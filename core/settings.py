@@ -33,7 +33,7 @@ INSTALLED_APPS = [
 
      # Apps do projeto
     "pages",
-    "products"
+    "products",
 
      # Banco de imagens
     "cloudinary",
