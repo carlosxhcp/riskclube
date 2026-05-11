@@ -116,10 +116,10 @@ STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 DATABASES = {
-    "default": dj_database_url.config(
-        default=config("DATABASE_URL", default="")
+    "default": dj_database_url.parse(
+        os.environ.get("DATABASE_URL")
     )
-}
+}   
 
 
 MEDIA_URL = "/media/"
