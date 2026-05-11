@@ -1,0 +1,224 @@
+{% extends "pages/base.html" %}
+{% load static %}
+
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/product-detail.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<section class="product-page">
+
+    <div class="product-gallery">
+
+        <div class="product-thumbs">
+
+            <button type="button" class="thumb active" data-image="{{ product.image.url }}">
+                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+            </button>
+
+            {% for img in product.images.all %}
+            <button type="button" class="thumb" data-image="{{ img.image.url }}">
+                <img src="{{ img.image.url }}" alt="{{ img.alt|default:product.name }}">
+            </button>
+            {% endfor %}
+
+        </div>
+
+        <div class="product-main-image">
+    <button type="button" class="gallery-arrow left" id="prevImage">‹</button>
+
+    <img id="mainProductImage" src="{{ product.image.url }}" alt="{{ product.name }}">
+
+    <button type="button" class="gallery-arrow right" id="nextImage">›</button>
+</div>
+
+    </div>
+
+    <div class="product-content">
+
+        <h1 class="product-title">{{ product.name }}</h1>
+
+        <div class="product-top-info">
+            <div>
+                <p class="product-price">R$ {{ product.price }}</p>
+
+                {% if product.installments %}
+                <span class="product-installments">
+                    {{ product.installments }}
+                </span>
+                {% endif %}
+            </div>
+
+            <div class="product-size-box">
+                <span>Tamanho</span>
+                <button>900ML</button>
+            </div>
+        </div>
+
+        <div class="product-colors">
+            <p>Cor — Black</p>
+
+            <div class="color-options">
+                <span class="color-dot black active"></span>
+                <span class="color-dot wine"></span>
+                <span class="color-dot pink"></span>
+                <span class="color-dot white"></span>
+            </div>
+        </div>
+
+        <p class="product-short-text">
+            Gelado/Quente por HORAS.
+        </p>
+
+        <button class="buy-button">
+            COMPRAR AGORA
+        </button>
+
+        <div class="product-accordions">
+
+            <details>
+                <summary>Descrição</summary>
+                <p>{{ product.description }}</p>
+            </details>
+
+            <details>
+                <summary>Ver medidas</summary>
+                <p>Capacidade aproximada: 900ML.</p>
+            </details>
+
+            <details>
+                <summary>Avaliação</summary>
+                <p>Ainda sem avaliações.</p>
+            </details>
+
+        </div>
+
+        <div class="product-benefits">
+
+            <div class="benefit-item">
+                <i class="bi bi-cup-straw"></i>
+                <span>Canudo Incluso</span>
+            </div>
+
+            <div class="benefit-item">
+                <i class="bi bi-droplet"></i>
+                <span>À Prova de Vazamento</span>
+            </div>
+
+            <div class="benefit-item">
+                <i class="bi bi-house"></i>
+                <span>Pode ir na Lava-Louças</span>
+            </div>
+
+            <div class="benefit-item">
+                <i class="bi bi-stars"></i>
+                <span>Fácil de Limpar</span>
+            </div>
+
+            <div class="benefit-item">
+                <i class="bi bi-box"></i>
+                <span>Leve</span>
+            </div>
+
+            <div class="benefit-item">
+                <i class="bi bi-bag"></i>
+                <span>Alça Fácil de Transportar</span>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<section class="product-video-section">
+
+    <video 
+        autoplay 
+        muted 
+        loop 
+        playsinline
+        class="product-video"
+    >
+        <source src="{% static 'videos/detail-video.mp4' %}" type="video/mp4">
+    </video>
+
+</section>
+
+
+<section class="community-section">
+
+    <h2 class="community-title">COMUNIDADE</h2>
+
+    <div class="community-grid">
+
+        {% for item in community_images %}
+            <img src="{{ item.image.url }}" alt="{{ item.alt }}">
+        {% empty %}
+            <p class="community-empty">Nenhuma imagem cadastrada ainda.</p>
+        {% endfor %}
+
+    </div>
+
+    <p class="community-text">
+        Você pode nos apoiar postando nas redes da forma que se sentir confortável marcando @riskclube — aproveite sua nova garrafa.
+    </p>
+
+</section>
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const mainImage = document.getElementById("mainProductImage");
+    const thumbs = Array.from(document.querySelectorAll(".thumb"));
+    const prevBtn = document.getElementById("prevImage");
+    const nextBtn = document.getElementById("nextImage");
+
+    let currentIndex = 0;
+
+    function updateImage(index) {
+        if (!mainImage || !thumbs.length) return;
+
+        if (index < 0) {
+            currentIndex = thumbs.length - 1;
+        } else if (index >= thumbs.length) {
+            currentIndex = 0;
+        } else {
+            currentIndex = index;
+        }
+
+        const imageUrl = thumbs[currentIndex].getAttribute("data-image");
+
+        if (!imageUrl) return;
+
+        mainImage.src = imageUrl;
+
+        thumbs.forEach(thumb => thumb.classList.remove("active"));
+        thumbs[currentIndex].classList.add("active");
+    }
+
+    thumbs.forEach((thumb, index) => {
+        thumb.addEventListener("click", function () {
+            updateImage(index);
+        });
+    });
+
+    if (prevBtn) {
+        prevBtn.addEventListener("click", function () {
+            updateImage(currentIndex - 1);
+        });
+    }
+
+    if (nextBtn) {
+        nextBtn.addEventListener("click", function () {
+            updateImage(currentIndex + 1);
+        });
+    }
+});
+</script>
+
+{% endblock %}

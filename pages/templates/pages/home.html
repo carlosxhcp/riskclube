@@ -1,0 +1,66 @@
+{% extends "pages/base.html" %}
+{% load static %}
+
+{% block title %}Risk Clube{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<section class="hero-banner">
+    <img 
+        src="{% static 'img/banners/home.jpg' %}" 
+        alt="Risk Clube"
+        class="hero-image"
+    >
+
+    <div class="hero-overlay">
+        <h1 class="hero-title">RISK CLUBE</h1>
+
+        <a href="#products" class="hero-button">
+            SHOP NOW
+        </a>
+    </div>
+</section>
+
+<section class="home-products" id="products">
+    <div class="home-product-grid">
+
+        {% for product in products %}
+        <div class="home-product-card">
+
+            <a href="{{ product.get_absolute_url }}" class="home-product-image-link">
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="home-product-image">
+            </a>
+
+            <div class="home-product-info">
+                <h3 class="home-product-title">
+                    {{ product.name }}
+                </h3>
+
+                <p class="home-product-price">
+                    R$ {{ product.price }}
+                </p>
+
+                {% if product.installments %}
+                <span class="home-product-installments">
+                    {{ product.installments }}
+                </span>
+                {% endif %}
+
+                <a href="{{ product.get_absolute_url }}" class="home-product-button">
+                    COMPRAR
+                </a>
+            </div>
+
+        </div>
+        {% empty %}
+        <p>Nenhum produto cadastrado ainda.</p>
+        {% endfor %}
+
+    </div>
+</section>
+
+{% endblock %}
