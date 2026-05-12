@@ -63,4 +63,24 @@
     </div>
 </section>
 
+<section class="community-section">
+
+    <h2 class="community-title">COMUNIDADE</h2>
+
+    <div class="community-grid">
+
+        {% for item in community_images %}
+            <img src="{{ item.image.url }}" alt="{{ item.alt }}">
+        {% empty %}
+            <p class="community-empty">Nenhuma imagem cadastrada ainda.</p>
+        {% endfor %}
+
+    </div>
+
+    <p class="community-text">
+        Você pode nos apoiar postando nas redes da forma que se sentir confortável marcando @riskclube — aproveite sua nova garrafa.
+    </p>
+
+</section>
+
 {% endblock %}

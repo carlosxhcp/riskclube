@@ -330,3 +330,145 @@ a {
     }
 
 }
+
+
+.risk-footer {
+    width: 100%;
+    background: #000;
+    color: #fff;
+    padding: 38px 6%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 60px;
+    margin-top: 100px;
+}
+
+.footer-left {
+    max-width: 420px;
+    width: 100%;
+}
+
+.footer-logo {
+    display: inline-block;
+    margin-bottom: 25px;
+}
+
+.footer-logo img {
+    width: 102px;
+    height: auto;
+    display: block;
+}
+.footer-newsletter-text {
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    color: #fff;
+}
+
+.footer-newsletter {
+    width: 100%;
+    position: relative;
+    margin-bottom: 25px;
+}
+
+.footer-newsletter input {
+    width: 100%;
+    height: 48px;
+    background: #111;
+    border: 1px solid #222;
+    color: #fff;
+    padding: 0 55px 0 18px;
+    outline: none;
+    font-size: 14px;
+}
+
+.footer-newsletter input::placeholder {
+    color: #777;
+}
+
+.footer-newsletter button {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: #fff;
+    color: #000;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.footer-socials {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.footer-socials a {
+    color: #fff;
+    font-size: 18px;
+    transition: 0.2s;
+}
+
+.footer-socials a:hover {
+    opacity: 0.7;
+}
+
+.footer-divider {
+    width: 1px;
+    background: #1c1c1c;
+    min-height: 110px;
+}
+
+.footer-links-wrapper {
+    display: flex;
+    gap: 100px;
+}
+
+.footer-links {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.footer-links h4 {
+    font-size: 16px;
+    margin-bottom: 12px;
+    color: #fff;
+}
+
+.footer-links a {
+    color: #bdbdbd;
+    text-decoration: none;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+.footer-links a:hover {
+    color: #fff;
+}
+
+@media (max-width: 900px) {
+
+    .risk-footer {
+        flex-direction: column;
+        gap: 50px;
+        padding: 50px 7%;
+    }
+
+    .footer-divider {
+        display: none;
+    }
+
+    .footer-links-wrapper {
+        width: 100%;
+        justify-content: space-between;
+        gap: 40px;
+    }
+
+}
