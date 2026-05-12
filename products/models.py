@@ -50,3 +50,31 @@ class CommunityImage(models.Model):
 
     def __str__(self):
         return self.alt or "Imagem da comunidade"
+
+class ProductVariant(models.Model):
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        related_name="variants"
+    )
+    color_name = models.CharField(max_length=50)
+    color_hex = models.CharField(max_length=20, default="#000000")
+    image = models.ImageField(upload_to="products/variants/")
+    active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ["id"]
+
+    def __str__(self):
+        return f"{self.product.name} - {self.color_name}"
+
+class VariantImage(models.Model):
+    variant = models.ForeignKey(
+        ProductVariant,
+        on_delete=models.CASCADE,
+        related_name="images"
+    )
+    image = models.ImageField(upload_to="products/variant_gallery/")
+
+    def __str__(self):
+        return f"Imagem de {self.variant}"
