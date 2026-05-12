@@ -1,0 +1,179 @@
+.hero-banner {
+    width: 100%;
+    height: 80vh;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.18);
+    padding: 20px;
+    text-align: center;
+}
+
+.hero-title {
+    color: #fff;
+    font-size: clamp(38px, 7vw, 82px);
+    font-weight: 700;
+    letter-spacing: 6px;
+    margin-bottom: 25px;
+}
+
+.hero-button {
+    color: #fff;
+    border: 1px solid #fff;
+    padding: 12px 28px;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: 0.3s;
+}
+
+.hero-button:hover {
+    background: #fff;
+    color: #000;
+}
+
+.home-products {
+    width: 100%;
+    background: #fff;
+}
+
+.home-product-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.home-product-card {
+    border-right: 1px solid #efefef;
+    border-bottom: 1px solid #efefef;
+    background: #fff;
+}
+
+.home-product-image-link {
+    width: 100%;
+    height: 520px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f7f7f7;
+}
+
+.home-product-image {
+    width: 75%;
+    height: 75%;
+    object-fit: contain;
+    transition: 0.4s;
+}
+
+.home-product-card:hover .home-product-image {
+    transform: scale(1.03);
+}
+
+.home-product-info {
+    padding: 18px 16px 30px;
+}
+
+.home-product-title {
+    font-size: clamp(16px, 2vw, 22px);
+    line-height: 1.3;
+    color: #000;
+    font-weight: 700;
+    margin-bottom: 14px;
+}
+
+.home-product-price {
+    font-size: clamp(21px, 3vw, 28px);
+    font-weight: 700;
+    color: #000;
+    margin-bottom: 4px;
+}
+
+.home-product-installments {
+    display: block;
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.home-product-button {
+    width: 160px;
+    height: 48px;
+    border: 1px solid #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    transition: 0.3s;
+}
+
+.home-product-button:hover {
+    background: #000;
+    color: #fff;
+}
+
+@media (max-width: 991px) {
+    .hero-banner {
+        height: 72vh;
+    }
+
+    .home-product-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .home-product-image-link {
+        height: 420px;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-banner {
+        height: 65vh;
+    }
+
+    .hero-title {
+        letter-spacing: 3px;
+    }
+
+    .home-product-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .home-product-image-link {
+        height: 360px;
+    }
+
+    .home-product-info {
+        padding: 16px 14px 28px;
+    }
+
+    .home-product-button {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-banner {
+        height: 58vh;
+    }
+
+    .home-product-image-link {
+        height: 310px;
+    }
+}
