@@ -501,16 +501,26 @@
     align-items: center;
 }
 
+
 .color-dot {
-    width: 26px;
-    height: 26px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
     border: 1px solid #ccc;
     cursor: pointer;
     padding: 0;
+    transition: 0.2s;
 }
 
 .color-dot.active {
     outline: 2px solid #000;
     outline-offset: 3px;
+}
+
+.color-dot:focus {
+    outline: none;
+}
+
+.color-dot:focus-visible {
+    outline: none;
 }
