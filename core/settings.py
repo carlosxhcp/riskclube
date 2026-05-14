@@ -30,6 +30,7 @@ INSTALLED_APPS = [
 
     "pages",
     "products",
+    "cart",
 ]
 
 MIDDLEWARE = [
@@ -112,3 +113,8 @@ CLOUDINARY_STORAGE = {
 MEDIA_URL = "/media/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+#STRIPE
+STRIPE_SECRET_KEY = config("STRIPE_SECRET_KEY", default="")
+STRIPE_WEBHOOK_SECRET = config("STRIPE_WEBHOOK_SECRET", default="")
+SITE_URL = config("SITE_URL", default="https://riskclube.vercel.app/")
