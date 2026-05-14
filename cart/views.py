@@ -1,11 +1,15 @@
-# views.py
 import requests
+
 from django.conf import settings
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.http import HttpResponseBadRequest
 
+from products.models import Product
 
-def checkout_infinitepay(request):
+
+def checkout_infinitepay(request, product_id):
+
+    product = get_object_or_404(Product, id=product_id)
 
     payload = {
         "handle": settings.INFINITEPAY_HANDLE,
@@ -15,8 +19,12 @@ def checkout_infinitepay(request):
         "items": [
             {
                 "quantity": 1,
-                "price": 1000,  # R$10,00 em centavos
-                "description": "Teste InfinitePay"
+
+                # preço em centavos
+                "price": int(product.price * 100),
+
+                # nome automático
+                "description": product.name
             }
         ]
     }
