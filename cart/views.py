@@ -92,3 +92,12 @@ def checkout_stripe_product(request, slug):
     )
 
     return redirect(session.url)
+
+from django.http import HttpResponse
+
+def stripe_webhook(request):
+    return HttpResponse(status=200)
+
+
+def stripe_success(request):
+    return HttpResponse("Pagamento aprovado")
