@@ -1,103 +1,117 @@
-import stripe
+import requests
+from decimal import Decimal
 from django.conf import settings
+from django.http import HttpResponseBadRequest, JsonResponse
 from django.shortcuts import redirect
-from django.http import HttpResponseBadRequest
 from django.views.decorators.csrf import csrf_exempt
-from django.http import JsonResponse
 import json
 
-from products.models import Product
-from django.shortcuts import get_object_or_404
 
-#from .models import Order
+def money_to_cents(value):
+    return int(Decimal(str(value)) * 100)
 
 
-def checkout_stripe(request):
-    stripe.api_key = settings.STRIPE_SECRET_KEY
-
+def checkout_infinitepay(request):
     cart = request.session.get("cart", {})
 
     if not cart:
         return HttpResponseBadRequest("Carrinho vazio.")
 
-    line_items = []
+    if not settings.INFINITEPAY_HANDLE:
+        return HttpResponseBadRequest("INFINITEPAY_HANDLE não configurado.")
+
+    # Aqui você pode trocar depois pelo ID real do seu Order
+    order_nsu = f"pedido-{request.session.session_key}"
+
+    items = []
 
     for cart_key, item in cart.items():
-        line_items.append({
-            "price_data": {
-                "currency": "brl",
-                "product_data": {
-                    "name": f"{item.get('name')} - Tam. {item.get('size', '')}",
-                },
-                "unit_amount": int(float(item.get("price", 0)) * 100),
-            },
+        name = item.get("name", "Produto")
+        size = item.get("size", "")
+
+        items.append({
             "quantity": int(item.get("quantity", 1)),
+            "price": money_to_cents(item.get("price", 0)),
+            "description": f"{name} - Tam. {size}",
         })
 
     shipping = request.session.get("shipping", {})
-    shipping_price = float(shipping.get("price", 0))
+    shipping_price = Decimal(str(shipping.get("price", 0)))
 
     if shipping_price > 0:
-        line_items.append({
-            "price_data": {
-                "currency": "brl",
-                "product_data": {
-                    "name": f"Frete - {shipping.get('name', 'Entrega')}",
-                },
-                "unit_amount": int(shipping_price * 100),
-            },
+        items.append({
             "quantity": 1,
+            "price": money_to_cents(shipping_price),
+            "description": "Frete",
         })
 
-    session = stripe.checkout.Session.create(
-        payment_method_types=["card"],
-        mode="payment",
-        line_items=line_items,
-        success_url=f"{settings.SITE_URL}/cart/stripe/sucesso/",
-        cancel_url=f"{settings.SITE_URL}/cart/",
-        metadata={
-            "user_id": request.user.id if request.user.is_authenticated else "",
-        }
+    payload = {
+        "handle": settings.INFINITEPAY_HANDLE,
+        "redirect_url": f"{settings.SITE_URL}/cart/infinitepay/retorno/",
+        "webhook_url": f"{settings.SITE_URL}/cart/infinitepay/webhook/",
+        "order_nsu": order_nsu,
+        "items": items,
+    }
+
+    response = requests.post(
+        "https://api.checkout.infinitepay.io/links",
+        json=payload,
+        timeout=15
     )
 
-    return redirect(session.url)
+    if response.status_code not in [200, 201]:
+        return HttpResponseBadRequest(f"Erro InfinitePay: {response.text}")
+
+    data = response.json()
+    payment_url = data.get("url")
+
+    if not payment_url:
+        return HttpResponseBadRequest("A InfinitePay não retornou o link de pagamento.")
+
+    return redirect(payment_url)
 
 
-def checkout_stripe_product(request, slug):
-    stripe.api_key = settings.STRIPE_SECRET_KEY
-
-    product = get_object_or_404(Product, slug=slug, available=True)
-
-    session = stripe.checkout.Session.create(
-        payment_method_types=["card", "pix", "boleto"],
-        mode="payment",
-        line_items=[
-            {
-                "price_data": {
-                    "currency": "brl",
-                    "product_data": {
-                        "name": product.name,
-                    },
-                    "unit_amount": int(float(product.price) * 100),
-                },
-                "quantity": 1,
-            }
-        ],
-        success_url=f"{settings.SITE_URL}/shop/{product.slug}/?payment=success",
-        cancel_url=f"{settings.SITE_URL}/shop/{product.slug}/?payment=cancel",
-        metadata={
-            "product_id": product.id,
-            "user_id": request.user.id if request.user.is_authenticated else "",
-        }
-    )
-
-    return redirect(session.url)
-
-from django.http import HttpResponse
-
-def stripe_webhook(request):
-    return HttpResponse(status=200)
+def infinitepay_return(request):
+    return JsonResponse({
+        "message": "Retorno InfinitePay recebido.",
+        "order_nsu": request.GET.get("order_nsu"),
+        "transaction_nsu": request.GET.get("transaction_nsu"),
+        "slug": request.GET.get("slug"),
+        "capture_method": request.GET.get("capture_method"),
+        "receipt_url": request.GET.get("receipt_url"),
+    })
 
 
-def stripe_success(request):
-    return HttpResponse("Pagamento aprovado")
+@csrf_exempt
+def infinitepay_webhook(request):
+    if request.method != "POST":
+        return JsonResponse({"success": False, "message": "Método inválido"}, status=400)
+
+    try:
+        data = json.loads(request.body)
+        print("=== WEBHOOK INFINITEPAY ===")
+        print(data)
+
+        order_nsu = data.get("order_nsu")
+        transaction_nsu = data.get("transaction_nsu")
+        receipt_url = data.get("receipt_url")
+        capture_method = data.get("capture_method")
+        installments = data.get("installments")
+
+        # Aqui depois você vai buscar seu Order pelo order_nsu
+        # order = Order.objects.filter(infinitepay_order_nsu=order_nsu).first()
+        # order.status = "paid"
+        # order.infinitepay_transaction_nsu = transaction_nsu
+        # order.receipt_url = receipt_url
+        # order.save()
+
+        return JsonResponse({
+            "success": True,
+            "message": None
+        })
+
+    except Exception as e:
+        return JsonResponse({
+            "success": False,
+            "message": str(e)
+        }, status=400)
