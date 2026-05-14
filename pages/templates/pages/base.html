@@ -21,7 +21,6 @@
         rel="stylesheet">
 
     <!-- CSS -->
-
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
 
     {% block extra_css %}{% endblock %}
@@ -36,20 +35,18 @@
     <nav class="main-navbar">
 
         <!-- MOBILE MENU BUTTON -->
-
         <button class="mobile-menu-btn" id="mobileMenuBtn">
             <i class="bi bi-list"></i>
         </button>
 
         <!-- ESQUERDA -->
-
         <div class="nav-left">
 
             <a href="/" class="nav-link-custom">
                 INICIO
             </a>
 
-            <a href="/shop/" class="nav-link-custom">
+            <a href="/" class="nav-link-custom">
                 SHOP
             </a>
 
@@ -60,7 +57,6 @@
         </div>
 
         <!-- LOGO -->
-
         <div class="nav-center">
 
             <a href="/" class="logo">
@@ -70,31 +66,44 @@
         </div>
 
         <!-- DIREITA -->
-
         <div class="nav-right">
 
-            <a href="#" class="icon-link">
-                <i class="bi bi-search"></i>
-            </a>
+            <!-- PESQUISA -->
+            <form action="{% url 'pages:home' %}#products" method="GET" class="search-form">
 
+                <input
+                    type="text"
+                    name="q"
+                    placeholder="Pesquisar..."
+                    class="search-input"
+                >
+
+                <button type="submit" class="icon-link search-button">
+                    <i class="bi bi-search"></i>
+                </button>
+
+            </form>
+
+            <!-- PERFIL -->
             <a href="#" class="icon-link">
                 <i class="bi bi-person"></i>
             </a>
 
+            <!-- FAVORITOS -->
             <a href="#" class="icon-link">
                 <i class="bi bi-heart"></i>
             </a>
 
-            <a href="#" class="icon-link">
+            <!-- CARRINHO -->
+            <button type="button" class="icon-link cart-open-btn" id="openCartBtn">
                 <i class="bi bi-bag"></i>
-            </a>
+            </button>
 
         </div>
 
     </nav>
 
     <!-- MENU MOBILE -->
-
     <div class="mobile-menu" id="mobileMenu">
 
         <button class="close-mobile-menu" id="closeMobileMenu">
@@ -105,7 +114,7 @@
             INICIO
         </a>
 
-        <a href="/shop/" class="mobile-link">
+        <a href="/" class="mobile-link">
             SHOP
         </a>
 
@@ -119,57 +128,112 @@
 
     {% block content %}{% endblock %}
 
+    <!-- FOOTER -->
     <footer class="risk-footer">
 
-    <div class="footer-left">
+        <div class="footer-left">
 
-        <a href="/" class="footer-logo">
-    <img src="{% static 'img/logo.png' %}" alt="Risk">
-</a>
+            <a href="/" class="footer-logo">
+                <img src="{% static 'img/logo.png' %}" alt="Risk">
+            </a>
 
-        <p class="footer-newsletter-text">
-            PROMOÇÕES, NOVIDADES E CONTEÚDOS EXCLUSIVOS. ASSINE NOSSA NEWSLETTER:
-        </p>
+            <p class="footer-newsletter-text">
+                PROMOÇÕES, NOVIDADES E CONTEÚDOS EXCLUSIVOS. ASSINE NOSSA NEWSLETTER:
+            </p>
 
-        <form class="footer-newsletter">
-            <input type="email" placeholder="Digite seu e-mail">
-            <button type="submit">
-                →
+            <form class="footer-newsletter">
+                <input type="email" placeholder="Digite seu e-mail">
+
+                <button type="submit">
+                    →
+                </button>
+            </form>
+
+            <div class="footer-socials">
+                <a href="#"><i class="bi bi-instagram"></i></a>
+                <a href="#"><i class="bi bi-youtube"></i></a>
+                <a href="#"><i class="bi bi-tiktok"></i></a>
+            </div>
+
+        </div>
+
+        <div class="footer-divider"></div>
+
+        <div class="footer-links-wrapper">
+
+            <div class="footer-links">
+
+                <h4>Sobre</h4>
+
+                <a href="#">Quem Somos</a>
+                <a href="#">Blog</a>
+
+            </div>
+
+            <div class="footer-links">
+
+                <h4>Atendimento</h4>
+
+                <a href="#">Trocas e Devoluções</a>
+                <a href="#">Fale Conosco</a>
+
+            </div>
+
+        </div>
+
+    </footer>
+
+    <!-- OVERLAY -->
+    <div class="cart-overlay" id="cartOverlay"></div>
+
+    <!-- SIDE CART -->
+    <aside class="side-cart" id="sideCart">
+
+        <div class="side-cart-header">
+
+            <h3>Seu Carrinho</h3>
+
+            <button type="button" id="closeCartBtn">
+                × Fechar
             </button>
-        </form>
 
-        <div class="footer-socials">
-            <a href="#"><i class="bi bi-instagram"></i></a>
-            <a href="#"><i class="bi bi-youtube"></i></a>
-            <a href="#"><i class="bi bi-tiktok"></i></a>
         </div>
 
-    </div>
+        <!-- FRETE -->
+        <div class="free-shipping-box">
 
-    <div class="footer-divider"></div>
+            <p id="freeShippingText">
+                Adicione mais R$ 200 para Frete Grátis
+            </p>
 
-    <div class="footer-links-wrapper">
+            <div class="free-shipping-bar">
+                <div
+                    class="free-shipping-progress"
+                    id="freeShippingProgress"
+                ></div>
+            </div>
 
-        <div class="footer-links">
-            <h4>Sobre</h4>
-
-            <a href="#">Quem Somos</a>
-            <a href="#">Blog</a>
         </div>
 
-        <div class="footer-links">
-            <h4>Atendimento</h4>
+        <!-- ITENS -->
+        <div id="sideCartContent" class="side-cart-content">
 
-            <a href="#">Trocas e Devoluções</a>
-            <a href="#">Fale Conosco</a>
+            <div class="empty-cart-box">
+                <i class="bi bi-cart-fill"></i>
+                <p>Não há itens no carrinho</p>
+            </div>
+
         </div>
 
-    </div>
+        <!-- FOOTER -->
+        <div class="side-cart-footer" id="sideCartFooter"></div>
 
-</footer>
+    </aside>
 
-
+    <!-- BOOTSTRAP -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- MOBILE MENU -->
     <script>
 
         const mobileMenuBtn = document.getElementById("mobileMenuBtn");
@@ -193,6 +257,210 @@
         });
 
     </script>
+
+    <!-- SIDE CART -->
+    <script>
+
+        const openCartBtn = document.getElementById("openCartBtn");
+        const closeCartBtn = document.getElementById("closeCartBtn");
+        const sideCart = document.getElementById("sideCart");
+        const cartOverlay = document.getElementById("cartOverlay");
+
+        const sideCartContent = document.getElementById("sideCartContent");
+        const sideCartFooter = document.getElementById("sideCartFooter");
+
+        const freeShippingText = document.getElementById("freeShippingText");
+        const freeShippingProgress = document.getElementById("freeShippingProgress");
+
+        function formatMoney(value) {
+            return "R$ " + Number(value).toFixed(2).replace(".", ",");
+        }
+
+        function openCart() {
+            sideCart.classList.add("active");
+            cartOverlay.classList.add("active");
+            loadCart();
+        }
+
+        function closeCart() {
+            sideCart.classList.remove("active");
+            cartOverlay.classList.remove("active");
+        }
+
+        async function loadCart() {
+
+            try {
+
+                const response = await fetch("/cart/data/");
+                const data = await response.json();
+
+                freeShippingProgress.style.width = data.free_shipping_progress + "%";
+
+                if (data.free_shipping_remaining > 0) {
+
+                    freeShippingText.innerText =
+                        `Adicione mais ${formatMoney(data.free_shipping_remaining)} para Frete Grátis`;
+
+                } else {
+
+                    freeShippingText.innerText =
+                        "Você ganhou Frete Grátis";
+
+                }
+
+                if (data.items.length === 0) {
+
+                    sideCartContent.innerHTML = `
+                        <div class="empty-cart-box">
+                            <i class="bi bi-cart-fill"></i>
+                            <p>Não há itens no carrinho</p>
+                        </div>
+                    `;
+
+                    sideCartFooter.innerHTML = `
+                        <a href="/" class="continue-shopping">
+                            CONTINUAR COMPRANDO
+                        </a>
+                    `;
+
+                    return;
+                }
+
+                sideCartContent.innerHTML = data.items.map(item => `
+
+                    <div class="cart-item">
+
+                        <img src="${item.image}" alt="${item.name}">
+
+                        <div class="cart-item-info">
+
+                            <div class="cart-item-name">
+                                ${item.name}
+                            </div>
+
+                            <div class="cart-item-size">
+                                Tamanho: ${item.size || "-"}
+                            </div>
+
+                            <div class="cart-item-installments">
+                                ${item.installments}
+                            </div>
+
+                            <div class="cart-qty">
+
+                                <button
+                                    type="button"
+                                    onclick="updateCartItem('${item.cart_key}', 'decrease')"
+                                >
+                                    -
+                                </button>
+
+                                <span>${item.quantity}</span>
+
+                                <button
+                                    type="button"
+                                    onclick="updateCartItem('${item.cart_key}', 'increase')"
+                                >
+                                    +
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                        <div class="cart-item-price">
+                            ${formatMoney(item.subtotal)}
+                        </div>
+
+                    </div>
+
+                `).join("");
+
+                sideCartFooter.innerHTML = `
+
+                    <div class="cart-total-line">
+                        <span>Subtotal</span>
+                        <strong>${formatMoney(data.subtotal)}</strong>
+                    </div>
+
+                    <div class="cart-total-line">
+                        <span>Desconto</span>
+                        <strong>- ${formatMoney(data.discount)}</strong>
+                    </div>
+
+                    <div class="cart-total-line">
+                        <span>Total</span>
+                        <strong>${formatMoney(data.total)}</strong>
+                    </div>
+
+                    <a href="/cart/infinitepay/checkout/" class="checkout-btn">
+                        FINALIZAR COMPRA
+                    </a>
+
+                    <a href="/" class="continue-shopping">
+                        CONTINUAR COMPRANDO
+                    </a>
+
+                `;
+
+            } catch (error) {
+
+                console.error("Erro ao carregar carrinho:", error);
+
+            }
+
+        }
+
+        async function updateCartItem(cartKey, action) {
+
+            try {
+
+                const response = await fetch("/cart/update/", {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": "{{ csrf_token }}"
+                    },
+
+                    body: JSON.stringify({
+                        cart_key: cartKey,
+                        action: action
+                    })
+
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+
+                    loadCart();
+
+                }
+
+            } catch (error) {
+
+                console.error("Erro ao atualizar carrinho:", error);
+
+            }
+
+        }
+
+        if (openCartBtn) {
+            openCartBtn.addEventListener("click", openCart);
+        }
+
+        if (closeCartBtn) {
+            closeCartBtn.addEventListener("click", closeCart);
+        }
+
+        if (cartOverlay) {
+            cartOverlay.addEventListener("click", closeCart);
+        }
+
+    </script>
+
 </body>
 
 </html>

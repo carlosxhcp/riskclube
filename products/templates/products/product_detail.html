@@ -88,10 +88,25 @@
             Gelado/Quente por HORAS.
         </p>
 
-        <a href="{% url 'checkout_infinitepay' product.id %}"
-   class="btn btn-dark w-100">
-    Comprar agora
-</a>
+        <div class="product-buttons">
+
+    <a href="{% url 'checkout_infinitepay' product.id %}"
+       class="buy-now-btn">
+        Comprar agora
+    </a>
+
+    <button
+        type="button"
+        class="add-cart-btn"
+        data-product-id="{{ product.id }}"
+        data-product-name="{{ product.name }}"
+        data-product-price="{{ product.price }}"
+        data-product-image="{{ product.image.url }}"
+    >
+        Adicionar ao carrinho
+    </button>
+
+</div>
         <div class="product-accordions">
 
             <details>
@@ -293,6 +308,43 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 });
+</script>
+<script>
+    const addCartBtn = document.querySelector(".add-cart-btn");
+
+if (addCartBtn) {
+
+    addCartBtn.addEventListener("click", async function () {
+
+        const productId = this.dataset.productId;
+
+        const response = await fetch("/cart/add/", {
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token }}"
+            },
+
+            body: JSON.stringify({
+                product_id: productId,
+                quantity: 1
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+
+            if (typeof openCart === "function") {
+                openCart();
+            }
+
+        }
+
+    });
+
+}
 </script>
 
 {% endblock %}
