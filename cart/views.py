@@ -9,7 +9,7 @@ import json
 from products.models import Product
 from django.shortcuts import get_object_or_404
 
-from .models import Order
+#from .models import Order
 
 
 def checkout_stripe(request):
