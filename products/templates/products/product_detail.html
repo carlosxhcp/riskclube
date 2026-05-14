@@ -88,9 +88,9 @@
             Gelado/Quente por HORAS.
         </p>
 
-        <button type="button" class="buy-button">
-            COMPRAR AGORA
-        </button>
+        <a href="{% url 'checkout_stripe_product' product.slug %}" class="buy-button">
+    COMPRAR AGORA
+</a>
 
         <div class="product-accordions">
 

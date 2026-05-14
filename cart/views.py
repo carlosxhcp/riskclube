@@ -6,6 +6,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 import json
 
+from products.models import Product
+from django.shortcuts import get_object_or_404
+
 from .models import Order
 
 
@@ -53,6 +56,37 @@ def checkout_stripe(request):
         success_url=f"{settings.SITE_URL}/cart/stripe/sucesso/",
         cancel_url=f"{settings.SITE_URL}/cart/",
         metadata={
+            "user_id": request.user.id if request.user.is_authenticated else "",
+        }
+    )
+
+    return redirect(session.url)
+
+
+def checkout_stripe_product(request, slug):
+    stripe.api_key = settings.STRIPE_SECRET_KEY
+
+    product = get_object_or_404(Product, slug=slug, available=True)
+
+    session = stripe.checkout.Session.create(
+        payment_method_types=["card"],
+        mode="payment",
+        line_items=[
+            {
+                "price_data": {
+                    "currency": "brl",
+                    "product_data": {
+                        "name": product.name,
+                    },
+                    "unit_amount": int(float(product.price) * 100),
+                },
+                "quantity": 1,
+            }
+        ],
+        success_url=f"{settings.SITE_URL}/shop/{product.slug}/?payment=success",
+        cancel_url=f"{settings.SITE_URL}/shop/{product.slug}/?payment=cancel",
+        metadata={
+            "product_id": product.id,
             "user_id": request.user.id if request.user.is_authenticated else "",
         }
     )
