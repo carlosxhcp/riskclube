@@ -10,7 +10,7 @@ urlpatterns = [
     path("", include("products.urls")),
     path("", include("cart.urls")),
     path(
-    "shop/<slug:slug>/checkout/",
+    "produto/<slug:slug>/checkout/",
     views.checkout_stripe_product,
     name="checkout_stripe_product"
 ),
