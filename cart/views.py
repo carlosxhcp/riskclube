@@ -69,7 +69,7 @@ def checkout_stripe_product(request, slug):
     product = get_object_or_404(Product, slug=slug, available=True)
 
     session = stripe.checkout.Session.create(
-        payment_method_types=["card"],
+        payment_method_types=["card", "pix"],
         mode="payment",
         line_items=[
             {
