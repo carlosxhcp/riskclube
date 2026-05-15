@@ -90,10 +90,9 @@
 
         <div class="product-buttons">
 
-    <a href="{% url 'checkout_infinitepay' product.id %}"
-       class="buy-now-btn">
-        Comprar agora
-    </a>
+    <a href="{% url 'cart:checkout_infinitepay' product.id %}" class="buy-now-btn">
+    Comprar agora
+</a>
 
     <button
         type="button"
