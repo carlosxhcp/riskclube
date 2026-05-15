@@ -12,17 +12,13 @@
 <section class="product-page">
 
     <div class="product-gallery">
-
         <div class="product-thumbs"></div>
 
         <div class="product-main-image">
             <button type="button" class="gallery-arrow left" id="prevImage">‹</button>
-
             <img id="mainProductImage" src="{{ product.image.url }}" alt="{{ product.name }}">
-
             <button type="button" class="gallery-arrow right" id="nextImage">›</button>
         </div>
-
     </div>
 
     <div class="product-content">
@@ -42,46 +38,30 @@
 
             <div class="product-size-box">
                 <p>Tamanho — <span id="selectedSizeName"></span></p>
-
-                <div class="size-options">
-                    {% for size in product.sizes.all %}
-                        {% if size.active %}
-                            <button
-                                type="button"
-                                class="size-btn {% if forloop.first %}active{% endif %}"
-                                data-size-name="{{ size.name }}"
-                            >
-                                {{ size.name }}
-                            </button>
-                        {% endif %}
-                    {% empty %}
-                        <button
-                            type="button"
-                            class="size-btn active"
-                            data-size-name="Único"
-                        >
-                            Único
-                        </button>
-                    {% endfor %}
-                </div>
+                <div class="size-options"></div>
             </div>
         </div>
 
         <div class="product-colors">
-            <p>Cor — <span id="selectedColorName">Preto</span></p>
+            <p>Cor — <span id="selectedColorName"></span></p>
 
             <div class="color-options">
 
                 <button
                     type="button"
                     class="color-dot active"
-                    style="background-color: #000;"
-                    data-color-name="Preto"
+                    style="background-color: {{ product.default_color_hex }};"
+                    data-color-name="{{ product.default_color_name }}"
                     data-images='[
                         "{{ product.image.url }}"
                         {% for img in product.images.all %}
-                        ,"{{ img.image.url }}"
+                            ,"{{ img.image.url }}"
                         {% endfor %}
+                    ]'
+                    data-sizes='[
+                        {
+                            "name": "Único"
+                        }
                     ]'
                 ></button>
 
@@ -95,7 +75,16 @@
                         data-images='[
                             "{{ variant.image.url }}"
                             {% for img in variant.images.all %}
-                            ,"{{ img.image.url }}"
+                                ,"{{ img.image.url }}"
+                            {% endfor %}
+                        ]'
+                        data-sizes='[
+                            {% for size in variant.sizes.all %}
+                                {% if size.active %}
+                                    {
+                                        "name": "{{ size.name }}"
+                                    }{% if not forloop.last %},{% endif %}
+                                {% endif %}
                             {% endfor %}
                         ]'
                     ></button>
@@ -184,11 +173,9 @@
 </section>
 
 <section class="product-video-section">
-
     <video autoplay muted loop playsinline class="product-video">
         <source src="{% static 'videos/detail-video.mp4' %}" type="video/mp4">
     </video>
-
 </section>
 
 <section class="community-section">
@@ -196,13 +183,11 @@
     <h2 class="community-title">COMUNIDADE</h2>
 
     <div class="community-grid">
-
         {% for item in community_images %}
             <img src="{{ item.image.url }}" alt="{{ item.alt }}">
         {% empty %}
             <p class="community-empty">Nenhuma imagem cadastrada ainda.</p>
         {% endfor %}
-
     </div>
 
     <p class="community-text">
@@ -221,7 +206,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const prevBtn = document.getElementById("prevImage");
     const nextBtn = document.getElementById("nextImage");
 
-    const sizeButtons = document.querySelectorAll(".size-btn");
+    const sizeOptions = document.querySelector(".size-options");
     const selectedSizeName = document.getElementById("selectedSizeName");
 
     let currentImages = [];
@@ -256,7 +241,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         currentImages = images;
         currentIndex = 0;
-
         thumbsContainer.innerHTML = "";
 
         images.forEach((imageUrl, index) => {
@@ -270,9 +254,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 button.classList.add("active");
             }
 
-            button.innerHTML = `
-                <img src="${imageUrl}" alt="{{ product.name }}">
-            `;
+            button.innerHTML = `<img src="${imageUrl}" alt="{{ product.name }}">`;
 
             button.addEventListener("click", function () {
                 updateMainImage(index);
@@ -284,13 +266,66 @@ document.addEventListener("DOMContentLoaded", function () {
         updateMainImage(0);
     }
 
+    function renderSizes(sizes) {
+        if (!sizeOptions) return;
+
+        sizeOptions.innerHTML = "";
+
+        if (!sizes || !sizes.length) {
+            sizes = [{ name: "Único" }];
+        }
+
+        sizes.forEach((size, index) => {
+            const button = document.createElement("button");
+
+            button.type = "button";
+            button.className = "size-btn";
+
+            if (index === 0) {
+                button.classList.add("active");
+            }
+
+            button.dataset.sizeName = size.name;
+            button.innerText = size.name;
+
+            button.addEventListener("click", function () {
+                document.querySelectorAll(".size-btn").forEach(btn => {
+                    btn.classList.remove("active");
+                });
+
+                this.classList.add("active");
+                this.blur();
+
+                if (selectedSizeName) {
+                    selectedSizeName.textContent = size.name;
+                }
+            });
+
+            sizeOptions.appendChild(button);
+        });
+
+        if (selectedSizeName) {
+            selectedSizeName.textContent = sizes[0].name;
+        }
+    }
+
     colorButtons.forEach(button => {
         button.addEventListener("click", function () {
             const colorName = this.getAttribute("data-color-name");
-            const images = JSON.parse(this.dataset.images);
 
-            if (selectedColorName && colorName) {
-                selectedColorName.textContent = colorName;
+            let images = [];
+            let sizes = [];
+
+            try {
+                images = JSON.parse(this.dataset.images);
+            } catch (error) {
+                images = [];
+            }
+
+            try {
+                sizes = JSON.parse(this.dataset.sizes);
+            } catch (error) {
+                sizes = [];
             }
 
             colorButtons.forEach(btn => {
@@ -300,24 +335,12 @@ document.addEventListener("DOMContentLoaded", function () {
             this.classList.add("active");
             this.blur();
 
-            renderGallery(images);
-        });
-    });
-
-    sizeButtons.forEach(button => {
-        button.addEventListener("click", function () {
-            const sizeName = this.getAttribute("data-size-name");
-
-            sizeButtons.forEach(btn => {
-                btn.classList.remove("active");
-            });
-
-            this.classList.add("active");
-            this.blur();
-
-            if (selectedSizeName && sizeName) {
-                selectedSizeName.textContent = sizeName;
+            if (selectedColorName) {
+                selectedColorName.textContent = colorName || "";
             }
+
+            renderGallery(images);
+            renderSizes(sizes);
         });
     });
 
@@ -336,20 +359,27 @@ document.addEventListener("DOMContentLoaded", function () {
     const firstColorButton = document.querySelector(".color-dot.active");
 
     if (firstColorButton) {
-        const firstColorName = firstColorButton.getAttribute("data-color-name");
-        const firstImages = JSON.parse(firstColorButton.dataset.images);
+        let firstImages = [];
+        let firstSizes = [];
 
-        if (selectedColorName && firstColorName) {
-            selectedColorName.textContent = firstColorName;
+        try {
+            firstImages = JSON.parse(firstColorButton.dataset.images);
+        } catch (error) {
+            firstImages = [];
+        }
+
+        try {
+            firstSizes = JSON.parse(firstColorButton.dataset.sizes);
+        } catch (error) {
+            firstSizes = [];
+        }
+
+        if (selectedColorName) {
+            selectedColorName.textContent = firstColorButton.dataset.colorName || "";
         }
 
         renderGallery(firstImages);
-    }
-
-    const firstSizeButton = document.querySelector(".size-btn.active");
-
-    if (firstSizeButton && selectedSizeName) {
-        selectedSizeName.textContent = firstSizeButton.getAttribute("data-size-name");
+        renderSizes(firstSizes);
     }
 
 });
@@ -383,7 +413,6 @@ document.addEventListener("DOMContentLoaded", function () {
         addCartBtn.innerText = "Adicionando...";
 
         try {
-
             const response = await fetch("/cart/add/", {
                 method: "POST",
                 headers: {
@@ -401,7 +430,6 @@ document.addEventListener("DOMContentLoaded", function () {
             const data = await response.json();
 
             if (data.success) {
-
                 addCartBtn.innerText = "Adicionado";
 
                 if (typeof openCart === "function") {
@@ -413,7 +441,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     addCartBtn.disabled = false;
                     addingToCart = false;
                 }, 700);
-
             } else {
                 addCartBtn.innerText = "Erro ao adicionar";
 
@@ -425,7 +452,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
         } catch (error) {
-
             console.error("Erro ao adicionar ao carrinho:", error);
 
             addCartBtn.innerText = "Erro ao adicionar";

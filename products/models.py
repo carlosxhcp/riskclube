@@ -4,12 +4,26 @@ from django.utils.text import slugify
 
 
 class Product(models.Model):
-    name = models.CharField(max_length=200)
-    slug = models.SlugField(unique=True, blank=True)
+    name = models.CharField(max_length=255)
+    slug = models.SlugField(unique=True)
+
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    installments = models.CharField(max_length=100, blank=True)
+
     image = models.ImageField(upload_to="products/")
+    image_hover = models.ImageField(upload_to="products/", blank=True, null=True)
+
     description = models.TextField(blank=True)
+
+    default_color_name = models.CharField(
+        max_length=50,
+        default="Preto"
+    )
+
+    default_color_hex = models.CharField(
+        max_length=20,
+        default="#000000"
+    )
+
     available = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
 
@@ -80,13 +94,14 @@ class VariantImage(models.Model):
         return f"Imagem de {self.variant}"
 
 class ProductSize(models.Model):
-    product = models.ForeignKey(
-        Product,
+    variant = models.ForeignKey(
+        ProductVariant,
         related_name="sizes",
         on_delete=models.CASCADE
     )
+
     name = models.CharField(max_length=50)
     active = models.BooleanField(default=True)
 
     def __str__(self):
-        return f"{self.product.name} - {self.name}"
+        return f"{self.variant.color_name} - {self.name}"
