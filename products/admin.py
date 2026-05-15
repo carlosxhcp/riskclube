@@ -1,18 +1,21 @@
 from django.contrib import admin
-from .models import Product, ProductImage, CommunityImage, ProductVariant, VariantImage
+from .models import Product, ProductImage, CommunityImage, ProductVariant, ProductSize
 
 
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
-    extra = 1
+    extra = 3
 
-class VariantImageInline(admin.TabularInline):
-    model = VariantImage
-    extra = 1
 
-class ProductVariantInline(admin.StackedInline):
+class ProductVariantInline(admin.TabularInline):
     model = ProductVariant
-    extra = 1
+    extra = 3
+
+
+class ProductSizeInline(admin.TabularInline):
+    model = ProductSize
+    extra = 3
+
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
@@ -20,11 +23,9 @@ class ProductAdmin(admin.ModelAdmin):
     list_filter = ("available", "created")
     search_fields = ("name",)
     prepopulated_fields = {"slug": ("name",)}
-    inlines = [ProductImageInline, ProductVariantInline]
+    inlines = [ProductImageInline, ProductVariantInline, ProductSizeInline]
 
 
 @admin.register(CommunityImage)
 class CommunityImageAdmin(admin.ModelAdmin):
-    list_display = ("alt", "active", "created")
-    list_filter = ("active", "created")
-    search_fields = ("alt",)
+    list_display = ("alt",)

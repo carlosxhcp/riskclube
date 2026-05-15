@@ -41,8 +41,29 @@
             </div>
 
             <div class="product-size-box">
-                <span>Tamanho</span>
-                <button type="button">900ML</button>
+                <p>Tamanho — <span id="selectedSizeName"></span></p>
+
+                <div class="size-options">
+                    {% for size in product.sizes.all %}
+                        {% if size.active %}
+                            <button
+                                type="button"
+                                class="size-btn {% if forloop.first %}active{% endif %}"
+                                data-size-name="{{ size.name }}"
+                            >
+                                {{ size.name }}
+                            </button>
+                        {% endif %}
+                    {% empty %}
+                        <button
+                            type="button"
+                            class="size-btn active"
+                            data-size-name="Único"
+                        >
+                            Único
+                        </button>
+                    {% endfor %}
+                </div>
             </div>
         </div>
 
@@ -114,7 +135,7 @@
 
             <details>
                 <summary>Ver medidas</summary>
-                <p>Capacidade aproximada: 900ML.</p>
+                <p>Confira as opções de tamanho disponíveis acima.</p>
             </details>
 
             <details>
@@ -200,6 +221,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const prevBtn = document.getElementById("prevImage");
     const nextBtn = document.getElementById("nextImage");
 
+    const sizeButtons = document.querySelectorAll(".size-btn");
+    const selectedSizeName = document.getElementById("selectedSizeName");
+
     let currentImages = [];
     let currentIndex = 0;
 
@@ -280,6 +304,23 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
+    sizeButtons.forEach(button => {
+        button.addEventListener("click", function () {
+            const sizeName = this.getAttribute("data-size-name");
+
+            sizeButtons.forEach(btn => {
+                btn.classList.remove("active");
+            });
+
+            this.classList.add("active");
+            this.blur();
+
+            if (selectedSizeName && sizeName) {
+                selectedSizeName.textContent = sizeName;
+            }
+        });
+    });
+
     if (prevBtn) {
         prevBtn.addEventListener("click", function () {
             updateMainImage(currentIndex - 1);
@@ -292,17 +333,23 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    const firstButton = document.querySelector(".color-dot.active");
+    const firstColorButton = document.querySelector(".color-dot.active");
 
-    if (firstButton) {
-        const firstColorName = firstButton.getAttribute("data-color-name");
-        const firstImages = JSON.parse(firstButton.dataset.images);
+    if (firstColorButton) {
+        const firstColorName = firstColorButton.getAttribute("data-color-name");
+        const firstImages = JSON.parse(firstColorButton.dataset.images);
 
         if (selectedColorName && firstColorName) {
             selectedColorName.textContent = firstColorName;
         }
 
         renderGallery(firstImages);
+    }
+
+    const firstSizeButton = document.querySelector(".size-btn.active");
+
+    if (firstSizeButton && selectedSizeName) {
+        selectedSizeName.textContent = firstSizeButton.getAttribute("data-size-name");
     }
 
 });
@@ -326,6 +373,12 @@ document.addEventListener("DOMContentLoaded", function () {
         const originalText = addCartBtn.innerText;
         const productId = addCartBtn.dataset.productId;
 
+        const selectedSizeBtn = document.querySelector(".size-btn.active");
+        const selectedSize = selectedSizeBtn ? selectedSizeBtn.dataset.sizeName : "";
+
+        const selectedColorBtn = document.querySelector(".color-dot.active");
+        const selectedColor = selectedColorBtn ? selectedColorBtn.dataset.colorName : "";
+
         addCartBtn.disabled = true;
         addCartBtn.innerText = "Adicionando...";
 
@@ -339,7 +392,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 },
                 body: JSON.stringify({
                     product_id: productId,
-                    quantity: 1
+                    quantity: 1,
+                    size: selectedSize,
+                    color: selectedColor
                 })
             });
 
