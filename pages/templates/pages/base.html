@@ -13,6 +13,77 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/base.css' %}?v=3">
+    <style>
+@media (max-width: 768px) {
+    .main-navbar {
+        height: 64px !important;
+        min-height: 64px !important;
+        padding: 0 10px !important;
+        display: grid !important;
+        grid-template-columns: 40px minmax(0, 1fr) 86px !important;
+        align-items: center !important;
+        overflow: visible !important;
+    }
+
+    .mobile-menu-btn {
+        display: flex !important;
+        grid-column: 1 !important;
+        width: 40px !important;
+        height: 40px !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        font-size: 26px !important;
+    }
+
+    .nav-left {
+        display: none !important;
+    }
+
+    .nav-center {
+        grid-column: 2 !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        display: flex !important;
+        justify-content: center !important;
+        overflow: hidden !important;
+    }
+
+    .logo img {
+        max-width: 105px !important;
+        max-height: 62px !important;
+    }
+
+    .nav-right {
+        grid-column: 3 !important;
+        width: 86px !important;
+        min-width: 86px !important;
+        display: flex !important;
+        justify-content: flex-end !important;
+        align-items: center !important;
+        gap: 12px !important;
+        overflow: visible !important;
+    }
+
+    .search-form,
+    .favorite-icon {
+        display: none !important;
+    }
+
+    .account-icon,
+    .cart-open-btn {
+        display: flex !important;
+        width: 28px !important;
+        min-width: 28px !important;
+        height: 28px !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 20px !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        color: #000 !important;
+    }
+}
+</style>
     {% block extra_css %}{% endblock %}
 </head>
 
