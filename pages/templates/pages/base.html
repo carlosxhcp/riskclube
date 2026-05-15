@@ -237,29 +237,29 @@ async function loadCart() {
                 </div>
 
                 <div
-    class="cart-item-price"
-    data-cart-price="${item.cart_key}"
-    data-unit-price="${item.price}"
->
-    ${formatMoney(item.subtotal)}
-</div>
+                    class="cart-item-price"
+                    data-cart-price="${item.cart_key}"
+                    data-unit-price="${item.price}"
+                >
+                    ${formatMoney(item.subtotal)}
+                </div>
             </div>
         `).join("");
 
         sideCartFooter.innerHTML = `
             <div class="cart-total-line">
                 <span>Subtotal</span>
-                <strong>${formatMoney(data.subtotal)}</strong>
+                <strong id="cartSubtotal">${formatMoney(data.subtotal)}</strong>
             </div>
 
             <div class="cart-total-line">
                 <span>Desconto</span>
-                <strong>- ${formatMoney(data.discount)}</strong>
+                <strong id="cartDiscount">- ${formatMoney(data.discount)}</strong>
             </div>
 
             <div class="cart-total-line">
                 <span>Total</span>
-                <strong>${formatMoney(data.total)}</strong>
+                <strong id="cartTotal">${formatMoney(data.total)}</strong>
             </div>
 
             <a href="/cart/infinitepay/checkout/" class="checkout-btn">
@@ -276,12 +276,51 @@ async function loadCart() {
     }
 }
 
+function updateCartTotalsInstantly() {
+    let subtotal = 0;
+
+    document.querySelectorAll("[data-cart-price]").forEach(priceElement => {
+        const unitPrice = Number(priceElement.dataset.unitPrice);
+        const cartKey = priceElement.dataset.cartPrice;
+        const qtyElement = document.querySelector(`[data-cart-qty="${cartKey}"]`);
+
+        if (qtyElement) {
+            const quantity = Number(qtyElement.innerText);
+            subtotal += unitPrice * quantity;
+        }
+    });
+
+    const subtotalElement = document.getElementById("cartSubtotal");
+    const totalElement = document.getElementById("cartTotal");
+
+    if (subtotalElement) {
+        subtotalElement.innerText = formatMoney(subtotal);
+    }
+
+    if (totalElement) {
+        totalElement.innerText = formatMoney(subtotal);
+    }
+
+    const remaining = Math.max(200 - subtotal, 0);
+    const progress = Math.min((subtotal / 200) * 100, 100);
+
+    freeShippingProgress.style.width = progress + "%";
+
+    if (remaining > 0) {
+        freeShippingText.innerText = `Adicione mais ${formatMoney(remaining)} para Frete Grátis`;
+    } else {
+        freeShippingText.innerText = "Você ganhou Frete Grátis";
+    }
+}
+
 async function updateCartItem(cartKey, action) {
     const qtyElement = document.querySelector(`[data-cart-qty="${cartKey}"]`);
+    const priceElement = document.querySelector(`[data-cart-price="${cartKey}"]`);
     const itemElement = document.querySelector(`[data-cart-item="${cartKey}"]`);
 
-    if (qtyElement) {
+    if (qtyElement && priceElement) {
         let currentQty = parseInt(qtyElement.innerText);
+        const unitPrice = Number(priceElement.dataset.unitPrice);
 
         if (action === "increase") {
             currentQty += 1;
@@ -292,10 +331,15 @@ async function updateCartItem(cartKey, action) {
         }
 
         if (currentQty <= 0) {
-            if (itemElement) itemElement.style.opacity = "0.4";
+            if (itemElement) {
+                itemElement.style.opacity = "0.4";
+            }
         } else {
             qtyElement.innerText = currentQty;
+            priceElement.innerText = formatMoney(unitPrice * currentQty);
         }
+
+        updateCartTotalsInstantly();
     }
 
     if (cartUpdateTimers[cartKey]) {
