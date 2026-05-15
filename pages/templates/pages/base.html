@@ -236,9 +236,13 @@ async function loadCart() {
                     </div>
                 </div>
 
-                <div class="cart-item-price" data-cart-price="${item.cart_key}">
-                    ${formatMoney(item.subtotal)}
-                </div>
+                <div
+    class="cart-item-price"
+    data-cart-price="${item.cart_key}"
+    data-unit-price="${item.price}"
+>
+    ${formatMoney(item.subtotal)}
+</div>
             </div>
         `).join("");
 
