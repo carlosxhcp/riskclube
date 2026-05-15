@@ -10,224 +10,224 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/base.css' %}">
-
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}?v=3">
     {% block extra_css %}{% endblock %}
 </head>
 
 <body>
 
-<div class="top-bar">FRETE GRÁTIS EM PEDIDOS ACIMA DE R$200</div>
+    <div class="top-bar">FRETE GRÁTIS EM PEDIDOS ACIMA DE R$200</div>
 
-<nav class="main-navbar">
+    <nav class="main-navbar">
 
-    <button class="mobile-menu-btn" id="mobileMenuBtn" type="button">
-        <i class="bi bi-list"></i>
-    </button>
-
-    <div class="nav-left">
-        <a href="/" class="nav-link-custom">INICIO</a>
-        <a href="/#products" class="nav-link-custom">SHOP</a>
-        <a href="/about/" class="nav-link-custom">COMUNIDADE</a>
-    </div>
-
-    <div class="nav-center">
-        <a href="/" class="logo">
-            <img src="{% static 'img/logo.png' %}" alt="Risk Clube">
-        </a>
-    </div>
-
-    <div class="nav-right">
-        <form action="{% url 'pages:home' %}#products" method="GET" class="search-form">
-            <input type="text" name="q" placeholder="Pesquisar..." class="search-input">
-            <button type="submit" class="icon-link search-button">
-                <i class="bi bi-search"></i>
-            </button>
-        </form>
-
-        <a href="#" class="icon-link account-icon">
-            <i class="bi bi-person"></i>
-        </a>
-
-        <a href="#" class="icon-link favorite-icon">
-            <i class="bi bi-heart"></i>
-        </a>
-
-        <button type="button" class="icon-link cart-open-btn" id="openCartBtn">
-            <i class="bi bi-bag"></i>
+        <button class="mobile-menu-btn" id="mobileMenuBtn" type="button">
+            <i class="bi bi-list"></i>
         </button>
-    </div>
 
-</nav>
-
-<div class="mobile-menu" id="mobileMenu">
-    <button class="close-mobile-menu" id="closeMobileMenu" type="button">
-        <i class="bi bi-x-lg"></i>
-    </button>
-
-    <a href="/" class="mobile-link">INICIO</a>
-    <a href="/#products" class="mobile-link">SHOP</a>
-    <a href="/about/" class="mobile-link">COMUNIDADE</a>
-</div>
-
-<div class="mobile-overlay" id="mobileOverlay"></div>
-
-{% block content %}{% endblock %}
-
-<footer class="risk-footer">
-    <div class="footer-left">
-        <a href="/" class="footer-logo">
-            <img src="{% static 'img/logo.png' %}" alt="Risk">
-        </a>
-
-        <p class="footer-newsletter-text">
-            PROMOÇÕES, NOVIDADES E CONTEÚDOS EXCLUSIVOS. ASSINE NOSSA NEWSLETTER:
-        </p>
-
-        <form class="footer-newsletter">
-            <input type="email" placeholder="Digite seu e-mail">
-            <button type="submit">→</button>
-        </form>
-
-        <div class="footer-socials">
-            <a href="#"><i class="bi bi-instagram"></i></a>
-            <a href="#"><i class="bi bi-youtube"></i></a>
-            <a href="#"><i class="bi bi-tiktok"></i></a>
-        </div>
-    </div>
-
-    <div class="footer-divider"></div>
-
-    <div class="footer-links-wrapper">
-        <div class="footer-links">
-            <h4>Sobre</h4>
-            <a href="#">Quem Somos</a>
-            <a href="#">Blog</a>
+        <div class="nav-left">
+            <a href="/" class="nav-link-custom">INICIO</a>
+            <a href="/#products" class="nav-link-custom">SHOP</a>
+            <a href="/about/" class="nav-link-custom">COMUNIDADE</a>
         </div>
 
-        <div class="footer-links">
-            <h4>Atendimento</h4>
-            <a href="#">Trocas e Devoluções</a>
-            <a href="#">Fale Conosco</a>
+        <div class="nav-center">
+            <a href="/" class="logo">
+                <img src="{% static 'img/logo.png' %}" alt="Risk Clube">
+            </a>
         </div>
-    </div>
-</footer>
 
-<div class="cart-overlay" id="cartOverlay"></div>
+        <div class="nav-right">
+            <form action="{% url 'pages:home' %}#products" method="GET" class="search-form">
+                <input type="text" name="q" placeholder="Pesquisar..." class="search-input">
+                <button type="submit" class="icon-link search-button">
+                    <i class="bi bi-search"></i>
+                </button>
+            </form>
 
-<aside class="side-cart" id="sideCart">
-    <div class="side-cart-header">
-        <h3>Seu Carrinho</h3>
-        <button type="button" id="closeCartBtn">× Fechar</button>
-    </div>
+            <a href="#" class="icon-link account-icon">
+                <i class="bi bi-person"></i>
+            </a>
 
-    <div class="free-shipping-box">
-        <p id="freeShippingText">Adicione mais R$ 200 para Frete Grátis</p>
+            <a href="#" class="icon-link favorite-icon">
+                <i class="bi bi-heart"></i>
+            </a>
 
-        <div class="free-shipping-bar">
-            <div class="free-shipping-progress" id="freeShippingProgress"></div>
+            <button type="button" class="icon-link cart-open-btn" id="openCartBtn">
+                <i class="bi bi-bag"></i>
+            </button>
         </div>
+
+    </nav>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="close-mobile-menu" id="closeMobileMenu" type="button">
+            <i class="bi bi-x-lg"></i>
+        </button>
+
+        <a href="/" class="mobile-link">INICIO</a>
+        <a href="/#products" class="mobile-link">SHOP</a>
+        <a href="/about/" class="mobile-link">COMUNIDADE</a>
     </div>
 
-    <div id="sideCartContent" class="side-cart-content">
-        <div class="empty-cart-box">
-            <i class="bi bi-cart-fill"></i>
-            <p>Não há itens no carrinho</p>
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+
+    {% block content %}{% endblock %}
+
+    <footer class="risk-footer">
+        <div class="footer-left">
+            <a href="/" class="footer-logo">
+                <img src="{% static 'img/logo.png' %}" alt="Risk">
+            </a>
+
+            <p class="footer-newsletter-text">
+                PROMOÇÕES, NOVIDADES E CONTEÚDOS EXCLUSIVOS. ASSINE NOSSA NEWSLETTER:
+            </p>
+
+            <form class="footer-newsletter">
+                <input type="email" placeholder="Digite seu e-mail">
+                <button type="submit">→</button>
+            </form>
+
+            <div class="footer-socials">
+                <a href="#"><i class="bi bi-instagram"></i></a>
+                <a href="#"><i class="bi bi-youtube"></i></a>
+                <a href="#"><i class="bi bi-tiktok"></i></a>
+            </div>
         </div>
-    </div>
 
-    <div class="side-cart-footer" id="sideCartFooter"></div>
-</aside>
+        <div class="footer-divider"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        <div class="footer-links-wrapper">
+            <div class="footer-links">
+                <h4>Sobre</h4>
+                <a href="#">Quem Somos</a>
+                <a href="#">Blog</a>
+            </div>
 
-<script>
-const mobileMenuBtn = document.getElementById("mobileMenuBtn");
-const mobileMenu = document.getElementById("mobileMenu");
-const closeMobileMenu = document.getElementById("closeMobileMenu");
-const mobileOverlay = document.getElementById("mobileOverlay");
+            <div class="footer-links">
+                <h4>Atendimento</h4>
+                <a href="#">Trocas e Devoluções</a>
+                <a href="#">Fale Conosco</a>
+            </div>
+        </div>
+    </footer>
 
-if (mobileMenuBtn) {
-    mobileMenuBtn.addEventListener("click", () => {
-        mobileMenu.classList.add("active");
-        mobileOverlay.classList.add("active");
-    });
-}
+    <div class="cart-overlay" id="cartOverlay"></div>
 
-if (closeMobileMenu) {
-    closeMobileMenu.addEventListener("click", () => {
-        mobileMenu.classList.remove("active");
-        mobileOverlay.classList.remove("active");
-    });
-}
+    <aside class="side-cart" id="sideCart">
+        <div class="side-cart-header">
+            <h3>Seu Carrinho</h3>
+            <button type="button" id="closeCartBtn">× Fechar</button>
+        </div>
 
-if (mobileOverlay) {
-    mobileOverlay.addEventListener("click", () => {
-        mobileMenu.classList.remove("active");
-        mobileOverlay.classList.remove("active");
-    });
-}
-</script>
+        <div class="free-shipping-box">
+            <p id="freeShippingText">Adicione mais R$ 200 para Frete Grátis</p>
 
-<script>
-const openCartBtn = document.getElementById("openCartBtn");
-const closeCartBtn = document.getElementById("closeCartBtn");
-const sideCart = document.getElementById("sideCart");
-const cartOverlay = document.getElementById("cartOverlay");
-const sideCartContent = document.getElementById("sideCartContent");
-const sideCartFooter = document.getElementById("sideCartFooter");
-const freeShippingText = document.getElementById("freeShippingText");
-const freeShippingProgress = document.getElementById("freeShippingProgress");
+            <div class="free-shipping-bar">
+                <div class="free-shipping-progress" id="freeShippingProgress"></div>
+            </div>
+        </div>
 
-let cartUpdateTimers = {};
+        <div id="sideCartContent" class="side-cart-content">
+            <div class="empty-cart-box">
+                <i class="bi bi-cart-fill"></i>
+                <p>Não há itens no carrinho</p>
+            </div>
+        </div>
 
-function formatMoney(value) {
-    return "R$ " + Number(value).toFixed(2).replace(".", ",");
-}
+        <div class="side-cart-footer" id="sideCartFooter"></div>
+    </aside>
 
-function openCart() {
-    sideCart.classList.add("active");
-    cartOverlay.classList.add("active");
-    loadCart();
-}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-function closeCart() {
-    sideCart.classList.remove("active");
-    cartOverlay.classList.remove("active");
-}
+    <script>
+        const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+        const mobileMenu = document.getElementById("mobileMenu");
+        const closeMobileMenu = document.getElementById("closeMobileMenu");
+        const mobileOverlay = document.getElementById("mobileOverlay");
 
-async function loadCart() {
-    try {
-        const response = await fetch("/cart/data/");
-        const data = await response.json();
-
-        freeShippingProgress.style.width = data.free_shipping_progress + "%";
-
-        if (data.free_shipping_remaining > 0) {
-            freeShippingText.innerText = `Adicione mais ${formatMoney(data.free_shipping_remaining)} para Frete Grátis`;
-        } else {
-            freeShippingText.innerText = "Você ganhou Frete Grátis";
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener("click", () => {
+                mobileMenu.classList.add("active");
+                mobileOverlay.classList.add("active");
+            });
         }
 
-        if (data.items.length === 0) {
-            sideCartContent.innerHTML = `
+        if (closeMobileMenu) {
+            closeMobileMenu.addEventListener("click", () => {
+                mobileMenu.classList.remove("active");
+                mobileOverlay.classList.remove("active");
+            });
+        }
+
+        if (mobileOverlay) {
+            mobileOverlay.addEventListener("click", () => {
+                mobileMenu.classList.remove("active");
+                mobileOverlay.classList.remove("active");
+            });
+        }
+    </script>
+
+    <script>
+        const openCartBtn = document.getElementById("openCartBtn");
+        const closeCartBtn = document.getElementById("closeCartBtn");
+        const sideCart = document.getElementById("sideCart");
+        const cartOverlay = document.getElementById("cartOverlay");
+        const sideCartContent = document.getElementById("sideCartContent");
+        const sideCartFooter = document.getElementById("sideCartFooter");
+        const freeShippingText = document.getElementById("freeShippingText");
+        const freeShippingProgress = document.getElementById("freeShippingProgress");
+
+        let cartUpdateTimers = {};
+
+        function formatMoney(value) {
+            return "R$ " + Number(value).toFixed(2).replace(".", ",");
+        }
+
+        function openCart() {
+            sideCart.classList.add("active");
+            cartOverlay.classList.add("active");
+            loadCart();
+        }
+
+        function closeCart() {
+            sideCart.classList.remove("active");
+            cartOverlay.classList.remove("active");
+        }
+
+        async function loadCart() {
+            try {
+                const response = await fetch("/cart/data/");
+                const data = await response.json();
+
+                freeShippingProgress.style.width = data.free_shipping_progress + "%";
+
+                if (data.free_shipping_remaining > 0) {
+                    freeShippingText.innerText = `Adicione mais ${formatMoney(data.free_shipping_remaining)} para Frete Grátis`;
+                } else {
+                    freeShippingText.innerText = "Você ganhou Frete Grátis";
+                }
+
+                if (data.items.length === 0) {
+                    sideCartContent.innerHTML = `
                 <div class="empty-cart-box">
                     <i class="bi bi-cart-fill"></i>
                     <p>Não há itens no carrinho</p>
                 </div>
             `;
 
-            sideCartFooter.innerHTML = `
+                    sideCartFooter.innerHTML = `
                 <a href="/" class="continue-shopping">
                     CONTINUAR COMPRANDO
                 </a>
             `;
 
-            return;
-        }
+                    return;
+                }
 
-        sideCartContent.innerHTML = data.items.map(item => `
+                sideCartContent.innerHTML = data.items.map(item => `
             <div class="cart-item" data-cart-item="${item.cart_key}">
                 <img src="${item.image}" alt="${item.name}">
 
@@ -253,7 +253,7 @@ async function loadCart() {
             </div>
         `).join("");
 
-        sideCartFooter.innerHTML = `
+                sideCartFooter.innerHTML = `
             <div class="cart-total-line">
                 <span>Subtotal</span>
                 <strong id="cartSubtotal">${formatMoney(data.subtotal)}</strong>
@@ -278,112 +278,113 @@ async function loadCart() {
             </a>
         `;
 
-    } catch (error) {
-        console.error("Erro ao carregar carrinho:", error);
-    }
-}
-
-function updateCartTotalsInstantly() {
-    let subtotal = 0;
-
-    document.querySelectorAll("[data-cart-price]").forEach(priceElement => {
-        const unitPrice = Number(priceElement.dataset.unitPrice);
-        const cartKey = priceElement.dataset.cartPrice;
-        const qtyElement = document.querySelector(`[data-cart-qty="${cartKey}"]`);
-
-        if (qtyElement) {
-            const quantity = Number(qtyElement.innerText);
-            subtotal += unitPrice * quantity;
-        }
-    });
-
-    const subtotalElement = document.getElementById("cartSubtotal");
-    const totalElement = document.getElementById("cartTotal");
-
-    if (subtotalElement) {
-        subtotalElement.innerText = formatMoney(subtotal);
-    }
-
-    if (totalElement) {
-        totalElement.innerText = formatMoney(subtotal);
-    }
-
-    const remaining = Math.max(200 - subtotal, 0);
-    const progress = Math.min((subtotal / 200) * 100, 100);
-
-    freeShippingProgress.style.width = progress + "%";
-
-    if (remaining > 0) {
-        freeShippingText.innerText = `Adicione mais ${formatMoney(remaining)} para Frete Grátis`;
-    } else {
-        freeShippingText.innerText = "Você ganhou Frete Grátis";
-    }
-}
-
-async function updateCartItem(cartKey, action) {
-    const qtyElement = document.querySelector(`[data-cart-qty="${cartKey}"]`);
-    const priceElement = document.querySelector(`[data-cart-price="${cartKey}"]`);
-    const itemElement = document.querySelector(`[data-cart-item="${cartKey}"]`);
-
-    if (qtyElement && priceElement) {
-        let currentQty = parseInt(qtyElement.innerText);
-        const unitPrice = Number(priceElement.dataset.unitPrice);
-
-        if (action === "increase") {
-            currentQty += 1;
-        }
-
-        if (action === "decrease") {
-            currentQty -= 1;
-        }
-
-        if (currentQty <= 0) {
-            if (itemElement) {
-                itemElement.style.opacity = "0.4";
+            } catch (error) {
+                console.error("Erro ao carregar carrinho:", error);
             }
-        } else {
-            qtyElement.innerText = currentQty;
-            priceElement.innerText = formatMoney(unitPrice * currentQty);
         }
 
-        updateCartTotalsInstantly();
-    }
+        function updateCartTotalsInstantly() {
+            let subtotal = 0;
 
-    if (cartUpdateTimers[cartKey]) {
-        clearTimeout(cartUpdateTimers[cartKey]);
-    }
+            document.querySelectorAll("[data-cart-price]").forEach(priceElement => {
+                const unitPrice = Number(priceElement.dataset.unitPrice);
+                const cartKey = priceElement.dataset.cartPrice;
+                const qtyElement = document.querySelector(`[data-cart-qty="${cartKey}"]`);
 
-    cartUpdateTimers[cartKey] = setTimeout(async () => {
-        try {
-            const response = await fetch("/cart/update/", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": "{{ csrf_token }}"
-                },
-                body: JSON.stringify({
-                    cart_key: cartKey,
-                    action: action
-                })
+                if (qtyElement) {
+                    const quantity = Number(qtyElement.innerText);
+                    subtotal += unitPrice * quantity;
+                }
             });
 
-            const data = await response.json();
+            const subtotalElement = document.getElementById("cartSubtotal");
+            const totalElement = document.getElementById("cartTotal");
 
-            if (data.success) {
-                loadCart();
+            if (subtotalElement) {
+                subtotalElement.innerText = formatMoney(subtotal);
             }
 
-        } catch (error) {
-            console.error("Erro ao atualizar carrinho:", error);
-            loadCart();
-        }
-    }, 250);
-}
+            if (totalElement) {
+                totalElement.innerText = formatMoney(subtotal);
+            }
 
-if (openCartBtn) openCartBtn.addEventListener("click", openCart);
-if (closeCartBtn) closeCartBtn.addEventListener("click", closeCart);
-if (cartOverlay) cartOverlay.addEventListener("click", closeCart);
-</script>
+            const remaining = Math.max(200 - subtotal, 0);
+            const progress = Math.min((subtotal / 200) * 100, 100);
+
+            freeShippingProgress.style.width = progress + "%";
+
+            if (remaining > 0) {
+                freeShippingText.innerText = `Adicione mais ${formatMoney(remaining)} para Frete Grátis`;
+            } else {
+                freeShippingText.innerText = "Você ganhou Frete Grátis";
+            }
+        }
+
+        async function updateCartItem(cartKey, action) {
+            const qtyElement = document.querySelector(`[data-cart-qty="${cartKey}"]`);
+            const priceElement = document.querySelector(`[data-cart-price="${cartKey}"]`);
+            const itemElement = document.querySelector(`[data-cart-item="${cartKey}"]`);
+
+            if (qtyElement && priceElement) {
+                let currentQty = parseInt(qtyElement.innerText);
+                const unitPrice = Number(priceElement.dataset.unitPrice);
+
+                if (action === "increase") {
+                    currentQty += 1;
+                }
+
+                if (action === "decrease") {
+                    currentQty -= 1;
+                }
+
+                if (currentQty <= 0) {
+                    if (itemElement) {
+                        itemElement.style.opacity = "0.4";
+                    }
+                } else {
+                    qtyElement.innerText = currentQty;
+                    priceElement.innerText = formatMoney(unitPrice * currentQty);
+                }
+
+                updateCartTotalsInstantly();
+            }
+
+            if (cartUpdateTimers[cartKey]) {
+                clearTimeout(cartUpdateTimers[cartKey]);
+            }
+
+            cartUpdateTimers[cartKey] = setTimeout(async () => {
+                try {
+                    const response = await fetch("/cart/update/", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRFToken": "{{ csrf_token }}"
+                        },
+                        body: JSON.stringify({
+                            cart_key: cartKey,
+                            action: action
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        loadCart();
+                    }
+
+                } catch (error) {
+                    console.error("Erro ao atualizar carrinho:", error);
+                    loadCart();
+                }
+            }, 250);
+        }
+
+        if (openCartBtn) openCartBtn.addEventListener("click", openCart);
+        if (closeCartBtn) closeCartBtn.addEventListener("click", closeCart);
+        if (cartOverlay) cartOverlay.addEventListener("click", closeCart);
+    </script>
 
 </body>
+
 </html>
