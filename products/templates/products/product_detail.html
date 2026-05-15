@@ -47,7 +47,7 @@
         </div>
 
         <div class="product-colors">
-            <p>Cor — <span id="selectedColorName">Pre</span></p>
+            <p>Cor — <span id="selectedColorName">Preto</span></p>
 
             <div class="color-options">
 
@@ -90,22 +90,21 @@
 
         <div class="product-buttons">
 
-    <a href="{% url 'cart:checkout_infinitepay' product.id %}" class="buy-now-btn">
-    Comprar agora
-</a>
+            <a href="{% url 'cart:checkout_infinitepay' product.id %}" class="buy-now-btn">
+                Comprar agora
+            </a>
 
-    <button
-        type="button"
-        class="add-cart-btn"
-        data-product-id="{{ product.id }}"
-        data-product-name="{{ product.name }}"
-        data-product-price="{{ product.price }}"
-        data-product-image="{{ product.image.url }}"
-    >
-        Adicionar ao carrinho
-    </button>
+            <button
+                type="button"
+                class="add-cart-btn"
+                id="addCartBtn"
+                data-product-id="{{ product.id }}"
+            >
+                Adicionar ao carrinho
+            </button>
 
-</div>
+        </div>
+
         <div class="product-accordions">
 
             <details>
@@ -238,6 +237,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         images.forEach((imageUrl, index) => {
             const button = document.createElement("button");
+
             button.type = "button";
             button.className = "thumb";
             button.setAttribute("data-image", imageUrl);
@@ -274,7 +274,6 @@ document.addEventListener("DOMContentLoaded", function () {
             });
 
             this.classList.add("active");
-
             this.blur();
 
             renderGallery(images);
@@ -308,42 +307,84 @@ document.addEventListener("DOMContentLoaded", function () {
 
 });
 </script>
-<script>
-    const addCartBtn = document.querySelector(".add-cart-btn");
 
-if (addCartBtn) {
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const addCartBtn = document.getElementById("addCartBtn");
+
+    if (!addCartBtn) return;
+
+    let addingToCart = false;
 
     addCartBtn.addEventListener("click", async function () {
 
-        const productId = this.dataset.productId;
+        if (addingToCart) return;
 
-        const response = await fetch("/cart/add/", {
-            method: "POST",
+        addingToCart = true;
 
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": "{{ csrf_token }}"
-            },
+        const originalText = addCartBtn.innerText;
+        const productId = addCartBtn.dataset.productId;
 
-            body: JSON.stringify({
-                product_id: productId,
-                quantity: 1
-            })
-        });
+        addCartBtn.disabled = true;
+        addCartBtn.innerText = "Adicionando...";
 
-        const data = await response.json();
+        try {
 
-        if (data.success) {
+            const response = await fetch("/cart/add/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                body: JSON.stringify({
+                    product_id: productId,
+                    quantity: 1
+                })
+            });
 
-            if (typeof openCart === "function") {
-                openCart();
+            const data = await response.json();
+
+            if (data.success) {
+
+                addCartBtn.innerText = "Adicionado";
+
+                if (typeof openCart === "function") {
+                    openCart();
+                }
+
+                setTimeout(() => {
+                    addCartBtn.innerText = originalText;
+                    addCartBtn.disabled = false;
+                    addingToCart = false;
+                }, 700);
+
+            } else {
+                addCartBtn.innerText = "Erro ao adicionar";
+
+                setTimeout(() => {
+                    addCartBtn.innerText = originalText;
+                    addCartBtn.disabled = false;
+                    addingToCart = false;
+                }, 1200);
             }
 
+        } catch (error) {
+
+            console.error("Erro ao adicionar ao carrinho:", error);
+
+            addCartBtn.innerText = "Erro ao adicionar";
+
+            setTimeout(() => {
+                addCartBtn.innerText = originalText;
+                addCartBtn.disabled = false;
+                addingToCart = false;
+            }, 1200);
         }
 
     });
 
-}
+});
 </script>
 
 {% endblock %}
