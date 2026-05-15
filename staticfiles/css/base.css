@@ -60,7 +60,7 @@ a {
     z-index: 999;
 }
 
-/* MENU MOBILE BUTTON */
+/* BOTÃO MENU MOBILE */
 
 .mobile-menu-btn {
     display: none;
@@ -252,26 +252,25 @@ a {
     .main-navbar {
         height: 68px;
         min-height: 68px;
+
         padding: 0 14px;
 
         display: grid;
-        grid-template-columns: 44px 1fr 70px;
+        grid-template-columns: 44px 1fr 72px;
+
         align-items: center;
-
-        position: sticky;
-        top: 0;
-
-        overflow: hidden;
     }
 
     .mobile-menu-btn {
         display: flex;
-        width: 44px;
-        height: 44px;
-        align-items: center;
-        justify-content: flex-start;
 
         grid-column: 1;
+
+        width: 44px;
+        height: 44px;
+
+        align-items: center;
+        justify-content: flex-start;
 
         font-size: 26px;
     }
@@ -283,16 +282,12 @@ a {
     .nav-center {
         grid-column: 2;
 
-        height: 68px;
-
         display: flex;
         align-items: center;
         justify-content: center;
     }
 
     .logo {
-        height: 68px;
-
         display: flex;
         align-items: center;
         justify-content: center;
@@ -313,25 +308,22 @@ a {
         align-items: center;
 
         gap: 12px;
-        height: 44px;
 
         flex: none;
     }
 
-    .search-form {
-        display: none;
+    .search-form,
+    .favorite-icon {
+        display: none !important;
     }
 
-    .nav-right .icon-link:nth-of-type(2) {
-        display: none;
-    }
-
-    .icon-link {
-        font-size: 18px;
-    }
-
+    .account-icon,
     .cart-open-btn {
-        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        font-size: 18px;
     }
 }
 
@@ -399,12 +391,16 @@ a {
     right: 6px;
     top: 50%;
     transform: translateY(-50%);
+
     width: 36px;
     height: 36px;
+
     border-radius: 50%;
     border: none;
+
     background: #fff;
     color: #000;
+
     font-size: 18px;
     cursor: pointer;
 }
@@ -459,6 +455,8 @@ a {
     color: #fff;
 }
 
+/* RESPONSIVO FOOTER */
+
 @media (max-width: 900px) {
 
     .risk-footer {
@@ -489,11 +487,15 @@ a {
 .search-input {
     width: 0;
     opacity: 0;
+
     border: none;
     border-bottom: 1px solid #111;
+
     background: transparent;
     outline: none;
+
     font-size: 12px;
+
     transition: all 0.3s ease;
 }
 
@@ -519,10 +521,14 @@ a {
 .cart-overlay {
     position: fixed;
     inset: 0;
+
     background: rgba(0,0,0,.45);
+
     opacity: 0;
     visibility: hidden;
+
     z-index: 9998;
+
     transition: .3s ease;
 }
 
@@ -535,13 +541,19 @@ a {
     position: fixed;
     top: 0;
     right: -430px;
+
     width: 410px;
     max-width: 94%;
     height: 100vh;
+
     background: #fff;
+
     z-index: 9999;
+
     padding: 22px;
+
     transition: .35s ease;
+
     overflow-y: auto;
 }
 
