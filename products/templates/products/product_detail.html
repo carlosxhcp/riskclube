@@ -12,46 +12,81 @@
 <section class="product-page">
 
     <div class="product-gallery">
+
         <div class="product-thumbs"></div>
 
         <div class="product-main-image">
-            <button type="button" class="gallery-arrow left" id="prevImage">‹</button>
-            <img id="mainProductImage" src="{{ product.image.url }}" alt="{{ product.name }}">
-            <button type="button" class="gallery-arrow right" id="nextImage">›</button>
+
+            <button type="button" class="gallery-arrow left" id="prevImage">
+                ‹
+            </button>
+
+            <img
+                id="mainProductImage"
+                src="{{ product.image.url }}"
+                alt="{{ product.name }}"
+            >
+
+            <button type="button" class="gallery-arrow right" id="nextImage">
+                ›
+            </button>
+
         </div>
+
     </div>
 
     <div class="product-content">
 
-        <h1 class="product-title">{{ product.name }}</h1>
+        <h1 class="product-title">
+            {{ product.name }}
+        </h1>
 
         <div class="product-top-info">
+
             <div>
-                <p class="product-price">R$ {{ product.price }}</p>
+
+                <p class="product-price">
+                    R$ {{ product.price }}
+                </p>
 
                 {% if product.installments %}
                 <span class="product-installments">
                     {{ product.installments }}
                 </span>
                 {% endif %}
+
             </div>
 
             <div class="product-size-box">
-                <p>Tamanho — <span id="selectedSizeName"></span></p>
+
+                <p>
+                    Tamanho —
+                    <span id="selectedSizeName"></span>
+                </p>
+
                 <div class="size-options"></div>
+
             </div>
+
         </div>
 
         <div class="product-colors">
-            <p>Cor — <span id="selectedColorName"></span></p>
+
+            <p>
+                Cor —
+                <span id="selectedColorName"></span>
+            </p>
 
             <div class="color-options">
+
+                <!-- COR PADRÃO -->
 
                 <button
                     type="button"
                     class="color-dot active"
                     style="background-color: {{ product.default_color_hex }};"
                     data-color-name="{{ product.default_color_name }}"
+                    data-image="{{ product.image.url }}"
                     data-images='[
                         "{{ product.image.url }}"
                         {% for img in product.images.all %}
@@ -60,18 +95,22 @@
                     ]'
                     data-sizes='[
                         {
-                            "name": "Único"
+                            "name": "900ML"
                         }
                     ]'
                 ></button>
 
+                <!-- VARIANTES -->
+
                 {% for variant in product.variants.all %}
                     {% if variant.active %}
+
                     <button
                         type="button"
                         class="color-dot"
                         style="background-color: {{ variant.color_hex }};"
                         data-color-name="{{ variant.color_name }}"
+                        data-image="{{ variant.image.url }}"
                         data-images='[
                             "{{ variant.image.url }}"
                             {% for img in variant.images.all %}
@@ -88,10 +127,12 @@
                             {% endfor %}
                         ]'
                     ></button>
+
                     {% endif %}
                 {% endfor %}
 
             </div>
+
         </div>
 
         <p class="product-short-text">
@@ -100,7 +141,10 @@
 
         <div class="product-buttons">
 
-            <a href="{% url 'cart:checkout_infinitepay' product.id %}" class="buy-now-btn">
+            <a
+                href="{% url 'cart:checkout_infinitepay' product.id %}"
+                class="buy-now-btn"
+            >
                 Comprar agora
             </a>
 
@@ -124,7 +168,9 @@
 
             <details>
                 <summary>Ver medidas</summary>
-                <p>Confira as opções de tamanho disponíveis acima.</p>
+                <p>
+                    Confira as opções de tamanho disponíveis acima.
+                </p>
             </details>
 
             <details>
@@ -173,25 +219,41 @@
 </section>
 
 <section class="product-video-section">
+
     <video autoplay muted loop playsinline class="product-video">
-        <source src="{% static 'videos/detail-video.mp4' %}" type="video/mp4">
+        <source
+            src="{% static 'videos/detail-video.mp4' %}"
+            type="video/mp4"
+        >
     </video>
+
 </section>
 
 <section class="community-section">
 
-    <h2 class="community-title">COMUNIDADE</h2>
+    <h2 class="community-title">
+        COMUNIDADE
+    </h2>
 
     <div class="community-grid">
+
         {% for item in community_images %}
-            <img src="{{ item.image.url }}" alt="{{ item.alt }}">
+            <img
+                src="{{ item.image.url }}"
+                alt="{{ item.alt }}"
+            >
         {% empty %}
-            <p class="community-empty">Nenhuma imagem cadastrada ainda.</p>
+            <p class="community-empty">
+                Nenhuma imagem cadastrada ainda.
+            </p>
         {% endfor %}
+
     </div>
 
     <p class="community-text">
-        Você pode nos apoiar postando nas redes da forma que se sentir confortável marcando @riskclube — aproveite sua nova garrafa.
+        Você pode nos apoiar postando nas redes da forma
+        que se sentir confortável marcando @riskclube —
+        aproveite sua nova garrafa.
     </p>
 
 </section>
@@ -201,25 +263,33 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const mainImage = document.getElementById("mainProductImage");
     const thumbsContainer = document.querySelector(".product-thumbs");
+
     const colorButtons = document.querySelectorAll(".color-dot");
+
     const selectedColorName = document.getElementById("selectedColorName");
-    const prevBtn = document.getElementById("prevImage");
-    const nextBtn = document.getElementById("nextImage");
+    const selectedSizeName = document.getElementById("selectedSizeName");
 
     const sizeOptions = document.querySelector(".size-options");
-    const selectedSizeName = document.getElementById("selectedSizeName");
+
+    const prevBtn = document.getElementById("prevImage");
+    const nextBtn = document.getElementById("nextImage");
 
     let currentImages = [];
     let currentIndex = 0;
 
     function updateMainImage(index) {
+
         if (!mainImage || !currentImages.length) return;
 
         if (index < 0) {
             currentIndex = currentImages.length - 1;
-        } else if (index >= currentImages.length) {
+        }
+
+        else if (index >= currentImages.length) {
             currentIndex = 0;
-        } else {
+        }
+
+        else {
             currentIndex = index;
         }
 
@@ -237,45 +307,52 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function renderGallery(images) {
+
         if (!thumbsContainer || !images.length) return;
 
         currentImages = images;
         currentIndex = 0;
+
         thumbsContainer.innerHTML = "";
 
         images.forEach((imageUrl, index) => {
+
             const button = document.createElement("button");
 
             button.type = "button";
             button.className = "thumb";
-            button.setAttribute("data-image", imageUrl);
 
             if (index === 0) {
                 button.classList.add("active");
             }
 
-            button.innerHTML = `<img src="${imageUrl}" alt="{{ product.name }}">`;
+            button.innerHTML = `
+                <img src="${imageUrl}" alt="{{ product.name }}">
+            `;
 
             button.addEventListener("click", function () {
                 updateMainImage(index);
             });
 
             thumbsContainer.appendChild(button);
+
         });
 
         updateMainImage(0);
     }
 
     function renderSizes(sizes) {
+
         if (!sizeOptions) return;
 
         sizeOptions.innerHTML = "";
 
         if (!sizes || !sizes.length) {
-            sizes = [{ name: "Único" }];
+            sizes = [{ name: "900ML" }];
         }
 
         sizes.forEach((size, index) => {
+
             const button = document.createElement("button");
 
             button.type = "button";
@@ -289,19 +366,21 @@ document.addEventListener("DOMContentLoaded", function () {
             button.innerText = size.name;
 
             button.addEventListener("click", function () {
+
                 document.querySelectorAll(".size-btn").forEach(btn => {
                     btn.classList.remove("active");
                 });
 
                 this.classList.add("active");
-                this.blur();
 
                 if (selectedSizeName) {
                     selectedSizeName.textContent = size.name;
                 }
+
             });
 
             sizeOptions.appendChild(button);
+
         });
 
         if (selectedSizeName) {
@@ -310,21 +389,27 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     colorButtons.forEach(button => {
+
         button.addEventListener("click", function () {
-            const colorName = this.getAttribute("data-color-name");
+
+            const colorName = this.dataset.colorName;
 
             let images = [];
             let sizes = [];
 
             try {
                 images = JSON.parse(this.dataset.images);
-            } catch (error) {
+            }
+
+            catch (error) {
                 images = [];
             }
 
             try {
                 sizes = JSON.parse(this.dataset.sizes);
-            } catch (error) {
+            }
+
+            catch (error) {
                 sizes = [];
             }
 
@@ -333,7 +418,6 @@ document.addEventListener("DOMContentLoaded", function () {
             });
 
             this.classList.add("active");
-            this.blur();
 
             if (selectedColorName) {
                 selectedColorName.textContent = colorName || "";
@@ -341,7 +425,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
             renderGallery(images);
             renderSizes(sizes);
+
         });
+
     });
 
     if (prevBtn) {
@@ -359,27 +445,34 @@ document.addEventListener("DOMContentLoaded", function () {
     const firstColorButton = document.querySelector(".color-dot.active");
 
     if (firstColorButton) {
+
         let firstImages = [];
         let firstSizes = [];
 
         try {
             firstImages = JSON.parse(firstColorButton.dataset.images);
-        } catch (error) {
+        }
+
+        catch (error) {
             firstImages = [];
         }
 
         try {
             firstSizes = JSON.parse(firstColorButton.dataset.sizes);
-        } catch (error) {
+        }
+
+        catch (error) {
             firstSizes = [];
         }
 
         if (selectedColorName) {
-            selectedColorName.textContent = firstColorButton.dataset.colorName || "";
+            selectedColorName.textContent =
+                firstColorButton.dataset.colorName || "";
         }
 
         renderGallery(firstImages);
         renderSizes(firstSizes);
+
     }
 
 });
@@ -401,35 +494,53 @@ document.addEventListener("DOMContentLoaded", function () {
         addingToCart = true;
 
         const originalText = addCartBtn.innerText;
+
         const productId = addCartBtn.dataset.productId;
 
-        const selectedSizeBtn = document.querySelector(".size-btn.active");
-        const selectedSize = selectedSizeBtn ? selectedSizeBtn.dataset.sizeName : "";
+        const selectedSizeBtn =
+            document.querySelector(".size-btn.active");
 
-        const selectedColorBtn = document.querySelector(".color-dot.active");
-        const selectedColor = selectedColorBtn ? selectedColorBtn.dataset.colorName : "";
+        const selectedColorBtn =
+            document.querySelector(".color-dot.active");
+
+        const selectedSize = selectedSizeBtn
+            ? selectedSizeBtn.dataset.sizeName
+            : "900ML";
+
+        const selectedColor = selectedColorBtn
+            ? selectedColorBtn.dataset.colorName
+            : "";
+
+        const selectedImage = selectedColorBtn
+            ? selectedColorBtn.dataset.image
+            : "";
 
         addCartBtn.disabled = true;
         addCartBtn.innerText = "Adicionando...";
 
         try {
+
             const response = await fetch("/cart/add/", {
                 method: "POST",
+
                 headers: {
                     "Content-Type": "application/json",
                     "X-CSRFToken": "{{ csrf_token }}"
                 },
+
                 body: JSON.stringify({
                     product_id: productId,
                     quantity: 1,
                     size: selectedSize,
-                    color: selectedColor
+                    color: selectedColor,
+                    image: selectedImage
                 })
             });
 
             const data = await response.json();
 
             if (data.success) {
+
                 addCartBtn.innerText = "Adicionado";
 
                 if (typeof openCart === "function") {
@@ -437,30 +548,51 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
 
                 setTimeout(() => {
+
                     addCartBtn.innerText = originalText;
+
                     addCartBtn.disabled = false;
+
                     addingToCart = false;
+
                 }, 700);
-            } else {
+
+            }
+
+            else {
+
                 addCartBtn.innerText = "Erro ao adicionar";
 
                 setTimeout(() => {
+
                     addCartBtn.innerText = originalText;
+
                     addCartBtn.disabled = false;
+
                     addingToCart = false;
+
                 }, 1200);
+
             }
 
-        } catch (error) {
-            console.error("Erro ao adicionar ao carrinho:", error);
+        }
+
+        catch (error) {
+
+            console.error(error);
 
             addCartBtn.innerText = "Erro ao adicionar";
 
             setTimeout(() => {
+
                 addCartBtn.innerText = originalText;
+
                 addCartBtn.disabled = false;
+
                 addingToCart = false;
+
             }, 1200);
+
         }
 
     });

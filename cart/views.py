@@ -11,30 +11,43 @@ from django.views.decorators.http import require_POST
 from products.models import Product
 
 
-def checkout_infinitepay(request, product_id):
+FREE_SHIPPING_LIMIT = Decimal("250.00")
 
+
+def money_to_cents(value):
+    return int(Decimal(str(value)) * 100)
+
+
+def get_cart_subtotal(cart):
+    subtotal = Decimal("0.00")
+
+    for item in cart.values():
+        quantity = int(item.get("quantity", 1))
+        price = Decimal(str(item.get("price", 0)))
+        subtotal += price * quantity
+
+    return subtotal
+
+
+def checkout_infinitepay(request, product_id):
     product = get_object_or_404(Product, id=product_id)
 
     payload = {
         "handle": settings.INFINITEPAY_HANDLE,
-
         "redirect_url": f"{settings.SITE_URL}/sucesso/",
-
         "items": [
             {
                 "quantity": 1,
-
-                "price": int(product.price * 100),
-
-                "description": product.name
+                "price": money_to_cents(product.price),
+                "description": product.name,
             }
-        ]
+        ],
     }
 
     response = requests.post(
         "https://api.checkout.infinitepay.io/links",
         json=payload,
-        timeout=15
+        timeout=15,
     )
 
     print(response.status_code)
@@ -49,25 +62,24 @@ def checkout_infinitepay(request, product_id):
 
 
 def cart_data(request):
-
     cart = request.session.get("cart", {})
+    shipping = request.session.get("shipping")
 
     items = []
     subtotal = Decimal("0.00")
 
     for cart_key, item in cart.items():
-
         quantity = int(item.get("quantity", 1))
         price = Decimal(str(item.get("price", 0)))
 
         item_subtotal = price * quantity
-
         subtotal += item_subtotal
 
         items.append({
             "cart_key": cart_key,
             "name": item.get("name", "Produto"),
             "size": item.get("size", ""),
+            "color": item.get("color", ""),
             "quantity": quantity,
             "price": float(price),
             "subtotal": float(item_subtotal),
@@ -75,69 +87,96 @@ def cart_data(request):
             "installments": f"6x de R$ {(price / 6):.2f}".replace(".", ","),
         })
 
-    free_shipping_limit = Decimal("200.00")
+    if subtotal >= FREE_SHIPPING_LIMIT:
+        shipping_price = Decimal("0.00")
 
-    remaining = free_shipping_limit - subtotal
+        if shipping:
+            shipping["price"] = 0
+            shipping["name"] = "Frete grátis"
+            request.session["shipping"] = shipping
+            request.session.modified = True
+
+    else:
+        shipping_price = Decimal(str(shipping.get("price", 0))) if shipping else Decimal("0.00")
+
+    remaining = FREE_SHIPPING_LIMIT - subtotal
 
     if remaining < 0:
         remaining = Decimal("0.00")
 
     progress = min(
-        (subtotal / free_shipping_limit) * 100,
-        100
-    ) if free_shipping_limit > 0 else 0
+        (subtotal / FREE_SHIPPING_LIMIT) * 100,
+        100,
+    ) if FREE_SHIPPING_LIMIT > 0 else 0
+
+    total = subtotal + shipping_price
 
     return JsonResponse({
         "items": items,
         "subtotal": float(subtotal),
         "discount": 0,
-        "total": float(subtotal),
+        "shipping": shipping,
+        "shipping_price": float(shipping_price),
+        "total": float(total),
         "free_shipping_remaining": float(remaining),
         "free_shipping_progress": float(progress),
+        "free_shipping_limit": float(FREE_SHIPPING_LIMIT),
     })
 
 
 @require_POST
 def cart_add_ajax(request):
-
-    data = json.loads(request.body)
+    try:
+        data = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({
+            "success": False,
+            "error": "Dados inválidos.",
+        }, status=400)
 
     product_id = data.get("product_id")
     quantity = int(data.get("quantity", 1))
+
+    size = data.get("size") or "Único"
+    color = data.get("color") or ""
 
     product = get_object_or_404(Product, id=product_id)
 
     cart = request.session.get("cart", {})
 
-    cart_key = str(product.id)
+    cart_key = f"{product.id}_{color}_{size}"
 
     if cart_key in cart:
-
         cart[cart_key]["quantity"] += quantity
-
     else:
-
         cart[cart_key] = {
             "product_id": product.id,
             "name": product.name,
             "price": str(product.price),
             "quantity": quantity,
-            "size": "900ML",
-            "image": product.image.url if product.image else "",
+            "size": size,
+            "color": color,
+            "image": data.get("image") or (product.image.url if product.image else ""),
         }
 
     request.session["cart"] = cart
     request.session.modified = True
 
     return JsonResponse({
-        "success": True
+        "success": True,
+        "cart_key": cart_key,
     })
 
 
 @require_POST
 def cart_update(request):
-
-    data = json.loads(request.body)
+    try:
+        data = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({
+            "success": False,
+            "error": "Dados inválidos.",
+        }, status=400)
 
     cart_key = str(data.get("cart_key"))
     action = data.get("action")
@@ -146,31 +185,232 @@ def cart_update(request):
 
     if cart_key not in cart:
         return JsonResponse({
-            "success": False
+            "success": False,
+            "error": "Produto não encontrado no carrinho.",
         })
 
     if action == "increase":
-
         cart[cart_key]["quantity"] += 1
 
     elif action == "decrease":
-
         cart[cart_key]["quantity"] -= 1
 
         if cart[cart_key]["quantity"] <= 0:
             del cart[cart_key]
 
+    else:
+        return JsonResponse({
+            "success": False,
+            "error": "Ação inválida.",
+        }, status=400)
+
     request.session["cart"] = cart
     request.session.modified = True
 
     return JsonResponse({
-        "success": True
+        "success": True,
+    })
+
+
+@require_POST
+def calculate_shipping(request):
+    try:
+        data = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({
+            "success": False,
+            "error": "Dados inválidos.",
+        }, status=400)
+
+    cep = str(data.get("cep", "")).replace("-", "").replace(".", "").strip()
+    cart = request.session.get("cart", {})
+
+    if not cep or len(cep) != 8 or not cep.isdigit():
+        return JsonResponse({
+            "success": False,
+            "error": "CEP inválido.",
+        }, status=400)
+
+    if not cart:
+        return JsonResponse({
+            "success": False,
+            "error": "Carrinho vazio.",
+        }, status=400)
+
+    subtotal = get_cart_subtotal(cart)
+
+    if subtotal >= FREE_SHIPPING_LIMIT:
+        shipping = {
+            "id": "free",
+            "name": "Frete grátis",
+            "company": "",
+            "price": 0,
+            "time": "",
+            "cep": cep,
+        }
+
+        request.session["shipping"] = shipping
+        request.session.modified = True
+
+        return JsonResponse({
+            "success": True,
+            "free_shipping": True,
+            "options": [
+                {
+                    "id": "free",
+                    "name": "Frete grátis",
+                    "company": "",
+                    "price": 0,
+                    "delivery_time": "",
+                    "cep": cep,
+                }
+            ],
+        })
+
+    products = []
+
+    for item in cart.values():
+        quantity = int(item.get("quantity", 1))
+        price = Decimal(str(item.get("price", 0)))
+
+        products.append({
+            "id": str(item.get("product_id", "")),
+            "width": 20,
+            "height": 5,
+            "length": 30,
+            "weight": 0.3,
+            "insurance_value": float(price),
+            "quantity": quantity,
+        })
+
+    env = getattr(settings, "MELHOR_ENVIO_ENV", "sandbox")
+
+    base_url = (
+        "https://sandbox.melhorenvio.com.br"
+        if env == "sandbox"
+        else "https://www.melhorenvio.com.br"
+    )
+
+    payload = {
+        "from": {
+            "postal_code": settings.MELHOR_ENVIO_ORIGIN_CEP,
+        },
+        "to": {
+            "postal_code": cep,
+        },
+        "products": products,
+        "options": {
+            "receipt": False,
+            "own_hand": False,
+            "collect": False,
+        },
+    }
+
+    headers = {
+        "Authorization": f"Bearer {settings.MELHOR_ENVIO_TOKEN}",
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "User-Agent": "Risk Clube",
+    }
+
+    try:
+        response = requests.post(
+            f"{base_url}/api/v2/me/shipment/calculate",
+            json=payload,
+            headers=headers,
+            timeout=20,
+        )
+    except requests.RequestException:
+        return JsonResponse({
+            "success": False,
+            "error": "Erro ao conectar com o Melhor Envio.",
+        }, status=500)
+
+    if response.status_code not in [200, 201]:
+        return JsonResponse({
+            "success": False,
+            "error": "Erro ao calcular frete.",
+            "details": response.text,
+        }, status=response.status_code)
+
+    results = response.json()
+
+    options = []
+
+    for option in results:
+        if option.get("error"):
+            continue
+
+        price = option.get("price") or option.get("custom_price")
+
+        if not price:
+            continue
+
+        company = option.get("company") or {}
+
+        options.append({
+            "id": str(option.get("id")),
+            "name": option.get("name", ""),
+            "company": company.get("name", ""),
+            "price": float(Decimal(str(price))),
+            "delivery_time": option.get("delivery_time", ""),
+            "cep": cep,
+        })
+
+    if not options:
+        return JsonResponse({
+            "success": False,
+            "error": "Nenhuma opção de frete disponível para esse CEP.",
+        }, status=400)
+
+    return JsonResponse({
+        "success": True,
+        "free_shipping": False,
+        "options": options,
+    })
+
+
+@require_POST
+def select_shipping(request):
+    try:
+        data = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({
+            "success": False,
+            "error": "Dados inválidos.",
+        }, status=400)
+
+    cart = request.session.get("cart", {})
+    subtotal = get_cart_subtotal(cart)
+
+    if subtotal >= FREE_SHIPPING_LIMIT:
+        price = 0
+        name = "Frete grátis"
+    else:
+        price = float(data.get("price", 0))
+        name = data.get("name", "Frete")
+
+    shipping = {
+        "id": data.get("id"),
+        "name": name,
+        "company": data.get("company", ""),
+        "price": price,
+        "time": data.get("delivery_time", ""),
+        "cep": data.get("cep", ""),
+    }
+
+    request.session["shipping"] = shipping
+    request.session.modified = True
+
+    return JsonResponse({
+        "success": True,
+        "shipping": shipping,
     })
 
 
 def checkout_infinitepay_cart(request):
-
     cart = request.session.get("cart", {})
+    shipping = request.session.get("shipping")
 
     if not cart:
         return HttpResponseBadRequest("Carrinho vazio.")
@@ -178,27 +418,51 @@ def checkout_infinitepay_cart(request):
     items = []
 
     for cart_key, item in cart.items():
+        name = item.get("name", "Produto")
+        size = item.get("size", "")
+        color = item.get("color", "")
+
+        description_parts = [name]
+
+        if color:
+            description_parts.append(f"Cor: {color}")
+
+        if size:
+            description_parts.append(f"Tamanho: {size}")
+
+        description = " | ".join(description_parts)
 
         items.append({
             "quantity": int(item.get("quantity", 1)),
-            "price": int(
-                Decimal(str(item.get("price", 0))) * 100
-            ),
-            "description": item.get("name", "Produto")
+            "price": money_to_cents(item.get("price", 0)),
+            "description": description,
         })
+
+    if shipping:
+        shipping_price = Decimal(str(shipping.get("price", 0)))
+
+        if shipping_price > 0:
+            shipping_description = f"Frete - {shipping.get('name', 'Entrega')}"
+
+            if shipping.get("company"):
+                shipping_description += f" | {shipping.get('company')}"
+
+            items.append({
+                "quantity": 1,
+                "price": money_to_cents(shipping_price),
+                "description": shipping_description,
+            })
 
     payload = {
         "handle": settings.INFINITEPAY_HANDLE,
-
         "redirect_url": f"{settings.SITE_URL}/sucesso/",
-
-        "items": items
+        "items": items,
     }
 
     response = requests.post(
         "https://api.checkout.infinitepay.io/links",
         json=payload,
-        timeout=15
+        timeout=15,
     )
 
     print(response.status_code)

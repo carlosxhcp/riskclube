@@ -10,86 +10,177 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/base.css' %}?v=3">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'css/base.css' %}?v=4">
+
     <style>
-@media (max-width: 768px) {
-    .main-navbar {
-        height: 64px !important;
-        min-height: 64px !important;
-        padding: 0 10px !important;
-        display: grid !important;
-        grid-template-columns: 40px minmax(0, 1fr) 86px !important;
-        align-items: center !important;
-        overflow: visible !important;
-    }
+        @media (max-width: 768px) {
+            .main-navbar {
+                height: 64px !important;
+                min-height: 64px !important;
+                padding: 0 10px !important;
+                display: grid !important;
+                grid-template-columns: 40px minmax(0, 1fr) 86px !important;
+                align-items: center !important;
+                overflow: visible !important;
+            }
 
-    .mobile-menu-btn {
-        display: flex !important;
-        grid-column: 1 !important;
-        width: 40px !important;
-        height: 40px !important;
-        align-items: center !important;
-        justify-content: flex-start !important;
-        font-size: 26px !important;
-    }
+            .mobile-menu-btn {
+                display: flex !important;
+                grid-column: 1 !important;
+                width: 40px !important;
+                height: 40px !important;
+                align-items: center !important;
+                justify-content: flex-start !important;
+                font-size: 26px !important;
+            }
 
-    .nav-left {
-        display: none !important;
-    }
+            .nav-left {
+                display: none !important;
+            }
 
-    .nav-center {
-        grid-column: 2 !important;
-        width: 100% !important;
-        min-width: 0 !important;
-        display: flex !important;
-        justify-content: center !important;
-        overflow: hidden !important;
-    }
+            .nav-center {
+                grid-column: 2 !important;
+                width: 100% !important;
+                min-width: 0 !important;
+                display: flex !important;
+                justify-content: center !important;
+                overflow: hidden !important;
+            }
 
-    .logo img {
-        max-width: 105px !important;
-        max-height: 62px !important;
-    }
+            .logo img {
+                max-width: 105px !important;
+                max-height: 62px !important;
+            }
 
-    .nav-right {
-        grid-column: 3 !important;
-        width: 86px !important;
-        min-width: 86px !important;
-        display: flex !important;
-        justify-content: flex-end !important;
-        align-items: center !important;
-        gap: 12px !important;
-        overflow: visible !important;
-    }
+            .nav-right {
+                grid-column: 3 !important;
+                width: 86px !important;
+                min-width: 86px !important;
+                display: flex !important;
+                justify-content: flex-end !important;
+                align-items: center !important;
+                gap: 12px !important;
+                overflow: visible !important;
+            }
 
-    .search-form,
-    .favorite-icon {
-        display: none !important;
-    }
+            .search-form,
+            .favorite-icon {
+                display: none !important;
+            }
 
-    .account-icon,
-    .cart-open-btn {
-        display: flex !important;
-        width: 28px !important;
-        min-width: 28px !important;
-        height: 28px !important;
-        align-items: center !important;
-        justify-content: center !important;
-        font-size: 20px !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        color: #000 !important;
-    }
-}
-</style>
+            .account-icon,
+            .cart-open-btn {
+                display: flex !important;
+                width: 28px !important;
+                min-width: 28px !important;
+                height: 28px !important;
+                align-items: center !important;
+                justify-content: center !important;
+                font-size: 20px !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                color: #000 !important;
+            }
+        }
+
+        .cart-shipping-box {
+            margin: 18px 0;
+            padding: 14px 0;
+            border-top: 1px solid #e5e5e5;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .cart-shipping-title {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            color: #111;
+        }
+
+        .cart-shipping-form {
+            display: flex;
+            gap: 8px;
+        }
+
+        .cart-shipping-form input {
+            width: 100%;
+            height: 42px;
+            border: 1px solid #ddd;
+            padding: 0 12px;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .cart-shipping-form button {
+            height: 42px;
+            border: 1px solid #111;
+            background: #111;
+            color: #fff;
+            padding: 0 14px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .cart-shipping-message {
+            margin-top: 8px;
+            font-size: 12px;
+            color: #555;
+        }
+
+        .shipping-options {
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .shipping-option {
+            width: 100%;
+            border: 1px solid #ddd;
+            background: #fff;
+            padding: 10px;
+            text-align: left;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .shipping-option:hover,
+        .shipping-option.active {
+            border-color: #111;
+            background: #f7f7f7;
+        }
+
+        .shipping-option-top {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #111;
+        }
+
+        .shipping-option-bottom {
+            margin-top: 4px;
+            font-size: 11px;
+            color: #666;
+        }
+
+        .cart-total-line.shipping-line {
+            color: #333;
+        }
+    </style>
+
     {% block extra_css %}{% endblock %}
 </head>
 
 <body>
 
-    <div class="top-bar">FRETE GRÁTIS EM PEDIDOS ACIMA DE R$200</div>
+    <div class="top-bar">FRETE GRÁTIS EM PEDIDOS ACIMA DE R$250</div>
 
     <nav class="main-navbar">
 
@@ -105,18 +196,11 @@
 
         <div class="nav-center">
             <a href="/" class="logo">
-                <img src="{% static 'img/logo.png' %}" alt="Risk Clube">
+                <img style="width: 40%;" src="{% static 'img/logo-black.png' %}" alt="Risk Clube">
             </a>
         </div>
 
         <div class="nav-right">
-            <form action="{% url 'pages:home' %}#products" method="GET" class="search-form">
-                <input type="text" name="q" placeholder="Pesquisar..." class="search-input">
-                <button type="submit" class="icon-link search-button">
-                    <i class="bi bi-search"></i>
-                </button>
-            </form>
-
             <a href="#" class="icon-link account-icon">
                 <i class="bi bi-person"></i>
             </a>
@@ -149,7 +233,7 @@
     <footer class="risk-footer">
         <div class="footer-left">
             <a href="/" class="footer-logo">
-                <img src="{% static 'img/logo.png' %}" alt="Risk">
+                <img src="{% static 'img/logo-white .png' %}" alt="Risk">
             </a>
 
             <p class="footer-newsletter-text">
@@ -194,7 +278,7 @@
         </div>
 
         <div class="free-shipping-box">
-            <p id="freeShippingText">Adicione mais R$ 200 para Frete Grátis</p>
+            <p id="freeShippingText">Adicione mais R$ 250 para Frete Grátis</p>
 
             <div class="free-shipping-bar">
                 <div class="free-shipping-progress" id="freeShippingProgress"></div>
@@ -252,9 +336,10 @@
         const freeShippingProgress = document.getElementById("freeShippingProgress");
 
         let cartUpdateTimers = {};
+        let selectedShippingId = null;
 
         function formatMoney(value) {
-            return "R$ " + Number(value).toFixed(2).replace(".", ",");
+            return "R$ " + Number(value || 0).toFixed(2).replace(".", ",");
         }
 
         function openCart() {
@@ -281,76 +366,227 @@
                     freeShippingText.innerText = "Você ganhou Frete Grátis";
                 }
 
+                if (data.shipping && data.shipping.id) {
+                    selectedShippingId = String(data.shipping.id);
+                }
+
                 if (data.items.length === 0) {
                     sideCartContent.innerHTML = `
-                <div class="empty-cart-box">
-                    <i class="bi bi-cart-fill"></i>
-                    <p>Não há itens no carrinho</p>
-                </div>
-            `;
+                        <div class="empty-cart-box">
+                            <i class="bi bi-cart-fill"></i>
+                            <p>Não há itens no carrinho</p>
+                        </div>
+                    `;
 
                     sideCartFooter.innerHTML = `
-                <a href="/" class="continue-shopping">
-                    CONTINUAR COMPRANDO
-                </a>
-            `;
+                        <a href="/" class="continue-shopping">
+                            CONTINUAR COMPRANDO
+                        </a>
+                    `;
 
                     return;
                 }
 
                 sideCartContent.innerHTML = data.items.map(item => `
-            <div class="cart-item" data-cart-item="${item.cart_key}">
-                <img src="${item.image}" alt="${item.name}">
+                    <div class="cart-item" data-cart-item="${item.cart_key}">
+                        <img src="${item.image}" alt="${item.name}">
 
-                <div class="cart-item-info">
-                    <div class="cart-item-name">${item.name}</div>
-                    <div class="cart-item-size">Tamanho: ${item.size || "-"}</div>
-                    <div class="cart-item-installments">${item.installments}</div>
+                        <div class="cart-item-info">
+                            <div class="cart-item-name">${item.name}</div>
 
-                    <div class="cart-qty">
-                        <button type="button" onclick="updateCartItem('${item.cart_key}', 'decrease')">-</button>
-                        <span data-cart-qty="${item.cart_key}">${item.quantity}</span>
-                        <button type="button" onclick="updateCartItem('${item.cart_key}', 'increase')">+</button>
+                            <div class="cart-item-size">
+                                Cor: ${item.color || "-"}
+                            </div>
+
+                            <div class="cart-item-size">
+                                Tamanho: ${item.size || "-"}
+                            </div>
+
+                            <div class="cart-item-installments">${item.installments}</div>
+
+                            <div class="cart-qty">
+                                <button type="button" onclick="updateCartItem('${item.cart_key}', 'decrease')">-</button>
+                                <span data-cart-qty="${item.cart_key}">${item.quantity}</span>
+                                <button type="button" onclick="updateCartItem('${item.cart_key}', 'increase')">+</button>
+                            </div>
+                        </div>
+
+                        <div
+                            class="cart-item-price"
+                            data-cart-price="${item.cart_key}"
+                            data-unit-price="${item.price}"
+                        >
+                            ${formatMoney(item.subtotal)}
+                        </div>
                     </div>
-                </div>
+                `).join("");
 
-                <div
-                    class="cart-item-price"
-                    data-cart-price="${item.cart_key}"
-                    data-unit-price="${item.price}"
-                >
-                    ${formatMoney(item.subtotal)}
-                </div>
-            </div>
-        `).join("");
+                const shippingName = data.shipping ? data.shipping.name : "Não calculado";
+                const shippingPrice = data.shipping_price || 0;
 
                 sideCartFooter.innerHTML = `
-            <div class="cart-total-line">
-                <span>Subtotal</span>
-                <strong id="cartSubtotal">${formatMoney(data.subtotal)}</strong>
-            </div>
+                    <div class="cart-shipping-box">
+                        <div class="cart-shipping-title">Calcular frete</div>
 
-            <div class="cart-total-line">
-                <span>Desconto</span>
-                <strong id="cartDiscount">- ${formatMoney(data.discount)}</strong>
-            </div>
+                        <div class="cart-shipping-form">
+                            <input type="text" id="shippingCepInput" placeholder="Digite seu CEP" maxlength="9">
+                            <button type="button" id="calculateShippingBtn">Calcular</button>
+                        </div>
 
-            <div class="cart-total-line">
-                <span>Total</span>
-                <strong id="cartTotal">${formatMoney(data.total)}</strong>
-            </div>
+                        <div id="shippingMessage" class="cart-shipping-message"></div>
+                        <div id="shippingOptions" class="shipping-options"></div>
+                    </div>
 
-            <a href="/cart/infinitepay/checkout/" class="checkout-btn">
-                FINALIZAR COMPRA
-            </a>
+                    <div class="cart-total-line">
+                        <span>Subtotal</span>
+                        <strong id="cartSubtotal">${formatMoney(data.subtotal)}</strong>
+                    </div>
 
-            <a href="/" class="continue-shopping">
-                CONTINUAR COMPRANDO
-            </a>
-        `;
+                    <div class="cart-total-line">
+                        <span>Desconto</span>
+                        <strong id="cartDiscount">- ${formatMoney(data.discount)}</strong>
+                    </div>
+
+                    <div class="cart-total-line shipping-line">
+                        <span>Frete</span>
+                        <strong id="cartShipping">${shippingPrice > 0 ? formatMoney(shippingPrice) : shippingName}</strong>
+                    </div>
+
+                    <div class="cart-total-line">
+                        <span>Total</span>
+                        <strong id="cartTotal">${formatMoney(data.total)}</strong>
+                    </div>
+
+                    <a href="/cart/infinitepay/checkout/" class="checkout-btn">
+                        FINALIZAR COMPRA
+                    </a>
+
+                    <a href="/" class="continue-shopping">
+                        CONTINUAR COMPRANDO
+                    </a>
+                `;
+
+                const calculateShippingBtn = document.getElementById("calculateShippingBtn");
+                const shippingCepInput = document.getElementById("shippingCepInput");
+
+                if (calculateShippingBtn) {
+                    calculateShippingBtn.addEventListener("click", calculateShipping);
+                }
+
+                if (shippingCepInput) {
+                    shippingCepInput.addEventListener("input", function () {
+                        let value = this.value.replace(/\D/g, "");
+
+                        if (value.length > 5) {
+                            value = value.replace(/^(\d{5})(\d)/, "$1-$2");
+                        }
+
+                        this.value = value;
+                    });
+
+                    shippingCepInput.addEventListener("keydown", function (event) {
+                        if (event.key === "Enter") {
+                            event.preventDefault();
+                            calculateShipping();
+                        }
+                    });
+
+                    if (data.shipping && data.shipping.cep) {
+                        shippingCepInput.value = data.shipping.cep;
+                    }
+                }
 
             } catch (error) {
                 console.error("Erro ao carregar carrinho:", error);
+            }
+        }
+
+        async function calculateShipping() {
+            const input = document.getElementById("shippingCepInput");
+            const message = document.getElementById("shippingMessage");
+            const optionsBox = document.getElementById("shippingOptions");
+
+            if (!input || !message || !optionsBox) return;
+
+            const cep = input.value.replace(/\D/g, "");
+
+            if (cep.length !== 8) {
+                message.innerText = "Digite um CEP válido.";
+                optionsBox.innerHTML = "";
+                return;
+            }
+
+            message.innerText = "Calculando frete...";
+            optionsBox.innerHTML = "";
+
+            try {
+                const response = await fetch("/cart/calculate-shipping/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": "{{ csrf_token }}"
+                    },
+                    body: JSON.stringify({ cep: cep })
+                });
+
+                const data = await response.json();
+
+                if (!data.success) {
+                    message.innerText = data.error || "Erro ao calcular frete.";
+                    return;
+                }
+
+                if (!data.options || data.options.length === 0) {
+                    message.innerText = "Nenhuma opção de frete encontrada.";
+                    return;
+                }
+
+                message.innerText = "Escolha uma opção de entrega:";
+
+                optionsBox.innerHTML = data.options.map(option => `
+                    <button
+                        type="button"
+                        class="shipping-option ${String(option.id) === selectedShippingId ? "active" : ""}"
+                        onclick='selectShipping(${JSON.stringify(option)})'
+                    >
+                        <div class="shipping-option-top">
+                            <span>${option.name || "Entrega"} ${option.company ? "- " + option.company : ""}</span>
+                            <strong>${Number(option.price) > 0 ? formatMoney(option.price) : "Grátis"}</strong>
+                        </div>
+
+                        <div class="shipping-option-bottom">
+                            ${option.delivery_time ? "Prazo: " + option.delivery_time + " dias úteis" : "Entrega disponível"}
+                        </div>
+                    </button>
+                `).join("");
+
+            } catch (error) {
+                console.error("Erro ao calcular frete:", error);
+                message.innerText = "Erro ao calcular frete.";
+            }
+        }
+
+        async function selectShipping(option) {
+            try {
+                selectedShippingId = String(option.id);
+
+                const response = await fetch("/cart/select-shipping/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": "{{ csrf_token }}"
+                    },
+                    body: JSON.stringify(option)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    loadCart();
+                }
+
+            } catch (error) {
+                console.error("Erro ao selecionar frete:", error);
             }
         }
 
@@ -379,8 +615,8 @@
                 totalElement.innerText = formatMoney(subtotal);
             }
 
-            const remaining = Math.max(200 - subtotal, 0);
-            const progress = Math.min((subtotal / 200) * 100, 100);
+            const remaining = Math.max(250 - subtotal, 0);
+            const progress = Math.min((subtotal / 250) * 100, 100);
 
             freeShippingProgress.style.width = progress + "%";
 

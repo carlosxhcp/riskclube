@@ -117,3 +117,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 #INFINITEPAY
 INFINITEPAY_HANDLE = config("INFINITEPAY_HANDLE", default="")
 SITE_URL = config("SITE_URL", default="https://riskclube.vercel.app")
+
+#MELHORENVIO
+MELHOR_ENVIO_TOKEN = config("MELHOR_ENVIO_TOKEN", default="")
+MELHOR_ENVIO_ORIGIN_CEP = config("MELHOR_ENVIO_ORIGIN_CEP", default="")
+MELHOR_ENVIO_ENV = config("MELHOR_ENVIO_ENV", default="sandbox")
+FREE_SHIPPING_LIMIT = config("FREE_SHIPPING_LIMIT", default=250, cast=int)

@@ -19,4 +19,6 @@ urlpatterns = [
         views.checkout_infinitepay_cart,
         name="checkout_infinitepay_cart"
     ),
+    path("cart/calculate-shipping/", views.calculate_shipping, name="calculate_shipping"),
+    path("cart/select-shipping/", views.select_shipping, name="select_shipping"),
 ]
