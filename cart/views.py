@@ -180,6 +180,7 @@ def cart_update(request):
 
     cart_key = str(data.get("cart_key"))
     action = data.get("action")
+    change = data.get("change")
 
     cart = request.session.get("cart", {})
 
@@ -189,14 +190,15 @@ def cart_update(request):
             "error": "Produto não encontrado no carrinho.",
         })
 
-    if action == "increase":
-        cart[cart_key]["quantity"] += 1
+    if change is not None:
+        change = int(change)
+        cart[cart_key]["quantity"] = int(cart[cart_key]["quantity"]) + change
+
+    elif action == "increase":
+        cart[cart_key]["quantity"] = int(cart[cart_key]["quantity"]) + 1
 
     elif action == "decrease":
-        cart[cart_key]["quantity"] -= 1
-
-        if cart[cart_key]["quantity"] <= 0:
-            del cart[cart_key]
+        cart[cart_key]["quantity"] = int(cart[cart_key]["quantity"]) - 1
 
     else:
         return JsonResponse({
@@ -204,13 +206,15 @@ def cart_update(request):
             "error": "Ação inválida.",
         }, status=400)
 
+    if int(cart[cart_key]["quantity"]) <= 0:
+        del cart[cart_key]
+
     request.session["cart"] = cart
     request.session.modified = True
 
     return JsonResponse({
         "success": True,
     })
-
 
 @require_POST
 def calculate_shipping(request):

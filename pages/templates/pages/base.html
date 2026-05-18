@@ -15,7 +15,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
 
-    <link rel="stylesheet" href="{% static 'css/base.css' %}?v=8">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}?v=9">
 
     <style>
         @media (max-width: 768px) {
@@ -88,127 +88,37 @@
             }
         }
 
-        .cart-shipping-box {
-            margin-top: 18px;
-            padding-top: 18px;
-            border-top: 1px solid #e5e5e5;
-        }
-
-        .cart-shipping-title {
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            margin-bottom: 10px;
-        }
-
-        .cart-shipping-form {
+        .cart-qty-controls {
             display: flex;
+            align-items: center;
             gap: 8px;
-        }
-
-        .cart-shipping-form input {
-            width: 100%;
-            height: 44px;
-            border: 1px solid #ddd;
-            padding: 0 12px;
-            font-size: 13px;
-            outline: none;
-        }
-
-        .cart-shipping-form button {
-            border: none;
-            background: #111;
-            color: #fff;
-            height: 44px;
-            padding: 0 16px;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            white-space: nowrap;
-        }
-
-        .cart-shipping-message {
             margin-top: 10px;
-            font-size: 12px;
-            color: #555;
         }
 
-        .shipping-options {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 12px;
-        }
-
-        .shipping-option {
-            width: 100%;
+        .cart-qty-controls button {
+            width: 28px;
+            height: 28px;
             border: 1px solid #ddd;
             background: #fff;
-            padding: 14px;
-            text-align: left;
+            color: #111;
+            font-size: 16px;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
             transition: .2s ease;
         }
 
-        .shipping-option:hover,
-        .shipping-option.active {
+        .cart-qty-controls button:hover {
             border-color: #111;
-            background: #f8f8f8;
         }
 
-        .shipping-option-top {
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
+        .cart-qty-controls span {
+            min-width: 18px;
+            text-align: center;
             font-size: 13px;
-            font-weight: 700;
-            color: #111;
-        }
-
-        .shipping-option-bottom {
-            margin-top: 4px;
-            font-size: 12px;
-            color: #666;
-        }
-
-        .selected-shipping-box {
-            margin-top: 12px;
-            border: 1px solid #111;
-            background: #f8f8f8;
-            padding: 14px;
-            display: none;
-            justify-content: space-between;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .selected-shipping-box div {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .selected-shipping-box strong {
-            font-size: 13px;
-            color: #111;
-        }
-
-        .selected-shipping-box small {
-            font-size: 11px;
-            color: #666;
-        }
-
-        .selected-shipping-box span {
-            font-size: 13px;
-            font-weight: 700;
-            color: #111;
-        }
-
-        .selected-shipping-box button {
-            border: none;
-            background: transparent;
-            text-decoration: underline;
-            font-size: 11px;
-            cursor: pointer;
+            font-weight: 600;
             color: #111;
         }
     </style>
@@ -313,8 +223,6 @@
         const freeShippingText = document.getElementById("freeShippingText");
         const freeShippingProgress = document.getElementById("freeShippingProgress");
 
-        let selectedShippingId = null;
-
         function formatMoney(value) {
             return "R$ " + Number(value || 0).toFixed(2).replace(".", ",");
         }
@@ -331,7 +239,6 @@
         }
 
         async function loadCart() {
-
             const response = await fetch("/cart/data/");
             const data = await response.json();
 
@@ -345,7 +252,6 @@
             }
 
             if (data.items.length === 0) {
-
                 sideCartContent.innerHTML = `
                     <div class="empty-cart-box">
                         <i class="bi bi-cart-fill"></i>
@@ -354,7 +260,6 @@
                 `;
 
                 sideCartFooter.innerHTML = "";
-
                 return;
             }
 
@@ -381,6 +286,12 @@
                             ${item.installments}
                         </div>
 
+                        <div class="cart-qty-controls">
+                            <button type="button" onclick="updateCartQty('${item.cart_key}', -1)">−</button>
+                            <span>${item.quantity}</span>
+                            <button type="button" onclick="updateCartQty('${item.cart_key}', 1)">+</button>
+                        </div>
+
                     </div>
 
                     <div class="cart-item-price">
@@ -391,210 +302,36 @@
             `).join("");
 
             sideCartFooter.innerHTML = `
-
-                <div class="cart-shipping-box">
-
-                    <div class="cart-shipping-title">
-                        Calcular frete
-                    </div>
-
-                    <div class="cart-shipping-form">
-                        <input
-                            type="text"
-                            id="shippingCepInput"
-                            placeholder="Digite seu CEP"
-                            maxlength="9"
-                        >
-
-                        <button type="button" id="calculateShippingBtn">
-                            Calcular
-                        </button>
-                    </div>
-
-                    <div id="shippingMessage" class="cart-shipping-message"></div>
-
-                    <div id="shippingOptions" class="shipping-options"></div>
-
-                    <div id="selectedShippingBox" class="selected-shipping-box">
-
-                        <div>
-                            <strong id="selectedShippingName"></strong>
-                            <small id="selectedShippingTime"></small>
-                        </div>
-
-                        <span id="selectedShippingPrice"></span>
-
-                        <button type="button" id="changeShippingBtn">
-                            Alterar
-                        </button>
-
-                    </div>
-
-                </div>
-
                 <div class="cart-total-line">
                     <span>Subtotal</span>
-                    <strong id="cartSubtotal">${formatMoney(data.subtotal)}</strong>
-                </div>
-
-                <div class="cart-total-line">
-                    <span>Frete</span>
-                    <strong id="cartShipping">
-                        ${data.shipping_price > 0 ? formatMoney(data.shipping_price) : "—"}
-                    </strong>
+                    <strong>${formatMoney(data.subtotal)}</strong>
                 </div>
 
                 <div class="cart-total-line">
                     <span>Total</span>
-                    <strong id="cartTotal">${formatMoney(data.total)}</strong>
+                    <strong>${formatMoney(data.total)}</strong>
                 </div>
 
                 <a href="/cart/infinitepay/checkout/" class="checkout-btn">
                     FINALIZAR COMPRA
                 </a>
             `;
-
-            const calculateShippingBtn = document.getElementById("calculateShippingBtn");
-
-            if (calculateShippingBtn) {
-                calculateShippingBtn.addEventListener("click", calculateShipping);
-            }
-
-            const changeShippingBtn = document.getElementById("changeShippingBtn");
-
-            if (changeShippingBtn) {
-                changeShippingBtn.addEventListener("click", () => {
-
-                    const optionsBox = document.getElementById("shippingOptions");
-                    const selectedBox = document.getElementById("selectedShippingBox");
-
-                    optionsBox.style.display = "flex";
-                    selectedBox.style.display = "none";
-                });
-            }
         }
 
-        async function calculateShipping() {
-
-            const input = document.getElementById("shippingCepInput");
-            const message = document.getElementById("shippingMessage");
-            const optionsBox = document.getElementById("shippingOptions");
-
-            const cep = input.value.replace(/\D/g, "");
-
-            if (cep.length !== 8) {
-                message.innerText = "Digite um CEP válido.";
-                return;
-            }
-
-            message.innerText = "Calculando frete...";
-            optionsBox.innerHTML = "";
-
-            const response = await fetch("/cart/calculate-shipping/", {
+        async function updateCartQty(cartKey, change) {
+            await fetch("/cart/update/", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "X-CSRFToken": "{{ csrf_token }}"
                 },
                 body: JSON.stringify({
-                    cep: cep
+                    cart_key: cartKey,
+                    change: change
                 })
             });
 
-            const data = await response.json();
-
-            if (!data.success) {
-                message.innerText = data.error || "Erro ao calcular frete.";
-                return;
-            }
-
-            message.innerText = "Escolha uma opção de entrega:";
-
-            optionsBox.innerHTML = data.options.map(option => `
-
-                <button
-                    type="button"
-                    class="shipping-option"
-                    onclick='selectShipping(${JSON.stringify(option)})'
-                >
-
-                    <div class="shipping-option-top">
-
-                        <span>
-                            ${option.name || "Entrega"}
-                            ${option.company ? "- " + option.company : ""}
-                        </span>
-
-                        <strong>
-                            ${Number(option.price) > 0 ? formatMoney(option.price) : "Grátis"}
-                        </strong>
-
-                    </div>
-
-                    <div class="shipping-option-bottom">
-                        Entrega em ${option.delivery_time} dias úteis
-                    </div>
-
-                </button>
-
-            `).join("");
-        }
-
-        async function selectShipping(option) {
-
-            selectedShippingId = String(option.id);
-
-            const response = await fetch("/cart/select-shipping/", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": "{{ csrf_token }}"
-                },
-                body: JSON.stringify(option)
-            });
-
-            const data = await response.json();
-
-            if (data.success) {
-
-                const optionsBox = document.getElementById("shippingOptions");
-                const selectedBox = document.getElementById("selectedShippingBox");
-
-                const selectedName = document.getElementById("selectedShippingName");
-                const selectedTime = document.getElementById("selectedShippingTime");
-                const selectedPrice = document.getElementById("selectedShippingPrice");
-
-                optionsBox.style.display = "none";
-                selectedBox.style.display = "flex";
-
-                selectedName.innerText =
-                    `${option.name} ${option.company ? "- " + option.company : ""}`;
-
-                selectedTime.innerText =
-                    `Entrega em ${option.delivery_time} dias úteis`;
-
-                selectedPrice.innerText =
-                    Number(option.price) > 0
-                    ? formatMoney(option.price)
-                    : "Grátis";
-
-                const subtotalText =
-                    document.getElementById("cartSubtotal")
-                    .innerText
-                    .replace("R$", "")
-                    .replace(".", "")
-                    .replace(",", ".");
-
-                const subtotal = Number(subtotalText);
-
-                document.getElementById("cartShipping").innerText =
-                    Number(option.price) > 0
-                    ? formatMoney(option.price)
-                    : "Grátis";
-
-                document.getElementById("cartTotal").innerText =
-                    formatMoney(subtotal + Number(option.price));
-            }
+            loadCart();
         }
 
         if (openCartBtn) {

@@ -27,6 +27,8 @@ class Product(models.Model):
     available = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
 
+    is_vip = models.BooleanField(default=False, verbose_name="Produto VIP")
+
     class Meta:
         ordering = ["-created"]
 

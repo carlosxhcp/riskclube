@@ -29,7 +29,7 @@
     <div class="home-product-grid">
 
         {% for product in products %}
-        <div class="home-product-card">
+        <div class="product-card {% if product.is_vip %}product-card-vip{% endif %}">
 
             <a href="{{ product.get_absolute_url }}" class="home-product-image-link">
                 <img src="{{ product.image.url }}" alt="{{ product.name }}" class="home-product-image">
@@ -82,5 +82,53 @@
     </p>
 
 </section>
+
+<canvas id="mockupCanvas" width="600" height="700"></canvas>
+
+<input type="file" id="uploadImage" accept="image/*">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+
+<script>
+const canvas = new fabric.Canvas("mockupCanvas");
+
+fabric.Image.fromURL("/static/img/produtos/1.png", function(img) {
+  img.set({
+    left: 0,
+    top: 0,
+    selectable: false
+  });
+
+  img.scaleToWidth(600);
+  canvas.add(img);
+  canvas.sendToBack(img);
+});
+
+document.getElementById("uploadImage").addEventListener("change", function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+
+  reader.onload = function(event) {
+    fabric.Image.fromURL(event.target.result, function(userImg) {
+      userImg.set({
+        left: 220,
+        top: 270,
+        scaleX: 0.25,
+        scaleY: 0.25,
+        angle: -2,
+        opacity: 0.95,
+        cornerStyle: "circle"
+      });
+
+      canvas.add(userImg);
+      canvas.setActiveObject(userImg);
+    });
+  };
+
+  reader.readAsDataURL(file);
+});
+</script>
 
 {% endblock %}

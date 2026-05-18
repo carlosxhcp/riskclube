@@ -262,20 +262,3 @@
         height: 150px;
     }
 }
-
-
-.product-card-vip {
-    background: #050505;
-    color: #c0c0c0;
-}
-
-.product-card-vip .product-name,
-.product-card-vip .product-price {
-    color: #c0c0c0;
-}
-
-.product-card-vip .buy-button {
-    border-color: #c0c0c0;
-    color: #c0c0c0;
-    background: transparent;
-}
