@@ -29,39 +29,7 @@ def get_cart_subtotal(cart):
     return subtotal
 
 
-def checkout_infinitepay(request, product_id):
-    product = get_object_or_404(Product, id=product_id)
-
-    payload = {
-        "handle": settings.INFINITEPAY_HANDLE,
-        "redirect_url": f"{settings.SITE_URL}/sucesso/",
-        "items": [
-            {
-                "quantity": 1,
-                "price": money_to_cents(product.price),
-                "description": product.name,
-            }
-        ],
-    }
-
-    response = requests.post(
-        "https://api.checkout.infinitepay.io/links",
-        json=payload,
-        timeout=15,
-    )
-
-    print(response.status_code)
-    print(response.text)
-
-    if response.status_code not in [200, 201]:
-        return HttpResponseBadRequest(response.text)
-
-    data = response.json()
-
-    return redirect(data["url"])
-
-
-def cart_data(request):
+def get_cart_payload(request):
     cart = request.session.get("cart", {})
     shipping = request.session.get("shipping")
 
@@ -95,7 +63,6 @@ def cart_data(request):
             shipping["name"] = "Frete grátis"
             request.session["shipping"] = shipping
             request.session.modified = True
-
     else:
         shipping_price = Decimal(str(shipping.get("price", 0))) if shipping else Decimal("0.00")
 
@@ -111,7 +78,8 @@ def cart_data(request):
 
     total = subtotal + shipping_price
 
-    return JsonResponse({
+    return {
+        "success": True,
         "items": items,
         "subtotal": float(subtotal),
         "discount": 0,
@@ -121,7 +89,40 @@ def cart_data(request):
         "free_shipping_remaining": float(remaining),
         "free_shipping_progress": float(progress),
         "free_shipping_limit": float(FREE_SHIPPING_LIMIT),
-    })
+    }
+
+
+def checkout_infinitepay(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+
+    payload = {
+        "handle": settings.INFINITEPAY_HANDLE,
+        "redirect_url": f"{settings.SITE_URL}/sucesso/",
+        "items": [
+            {
+                "quantity": 1,
+                "price": money_to_cents(product.price),
+                "description": product.name,
+            }
+        ],
+    }
+
+    response = requests.post(
+        "https://api.checkout.infinitepay.io/links",
+        json=payload,
+        timeout=15,
+    )
+
+    if response.status_code not in [200, 201]:
+        return HttpResponseBadRequest(response.text)
+
+    data = response.json()
+
+    return redirect(data["url"])
+
+
+def cart_data(request):
+    return JsonResponse(get_cart_payload(request))
 
 
 @require_POST
@@ -143,7 +144,6 @@ def cart_add_ajax(request):
     product = get_object_or_404(Product, id=product_id)
 
     cart = request.session.get("cart", {})
-
     cart_key = f"{product.id}_{color}_{size}"
 
     if cart_key in cart:
@@ -162,10 +162,10 @@ def cart_add_ajax(request):
     request.session["cart"] = cart
     request.session.modified = True
 
-    return JsonResponse({
-        "success": True,
-        "cart_key": cart_key,
-    })
+    payload = get_cart_payload(request)
+    payload["cart_key"] = cart_key
+
+    return JsonResponse(payload)
 
 
 @require_POST
@@ -188,11 +188,10 @@ def cart_update(request):
         return JsonResponse({
             "success": False,
             "error": "Produto não encontrado no carrinho.",
-        })
+        }, status=404)
 
     if change is not None:
-        change = int(change)
-        cart[cart_key]["quantity"] = int(cart[cart_key]["quantity"]) + change
+        cart[cart_key]["quantity"] = int(cart[cart_key]["quantity"]) + int(change)
 
     elif action == "increase":
         cart[cart_key]["quantity"] = int(cart[cart_key]["quantity"]) + 1
@@ -212,9 +211,8 @@ def cart_update(request):
     request.session["cart"] = cart
     request.session.modified = True
 
-    return JsonResponse({
-        "success": True,
-    })
+    return JsonResponse(get_cart_payload(request))
+
 
 @require_POST
 def calculate_shipping(request):
@@ -251,7 +249,7 @@ def calculate_shipping(request):
             "price": 0,
             "time": "",
             "cep": cep,
-            "icon": "https://cdn-icons-png.flaticon.com/512/891/891462.png",
+            "icon": "",
         }
 
         request.session["shipping"] = shipping
@@ -268,7 +266,7 @@ def calculate_shipping(request):
                     "price": 0,
                     "delivery_time": "",
                     "cep": cep,
-                    "icon": "https://cdn-icons-png.flaticon.com/512/891/891462.png",
+                    "icon": "",
                 }
             ],
         })
@@ -340,7 +338,6 @@ def calculate_shipping(request):
         }, status=response.status_code)
 
     results = response.json()
-
     options = []
 
     for option in results:
@@ -351,7 +348,6 @@ def calculate_shipping(request):
         option_name_lower = option_name.lower()
 
         company_data = option.get("company") or {}
-
         company_name = (company_data.get("name") or "").strip()
         company_name_lower = company_name.lower()
 
@@ -363,26 +359,14 @@ def calculate_shipping(request):
 
         allow_option = False
 
-        # SEDEX
         if "sedex" in option_name_lower:
             allow_option = True
 
-            if not company_icon:
-                company_icon = "https://logodownload.org/wp-content/uploads/2017/02/correios-logo-8.png"
-
-        # JADLOG
         elif "jadlog" in company_name_lower or "jadlog.com" in option_name_lower:
             allow_option = True
 
-            if not company_icon:
-                company_icon = "https://companieslogo.com/img/orig/JADLOG.SA_BIG-2e3c0b66.png"
-
-        # LOGGI EXPRESS
         elif "loggi" in company_name_lower and "express" in option_name_lower:
             allow_option = True
-
-            if not company_icon:
-                company_icon = "https://seeklogo.com/images/L/loggi-logo-D6841C5E88-seeklogo.com.png"
 
         if not allow_option:
             continue
@@ -414,6 +398,7 @@ def calculate_shipping(request):
         "options": options,
     })
 
+
 @require_POST
 def select_shipping(request):
     try:
@@ -430,9 +415,11 @@ def select_shipping(request):
     if subtotal >= FREE_SHIPPING_LIMIT:
         price = 0
         name = "Frete grátis"
+        icon = ""
     else:
         price = float(data.get("price", 0))
         name = data.get("name", "Frete")
+        icon = data.get("icon", "")
 
     shipping = {
         "id": data.get("id"),
@@ -441,15 +428,13 @@ def select_shipping(request):
         "price": price,
         "time": data.get("delivery_time", ""),
         "cep": data.get("cep", ""),
+        "icon": icon,
     }
 
     request.session["shipping"] = shipping
     request.session.modified = True
 
-    return JsonResponse({
-        "success": True,
-        "shipping": shipping,
-    })
+    return JsonResponse(get_cart_payload(request))
 
 
 def checkout_infinitepay_cart(request):
@@ -508,9 +493,6 @@ def checkout_infinitepay_cart(request):
         json=payload,
         timeout=15,
     )
-
-    print(response.status_code)
-    print(response.text)
 
     if response.status_code not in [200, 201]:
         return HttpResponseBadRequest(response.text)

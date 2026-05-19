@@ -14,7 +14,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
 
-    <link rel="stylesheet" href="{% static 'css/base.css' %}?v=10">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}?v=11">
 
     <style>
         @media (max-width: 768px) {
@@ -113,6 +113,11 @@
             border-color: #111;
         }
 
+        .cart-qty-controls button:disabled {
+            opacity: .45;
+            cursor: not-allowed;
+        }
+
         .cart-qty-controls span {
             min-width: 18px;
             text-align: center;
@@ -204,6 +209,11 @@
         .mini-shipping-option:hover,
         .mini-shipping-option.selected {
             border-color: #111;
+        }
+
+        .mini-shipping-option:disabled {
+            opacity: .55;
+            cursor: not-allowed;
         }
 
         .mini-shipping-option-main {
@@ -348,6 +358,7 @@
         const freeShippingProgress = document.getElementById("freeShippingProgress");
 
         let shippingOptions = [];
+        let cartBusy = false;
 
         function formatMoney(value) {
             return "R$ " + Number(value || 0).toFixed(2).replace(".", ",");
@@ -367,6 +378,14 @@
             return 0;
         }
 
+        function setCartBusy(status) {
+            cartBusy = status;
+
+            document.querySelectorAll(".cart-qty-controls button, .mini-shipping-option, #miniShippingBtn").forEach(btn => {
+                btn.disabled = status;
+            });
+        }
+
         function openCart() {
             sideCart.classList.add("active");
             cartOverlay.classList.add("active");
@@ -381,7 +400,10 @@
         async function loadCart() {
             const response = await fetch("/cart/data/");
             const data = await response.json();
+            renderCart(data);
+        }
 
+        function renderCart(data) {
             freeShippingProgress.style.width = data.free_shipping_progress + "%";
 
             if (data.free_shipping_remaining > 0) {
@@ -405,11 +427,9 @@
 
             sideCartContent.innerHTML = data.items.map(item => `
                 <div class="cart-item">
-
                     <img src="${item.image}" alt="${item.name}">
 
                     <div class="cart-item-info">
-
                         <div class="cart-item-name">
                             ${item.name}
                         </div>
@@ -431,13 +451,11 @@
                             <span>${item.quantity}</span>
                             <button type="button" onclick="updateCartQty('${item.cart_key}', 1)">+</button>
                         </div>
-
                     </div>
 
                     <div class="cart-item-price">
                         ${formatMoney(item.subtotal)}
                     </div>
-
                 </div>
             `).join("");
 
@@ -555,6 +573,8 @@
         }
 
         async function calculateMiniShipping() {
+            if (cartBusy) return;
+
             const cepInput = document.getElementById("miniShippingCep");
             const messageBox = document.getElementById("miniShippingMessage");
             const optionsBox = document.getElementById("miniShippingOptions");
@@ -648,38 +668,74 @@
         }
 
         async function selectMiniShipping(index) {
+            if (cartBusy) return;
+
             const option = shippingOptions[index];
 
             if (!option) {
                 return;
             }
 
-            await fetch("/cart/select-shipping/", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": "{{ csrf_token }}"
-                },
-                body: JSON.stringify(option)
-            });
+            setCartBusy(true);
 
-            await loadCart();
+            try {
+                const response = await fetch("/cart/select-shipping/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": "{{ csrf_token }}"
+                    },
+                    body: JSON.stringify(option)
+                });
+
+                const data = await response.json();
+
+                if (!response.ok || !data.success) {
+                    alert(data.error || "Erro ao selecionar frete.");
+                    return;
+                }
+
+                renderCart(data);
+
+            } catch (error) {
+                alert("Erro ao selecionar frete.");
+            } finally {
+                setCartBusy(false);
+            }
         }
 
         async function updateCartQty(cartKey, change) {
-            await fetch("/cart/update/", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": "{{ csrf_token }}"
-                },
-                body: JSON.stringify({
-                    cart_key: cartKey,
-                    change: change
-                })
-            });
+            if (cartBusy) return;
 
-            loadCart();
+            setCartBusy(true);
+
+            try {
+                const response = await fetch("/cart/update/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": "{{ csrf_token }}"
+                    },
+                    body: JSON.stringify({
+                        cart_key: cartKey,
+                        change: change
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok || !data.success) {
+                    alert(data.error || "Erro ao atualizar carrinho.");
+                    return;
+                }
+
+                renderCart(data);
+
+            } catch (error) {
+                alert("Erro ao atualizar carrinho.");
+            } finally {
+                setCartBusy(false);
+            }
         }
 
         if (openCartBtn) {
