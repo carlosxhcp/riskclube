@@ -11,10 +11,10 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
 
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap"
         rel="stylesheet">
 
-    <link rel="stylesheet" href="{% static 'css/base.css' %}?v=13">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}?v=14">
 
     <style>
         @media (max-width: 768px) {
@@ -277,6 +277,222 @@
             text-decoration: underline;
             cursor: pointer;
         }
+
+        .newsletter-popup-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .48);
+            backdrop-filter: blur(4px);
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: .3s ease;
+        }
+
+        .newsletter-popup-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .newsletter-popup {
+            width: 920px;
+            max-width: calc(100vw - 20px);
+            min-height: 640px;
+            background: #fff;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            position: relative;
+            overflow: hidden;
+            border-radius: 28px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, .28);
+        }
+
+        .newsletter-close {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            width: 38px;
+            height: 38px;
+            border: 0;
+            background: transparent;
+            font-size: 20px;
+            color: #111;
+            z-index: 5;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: .2s ease;
+        }
+
+        .newsletter-close:hover {
+            transform: scale(1.08);
+        }
+
+        .newsletter-image {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .newsletter-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .newsletter-content {
+            padding: 70px 55px 55px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: #fff;
+        }
+
+        .newsletter-logo {
+            width: 145px;
+            margin-bottom: 38px;
+        }
+
+        .newsletter-content h2 {
+            font-size: 62px;
+            line-height: 1;
+            font-weight: 900;
+            color: #000;
+            margin-bottom: 34px;
+            letter-spacing: -.05em;
+        }
+
+        .newsletter-content p {
+            font-size: 24px;
+            line-height: 1.55;
+            color: #333;
+            margin-bottom: 52px;
+        }
+
+        .newsletter-form {
+            width: 100%;
+            max-width: 360px;
+        }
+
+        .newsletter-form input {
+            width: 100%;
+            height: 60px;
+            border: 0;
+            border-bottom: 1px solid #999;
+            outline: none;
+            font-size: 28px;
+            color: #111;
+            background: transparent;
+            margin-bottom: 28px;
+            transition: .2s ease;
+        }
+
+        .newsletter-form input:focus {
+            border-color: #111;
+        }
+
+        .newsletter-form input::placeholder {
+            color: #777;
+        }
+
+        .newsletter-form button {
+            width: 100%;
+            height: 66px;
+            border: 0;
+            border-radius: 999px;
+            background: #000;
+            color: #fff;
+            font-size: 30px;
+            font-weight: 900;
+            letter-spacing: -.02em;
+            transition: .2s ease;
+            cursor: pointer;
+        }
+
+        .newsletter-form button:hover {
+            opacity: .93;
+            transform: translateY(-1px);
+        }
+
+        .newsletter-no {
+            margin-top: 34px;
+            border: 0;
+            background: transparent;
+            font-size: 18px;
+            font-weight: 600;
+            color: #111;
+            cursor: pointer;
+            transition: .2s ease;
+        }
+
+        .newsletter-no:hover {
+            opacity: .65;
+        }
+
+        @media (max-width: 768px) {
+            .newsletter-popup {
+                grid-template-columns: 1fr;
+                width: calc(100vw - 20px);
+                min-height: auto;
+                max-height: 92vh;
+                overflow-y: auto;
+                border-radius: 22px;
+            }
+
+            .newsletter-image {
+                height: 300px;
+            }
+
+            .newsletter-content {
+                padding: 42px 24px 34px;
+            }
+
+            .newsletter-logo {
+                width: 105px;
+                margin-bottom: 22px;
+            }
+
+            .newsletter-content h2 {
+                font-size: 42px;
+                margin-bottom: 22px;
+            }
+
+            .newsletter-content p {
+                font-size: 18px;
+                margin-bottom: 34px;
+            }
+
+            .newsletter-form {
+                max-width: 100%;
+            }
+
+            .newsletter-form input {
+                height: 54px;
+                font-size: 22px;
+                margin-bottom: 20px;
+            }
+
+            .newsletter-form button {
+                height: 58px;
+                font-size: 22px;
+            }
+
+            .newsletter-no {
+                margin-top: 22px;
+                font-size: 15px;
+            }
+
+            .newsletter-close {
+                top: 12px;
+                right: 12px;
+            }
+        }
     </style>
 
     {% block extra_css %}{% endblock %}
@@ -342,6 +558,45 @@
 
     {% block content %}{% endblock %}
 
+    <div class="newsletter-popup-overlay" id="newsletterPopup">
+        <div class="newsletter-popup">
+
+            <button class="newsletter-close" id="closeNewsletterPopup" type="button">
+                <i class="bi bi-x-lg"></i>
+            </button>
+
+            <div class="newsletter-image">
+                <img src="{% static 'img/popup.jpg' %}" alt="Risk Clube">
+            </div>
+
+            <div class="newsletter-content">
+                <img src="{% static 'img/logo-black.png' %}" alt="Risk Clube" class="newsletter-logo">
+
+                <h2>GANHE R$15</h2>
+
+                <p>
+                    Coloque seu email abaixo<br>
+                    para receber seu cupom.
+                </p>
+
+                <form method="POST" action="/newsletter/" class="newsletter-form">
+                    {% csrf_token %}
+
+                    <input type="email" name="email" placeholder="Email" required>
+
+                    <button type="submit">
+                        LOGIN
+                    </button>
+                </form>
+
+                <button type="button" class="newsletter-no" id="noNewsletterPopup">
+                    NÃO, OBRIGADO
+                </button>
+            </div>
+
+        </div>
+    </div>
+
     <div class="cart-overlay" id="cartOverlay"></div>
 
     <aside class="side-cart" id="sideCart">
@@ -384,6 +639,10 @@
         const freeShippingText = document.getElementById("freeShippingText");
         const freeShippingProgress = document.getElementById("freeShippingProgress");
         const cartCountBadge = document.getElementById("cartCountBadge");
+
+        const newsletterPopup = document.getElementById("newsletterPopup");
+        const closeNewsletterPopup = document.getElementById("closeNewsletterPopup");
+        const noNewsletterPopup = document.getElementById("noNewsletterPopup");
 
         let shippingOptions = [];
         let cartBusy = false;
@@ -810,6 +1069,41 @@
             } finally {
                 setCartBusy(false);
             }
+        }
+
+        function closeNewsletter() {
+            if (!newsletterPopup) return;
+
+            newsletterPopup.classList.remove("active");
+            localStorage.setItem("newsletter_closed", "true");
+        }
+
+        window.addEventListener("load", () => {
+            if (!newsletterPopup) return;
+
+            const alreadyClosed = localStorage.getItem("newsletter_closed");
+
+            if (!alreadyClosed) {
+                setTimeout(() => {
+                    newsletterPopup.classList.add("active");
+                }, 1200);
+            }
+        });
+
+        if (closeNewsletterPopup) {
+            closeNewsletterPopup.addEventListener("click", closeNewsletter);
+        }
+
+        if (noNewsletterPopup) {
+            noNewsletterPopup.addEventListener("click", closeNewsletter);
+        }
+
+        if (newsletterPopup) {
+            newsletterPopup.addEventListener("click", (e) => {
+                if (e.target === newsletterPopup) {
+                    closeNewsletter();
+                }
+            });
         }
 
         if (openCartBtn) {
