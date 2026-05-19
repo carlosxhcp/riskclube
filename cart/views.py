@@ -64,7 +64,13 @@ def get_cart_payload(request):
             request.session["shipping"] = shipping
             request.session.modified = True
     else:
-        shipping_price = Decimal(str(shipping.get("price", 0))) if shipping else Decimal("0.00")
+        if shipping and shipping.get("id") == "free":
+            request.session.pop("shipping", None)
+            request.session.modified = True
+            shipping = None
+            shipping_price = Decimal("0.00")
+        else:
+            shipping_price = Decimal(str(shipping.get("price", 0))) if shipping else Decimal("0.00")
 
     remaining = FREE_SHIPPING_LIMIT - subtotal
 
