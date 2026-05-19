@@ -14,7 +14,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
 
-    <link rel="stylesheet" href="{% static 'css/base.css' %}?v=11">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}?v=12">
 
     <style>
         @media (max-width: 768px) {
@@ -285,7 +285,6 @@
         </div>
 
         <div class="nav-right">
-
             <a href="#" class="icon-link account-icon">
                 <i class="bi bi-person"></i>
             </a>
@@ -465,64 +464,88 @@
         function renderCartFooter(data) {
             const shippingPrice = getShippingPrice(data);
             const shipping = data.shipping;
+            const hasFreeShipping = Number(data.free_shipping_remaining || 0) <= 0;
 
             sideCartFooter.innerHTML = `
-                <div class="mini-shipping-box">
-                    <div class="mini-shipping-title">Calcular frete</div>
+                ${hasFreeShipping ? `
+                    <div class="mini-shipping-box">
+                        <div class="mini-shipping-title">Frete</div>
 
-                    <div id="miniShippingSelected">
-                        ${shipping ? `
-                            <div class="mini-shipping-option selected">
-                                <div class="mini-shipping-option-main">
-                                    <div class="mini-shipping-option-left">
-                                        ${shipping.icon ? `
-                                            <img
-                                                src="${shipping.icon}"
-                                                alt="${shipping.company || shipping.name}"
-                                                class="mini-shipping-icon"
-                                            >
-                                        ` : ""}
+                        <div class="mini-shipping-option selected">
+                            <div class="mini-shipping-option-main">
+                                <div class="mini-shipping-option-left">
+                                    <i class="bi bi-truck" style="font-size:22px;"></i>
 
-                                        <div>
-                                            <div>${shipping.name || "Frete"}</div>
-
-                                            <div class="mini-shipping-option-sub">
-                                                ${shipping.company ? shipping.company + " • " : ""}
-                                                ${shipping.time ? shipping.time + " dias úteis" : ""}
-                                                ${shipping.cep ? "CEP: " + shipping.cep : ""}
-                                            </div>
+                                    <div>
+                                        <div>Frete grátis</div>
+                                        <div class="mini-shipping-option-sub">
+                                            Pedido acima de R$ 250
                                         </div>
                                     </div>
-
-                                    <strong>${shippingPrice > 0 ? formatMoney(shippingPrice) : "Grátis"}</strong>
                                 </div>
+
+                                <strong>Grátis</strong>
                             </div>
-
-                            <button type="button" class="mini-change-shipping" onclick="showShippingForm()">
-                                Trocar frete
-                            </button>
-                        ` : ""}
+                        </div>
                     </div>
+                ` : `
+                    <div class="mini-shipping-box">
+                        <div class="mini-shipping-title">Calcular frete</div>
 
-                    <div id="miniShippingFormBox" style="${shipping ? "display:none;" : ""}">
-                        <div class="mini-shipping-form">
-                            <input
-                                type="text"
-                                id="miniShippingCep"
-                                placeholder="Digite seu CEP"
-                                maxlength="9"
-                                inputmode="numeric"
-                            >
+                        <div id="miniShippingSelected">
+                            ${shipping ? `
+                                <div class="mini-shipping-option selected">
+                                    <div class="mini-shipping-option-main">
+                                        <div class="mini-shipping-option-left">
+                                            ${shipping.icon ? `
+                                                <img
+                                                    src="${shipping.icon}"
+                                                    alt="${shipping.company || shipping.name}"
+                                                    class="mini-shipping-icon"
+                                                >
+                                            ` : ""}
 
-                            <button type="button" id="miniShippingBtn" onclick="calculateMiniShipping()">
-                                Calcular
-                            </button>
+                                            <div>
+                                                <div>${shipping.name || "Frete"}</div>
+
+                                                <div class="mini-shipping-option-sub">
+                                                    ${shipping.company ? shipping.company + " • " : ""}
+                                                    ${shipping.time ? shipping.time + " dias úteis" : ""}
+                                                    ${shipping.cep ? "CEP: " + shipping.cep : ""}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <strong>${shippingPrice > 0 ? formatMoney(shippingPrice) : "Grátis"}</strong>
+                                    </div>
+                                </div>
+
+                                <button type="button" class="mini-change-shipping" onclick="showShippingForm()">
+                                    Trocar frete
+                                </button>
+                            ` : ""}
                         </div>
 
-                        <div class="mini-shipping-message" id="miniShippingMessage"></div>
-                        <div class="mini-shipping-options" id="miniShippingOptions"></div>
+                        <div id="miniShippingFormBox" style="${shipping ? "display:none;" : ""}">
+                            <div class="mini-shipping-form">
+                                <input
+                                    type="text"
+                                    id="miniShippingCep"
+                                    placeholder="Digite seu CEP"
+                                    maxlength="9"
+                                    inputmode="numeric"
+                                >
+
+                                <button type="button" id="miniShippingBtn" onclick="calculateMiniShipping()">
+                                    Calcular
+                                </button>
+                            </div>
+
+                            <div class="mini-shipping-message" id="miniShippingMessage"></div>
+                            <div class="mini-shipping-options" id="miniShippingOptions"></div>
+                        </div>
                     </div>
-                </div>
+                `}
 
                 <div class="cart-total-line">
                     <span>Subtotal</span>
@@ -531,7 +554,7 @@
 
                 <div class="cart-total-line">
                     <span>Frete</span>
-                    <strong>${shipping ? (shippingPrice > 0 ? formatMoney(shippingPrice) : "Grátis") : "Calcule"}</strong>
+                    <strong>${hasFreeShipping ? "Grátis" : (shipping ? formatMoney(shippingPrice) : "Calcule")}</strong>
                 </div>
 
                 <div class="cart-total-line">
