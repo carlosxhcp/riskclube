@@ -28,3 +28,7 @@ def shop(request):
         "products": products,
         "query": query,
     })
+
+
+def mockup_3d(request):
+    return render(request, "mockup_3d.html")
