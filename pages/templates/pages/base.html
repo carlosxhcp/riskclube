@@ -14,7 +14,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
 
-    <link rel="stylesheet" href="{% static 'css/base.css' %}?v=12">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}?v=13">
 
     <style>
         @media (max-width: 768px) {
@@ -85,6 +85,28 @@
                 margin: 0 !important;
                 color: #000 !important;
             }
+        }
+
+        .cart-open-btn {
+            position: relative;
+        }
+
+        .cart-count-badge {
+            position: absolute;
+            top: -5px;
+            right: -8px;
+            min-width: 17px;
+            height: 17px;
+            padding: 0 5px;
+            border-radius: 999px;
+            background: #000;
+            color: #fff;
+            font-size: 10px;
+            font-weight: 700;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
         }
 
         .cart-qty-controls {
@@ -285,6 +307,7 @@
         </div>
 
         <div class="nav-right">
+
             <a href="#" class="icon-link account-icon">
                 <i class="bi bi-person"></i>
             </a>
@@ -295,7 +318,12 @@
 
             <button type="button" class="icon-link cart-open-btn" id="openCartBtn">
                 <i class="bi bi-bag"></i>
+
+                <span class="cart-count-badge" id="cartCountBadge">
+                    0
+                </span>
             </button>
+
         </div>
 
     </nav>
@@ -355,12 +383,33 @@
         const sideCartFooter = document.getElementById("sideCartFooter");
         const freeShippingText = document.getElementById("freeShippingText");
         const freeShippingProgress = document.getElementById("freeShippingProgress");
+        const cartCountBadge = document.getElementById("cartCountBadge");
 
         let shippingOptions = [];
         let cartBusy = false;
 
         function formatMoney(value) {
             return "R$ " + Number(value || 0).toFixed(2).replace(".", ",");
+        }
+
+        function updateCartCount(data) {
+            if (!cartCountBadge) return;
+
+            let totalItems = 0;
+
+            if (data.items && data.items.length > 0) {
+                data.items.forEach(item => {
+                    totalItems += Number(item.quantity || 0);
+                });
+            }
+
+            cartCountBadge.innerText = totalItems;
+
+            if (totalItems > 0) {
+                cartCountBadge.style.display = "flex";
+            } else {
+                cartCountBadge.style.display = "none";
+            }
         }
 
         function getShippingPrice(data) {
@@ -403,6 +452,8 @@
         }
 
         function renderCart(data) {
+            updateCartCount(data);
+
             freeShippingProgress.style.width = data.free_shipping_progress + "%";
 
             if (data.free_shipping_remaining > 0) {
@@ -772,6 +823,12 @@
         if (cartOverlay) {
             cartOverlay.addEventListener("click", closeCart);
         }
+
+        fetch("/cart/data/")
+            .then(response => response.json())
+            .then(data => {
+                updateCartCount(data);
+            });
     </script>
 
 </body>
