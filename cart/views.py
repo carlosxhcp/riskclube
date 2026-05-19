@@ -251,6 +251,7 @@ def calculate_shipping(request):
             "price": 0,
             "time": "",
             "cep": cep,
+            "icon": "https://cdn-icons-png.flaticon.com/512/891/891462.png",
         }
 
         request.session["shipping"] = shipping
@@ -267,6 +268,7 @@ def calculate_shipping(request):
                     "price": 0,
                     "delivery_time": "",
                     "cep": cep,
+                    "icon": "https://cdn-icons-png.flaticon.com/512/891/891462.png",
                 }
             ],
         })
@@ -345,20 +347,59 @@ def calculate_shipping(request):
         if option.get("error"):
             continue
 
+        option_name = (option.get("name") or "").strip()
+        option_name_lower = option_name.lower()
+
+        company_data = option.get("company") or {}
+
+        company_name = (company_data.get("name") or "").strip()
+        company_name_lower = company_name.lower()
+
+        company_icon = (
+            company_data.get("picture")
+            or company_data.get("logo")
+            or ""
+        )
+
+        allow_option = False
+
+        # SEDEX
+        if "sedex" in option_name_lower:
+            allow_option = True
+
+            if not company_icon:
+                company_icon = "https://logodownload.org/wp-content/uploads/2017/02/correios-logo-8.png"
+
+        # JADLOG
+        elif "jadlog" in company_name_lower or "jadlog.com" in option_name_lower:
+            allow_option = True
+
+            if not company_icon:
+                company_icon = "https://companieslogo.com/img/orig/JADLOG.SA_BIG-2e3c0b66.png"
+
+        # LOGGI EXPRESS
+        elif "loggi" in company_name_lower and "express" in option_name_lower:
+            allow_option = True
+
+            if not company_icon:
+                company_icon = "https://seeklogo.com/images/L/loggi-logo-D6841C5E88-seeklogo.com.png"
+
+        if not allow_option:
+            continue
+
         price = option.get("price") or option.get("custom_price")
 
         if not price:
             continue
 
-        company = option.get("company") or {}
-
         options.append({
             "id": str(option.get("id")),
-            "name": option.get("name", ""),
-            "company": company.get("name", ""),
+            "name": option_name,
+            "company": company_name,
             "price": float(Decimal(str(price))),
             "delivery_time": option.get("delivery_time", ""),
             "cep": cep,
+            "icon": company_icon,
         })
 
     if not options:
@@ -372,7 +413,6 @@ def calculate_shipping(request):
         "free_shipping": False,
         "options": options,
     })
-
 
 @require_POST
 def select_shipping(request):
