@@ -2,6 +2,7 @@
 
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <title>Mockup 3D</title>
@@ -47,6 +48,10 @@
             font-weight: bold;
         }
 
+        .mockup-header button:hover {
+            opacity: 0.8;
+        }
+
         #viewer {
             width: 100%;
             height: calc(100vh - 90px);
@@ -56,23 +61,26 @@
 
 <body>
 
-<div class="mockup-page">
+    <div class="mockup-page">
 
-    <div class="mockup-header">
-        <input type="file" id="imageUpload" accept="image/png, image/jpeg, image/webp">
+        <div class="mockup-header">
+            <input type="file" id="imageUpload" accept="image/png, image/jpeg, image/webp">
 
-        <button type="button" id="increaseLogo">Aumentar</button>
-        <button type="button" id="decreaseLogo">Diminuir</button>
-        <button type="button" id="moveUp">Subir</button>
-        <button type="button" id="moveDown">Descer</button>
-        <button type="button" id="saveMockup">Salvar imagem</button>
+            <button type="button" id="increaseLogo">Aumentar</button>
+            <button type="button" id="decreaseLogo">Diminuir</button>
+            <button type="button" id="moveUp">Subir</button>
+            <button type="button" id="moveDown">Descer</button>
+            <button type="button" id="moveLeft">Esquerda</button>
+            <button type="button" id="moveRight">Direita</button>
+            <button type="button" id="resetLogo">Resetar</button>
+            <button type="button" id="saveMockup">Salvar imagem</button>
+        </div>
+
+        <div id="viewer"></div>
+
     </div>
 
-    <div id="viewer"></div>
-
-</div>
-
-<script type="importmap">
+    <script type="importmap">
 {
     "imports": {
         "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
@@ -81,154 +89,203 @@
 }
 </script>
 
-<script type="module">
-    import * as THREE from "three";
-    import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-    import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+    <script type="module">
+        import * as THREE from "three";
+        import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+        import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
-    const container = document.getElementById("viewer");
+        const container = document.getElementById("viewer");
 
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x111111);
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x111111);
 
-    const camera = new THREE.PerspectiveCamera(
-        45,
-        container.clientWidth / container.clientHeight,
-        0.1,
-        100
-    );
+        const camera = new THREE.PerspectiveCamera(
+            45,
+            container.clientWidth / container.clientHeight,
+            0.1,
+            100
+        );
 
-    camera.position.set(0, 1.2, 4);
+        camera.position.set(0, 1.2, 4);
 
-    const renderer = new THREE.WebGLRenderer({
-        antialias: true,
-        preserveDrawingBuffer: true
-    });
-
-    renderer.setSize(container.clientWidth, container.clientHeight);
-    renderer.setPixelRatio(window.devicePixelRatio);
-    container.appendChild(renderer.domElement);
-
-    const controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.target.set(0, 1, 0);
-
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1.4);
-    scene.add(ambientLight);
-
-    const frontLight = new THREE.DirectionalLight(0xffffff, 2);
-    frontLight.position.set(0, 3, 5);
-    scene.add(frontLight);
-
-    const sideLight = new THREE.DirectionalLight(0xffffff, 1);
-    sideLight.position.set(4, 2, 2);
-    scene.add(sideLight);
-
-    let bottleModel = null;
-    let logoPlane = null;
-
-    const loader = new GLTFLoader();
-
-    loader.load(
-        "{% static 'models/garrafa.glb' %}",
-        function (gltf) {
-            bottleModel = gltf.scene;
-
-            bottleModel.position.set(0, 0, 0);
-            bottleModel.scale.set(1.5, 1.5, 1.5);
-
-            scene.add(bottleModel);
-        },
-        undefined,
-        function (error) {
-            console.error("Erro ao carregar modelo:", error);
-            alert("Erro ao carregar o modelo 3D. Confira o caminho static/models/garrafa.glb");
-        }
-    );
-
-    document.getElementById("imageUpload").addEventListener("change", function (event) {
-        const file = event.target.files[0];
-
-        if (!file) return;
-
-        const imageUrl = URL.createObjectURL(file);
-        const textureLoader = new THREE.TextureLoader();
-
-        textureLoader.load(imageUrl, function (texture) {
-            texture.colorSpace = THREE.SRGBColorSpace;
-
-            if (logoPlane) {
-                scene.remove(logoPlane);
-            }
-
-            const material = new THREE.MeshBasicMaterial({
-                map: texture,
-                transparent: true,
-                side: THREE.DoubleSide
-            });
-
-            const geometry = new THREE.PlaneGeometry(0.9, 0.9);
-
-            logoPlane = new THREE.Mesh(geometry, material);
-
-            logoPlane.position.set(0, 1.15, 1.2);
-            logoPlane.rotation.set(0, 0, 0);
-            logoPlane.scale.set(1, 1, 1);
-
-            scene.add(logoPlane);
+        const renderer = new THREE.WebGLRenderer({
+            antialias: true,
+            preserveDrawingBuffer: true
         });
-    });
-
-    document.getElementById("increaseLogo").addEventListener("click", function () {
-        if (!logoPlane) return;
-        logoPlane.scale.multiplyScalar(1.1);
-    });
-
-    document.getElementById("decreaseLogo").addEventListener("click", function () {
-        if (!logoPlane) return;
-        logoPlane.scale.multiplyScalar(0.9);
-    });
-
-    document.getElementById("moveUp").addEventListener("click", function () {
-        if (!logoPlane) return;
-        logoPlane.position.y += 0.05;
-    });
-
-    document.getElementById("moveDown").addEventListener("click", function () {
-        if (!logoPlane) return;
-        logoPlane.position.y -= 0.05;
-    });
-
-    document.getElementById("saveMockup").addEventListener("click", function () {
-        const image = renderer.domElement.toDataURL("image/png");
-
-        const link = document.createElement("a");
-        link.href = image;
-        link.download = "mockup-garrafa.png";
-        link.click();
-    });
-
-    function animate() {
-        requestAnimationFrame(animate);
-
-        controls.update();
-
-        if (logoPlane) {
-            //logoPlane.lookAt(camera.position);
-        }
-
-        renderer.render(scene, camera);
-    }
-
-    animate();
-
-    window.addEventListener("resize", function () {
-        camera.aspect = container.clientWidth / container.clientHeight;
-        camera.updateProjectionMatrix();
 
         renderer.setSize(container.clientWidth, container.clientHeight);
-    });
-</script>
+        renderer.setPixelRatio(window.devicePixelRatio);
+        container.appendChild(renderer.domElement);
+
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.target.set(0, 1, 0);
+
+        const ambientLight = new THREE.AmbientLight(0xffffff, 1.4);
+        scene.add(ambientLight);
+
+        const frontLight = new THREE.DirectionalLight(0xffffff, 2);
+        frontLight.position.set(0, 3, 5);
+        scene.add(frontLight);
+
+        const sideLight = new THREE.DirectionalLight(0xffffff, 1);
+        sideLight.position.set(4, 2, 2);
+        scene.add(sideLight);
+
+        let bottleModel = null;
+        let printArea = null;
+        let originalPrintAreaPosition = null;
+        let originalPrintAreaScale = null;
+
+        const loader = new GLTFLoader();
+
+        loader.load(
+            "{% static 'models/garrafa.glb' %}",
+            function (gltf) {
+                bottleModel = gltf.scene;
+
+                bottleModel.position.set(0, 0, 0);
+                bottleModel.scale.set(1.5, 1.5, 1.5);
+
+                scene.add(bottleModel);
+                bottleModel.traverse((child) => {
+
+                    if (child.isMesh) {
+
+                        if (child.name !== "print_area") {
+
+                            child.material.transparent = false;
+                            child.material.opacity = 1;
+
+                            child.material.color.set("#ffffff");
+
+                        }
+
+                    }
+
+                });
+                console.log("OBJETOS DO GLB:");
+                bottleModel.traverse((child) => {
+                    console.log(child.name, child.type);
+                });
+
+                printArea = bottleModel.getObjectByName("print_area");
+
+                if (!printArea) {
+                    alert("Objeto print_area não encontrado no GLB. Confira se o nome no Blender está exatamente: print_area");
+                    console.log("Modelo carregado:", bottleModel);
+                    return;
+                }
+
+                originalPrintAreaPosition = printArea.position.clone();
+                originalPrintAreaScale = printArea.scale.clone();
+
+                printArea.material = new THREE.MeshBasicMaterial({
+                    color: 0xffffff,
+                    transparent: true,
+                    opacity: 0.15,
+                    side: THREE.DoubleSide
+                });
+            },
+            undefined,
+            function (error) {
+                console.error("Erro ao carregar modelo:", error);
+                alert("Erro ao carregar o modelo 3D. Confira o caminho static/models/garrafa.glb");
+            }
+        );
+
+        document.getElementById("imageUpload").addEventListener("change", function (event) {
+            const file = event.target.files[0];
+
+            if (!file) return;
+
+            if (!printArea) {
+                alert("A área de impressão ainda não foi carregada.");
+                return;
+            }
+
+            const imageUrl = URL.createObjectURL(file);
+            const textureLoader = new THREE.TextureLoader();
+
+            textureLoader.load(imageUrl, function (texture) {
+                texture.colorSpace = THREE.SRGBColorSpace;
+                texture.flipY = false;
+
+                texture.wrapS = THREE.ClampToEdgeWrapping;
+                texture.wrapT = THREE.ClampToEdgeWrapping;
+
+                printArea.material = new THREE.MeshBasicMaterial({
+                    map: texture,
+                    transparent: true,
+                    side: THREE.DoubleSide
+                });
+
+                URL.revokeObjectURL(imageUrl);
+            });
+        });
+
+        document.getElementById("increaseLogo").addEventListener("click", function () {
+            if (!printArea) return;
+            printArea.scale.multiplyScalar(1.1);
+        });
+
+        document.getElementById("decreaseLogo").addEventListener("click", function () {
+            if (!printArea) return;
+            printArea.scale.multiplyScalar(0.9);
+        });
+
+        document.getElementById("moveUp").addEventListener("click", function () {
+            if (!printArea) return;
+            printArea.position.y += 0.02;
+        });
+
+        document.getElementById("moveDown").addEventListener("click", function () {
+            if (!printArea) return;
+            printArea.position.y -= 0.02;
+        });
+
+        document.getElementById("moveLeft").addEventListener("click", function () {
+            if (!printArea) return;
+            printArea.position.x -= 0.02;
+        });
+
+        document.getElementById("moveRight").addEventListener("click", function () {
+            if (!printArea) return;
+            printArea.position.x += 0.02;
+        });
+
+        document.getElementById("resetLogo").addEventListener("click", function () {
+            if (!printArea || !originalPrintAreaPosition || !originalPrintAreaScale) return;
+
+            printArea.position.copy(originalPrintAreaPosition);
+            printArea.scale.copy(originalPrintAreaScale);
+        });
+
+        document.getElementById("saveMockup").addEventListener("click", function () {
+            const image = renderer.domElement.toDataURL("image/png");
+
+            const link = document.createElement("a");
+            link.href = image;
+            link.download = "mockup-garrafa.png";
+            link.click();
+        });
+
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        window.addEventListener("resize", function () {
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        });
+    </script>
 
 </body>
+
 </html>
