@@ -97,16 +97,15 @@
         const container = document.getElementById("viewer");
 
         const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x111111);
-
+        scene.background = new THREE.Color(0x1a1a1a);
         const camera = new THREE.PerspectiveCamera(
-            45,
+            25,
             container.clientWidth / container.clientHeight,
             0.1,
             100
         );
 
-        camera.position.set(0, 1.2, 4);
+        camera.position.set(-70, 30, 50);
 
         const renderer = new THREE.WebGLRenderer({
             antialias: true,
@@ -115,27 +114,31 @@
 
         renderer.setSize(container.clientWidth, container.clientHeight);
         renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.outputColorSpace = THREE.SRGBColorSpace;
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1;
         container.appendChild(renderer.domElement);
 
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
-        controls.target.set(0, 1, 0);
+        controls.target.set(0, 1.2, 0);
 
-        const ambientLight = new THREE.AmbientLight(0xffffff, 1.4);
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
         scene.add(ambientLight);
 
-        const frontLight = new THREE.DirectionalLight(0xffffff, 2);
-        frontLight.position.set(0, 3, 5);
+        const frontLight = new THREE.DirectionalLight(0xffffff, 1.8);
+        frontLight.position.set(2, 4, 5);
         scene.add(frontLight);
 
-        const sideLight = new THREE.DirectionalLight(0xffffff, 1);
-        sideLight.position.set(4, 2, 2);
+        const sideLight = new THREE.DirectionalLight(0xffffff, 2.2);
+        sideLight.position.set(-4, 3, 2);
         scene.add(sideLight);
 
         let bottleModel = null;
         let printArea = null;
         let originalPrintAreaPosition = null;
         let originalPrintAreaScale = null;
+        let originalPrintAreaRotation = null;
 
         const loader = new GLTFLoader();
 
@@ -145,28 +148,29 @@
                 bottleModel = gltf.scene;
 
                 bottleModel.position.set(0, 0, 0);
+                bottleModel.rotation.y = -3;
+                bottleModel.rotation.x = -0.1;
                 bottleModel.scale.set(1.5, 1.5, 1.5);
 
                 scene.add(bottleModel);
-                bottleModel.traverse((child) => {
 
-                    if (child.isMesh) {
-
-                        if (child.name !== "print_area") {
-
-                            child.material.transparent = false;
-                            child.material.opacity = 1;
-
-                            child.material.color.set("#ffffff");
-
-                        }
-
-                    }
-
-                });
                 console.log("OBJETOS DO GLB:");
+
                 bottleModel.traverse((child) => {
                     console.log(child.name, child.type);
+
+                    if (child.isMesh) {
+                        if (child.name !== "print_area") {
+                            child.material = new THREE.MeshStandardMaterial({
+                                color: "#d8d8d8",
+                                roughness: 0.72,
+                                metalness: 0.05
+                            });
+
+                            child.castShadow = true;
+                            child.receiveShadow = true;
+                        }
+                    }
                 });
 
                 printArea = bottleModel.getObjectByName("print_area");
@@ -179,11 +183,14 @@
 
                 originalPrintAreaPosition = printArea.position.clone();
                 originalPrintAreaScale = printArea.scale.clone();
+                originalPrintAreaRotation = printArea.rotation.clone();
 
-                printArea.material = new THREE.MeshBasicMaterial({
+                printArea.material = new THREE.MeshStandardMaterial({
                     color: 0xffffff,
                     transparent: true,
                     opacity: 0.15,
+                    roughness: 0.5,
+                    metalness: 0,
                     side: THREE.DoubleSide
                 });
             },
@@ -214,9 +221,11 @@
                 texture.wrapS = THREE.ClampToEdgeWrapping;
                 texture.wrapT = THREE.ClampToEdgeWrapping;
 
-                printArea.material = new THREE.MeshBasicMaterial({
+                printArea.material = new THREE.MeshStandardMaterial({
                     map: texture,
                     transparent: true,
+                    roughness: 0.45,
+                    metalness: 0,
                     side: THREE.DoubleSide
                 });
 
@@ -255,10 +264,11 @@
         });
 
         document.getElementById("resetLogo").addEventListener("click", function () {
-            if (!printArea || !originalPrintAreaPosition || !originalPrintAreaScale) return;
+            if (!printArea || !originalPrintAreaPosition || !originalPrintAreaScale || !originalPrintAreaRotation) return;
 
             printArea.position.copy(originalPrintAreaPosition);
             printArea.scale.copy(originalPrintAreaScale);
+            printArea.rotation.copy(originalPrintAreaRotation);
         });
 
         document.getElementById("saveMockup").addEventListener("click", function () {
@@ -281,7 +291,6 @@
         window.addEventListener("resize", function () {
             camera.aspect = container.clientWidth / container.clientHeight;
             camera.updateProjectionMatrix();
-
             renderer.setSize(container.clientWidth, container.clientHeight);
         });
     </script>
