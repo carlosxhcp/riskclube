@@ -1,13 +1,10 @@
 .product-page {
     width: 100%;
     min-height: calc(100vh - 114px);
-
     padding: 60px 6% 80px;
-
     display: grid;
     grid-template-columns: 58% 42%;
     gap: 45px;
-
     background: #fff;
 }
 
@@ -28,16 +25,12 @@
 .thumb {
     width: 90px;
     height: 90px;
-
     border: 1px solid #e5e5e5;
     background: #fff;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     cursor: pointer;
-
     transition: .2s ease;
 }
 
@@ -53,36 +46,68 @@
 
 .product-main-image {
     height: 560px;
-
     background: #f8f8f8;
-
     position: relative;
-
+    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.product-main-image img {
+/* IMAGEM BASE DA GARRAFA */
+
+.product-main-image #mainProductImage {
     width: 75%;
     height: 90%;
     object-fit: contain;
+    position: relative;
+    z-index: 1;
 }
+
+/* MOCKUP DA GRAVAÇÃO */
+
+.engraving-preview {
+    position: absolute;
+    z-index: 2;
+
+    top: 48%;
+    left: 50%;
+
+    width: 22%;
+    max-width: 115px;
+    height: auto;
+
+    transform: translate(-50%, -50%);
+
+    opacity: 0;
+    pointer-events: none;
+
+    object-fit: contain;
+
+    mix-blend-mode: screen;
+
+    transition:
+        opacity .25s ease,
+        transform .25s ease;
+}
+
+.engraving-preview.active {
+    opacity: 1;
+}
+
+/* SETAS DA GALERIA */
 
 .gallery-arrow {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-
     border: none;
     background: transparent;
-
     color: #000;
     font-size: 42px;
     line-height: 1;
-
     cursor: pointer;
-    z-index: 2;
+    z-index: 5;
 }
 
 .gallery-arrow.left {
@@ -102,13 +127,9 @@
 .product-title {
     font-size: clamp(28px, 3vw, 42px);
     line-height: 1.1;
-
     color: #000;
-
     font-weight: 800;
-
     margin-bottom: 35px;
-
     text-transform: uppercase;
 }
 
@@ -116,9 +137,7 @@
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-
     max-width: 500px;
-
     margin-bottom: 35px;
     gap: 30px;
 }
@@ -127,7 +146,6 @@
     font-size: 28px;
     color: #444;
     font-weight: 500;
-
     margin-bottom: 4px;
 }
 
@@ -143,17 +161,13 @@
     flex-direction: column;
     gap: 12px;
     margin-bottom: 32px;
-
 }
 
 .product-size-box p {
     font-size: 15px;
     color: #444;
-
     margin: 0;
-
     font-weight: 500;
-
     text-transform: uppercase;
     letter-spacing: .5px;
 }
@@ -173,24 +187,16 @@
 .size-btn {
     min-width: 62px;
     height: 46px;
-
     padding: 0 18px;
-
     background: #fff;
-
     border: 1px solid #dcdcdc;
     border-radius: 12px;
-
     color: #111;
-
     font-size: 13px;
     font-weight: 600;
-
     letter-spacing: 1px;
     text-transform: uppercase;
-
     cursor: pointer;
-
     transition:
         background .18s ease,
         color .18s ease,
@@ -208,10 +214,7 @@
     background: #111 !important;
     color: #fff !important;
     border: 1px solid #111 !important;
-
-    box-shadow:
-        0 8px 18px rgba(0,0,0,.14);
-
+    box-shadow: 0 8px 18px rgba(0,0,0,.14);
     transform: translateY(-1px);
 }
 
@@ -234,9 +237,7 @@
 .product-colors p {
     font-size: 16px;
     color: #444;
-
     margin-bottom: 10px;
-
     text-transform: uppercase;
     letter-spacing: .5px;
 }
@@ -255,14 +256,10 @@
 .color-dot {
     width: 26px;
     height: 26px;
-
     border-radius: 50%;
     border: 1px solid #ccc;
-
     cursor: pointer;
-
     padding: 0;
-
     transition: .2s ease;
 }
 
@@ -280,14 +277,101 @@
     outline: none;
 }
 
+/* GRAVAÇÕES */
+
+.engraving-box {
+    margin-top: 22px;
+    margin-bottom: 20px;
+}
+
+.engraving-label {
+    display: block;
+    font-size: 15px;
+    color: #000;
+    font-weight: 700;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+}
+
+.engraving-select {
+    width: 100%;
+    height: 44px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 0 12px;
+    background: #fff;
+    color: #111;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.engraving-select:focus {
+    outline: none;
+    border-color: #000;
+}
+
+.engraving-options-wrapper {
+    margin-top: 14px;
+    width: 100%;
+}
+
+.engraving-options {
+    display: none;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+}
+
+.engraving-options.active {
+    display: grid;
+}
+
+.engraving-option {
+    border: 1px solid #ddd;
+    background: #fff;
+    border-radius: 10px;
+    padding: 6px;
+    cursor: pointer;
+    transition:
+        border .2s ease,
+        box-shadow .2s ease,
+        transform .2s ease;
+}
+
+.engraving-option:hover {
+    border-color: #999;
+    transform: translateY(-1px);
+}
+
+.engraving-option.selected {
+    border-color: #000;
+    box-shadow: 0 0 0 1px #000;
+}
+
+.engraving-option img {
+    width: 100%;
+    height: 58px;
+    object-fit: contain;
+    display: block;
+    background: #f7f7f7;
+    border-radius: 6px;
+}
+
+.engraving-option span {
+    display: block;
+    font-size: 11px;
+    color: #111;
+    margin-top: 5px;
+    text-align: center;
+    line-height: 1.2;
+}
+
 /* TEXTO */
 
 .product-short-text {
     font-size: 17px;
     color: #000;
-
     font-weight: 500;
-
     margin-bottom: 12px;
 }
 
@@ -296,9 +380,7 @@
 .product-buttons {
     display: flex;
     flex-direction: column;
-
     gap: 10px;
-
     margin-top: 20px;
 }
 
@@ -306,25 +388,19 @@
 .add-cart-btn {
     width: 100%;
     height: 52px;
-
     border: none;
-
     text-transform: uppercase;
-
     font-size: 12px;
     letter-spacing: 1px;
-
     transition: .2s ease;
 }
 
 .buy-now-btn {
     background: #111;
     color: #fff;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     text-decoration: none;
 }
 
@@ -336,7 +412,6 @@
 .add-cart-btn {
     background: #fff;
     color: #111;
-
     border: 1px solid #111;
 }
 
@@ -359,20 +434,15 @@
 
 .product-accordions details {
     margin-bottom: 5px;
-
     border-bottom: 1px solid #ececec;
-
     padding-bottom: 12px;
 }
 
 .product-accordions summary {
     cursor: pointer;
-
     font-size: 16px;
     color: #000;
-
     list-style: none;
-
     font-weight: 500;
 }
 
@@ -387,12 +457,9 @@
 
 .product-accordions p {
     margin-top: 10px;
-
     max-width: 420px;
-
     font-size: 14px;
     color: #444;
-
     line-height: 1.5;
 }
 
@@ -401,9 +468,7 @@
 .product-benefits {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
-
     gap: 14px;
-
     max-width: 560px;
 }
 
@@ -411,23 +476,18 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-
     gap: 6px;
-
     text-align: center;
 }
 
 .benefit-item i {
     width: 46px;
     height: 46px;
-
     border: 1px solid #333;
     border-radius: 50%;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     font-size: 22px;
     color: #333;
 }
@@ -435,9 +495,7 @@
 .benefit-item span {
     font-size: 10px;
     line-height: 1.1;
-
     color: #000;
-
     font-weight: 600;
 }
 
@@ -446,18 +504,14 @@
 .product-video-section {
     width: 100%;
     height: 100vh;
-
     overflow: hidden;
-
     background: #000;
 }
 
 .product-video {
     width: 100%;
     height: 100%;
-
     object-fit: cover;
-
     display: block;
 }
 
@@ -465,34 +519,24 @@
 
 .community-section {
     width: 100%;
-
     background: #fff;
-
     padding: 70px 5% 80px;
 }
 
 .community-title {
     font-size: clamp(38px, 6vw, 72px);
-
     font-weight: 900;
-
     color: #000;
-
     letter-spacing: -2px;
-
     margin-bottom: 20px;
-
     text-transform: uppercase;
 }
 
 .community-grid {
     width: 100%;
-
     border: 8px solid #000;
     border-radius: 12px;
-
     overflow: hidden;
-
     display: grid;
     grid-template-columns: repeat(5, 1fr);
 }
@@ -500,38 +544,27 @@
 .community-grid img {
     width: 100%;
     height: 230px;
-
     object-fit: cover;
-
     display: block;
 }
 
 .community-text {
     margin-top: 25px;
-
     font-size: 18px;
     color: #222;
-
     line-height: 1.5;
-
     max-width: 1200px;
 }
 
 .community-empty {
     padding: 40px;
-
     font-size: 16px;
     color: #000;
 }
 
-/* MINI CART INFO */
-
-
-
 /* RESPONSIVO */
 
 @media (max-width: 1100px) {
-
     .product-page {
         grid-template-columns: 1fr;
     }
@@ -546,7 +579,6 @@
 }
 
 @media (max-width: 991px) {
-
     .community-grid {
         grid-template-columns: repeat(3, 1fr);
     }
@@ -557,7 +589,6 @@
 }
 
 @media (max-width: 768px) {
-
     .product-page {
         padding: 30px 14px 60px;
         gap: 28px;
@@ -569,11 +600,8 @@
 
     .product-thumbs {
         order: 2;
-
         flex-direction: row;
-
         overflow-x: auto;
-
         gap: 10px;
     }
 
@@ -587,9 +615,15 @@
         height: 430px;
     }
 
-    .product-main-image img {
+    .product-main-image #mainProductImage {
         width: 88%;
         height: 88%;
+    }
+
+    .engraving-preview {
+        top: 48%;
+        width: 24%;
+        max-width: 95px;
     }
 
     .product-title {
@@ -599,14 +633,20 @@
 
     .product-top-info {
         max-width: 100%;
-
         gap: 20px;
-
         flex-direction: column;
     }
 
     .product-price {
         font-size: 24px;
+    }
+
+    .engraving-options {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .engraving-option img {
+        height: 52px;
     }
 
     .product-benefits {
@@ -620,7 +660,6 @@
 
     .community-grid {
         grid-template-columns: repeat(2, 1fr);
-
         border-width: 5px;
         border-radius: 8px;
     }
@@ -639,13 +678,39 @@
 }
 
 @media (max-width: 480px) {
-
     .product-main-image {
         height: 350px;
     }
 
+    .product-main-image #mainProductImage {
+        width: 92%;
+        height: 90%;
+    }
+
+    .engraving-preview {
+        top: 48%;
+        width: 25%;
+        max-width: 78px;
+    }
+
     .gallery-arrow {
         font-size: 34px;
+    }
+
+    .engraving-options {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .engraving-option {
+        padding: 5px;
+    }
+
+    .engraving-option img {
+        height: 48px;
+    }
+
+    .engraving-option span {
+        font-size: 10px;
     }
 
     .product-benefits {
@@ -659,9 +724,7 @@
     .size-btn {
         min-width: 56px;
         height: 42px;
-
         padding: 0 14px;
-
         font-size: 12px;
     }
 }

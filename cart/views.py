@@ -48,6 +48,8 @@ def get_cart_payload(request):
             "name": item.get("name", "Produto"),
             "size": item.get("size", ""),
             "color": item.get("color", ""),
+            "engraving_name": item.get("engraving_name", ""),
+            "engraving_image": item.get("engraving_image", ""),
             "quantity": quantity,
             "price": float(price),
             "subtotal": float(item_subtotal),
@@ -147,10 +149,16 @@ def cart_add_ajax(request):
     size = data.get("size") or "Único"
     color = data.get("color") or ""
 
+    engraving_name = data.get("engraving_name") or ""
+    engraving_image = data.get("engraving_image") or ""
+
     product = get_object_or_404(Product, id=product_id)
 
     cart = request.session.get("cart", {})
-    cart_key = f"{product.id}_{color}_{size}"
+
+    cart_key = f"{product.id}_{color}_{size}_{engraving_name}"
+
+    final_image = data.get("image") or engraving_image or (product.image.url if product.image else "")
 
     if cart_key in cart:
         cart[cart_key]["quantity"] += quantity
@@ -162,7 +170,9 @@ def cart_add_ajax(request):
             "quantity": quantity,
             "size": size,
             "color": color,
-            "image": data.get("image") or (product.image.url if product.image else ""),
+            "engraving_name": engraving_name,
+            "engraving_image": engraving_image,
+            "image": final_image,
         }
 
     request.session["cart"] = cart
@@ -456,6 +466,7 @@ def checkout_infinitepay_cart(request):
         name = item.get("name", "Produto")
         size = item.get("size", "")
         color = item.get("color", "")
+        engraving_name = item.get("engraving_name", "")
 
         description_parts = [name]
 
@@ -464,6 +475,9 @@ def checkout_infinitepay_cart(request):
 
         if size:
             description_parts.append(f"Tamanho: {size}")
+
+        if engraving_name:
+            description_parts.append(f"Gravação: {engraving_name}")
 
         description = " | ".join(description_parts)
 

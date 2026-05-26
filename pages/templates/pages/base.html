@@ -14,8 +14,7 @@
 
     <!-- FONTES -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <!-- CSS DO PROJETO -->
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
@@ -37,26 +36,22 @@
     <!-- MENU PRINCIPAL -->
     <nav class="main-navbar">
 
-        <!-- BOTÃO MENU MOBILE -->
         <button class="mobile-menu-btn" id="mobileMenuBtn" type="button">
             <i class="bi bi-list"></i>
         </button>
 
-        <!-- LINKS DO MENU DESKTOP -->
         <div class="nav-left">
             <a href="/" class="nav-link-custom">INICIO</a>
             <a href="/#products" class="nav-link-custom">SHOP</a>
             <a href="/about/" class="nav-link-custom">COMUNIDADE</a>
         </div>
 
-        <!-- LOGO -->
         <div class="nav-center">
             <a href="/" class="logo">
                 <img style="width: 40%;" src="{% static 'img/logo-black.png' %}" alt="Risk Clube">
             </a>
         </div>
 
-        <!-- ÍCONES DO MENU -->
         <div class="nav-right">
 
             <a href="#" class="icon-link account-icon">
@@ -69,10 +64,7 @@
 
             <button type="button" class="icon-link cart-open-btn" id="openCartBtn">
                 <i class="bi bi-bag"></i>
-
-                <span class="cart-count-badge" id="cartCountBadge">
-                    0
-                </span>
+                <span class="cart-count-badge" id="cartCountBadge">0</span>
             </button>
 
         </div>
@@ -92,10 +84,8 @@
 
     </div>
 
-    <!-- OVERLAY DO MENU MOBILE -->
     <div class="mobile-overlay" id="mobileOverlay"></div>
 
-    <!-- CONTEÚDO DAS PÁGINAS -->
     {% block content %}{% endblock %}
 
     <!-- POPUP NEWSLETTER -->
@@ -123,12 +113,8 @@
 
                 <form method="POST" action="/newsletter/" class="newsletter-form">
                     {% csrf_token %}
-
                     <input type="email" name="email" placeholder="Email" required>
-
-                    <button type="submit">
-                        LOGIN
-                    </button>
+                    <button type="submit">LOGIN</button>
                 </form>
 
                 <button type="button" class="newsletter-no" id="noNewsletterPopup">
@@ -144,7 +130,6 @@
     <footer class="site-footer">
         <div class="footer-inner">
 
-            <!-- NEWSLETTER DO RODAPÉ -->
             <div class="footer-left">
 
                 <a href="/" class="footer-logo">
@@ -157,7 +142,6 @@
 
                 <form method="POST" action="/newsletter/" class="footer-newsletter-form">
                     {% csrf_token %}
-
                     <input type="email" name="email" placeholder="Digite seu e-mail" required>
 
                     <button type="submit">
@@ -181,10 +165,8 @@
 
             </div>
 
-            <!-- LINHA DIVISÓRIA DO RODAPÉ -->
             <div class="footer-divider"></div>
 
-            <!-- LINKS DO RODAPÉ -->
             <div class="footer-links-area">
 
                 <div class="footer-column">
@@ -210,13 +192,14 @@
     <!-- MINI CARRINHO LATERAL -->
     <aside class="side-cart" id="sideCart">
 
-        <!-- CABEÇALHO DO MINI CARRINHO -->
         <div class="side-cart-header">
             <h3>Seu Carrinho</h3>
-            <button type="button" id="closeCartBtn">× Fechar</button>
+
+            <button type="button" id="closeCartBtn">
+                × Fechar
+            </button>
         </div>
 
-        <!-- BARRA DE FRETE GRÁTIS -->
         <div class="free-shipping-box">
             <p id="freeShippingText">
                 Adicione mais R$ 250 para Frete Grátis
@@ -227,7 +210,6 @@
             </div>
         </div>
 
-        <!-- CONTEÚDO DO MINI CARRINHO -->
         <div id="sideCartContent" class="side-cart-content">
             <div class="empty-cart-box">
                 <i class="bi bi-cart-fill"></i>
@@ -235,13 +217,60 @@
             </div>
         </div>
 
+        <!-- ÁREA DE FRETE -->
+        <div class="cart-shipping-box" id="cartShippingBox">
+
+            <label for="shippingCepInput" class="cart-shipping-label">
+                Calcular frete
+            </label>
+
+            <div class="cart-shipping-form">
+                <input
+                    type="text"
+                    id="shippingCepInput"
+                    placeholder="Digite seu CEP"
+                    maxlength="9"
+                    autocomplete="postal-code"
+                >
+
+                <button type="button" id="calculateShippingBtn">
+                    Calcular
+                </button>
+            </div>
+
+            <div class="shipping-options" id="shippingOptions"></div>
+
+        </div>
+
         <!-- RODAPÉ DO MINI CARRINHO -->
-        <div class="side-cart-footer" id="sideCartFooter"></div>
+        <div class="side-cart-footer" id="sideCartFooter">
+
+            <div class="cart-total-row">
+                <span>Subtotal</span>
+                <strong id="cartSubtotal">R$ 0,00</strong>
+            </div>
+
+            <div class="cart-total-row">
+                <span>Frete</span>
+                <strong id="cartShippingPrice">R$ 0,00</strong>
+            </div>
+
+            <div class="cart-total-row cart-total-final">
+                <span>Total</span>
+                <strong id="cartTotal">R$ 0,00</strong>
+            </div>
+
+            <a href="{% url 'cart:checkout_infinitepay_cart' %}" class="checkout-btn" id="checkoutCartBtn">
+                Finalizar compra
+            </a>
+
+        </div>
 
     </aside>
 
     <!-- JAVASCRIPT EXTERNO -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
     <!-- JAVASCRIPT DO PROJETO -->
     <script src="{% static 'js/cart.js' %}"></script>
     <script src="{% static 'js/newsletter.js' %}"></script>

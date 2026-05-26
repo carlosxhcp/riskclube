@@ -15,17 +15,13 @@
 
         <div class="product-thumbs"></div>
 
-        <div class="product-main-image">
+        <div class="product-main-image mockup-area">
 
-            <button type="button" class="gallery-arrow left" id="prevImage">
-                ‹
-            </button>
+            <button type="button" class="gallery-arrow left" id="prevImage">‹</button>
 
             <img id="mainProductImage" src="{{ product.image.url }}" alt="{{ product.name }}">
 
-            <button type="button" class="gallery-arrow right" id="nextImage">
-                ›
-            </button>
+            <button type="button" class="gallery-arrow right" id="nextImage">›</button>
 
         </div>
 
@@ -33,41 +29,22 @@
 
     <div class="product-content">
 
-        <h1 class="product-title">
-            {{ product.name }}
-        </h1>
+        <h1 class="product-title">{{ product.name }}</h1>
 
         <div class="product-top-info">
-
             <div>
-
-                <p class="product-price">
-                    R$ {{ product.price }}
-                </p>
-
-                {% if product.installments %}
-                <span class="product-installments">
-                    {{ product.installments }}
-                </span>
-                {% endif %}
-
+                <p class="product-price">R$ {{ product.price }}</p>
             </div>
-
-
-
         </div>
 
         <div class="product-size-box">
-
             <p>
                 Tamanho —
                 <span id="selectedSizeName"></span>
             </p>
 
             <div class="size-options"></div>
-
         </div>
-
 
         <div class="product-colors">
 
@@ -78,48 +55,97 @@
 
             <div class="color-options">
 
-                <!-- COR PADRÃO -->
-
-                <button type="button" class="color-dot active"
+                <button
+                    type="button"
+                    class="color-dot active"
                     style="background-color: {{ product.default_color_hex }};"
-                    data-color-name="{{ product.default_color_name }}" data-image="{{ product.image.url }}" data-images='[
+                    data-variant-id=""
+                    data-color-name="{{ product.default_color_name }}"
+                    data-image="{{ product.image.url }}"
+                    data-images='[
                         "{{ product.image.url }}"
                         {% for img in product.images.all %}
                             ,"{{ img.image.url }}"
                         {% endfor %}
-                    ]' data-sizes='[
+                    ]'
+                    data-sizes='[
                         {
                             "name": "900ML"
                         }
-                    ]'></button>
-
-                <!-- VARIANTES -->
+                    ]'
+                ></button>
 
                 {% for variant in product.variants.all %}
-                {% if variant.active %}
-
-                <button type="button" class="color-dot" style="background-color: {{ variant.color_hex }};"
-                    data-color-name="{{ variant.color_name }}" data-image="{{ variant.image.url }}" data-images='[
-                            "{{ variant.image.url }}"
-                            {% for img in variant.images.all %}
-                                ,"{{ img.image.url }}"
-                            {% endfor %}
-                        ]' data-sizes='[
-                            {% for size in variant.sizes.all %}
-                                {% if size.active %}
-                                    {
-                                        "name": "{{ size.name }}"
-                                    }{% if not forloop.last %},{% endif %}
-                                {% endif %}
-                            {% endfor %}
-                        ]'></button>
-
-                {% endif %}
+                    {% if variant.active %}
+                        <button
+                            type="button"
+                            class="color-dot"
+                            style="background-color: {{ variant.color_hex }};"
+                            data-variant-id="{{ variant.id }}"
+                            data-color-name="{{ variant.color_name }}"
+                            data-image="{{ variant.image.url }}"
+                            data-images='[
+                                "{{ variant.image.url }}"
+                                {% for img in variant.images.all %}
+                                    ,"{{ img.image.url }}"
+                                {% endfor %}
+                            ]'
+                            data-sizes='[
+                                {% for size in variant.sizes.all %}
+                                    {% if size.active %}
+                                        {
+                                            "name": "{{ size.name }}"
+                                        }{% if not forloop.last %},{% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            ]'
+                        ></button>
+                    {% endif %}
                 {% endfor %}
 
             </div>
 
+        </div>
 
+        <div class="engraving-box">
+
+            <label class="engraving-label">Selecione uma gravação</label>
+
+            <div class="engraving-options-wrapper">
+
+                {% for mockup in product.engraving_mockups.all %}
+                    {% if mockup.active %}
+                        <button
+                            type="button"
+                            class="engraving-option"
+                            data-variant-id="{% if mockup.variant %}{{ mockup.variant.id }}{% endif %}"
+                            data-engraving-id="{{ mockup.id }}"
+                            data-engraving-name="{{ mockup.name }}"
+                            data-engraving-image="{{ mockup.main_image.url }}"
+                            data-images='[
+                                "{{ mockup.main_image.url }}"
+                                {% for img in mockup.images.all %}
+                                    {% if img.active %}
+                                        ,"{{ img.image.url }}"
+                                    {% endif %}
+                                {% endfor %}
+                            ]'
+                        >
+                            <img src="{{ mockup.thumbnail.url }}" alt="{{ mockup.name }}">
+                            <span>{{ mockup.name }}</span>
+                        </button>
+                    {% endif %}
+                {% empty %}
+                    <p class="engraving-empty">
+                        Nenhuma gravação cadastrada ainda.
+                    </p>
+                {% endfor %}
+
+            </div>
+
+            <input type="hidden" id="selectedEngravingId">
+            <input type="hidden" id="selectedEngravingName">
+            <input type="hidden" id="selectedEngravingImage">
 
         </div>
 
@@ -133,7 +159,12 @@
                 Comprar agora
             </a>
 
-            <button type="button" class="add-cart-btn" id="addCartBtn" data-product-id="{{ product.id }}">
+            <button
+                type="button"
+                class="add-cart-btn"
+                id="addCartBtn"
+                data-product-id="{{ product.id }}"
+            >
                 Adicionar ao carrinho
             </button>
 
@@ -148,9 +179,7 @@
 
             <details>
                 <summary>Ver medidas</summary>
-                <p>
-                    Confira as opções de tamanho disponíveis acima.
-                </p>
+                <p>Confira as opções de tamanho disponíveis acima.</p>
             </details>
 
             <details>
@@ -208,18 +237,16 @@
 
 <section class="community-section">
 
-    <h2 class="community-title">
-        COMUNIDADE
-    </h2>
+    <h2 class="community-title">COMUNIDADE</h2>
 
     <div class="community-grid">
 
         {% for item in community_images %}
-        <img src="{{ item.image.url }}" alt="{{ item.alt }}">
+            <img src="{{ item.image.url }}" alt="{{ item.alt }}">
         {% empty %}
-        <p class="community-empty">
-            Nenhuma imagem cadastrada ainda.
-        </p>
+            <p class="community-empty">
+                Nenhuma imagem cadastrada ainda.
+            </p>
         {% endfor %}
 
     </div>
@@ -233,345 +260,380 @@
 </section>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function () {
 
-        const mainImage = document.getElementById("mainProductImage");
-        const thumbsContainer = document.querySelector(".product-thumbs");
+    const mainImage = document.getElementById("mainProductImage");
+    const thumbsContainer = document.querySelector(".product-thumbs");
+    const colorButtons = document.querySelectorAll(".color-dot");
+    const engravingButtons = document.querySelectorAll(".engraving-option");
 
-        const colorButtons = document.querySelectorAll(".color-dot");
+    const selectedColorName = document.getElementById("selectedColorName");
+    const selectedSizeName = document.getElementById("selectedSizeName");
+    const sizeOptions = document.querySelector(".size-options");
 
-        const selectedColorName = document.getElementById("selectedColorName");
-        const selectedSizeName = document.getElementById("selectedSizeName");
+    const prevBtn = document.getElementById("prevImage");
+    const nextBtn = document.getElementById("nextImage");
 
-        const sizeOptions = document.querySelector(".size-options");
+    const hiddenEngravingId = document.getElementById("selectedEngravingId");
+    const hiddenEngravingName = document.getElementById("selectedEngravingName");
+    const hiddenEngravingImage = document.getElementById("selectedEngravingImage");
 
-        const prevBtn = document.getElementById("prevImage");
-        const nextBtn = document.getElementById("nextImage");
+    let currentImages = [];
+    let currentIndex = 0;
+    let currentVariantId = "";
 
-        let currentImages = [];
-        let currentIndex = 0;
+    function clearSelectedEngraving() {
+        if (hiddenEngravingId) hiddenEngravingId.value = "";
+        if (hiddenEngravingName) hiddenEngravingName.value = "";
+        if (hiddenEngravingImage) hiddenEngravingImage.value = "";
 
-        function updateMainImage(index) {
+        engravingButtons.forEach(btn => {
+            btn.classList.remove("selected");
+        });
+    }
 
-            if (!mainImage || !currentImages.length) return;
+    function filterEngravingsByVariant(variantId) {
+        let hasVisible = false;
 
-            if (index < 0) {
-                currentIndex = currentImages.length - 1;
+        engravingButtons.forEach(button => {
+            const buttonVariantId = button.dataset.variantId || "";
+
+            if (!variantId && !buttonVariantId) {
+                button.style.display = "";
+                hasVisible = true;
+            } else if (variantId && buttonVariantId === variantId) {
+                button.style.display = "";
+                hasVisible = true;
+            } else {
+                button.style.display = "none";
+                button.classList.remove("selected");
             }
+        });
 
-            else if (index >= currentImages.length) {
-                currentIndex = 0;
-            }
+        const engravingBox = document.querySelector(".engraving-box");
 
-            else {
-                currentIndex = index;
-            }
+        if (engravingBox) {
+            engravingBox.style.display = hasVisible ? "" : "none";
+        }
+    }
 
-            mainImage.src = currentImages[currentIndex];
+    function updateMainImage(index) {
+        if (!mainImage || !currentImages.length) return;
 
-            document.querySelectorAll(".thumb").forEach(thumb => {
-                thumb.classList.remove("active");
-            });
-
-            const thumbs = document.querySelectorAll(".thumb");
-
-            if (thumbs[currentIndex]) {
-                thumbs[currentIndex].classList.add("active");
-            }
+        if (index < 0) {
+            currentIndex = currentImages.length - 1;
+        } else if (index >= currentImages.length) {
+            currentIndex = 0;
+        } else {
+            currentIndex = index;
         }
 
-        function renderGallery(images) {
+        mainImage.src = currentImages[currentIndex];
 
-            if (!thumbsContainer || !images.length) return;
+        document.querySelectorAll(".thumb").forEach(thumb => {
+            thumb.classList.remove("active");
+        });
 
-            currentImages = images;
-            currentIndex = 0;
+        const thumbs = document.querySelectorAll(".thumb");
 
-            thumbsContainer.innerHTML = "";
+        if (thumbs[currentIndex]) {
+            thumbs[currentIndex].classList.add("active");
+        }
+    }
 
-            images.forEach((imageUrl, index) => {
+    function renderGallery(images) {
+        if (!thumbsContainer || !images.length) return;
 
-                const button = document.createElement("button");
+        currentImages = images;
+        currentIndex = 0;
 
-                button.type = "button";
-                button.className = "thumb";
+        thumbsContainer.innerHTML = "";
 
-                if (index === 0) {
-                    button.classList.add("active");
-                }
+        images.forEach((imageUrl, index) => {
+            const button = document.createElement("button");
 
-                button.innerHTML = `
+            button.type = "button";
+            button.className = "thumb";
+
+            if (index === 0) {
+                button.classList.add("active");
+            }
+
+            button.innerHTML = `
                 <img src="${imageUrl}" alt="{{ product.name }}">
             `;
 
-                button.addEventListener("click", function () {
-                    updateMainImage(index);
-                });
-
-                thumbsContainer.appendChild(button);
-
+            button.addEventListener("click", function () {
+                updateMainImage(index);
             });
 
-            updateMainImage(0);
+            thumbsContainer.appendChild(button);
+        });
+
+        updateMainImage(0);
+    }
+
+    function renderSizes(sizes) {
+        if (!sizeOptions) return;
+
+        sizeOptions.innerHTML = "";
+
+        if (!sizes || !sizes.length) {
+            sizes = [{ name: "900ML" }];
         }
 
-        function renderSizes(sizes) {
+        sizes.forEach((size, index) => {
+            const button = document.createElement("button");
 
-            if (!sizeOptions) return;
+            button.type = "button";
+            button.className = "size-btn";
 
-            sizeOptions.innerHTML = "";
-
-            if (!sizes || !sizes.length) {
-                sizes = [{ name: "900ML" }];
+            if (index === 0) {
+                button.classList.add("active");
             }
 
-            sizes.forEach((size, index) => {
-
-                const button = document.createElement("button");
-
-                button.type = "button";
-                button.className = "size-btn";
-
-                if (index === 0) {
-                    button.classList.add("active");
-                }
-
-                button.dataset.sizeName = size.name;
-                button.innerText = size.name;
-
-                button.addEventListener("click", function () {
-
-                    document.querySelectorAll(".size-btn").forEach(btn => {
-                        btn.classList.remove("active");
-                    });
-
-                    this.classList.add("active");
-
-                    if (selectedSizeName) {
-                        selectedSizeName.textContent = size.name;
-                    }
-
-                });
-
-                sizeOptions.appendChild(button);
-
-            });
-
-            if (selectedSizeName) {
-                selectedSizeName.textContent = sizes[0].name;
-            }
-        }
-
-        colorButtons.forEach(button => {
+            button.dataset.sizeName = size.name;
+            button.innerText = size.name;
 
             button.addEventListener("click", function () {
-
-                const colorName = this.dataset.colorName;
-
-                let images = [];
-                let sizes = [];
-
-                try {
-                    images = JSON.parse(this.dataset.images);
-                }
-
-                catch (error) {
-                    images = [];
-                }
-
-                try {
-                    sizes = JSON.parse(this.dataset.sizes);
-                }
-
-                catch (error) {
-                    sizes = [];
-                }
-
-                colorButtons.forEach(btn => {
+                document.querySelectorAll(".size-btn").forEach(btn => {
                     btn.classList.remove("active");
                 });
 
                 this.classList.add("active");
 
-                if (selectedColorName) {
-                    selectedColorName.textContent = colorName || "";
+                if (selectedSizeName) {
+                    selectedSizeName.textContent = size.name;
                 }
-
-                renderGallery(images);
-                renderSizes(sizes);
-
             });
 
+            sizeOptions.appendChild(button);
         });
 
-        if (prevBtn) {
-            prevBtn.addEventListener("click", function () {
-                updateMainImage(currentIndex - 1);
-            });
+        if (selectedSizeName) {
+            selectedSizeName.textContent = sizes[0].name;
         }
+    }
 
-        if (nextBtn) {
-            nextBtn.addEventListener("click", function () {
-                updateMainImage(currentIndex + 1);
-            });
-        }
+    colorButtons.forEach(button => {
+        button.addEventListener("click", function () {
+            const colorName = this.dataset.colorName || "";
+            currentVariantId = this.dataset.variantId || "";
 
-        const firstColorButton = document.querySelector(".color-dot.active");
-
-        if (firstColorButton) {
-
-            let firstImages = [];
-            let firstSizes = [];
+            let images = [];
+            let sizes = [];
 
             try {
-                firstImages = JSON.parse(firstColorButton.dataset.images);
-            }
-
-            catch (error) {
-                firstImages = [];
+                images = JSON.parse(this.dataset.images);
+            } catch (error) {
+                images = [];
             }
 
             try {
-                firstSizes = JSON.parse(firstColorButton.dataset.sizes);
+                sizes = JSON.parse(this.dataset.sizes);
+            } catch (error) {
+                sizes = [];
             }
 
-            catch (error) {
-                firstSizes = [];
-            }
+            colorButtons.forEach(btn => {
+                btn.classList.remove("active");
+            });
+
+            this.classList.add("active");
 
             if (selectedColorName) {
-                selectedColorName.textContent =
-                    firstColorButton.dataset.colorName || "";
+                selectedColorName.textContent = colorName;
             }
 
-            renderGallery(firstImages);
-            renderSizes(firstSizes);
+            renderGallery(images);
+            renderSizes(sizes);
+            clearSelectedEngraving();
+            filterEngravingsByVariant(currentVariantId);
+        });
+    });
 
+    engravingButtons.forEach(button => {
+        button.addEventListener("click", function () {
+            const buttonVariantId = this.dataset.variantId || "";
+
+            if (buttonVariantId !== currentVariantId) return;
+
+            engravingButtons.forEach(btn => {
+                btn.classList.remove("selected");
+            });
+
+            this.classList.add("selected");
+
+            const engravingId = this.dataset.engravingId || "";
+            const engravingName = this.dataset.engravingName || "";
+            const engravingImage = this.dataset.engravingImage || "";
+
+            let engravingImages = [];
+
+            try {
+                engravingImages = JSON.parse(this.dataset.images);
+            } catch (error) {
+                engravingImages = [];
+            }
+
+            if (hiddenEngravingId) hiddenEngravingId.value = engravingId;
+            if (hiddenEngravingName) hiddenEngravingName.value = engravingName;
+            if (hiddenEngravingImage) hiddenEngravingImage.value = engravingImage;
+
+            if (engravingImages.length) {
+                renderGallery(engravingImages);
+            } else if (engravingImage) {
+                renderGallery([engravingImage]);
+            }
+        });
+    });
+
+    if (prevBtn) {
+        prevBtn.addEventListener("click", function () {
+            updateMainImage(currentIndex - 1);
+        });
+    }
+
+    if (nextBtn) {
+        nextBtn.addEventListener("click", function () {
+            updateMainImage(currentIndex + 1);
+        });
+    }
+
+    const firstColorButton = document.querySelector(".color-dot.active");
+
+    if (firstColorButton) {
+        let firstImages = [];
+        let firstSizes = [];
+
+        currentVariantId = firstColorButton.dataset.variantId || "";
+
+        try {
+            firstImages = JSON.parse(firstColorButton.dataset.images);
+        } catch (error) {
+            firstImages = [];
         }
 
-    });
+        try {
+            firstSizes = JSON.parse(firstColorButton.dataset.sizes);
+        } catch (error) {
+            firstSizes = [];
+        }
+
+        if (selectedColorName) {
+            selectedColorName.textContent = firstColorButton.dataset.colorName || "";
+        }
+
+        renderGallery(firstImages);
+        renderSizes(firstSizes);
+        filterEngravingsByVariant(currentVariantId);
+    }
+
+});
 </script>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function () {
 
-        const addCartBtn = document.getElementById("addCartBtn");
+    const addCartBtn = document.getElementById("addCartBtn");
 
-        if (!addCartBtn) return;
+    if (!addCartBtn) return;
 
-        let addingToCart = false;
+    let addingToCart = false;
 
-        addCartBtn.addEventListener("click", async function () {
+    addCartBtn.addEventListener("click", async function () {
 
-            if (addingToCart) return;
+        if (addingToCart) return;
 
-            addingToCart = true;
+        addingToCart = true;
 
-            const originalText = addCartBtn.innerText;
+        const originalText = addCartBtn.innerText;
+        const productId = addCartBtn.dataset.productId;
 
-            const productId = addCartBtn.dataset.productId;
+        const selectedSizeBtn = document.querySelector(".size-btn.active");
+        const selectedColorBtn = document.querySelector(".color-dot.active");
 
-            const selectedSizeBtn =
-                document.querySelector(".size-btn.active");
+        const selectedSize = selectedSizeBtn
+            ? selectedSizeBtn.dataset.sizeName
+            : "900ML";
 
-            const selectedColorBtn =
-                document.querySelector(".color-dot.active");
+        const selectedColor = selectedColorBtn
+            ? selectedColorBtn.dataset.colorName
+            : "";
 
-            const selectedSize = selectedSizeBtn
-                ? selectedSizeBtn.dataset.sizeName
-                : "900ML";
+        const selectedImage = selectedColorBtn
+            ? selectedColorBtn.dataset.image
+            : "";
 
-            const selectedColor = selectedColorBtn
-                ? selectedColorBtn.dataset.colorName
-                : "";
+        const engravingId = document.getElementById("selectedEngravingId")?.value || "";
+        const engravingName = document.getElementById("selectedEngravingName")?.value || "";
+        const engravingImage = document.getElementById("selectedEngravingImage")?.value || "";
 
-            const selectedImage = selectedColorBtn
-                ? selectedColorBtn.dataset.image
-                : "";
+        const finalImage = engravingImage || selectedImage;
 
-            addCartBtn.disabled = true;
-            addCartBtn.innerText = "Adicionando...";
+        addCartBtn.disabled = true;
+        addCartBtn.innerText = "Adicionando...";
 
-            try {
+        try {
+            const response = await fetch("/cart/add/", {
+                method: "POST",
 
-                const response = await fetch("/cart/add/", {
-                    method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
 
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRFToken": "{{ csrf_token }}"
-                    },
+                body: JSON.stringify({
+                    product_id: productId,
+                    quantity: 1,
+                    size: selectedSize,
+                    color: selectedColor,
+                    image: finalImage,
+                    engraving_id: engravingId,
+                    engraving_name: engravingName,
+                    engraving_image: engravingImage
+                })
+            });
 
-                    body: JSON.stringify({
-                        product_id: productId,
-                        quantity: 1,
-                        size: selectedSize,
-                        color: selectedColor,
-                        image: selectedImage
-                    })
-                });
+            const data = await response.json();
 
-                const data = await response.json();
+            if (data.success) {
+                addCartBtn.innerText = "Adicionado";
 
-                if (data.success) {
-
-                    addCartBtn.innerText = "Adicionado";
-
-                    if (typeof openCart === "function") {
-                        openCart();
-                    }
-
-                    setTimeout(() => {
-
-                        addCartBtn.innerText = originalText;
-
-                        addCartBtn.disabled = false;
-
-                        addingToCart = false;
-
-                    }, 700);
-
+                if (typeof openCart === "function") {
+                    openCart();
                 }
 
-                else {
-
-                    addCartBtn.innerText = "Erro ao adicionar";
-
-                    setTimeout(() => {
-
-                        addCartBtn.innerText = originalText;
-
-                        addCartBtn.disabled = false;
-
-                        addingToCart = false;
-
-                    }, 1200);
-
-                }
-
-            }
-
-            catch (error) {
-
-                console.error(error);
-
+                setTimeout(() => {
+                    addCartBtn.innerText = originalText;
+                    addCartBtn.disabled = false;
+                    addingToCart = false;
+                }, 700);
+            } else {
                 addCartBtn.innerText = "Erro ao adicionar";
 
                 setTimeout(() => {
-
                     addCartBtn.innerText = originalText;
-
                     addCartBtn.disabled = false;
-
                     addingToCart = false;
-
                 }, 1200);
-
             }
 
-        });
+        } catch (error) {
+            console.error(error);
+
+            addCartBtn.innerText = "Erro ao adicionar";
+
+            setTimeout(() => {
+                addCartBtn.innerText = originalText;
+                addCartBtn.disabled = false;
+                addingToCart = false;
+            }, 1200);
+        }
 
     });
+
+});
 </script>
 
 {% endblock %}

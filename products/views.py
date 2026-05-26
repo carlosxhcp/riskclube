@@ -2,12 +2,26 @@ import stripe
 
 from django.conf import settings
 from django.shortcuts import render, get_object_or_404, redirect
+
 from .models import Product, CommunityImage
 
 
 def product_detail(request, slug):
-    product = get_object_or_404(Product, slug=slug, available=True)
-    community_images = CommunityImage.objects.filter(active=True)[:10]
+    product = get_object_or_404(
+        Product.objects.prefetch_related(
+            "images",
+            "variants",
+            "variants__images",
+            "variants__sizes",
+            "engraving_mockups",
+            "engraving_mockups__images",
+            "engraving_mockups__variant",
+        ),
+        slug=slug,
+        available=True
+    )
+
+    community_images = CommunityImage.objects.filter(active=True)
 
     return render(request, "products/product_detail.html", {
         "product": product,
@@ -18,7 +32,7 @@ def product_detail(request, slug):
 def checkout_stripe_product(request, slug):
     stripe.api_key = settings.STRIPE_SECRET_KEY
 
-    product = get_object_or_404(Product, slug=slug)
+    product = get_object_or_404(Product, slug=slug, available=True)
 
     session = stripe.checkout.Session.create(
         payment_method_types=["card"],
@@ -30,7 +44,7 @@ def checkout_stripe_product(request, slug):
                     "product_data": {
                         "name": product.name,
                     },
-                    "unit_amount": int(float(product.price) * 100),
+                    "unit_amount": int(product.price * 100),
                 },
                 "quantity": 1,
             }
