@@ -9,12 +9,9 @@
 
 {% block content %}
 
+<!-- HERO PRINCIPAL -->
 <section class="hero-banner">
-    <img 
-        src="{% static 'img/banners/home.jpg' %}" 
-        alt="Risk Clube"
-        class="hero-image"
-    >
+    <img src="{% static 'img/banners/home.jpg' %}" alt="Risk Clube" class="hero-image">
 
     <div class="hero-overlay">
         <h1 class="hero-title">RISK CLUBE</h1>
@@ -25,67 +22,98 @@
     </div>
 </section>
 
+<!-- LISTA DE PRODUTOS -->
 <section class="home-products" id="products">
     <div class="home-product-grid">
 
         {% for product in products %}
+
+        <!-- CARD DO PRODUTO -->
         <div class="product-card {% if product.is_vip %}product-card-vip{% endif %}">
 
-            <a href="{{ product.get_absolute_url }}" class="home-product-image-link">
-                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="home-product-image">
-            </a>
+            <!-- LINK DA IMAGEM -->
+            {% if product.is_vip %}
+            <a href="{% url 'products:vip_customization_choice' product.slug %}" class="home-product-image-link">
+                {% else %}
+                <a href="{{ product.get_absolute_url }}" class="home-product-image-link">
+                    {% endif %}
 
-            <div class="home-product-info">
-                <h3 class="home-product-title">
-                    {{ product.name }}
-                </h3>
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="home-product-image">
 
-                <p class="home-product-price">
-                    R$ {{ product.price }}
-                </p>
-
-                {% if product.installments %}
-                <span class="home-product-installments">
-                    {{ product.installments }}
-                </span>
-                {% endif %}
-
-                <a href="{{ product.get_absolute_url }}" class="home-product-button">
-                    COMPRAR
                 </a>
-            </div>
+
+                <!-- INFORMAÇÕES DO PRODUTO -->
+                <div class="home-product-info">
+                    <h3 class="home-product-title">
+                        {{ product.name }}
+                    </h3>
+
+                    <p class="home-product-price">
+                        R$ {{ product.price }}
+                    </p>
+
+                    {% if product.installments %}
+                    <span class="home-product-installments">
+                        {{ product.installments }}
+                    </span>
+                    {% endif %}
+
+                    <!-- BOTÃO DO PRODUTO -->
+                    {% if product.is_vip %}
+                    <a href="{% url 'customization:vip_choose_type' product.slug %}" class="home-product-button">
+                        PERSONALIZAR
+                    </a>
+                    {% else %}
+                    <a href="{{ product.get_absolute_url }}" class="home-product-button">
+                        COMPRAR
+                    </a>
+                    {% endif %}
+                </div>
 
         </div>
+
         {% empty %}
-        <p>Nenhum produto encontrado.</p>
+
+        <!-- MENSAGEM CASO NÃO TENHA PRODUTOS -->
+        <p class="home-products-empty">
+            Nenhum produto encontrado.
+        </p>
+
         {% endfor %}
 
     </div>
 </section>
 
+<!-- SEÇÃO COMUNIDADE -->
 <section class="community-section">
 
-    <h2 class="community-title">COMUNIDADE</h2>
+    <h2 class="community-title">
+        COMUNIDADE
+    </h2>
 
     <div class="community-grid">
 
         {% for item in community_images %}
-            <img src="{{ item.image.url }}" alt="{{ item.alt }}">
+
+        <!-- IMAGEM DA COMUNIDADE -->
+        <img src="{{ item.image.url }}" alt="{{ item.alt }}">
+
         {% empty %}
-            <p class="community-empty">Nenhuma imagem cadastrada ainda.</p>
+
+        <!-- MENSAGEM CASO NÃO TENHA IMAGENS -->
+        <p class="community-empty">
+            Nenhuma imagem cadastrada ainda.
+        </p>
+
         {% endfor %}
 
     </div>
 
     <p class="community-text">
-        Você pode nos apoiar postando nas redes da forma que se sentir confortável marcando @riskclube — aproveite sua nova garrafa.
+        Você pode nos apoiar postando nas redes da forma que se sentir confortável marcando @riskclube — aproveite sua
+        nova garrafa.
     </p>
 
 </section>
-
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
-
-
 
 {% endblock %}

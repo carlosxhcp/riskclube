@@ -54,3 +54,11 @@ def checkout_stripe_product(request, slug):
     )
 
     return redirect(session.url)
+
+
+def vip_customization_choice(request, slug):
+    product = get_object_or_404(Product, slug=slug, available=True, is_vip=True)
+
+    return render(request, "products/vip_customization_choice.html", {
+        "product": product,
+    })

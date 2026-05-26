@@ -15,4 +15,9 @@ urlpatterns = [
         views.checkout_stripe_product,
         name="checkout_stripe_product"
     ),
+    path(
+    "produto/<slug:slug>/personalizar/",
+    views.vip_customization_choice,
+    name="vip_customization_choice"
+    ),
 ]

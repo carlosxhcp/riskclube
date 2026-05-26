@@ -1,0 +1,161 @@
+{% extends "pages/base.html" %}
+{% load static %}
+
+{% block title %}Personalizar | Risk Clube{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/vip-customization.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<!-- PÁGINA DE ESCOLHA DA CUSTOMIZAÇÃO VIP -->
+<section class="vip-custom-page">
+
+ 
+
+    <!-- TOPO DA PÁGINA -->
+    <div class="vip-custom-header">
+
+        <h1>Escolha como personalizar</h1>
+
+        <p>
+            Selecione uma opção para começar
+        </p>
+    </div>
+
+    <!-- CARDS DE OPÇÕES -->
+    <div class="vip-options-grid">
+
+        <!-- OPÇÃO INDIVIDUAL -->
+        <div class="vip-option-card">
+
+            <!-- IMAGEM INDIVIDUAL -->
+            <div class="vip-option-image-box">
+                <img 
+                    src="{{ product.image.url }}" 
+                    alt="{{ product.name }}" 
+                    class="vip-option-image"
+                >
+            </div>
+
+            <!-- TÍTULO INDIVIDUAL -->
+            <div class="vip-option-title-row">
+                <i class="bi bi-person"></i>
+
+                <div>
+                    <h2>Individual</h2>
+                    <span>1 garrafa</span>
+                </div>
+            </div>
+
+            <!-- INFORMAÇÕES INDIVIDUAL -->
+            <div class="vip-option-info">
+                <p>
+                    <i class="bi bi-check-circle"></i>
+                    Quantidade: 1
+                </p>
+
+                <p>
+                    <i class="bi bi-check-circle"></i>
+                    Sem desconto
+                </p>
+            </div>
+
+            <!-- BOTÃO INDIVIDUAL -->
+            <a href="{% url 'customization:vip_choose_model' product.slug 'individual' %}" class="vip-option-button">
+    Personalizar 1
+    <i class="bi bi-chevron-right"></i>
+</a>
+
+        </div>
+
+        <!-- OPÇÃO GRUPO -->
+        <div class="vip-option-card">
+
+            <!-- IMAGENS DO GRUPO -->
+            <div class="vip-option-image-box vip-group-preview">
+
+                <img 
+                    src="{{ product.image.url }}" 
+                    alt="{{ product.name }}" 
+                    class="vip-option-image vip-bottle vip-bottle-left"
+                >
+
+                <img 
+                    src="{{ product.image.url }}" 
+                    alt="{{ product.name }}" 
+                    class="vip-option-image vip-bottle vip-bottle-center"
+                >
+
+                <img 
+                    src="{{ product.image.url }}" 
+                    alt="{{ product.name }}" 
+                    class="vip-option-image vip-bottle vip-bottle-right"
+                >
+
+            </div>
+
+            <!-- TÍTULO GRUPO -->
+            <div class="vip-option-title-row">
+                <i class="bi bi-people"></i>
+
+                <div>
+                    <h2>Grupo</h2>
+                    <span>2 ou mais garrafas</span>
+                </div>
+            </div>
+
+            <!-- INFORMAÇÕES GRUPO -->
+            <div class="vip-option-info">
+                <p>
+                    <i class="bi bi-check-circle"></i>
+                    Quantidade: 2+
+                </p>
+
+                <p class="vip-green">
+                    <i class="bi bi-check-circle"></i>
+                    10% de desconto aplicado
+                </p>
+            </div>
+
+            <!-- BOTÃO GRUPO -->
+            <a href="{% url 'customization:vip_choose_model' product.slug 'grupo' %}" class="vip-option-button">
+    Personalizar grupo
+    <i class="bi bi-chevron-right"></i>
+</a>
+
+        </div>
+
+    </div>
+
+    <!-- BLOCO DE DESCONTO -->
+    <div class="vip-discount-box">
+
+        <!-- DESTAQUE DO DESCONTO -->
+        <div class="vip-discount-highlight">
+            <div class="vip-discount-icon">
+                <i class="bi bi-tag"></i>
+            </div>
+
+            <div>
+                <strong>2 ou mais garrafas = 10% OFF</strong>
+                <span>Desconto automático no carrinho</span>
+            </div>
+        </div>
+
+        <!-- OBSERVAÇÃO DO DESCONTO -->
+        <div class="vip-discount-note">
+            <i class="bi bi-building"></i>
+
+            <p>
+                Ideal para presentear mais pessoas,<br>
+                ou fazer algo corporativo.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

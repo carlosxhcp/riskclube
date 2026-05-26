@@ -1,0 +1,289 @@
+/* =========================
+   PÁGINA CUSTOM VIP
+========================= */
+
+.vip-custom-page {
+    min-height: 100vh;
+    background: #f5f5f5;
+    padding: 60px 20px 80px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* MARCA D'ÁGUA */
+
+.vip-bg-logo {
+    position: absolute;
+    left: -80px;
+    top: 90px;
+    width: 420px;
+    opacity: 0.025;
+    pointer-events: none;
+}
+
+/* TOPO */
+
+.vip-custom-header {
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    margin-bottom: 28px;
+}
+
+.vip-custom-logo {
+    width: 220px;
+    max-width: 70%;
+    margin-bottom: 22px;
+}
+
+.vip-custom-header h1 {
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 800;
+    color: #111;
+    margin-bottom: 8px;
+}
+
+.vip-custom-header p {
+    color: #8a8a8a;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+/* GRID DOS CARDS */
+
+.vip-options-grid {
+    width: min(760px, 100%);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px;
+    position: relative;
+    z-index: 2;
+}
+
+/* CARD */
+
+.vip-option-card {
+    background: #fff;
+    border: 1px solid #e9e9e9;
+    border-radius: 18px;
+    padding: 18px;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.06);
+}
+
+/* IMAGEM */
+
+.vip-option-image-box {
+    height: 330px;
+    background: #f2f2f2;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.vip-option-image {
+    max-width: 82%;
+    max-height: 92%;
+    object-fit: contain;
+    display: block;
+}
+
+/* PREVIEW GRUPO */
+
+.vip-group-preview .vip-option-image {
+    position: relative;
+    z-index: 2;
+}
+
+.name-tag {
+    position: absolute;
+    top: 58%;
+    transform: translateY(-50%);
+    background: #161616;
+    color: #fff;
+    height: 48px;
+    min-width: 92px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    z-index: 1;
+}
+
+.name-tag-left {
+    left: 18px;
+}
+
+.name-tag-center {
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 3;
+}
+
+.name-tag-right {
+    right: 18px;
+}
+
+/* TÍTULO DO CARD */
+
+.vip-option-title-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.vip-option-title-row i {
+    font-size: 28px;
+    color: #111;
+}
+
+.vip-option-title-row h2 {
+    font-size: 22px;
+    font-weight: 800;
+    color: #111;
+    margin: 0;
+}
+
+.vip-option-title-row span {
+    color: #777;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* INFOS */
+
+.vip-option-info {
+    padding: 16px 0 12px;
+}
+
+.vip-option-info p {
+    margin: 0 0 10px;
+    color: #777;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.vip-option-info i {
+    color: #999;
+}
+
+.vip-option-info .vip-green,
+.vip-option-info .vip-green i {
+    color: #00b84f;
+}
+
+/* BOTÃO */
+
+.vip-option-button {
+    width: 100%;
+    height: 54px;
+    background: #050505;
+    color: #fff;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 42px;
+    transition: 0.25s ease;
+}
+
+.vip-option-button:hover {
+    background: #222;
+    color: #fff;
+}
+
+/* DESCONTO */
+
+.vip-discount-box {
+    width: min(420px, 100%);
+    margin: 70px auto 0;
+    position: relative;
+    z-index: 2;
+}
+
+.vip-discount-highlight {
+    background: #effbf3;
+    border-radius: 12px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.vip-discount-icon {
+    width: 46px;
+    height: 46px;
+    background: #00b84f;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.vip-discount-icon i {
+    font-size: 22px;
+}
+
+.vip-discount-highlight strong {
+    color: #00b84f;
+    font-size: 16px;
+    display: block;
+}
+
+.vip-discount-highlight span {
+    color: #555;
+    font-size: 13px;
+}
+
+.vip-discount-note {
+    background: #fff;
+    padding: 18px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.vip-discount-note i {
+    font-size: 30px;
+    color: #444;
+}
+
+.vip-discount-note p {
+    margin: 0;
+    color: #333;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* RESPONSIVO */
+
+@media (max-width: 768px) {
+    .vip-custom-page {
+        padding: 40px 14px 60px;
+    }
+
+    .vip-options-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .vip-option-image-box {
+        height: 300px;
+    }
+
+    .vip-custom-logo {
+        width: 170px;
+    }
+}

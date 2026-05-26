@@ -1,0 +1,72 @@
+{% extends "pages/base.html" %}
+{% load static %}
+
+{% block title %}Selecionar Modelo | Risk Clube{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/vip-model-selection.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<section class="vip-model-page">
+
+    <!-- TOPO DA PÁGINA -->
+    <div class="vip-model-header">
+        <h1>Selecione o modelo</h1>
+        <p>Escolha o modelo da sua garrafa</p>
+    </div>
+
+    <!-- GRID DOS MODELOS -->
+    <div class="vip-model-grid">
+
+        {% for model in models %}
+
+            <!-- CARD DO MODELO -->
+            <div class="vip-model-card">
+
+                <h2 class="vip-model-name">
+                    {{ model.name }}
+                </h2>
+
+                <div class="vip-model-image-box">
+                    <img 
+                        src="{{ model.image.url }}" 
+                        alt="{{ model.name }}" 
+                        class="vip-model-image"
+                    >
+                </div>
+
+                <div class="vip-model-info">
+
+                    <div class="vip-model-icon">
+                        <i class="{{ model.icon_class }}"></i>
+                    </div>
+
+                    <div>
+                        <h3>{{ model.name }}</h3>
+                        <p>{{ model.description }}</p>
+                    </div>
+
+                </div>
+
+                <a href="#" class="vip-model-button">
+                    Selecionar
+                    <i class="bi bi-chevron-right"></i>
+                </a>
+
+            </div>
+
+        {% empty %}
+
+            <p class="vip-model-empty">
+                Nenhum modelo cadastrado ainda.
+            </p>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+{% endblock %}
