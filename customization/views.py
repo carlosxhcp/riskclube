@@ -29,8 +29,22 @@ def vip_choose_model(request, slug, custom_type):
 
     models = VipBottleModel.objects.filter(product=product, active=True)
 
+    if custom_type == "grupo":
+        return render(request, "customization/vip_group.html", {
+            "product": product,
+            "custom_type": custom_type,
+            "models": models,
+        })
+
     return render(request, "customization/vip_choose_model.html", {
         "product": product,
         "custom_type": custom_type,
         "models": models,
+    })
+
+def vip_group_mockup(request, slug):
+    product = get_object_or_404(Product, slug=slug, available=True, is_vip=True)
+
+    return render(request, "customization/vip_group_mockup.html", {
+        "product": product,
     })

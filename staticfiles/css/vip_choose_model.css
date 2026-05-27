@@ -1,0 +1,196 @@
+/* =========================
+   PÁGINA SELECIONAR MODELO
+========================= */
+
+.vip-model-page {
+    min-height: 100vh;
+    background: #f5f5f5;
+    padding: 70px 5% 90px;
+    position: relative;
+    overflow: hidden;
+}
+
+.vip-model-page::before {
+    content: "R";
+    position: absolute;
+    left: -40px;
+    top: 40px;
+    font-size: 420px;
+    font-weight: 900;
+    color: rgba(0, 0, 0, 0.025);
+    line-height: 1;
+    pointer-events: none;
+}
+
+/* TOPO */
+
+.vip-model-header {
+    text-align: center;
+    margin-bottom: 42px;
+    position: relative;
+    z-index: 2;
+}
+
+.vip-model-header h1 {
+    font-size: clamp(32px, 5vw, 48px);
+    font-weight: 900;
+    color: #080808;
+    margin-bottom: 10px;
+}
+
+.vip-model-header p {
+    color: #777;
+    font-size: 17px;
+    font-weight: 500;
+    margin: 0;
+}
+
+/* GRID */
+
+.vip-model-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 26px;
+    position: relative;
+    z-index: 2;
+}
+
+/* CARD */
+
+.vip-model-card {
+    background: #fff;
+    border: 1px solid #e9e9e9;
+    border-radius: 18px;
+    padding: 22px 18px 20px;
+    box-shadow: 0 14px 35px rgba(0, 0, 0, 0.06);
+}
+
+/* NOME */
+
+.vip-model-name {
+    text-align: center;
+    font-size: 22px;
+    font-weight: 900;
+    color: #111;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+}
+
+/* IMAGEM */
+
+.vip-model-image-box {
+    width: 100%;
+    height: 300px;
+    background: #f1f1f1;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin-bottom: 24px;
+}
+
+.vip-model-image {
+    max-width: 88%;
+    max-height: 92%;
+    object-fit: contain;
+    display: block;
+}
+
+/* INFO */
+
+.vip-model-info {
+    display: grid;
+    grid-template-columns: 52px 1fr;
+    gap: 14px;
+    align-items: center;
+    margin-bottom: 28px;
+}
+
+.vip-model-icon {
+    width: 52px;
+    height: 52px;
+    background: #f1f1f1;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.vip-model-icon i {
+    font-size: 25px;
+    color: #111;
+}
+
+.vip-model-info h3 {
+    font-size: 16px;
+    font-weight: 800;
+    color: #111;
+    margin: 0 0 4px;
+}
+
+.vip-model-info p {
+    font-size: 13px;
+    line-height: 1.35;
+    color: #777;
+    margin: 0;
+    font-weight: 500;
+}
+
+/* BOTÃO */
+
+.vip-model-button {
+    width: 100%;
+    height: 54px;
+    background: #050505;
+    color: #fff;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 44px;
+    transition: 0.25s ease;
+}
+
+.vip-model-button:hover {
+    background: #222;
+    color: #fff;
+}
+
+/* EMPTY */
+
+.vip-model-empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: #555;
+    font-weight: 600;
+}
+
+/* RESPONSIVO */
+
+@media (max-width: 1200px) {
+    .vip-model-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .vip-model-image-box {
+        height: 320px;
+    }
+}
+
+@media (max-width: 768px) {
+    .vip-model-page {
+        padding: 50px 16px 70px;
+    }
+
+    .vip-model-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .vip-model-image-box {
+        height: 300px;
+    }
+}

@@ -1,0 +1,258 @@
+    {% extends "pages/base.html" %}
+    {% load static %}
+
+    {% block title %}Grupo VIP | Risk Clube{% endblock %}
+
+    {% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/vip_group.css' %}">
+    {% endblock %}
+
+    {% block content %}
+
+    <section class="vip-group-page">
+
+        <div class="vip-group-header">
+            <h1>Personalização em grupo</h1>
+            <p>Escolha um modelo diferente para cada garrafa</p>
+        </div>
+
+        <div class="vip-group-wrapper" id="bottlesContainer">
+
+            <div class="vip-group-item" data-bottle-number="1">
+
+                <div class="vip-group-preview">
+                    <span class="vip-bottle-label">Garrafa 1</span>
+
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="vip-group-bottle-image">
+                </div>
+
+                <div class="vip-group-config">
+                    <h2>Garrafa 1</h2>
+                    <p>Escolha o modelo desta garrafa</p>
+
+                    <div class="vip-model-dropdown">
+
+                        <button type="button" class="vip-model-dropdown-btn">
+                            <span class="vip-selected-model">
+                                {% if models.first %}
+                                {{ models.first.name }}
+                                {% else %}
+                                Nenhum modelo cadastrado
+                                {% endif %}
+                            </span>
+
+                            <i class="bi bi-chevron-down"></i>
+                        </button>
+
+                        <div class="vip-model-dropdown-list">
+
+                            {% for model in models %}
+                            <button type="button" class="vip-model-option {% if forloop.first %}active{% endif %}"
+                                data-model-id="{{ model.id }}" data-model-name="{{ model.name }}"
+                                data-model-image="{% if model.image %}{{ model.image.url }}{% else %}{{ product.image.url }}{% endif %}">
+                                {{ model.name }}
+                            </button>
+                            {% empty %}
+                            <div class="vip-no-models">
+                                Nenhum modelo VIP cadastrado.
+                            </div>
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+
+                    <input type="hidden" name="bottle_1_model"
+                        value="{% if models.first %}{{ models.first.id }}{% endif %}">
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="vip-group-actions">
+            <button type="button" class="vip-add-bottle-btn" id="addBottleBtn">
+                Adicionar mais uma garrafa +
+            </button>
+
+            <a href="{% url 'customization:vip_group_mockup' product.slug %}" class="vip-continue-btn"
+                id="continueGroupCustomization">
+                Continuar personalização
+                <i class="bi bi-chevron-right"></i>
+            </a>
+        </div>
+
+    </section>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const bottlesContainer = document.getElementById("bottlesContainer");
+    const addBottleBtn = document.getElementById("addBottleBtn");
+    const continueBtn = document.getElementById("continueGroupCustomization");
+
+    let bottleCount = 1;
+
+    function closeAllDropdowns(exceptDropdown = null) {
+        document.querySelectorAll(".vip-model-dropdown").forEach(dropdown => {
+            if (dropdown !== exceptDropdown) {
+                dropdown.classList.remove("open");
+            }
+        });
+    }
+
+    function saveSelectedBottles() {
+        const bottles = document.querySelectorAll(".vip-group-item");
+        const selectedBottles = {};
+
+        bottles.forEach((bottle, index) => {
+            const activeModel = bottle.querySelector(".vip-model-option.active");
+
+            if (activeModel) {
+                selectedBottles[`garrafa_${index + 1}`] = {
+                    model_id: activeModel.dataset.modelId,
+                    model_name: activeModel.dataset.modelName,
+                    model_image: activeModel.dataset.modelImage
+                };
+            }
+        });
+
+        sessionStorage.setItem("vip_selected_bottles", JSON.stringify(selectedBottles));
+        sessionStorage.setItem("vip_total_bottles", bottles.length);
+        sessionStorage.setItem("vip_current_bottle", 1);
+    }
+
+    function updateBottleNumbers() {
+        const bottles = document.querySelectorAll(".vip-group-item");
+
+        bottleCount = bottles.length;
+
+        bottles.forEach((bottle, index) => {
+            const number = index + 1;
+
+            bottle.dataset.bottleNumber = number;
+
+            const label = bottle.querySelector(".vip-bottle-label");
+            const title = bottle.querySelector(".vip-group-config h2");
+            const hiddenInput = bottle.querySelector("input[type='hidden']");
+
+            if (label) {
+                label.textContent = `Garrafa ${number}`;
+            }
+
+            if (title) {
+                title.textContent = `Garrafa ${number}`;
+            }
+
+            if (hiddenInput) {
+                hiddenInput.name = `bottle_${number}_model`;
+            }
+        });
+    }
+
+    function updateBottleEvents(bottleItem) {
+        const dropdown = bottleItem.querySelector(".vip-model-dropdown");
+        const dropdownBtn = bottleItem.querySelector(".vip-model-dropdown-btn");
+        const selectedText = bottleItem.querySelector(".vip-selected-model");
+        const modelButtons = bottleItem.querySelectorAll(".vip-model-option");
+        const bottleImage = bottleItem.querySelector(".vip-group-bottle-image");
+        const hiddenInput = bottleItem.querySelector("input[type='hidden']");
+
+        dropdownBtn.addEventListener("click", function (event) {
+            event.stopPropagation();
+
+            const isOpen = dropdown.classList.contains("open");
+
+            closeAllDropdowns();
+
+            if (!isOpen) {
+                dropdown.classList.add("open");
+            }
+        });
+
+        modelButtons.forEach(button => {
+            button.addEventListener("click", function (event) {
+                event.stopPropagation();
+
+                modelButtons.forEach(btn => btn.classList.remove("active"));
+
+                this.classList.add("active");
+
+                const modelId = this.dataset.modelId;
+                const modelName = this.dataset.modelName;
+                const modelImage = this.dataset.modelImage;
+
+                selectedText.textContent = modelName;
+
+                if (modelImage) {
+                    bottleImage.src = modelImage;
+                }
+
+                if (hiddenInput) {
+                    hiddenInput.value = modelId;
+                }
+
+                dropdown.classList.remove("open");
+            });
+        });
+    }
+
+    document.addEventListener("click", function () {
+        closeAllDropdowns();
+    });
+
+    updateBottleEvents(document.querySelector(".vip-group-item"));
+
+    addBottleBtn.addEventListener("click", function () {
+        const firstBottle = document.querySelector(".vip-group-item");
+        const newBottle = firstBottle.cloneNode(true);
+
+        const modelButtons = newBottle.querySelectorAll(".vip-model-option");
+        const selectedText = newBottle.querySelector(".vip-selected-model");
+        const hiddenInput = newBottle.querySelector("input[type='hidden']");
+        const dropdown = newBottle.querySelector(".vip-model-dropdown");
+        const bottleImage = newBottle.querySelector(".vip-group-bottle-image");
+
+        dropdown.classList.remove("open");
+
+        modelButtons.forEach(btn => btn.classList.remove("active"));
+
+        if (modelButtons.length > 0) {
+            const firstModel = modelButtons[0];
+
+            firstModel.classList.add("active");
+            selectedText.textContent = firstModel.dataset.modelName;
+            hiddenInput.value = firstModel.dataset.modelId;
+            bottleImage.src = firstModel.dataset.modelImage;
+        }
+
+        const oldRemoveBtn = newBottle.querySelector(".vip-remove-bottle-btn");
+        if (oldRemoveBtn) {
+            oldRemoveBtn.remove();
+        }
+
+        const removeBtn = document.createElement("button");
+        removeBtn.type = "button";
+        removeBtn.className = "vip-remove-bottle-btn";
+        removeBtn.textContent = "Remover garrafa";
+
+        removeBtn.addEventListener("click", function () {
+            newBottle.remove();
+            updateBottleNumbers();
+        });
+
+        newBottle.querySelector(".vip-group-config").appendChild(removeBtn);
+
+        bottlesContainer.appendChild(newBottle);
+
+        updateBottleNumbers();
+        updateBottleEvents(newBottle);
+    });
+
+    continueBtn.addEventListener("click", function () {
+        saveSelectedBottles();
+    });
+});
+</script>
+
+    {% endblock %}

@@ -14,4 +14,9 @@ urlpatterns = [
         views.vip_choose_model,
         name="vip_choose_model"
     ),
+    path(
+    "vip/<slug:slug>/grupo/mockup/",
+    views.vip_group_mockup,
+    name="vip_group_mockup"
+    ),
 ]

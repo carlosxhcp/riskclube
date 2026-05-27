@@ -1,0 +1,338 @@
+{% extends "pages/base.html" %}
+{% load static %}
+
+{% block title %}Personalizar Grupo | Risk Clube{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/vip_group_mockup.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<section class="vip-mockup-page">
+
+    <div class="vip-mockup-left">
+
+        <div class="vip-current-bottle-info">
+            <strong id="currentBottleTitle">Garrafa 1</strong>
+            <span id="currentBottleModel">Modelo selecionado</span>
+        </div>
+
+        <div class="vip-mockup-stage">
+
+            <img 
+                src="{{ product.image.url }}" 
+                alt="{{ product.name }}"
+                class="vip-mockup-bottle"
+                id="mockupBottleImage"
+            >
+
+            <div id="mockupText" class="vip-mockup-text vertical">
+                SEU NOME AQUI
+            </div>
+
+            <div class="vip-mockup-logo">Risk</div>
+
+        </div>
+
+        <button type="button" class="vip-live-preview">
+            <i class="bi bi-eye"></i>
+            Live Preview
+        </button>
+
+    </div>
+
+    <div class="vip-mockup-panel">
+
+        <div class="vip-panel-logo">Risk</div>
+
+        <div class="vip-editing-badge">
+            <span id="editingBadge">Editando garrafa 1</span>
+        </div>
+
+        <div class="vip-panel-section">
+            <label id="nameLabel">Nome da garrafa 1</label>
+
+            <div class="vip-name-input-row">
+                <input 
+                    type="text" 
+                    id="nameInput" 
+                    maxlength="22"
+                    placeholder="Digite o nome"
+                    value="SEU NOME AQUI"
+                >
+
+                <button type="button">
+                    <i class="bi bi-pencil"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="vip-panel-section">
+            <div class="vip-section-title-row">
+                <label>Fonte</label>
+                <span>Ver todas</span>
+            </div>
+
+            <div class="vip-font-options">
+                <button type="button" class="vip-font-btn active" data-font="Arial">
+                    <strong>Aa</strong>
+                    <span>Arial</span>
+                </button>
+
+                <button type="button" class="vip-font-btn" data-font="Montserrat">
+                    <strong>Aa</strong>
+                    <span>Montserrat</span>
+                </button>
+
+                <button type="button" class="vip-font-btn" data-font="Georgia">
+                    <strong>Aa</strong>
+                    <span>Georgia</span>
+                </button>
+
+                <button type="button" class="vip-font-btn" data-font="serif">
+                    <strong>Aa</strong>
+                    <span>Serif</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="vip-panel-section">
+            <label>Orientação</label>
+
+            <div class="vip-orientation-options">
+                <button type="button" class="vip-orientation-btn active" data-orientation="vertical">
+                    <i class="bi bi-arrows-vertical"></i>
+                    Vertical
+                </button>
+
+                <button type="button" class="vip-orientation-btn" data-orientation="horizontal">
+                    <i class="bi bi-arrows"></i>
+                    Horizontal
+                </button>
+            </div>
+        </div>
+
+        <div class="vip-panel-section">
+            <label>Escolha sua categoria</label>
+
+            <div class="vip-category-grid">
+                <button type="button" class="vip-category-btn active">
+                    <i class="bi bi-gem"></i>
+                    <span>Premium</span>
+                </button>
+
+                <button type="button" class="vip-category-btn">
+                    <i class="bi bi-eye"></i>
+                    <span>Místico</span>
+                </button>
+
+                <button type="button" class="vip-category-btn">
+                    <i class="bi bi-plus-lg"></i>
+                    <span>Religião</span>
+                </button>
+
+                <button type="button" class="vip-category-btn">
+                    <i class="bi bi-trophy"></i>
+                    <span>Time</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="vip-price-box">
+            <strong>R$ {{ product.price }}</strong>
+        </div>
+
+        <div class="vip-group-flow-actions">
+
+            <button type="button" class="vip-copy-all-btn">
+                Copiar este design para todas
+            </button>
+
+            <button type="button" class="vip-next-bottle-btn">
+                Editar próxima separadamente
+                <i class="bi bi-arrow-right"></i>
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const nameInput = document.getElementById("nameInput");
+    const mockupText = document.getElementById("mockupText");
+    const mockupBottleImage = document.getElementById("mockupBottleImage");
+
+    const currentBottleTitle = document.getElementById("currentBottleTitle");
+    const currentBottleModel = document.getElementById("currentBottleModel");
+    const editingBadge = document.getElementById("editingBadge");
+    const nameLabel = document.getElementById("nameLabel");
+
+    const fontButtons = document.querySelectorAll(".vip-font-btn");
+    const orientationButtons = document.querySelectorAll(".vip-orientation-btn");
+    const categoryButtons = document.querySelectorAll(".vip-category-btn");
+
+    const copyAllBtn = document.querySelector(".vip-copy-all-btn");
+    const nextBottleBtn = document.querySelector(".vip-next-bottle-btn");
+
+    let currentBottle = Number(sessionStorage.getItem("vip_current_bottle")) || 1;
+    let totalBottles = Number(sessionStorage.getItem("vip_total_bottles")) || 2;
+
+    const selectedBottles = JSON.parse(sessionStorage.getItem("vip_selected_bottles")) || {};
+
+    function getCurrentBottleData() {
+        return selectedBottles[`garrafa_${currentBottle}`] || null;
+    }
+
+    function updateBottleInfo() {
+        const bottleData = getCurrentBottleData();
+
+        currentBottleTitle.textContent = `Garrafa ${currentBottle} de ${totalBottles}`;
+        editingBadge.textContent = `Editando garrafa ${currentBottle} de ${totalBottles}`;
+        nameLabel.textContent = `Nome da garrafa ${currentBottle}`;
+
+        if (bottleData) {
+            currentBottleModel.textContent = bottleData.model_name;
+
+            if (bottleData.model_image) {
+                mockupBottleImage.src = bottleData.model_image;
+            }
+        } else {
+            currentBottleModel.textContent = "Modelo não encontrado";
+        }
+    }
+
+    function getCurrentDesign() {
+        const activeFont = document.querySelector(".vip-font-btn.active");
+        const activeOrientation = document.querySelector(".vip-orientation-btn.active");
+        const activeCategory = document.querySelector(".vip-category-btn.active");
+        const bottleData = getCurrentBottleData();
+
+        return {
+            bottle: currentBottle,
+            model_id: bottleData ? bottleData.model_id : "",
+            model_name: bottleData ? bottleData.model_name : "",
+            model_image: bottleData ? bottleData.model_image : "",
+            name: nameInput.value || "SEU NOME AQUI",
+            font: activeFont ? activeFont.dataset.font : "Arial",
+            orientation: activeOrientation ? activeOrientation.dataset.orientation : "vertical",
+            category: activeCategory ? activeCategory.innerText.trim() : ""
+        };
+    }
+
+    function saveCurrentDesign() {
+        const designs = JSON.parse(sessionStorage.getItem("vip_group_designs")) || {};
+        designs[`garrafa_${currentBottle}`] = getCurrentDesign();
+        sessionStorage.setItem("vip_group_designs", JSON.stringify(designs));
+    }
+
+    function applyDesign(design) {
+        if (!design) return;
+
+        nameInput.value = design.name;
+        mockupText.textContent = design.name;
+        mockupText.style.fontFamily = design.font;
+
+        if (design.model_image) {
+            mockupBottleImage.src = design.model_image;
+        }
+
+        fontButtons.forEach(btn => {
+            btn.classList.toggle("active", btn.dataset.font === design.font);
+        });
+
+        orientationButtons.forEach(btn => {
+            const isActive = btn.dataset.orientation === design.orientation;
+            btn.classList.toggle("active", isActive);
+
+            if (isActive) {
+                mockupText.classList.remove("vertical", "horizontal");
+                mockupText.classList.add(design.orientation);
+            }
+        });
+    }
+
+    function loadCurrentBottleDesign() {
+        updateBottleInfo();
+
+        const designs = JSON.parse(sessionStorage.getItem("vip_group_designs")) || {};
+        const design = designs[`garrafa_${currentBottle}`];
+
+        if (design) {
+            applyDesign(design);
+        } else {
+            nameInput.value = "SEU NOME AQUI";
+            mockupText.textContent = "SEU NOME AQUI";
+        }
+    }
+
+    nameInput.addEventListener("input", function () {
+        mockupText.textContent = this.value || "SEU NOME AQUI";
+    });
+
+    fontButtons.forEach(button => {
+        button.addEventListener("click", function () {
+            fontButtons.forEach(btn => btn.classList.remove("active"));
+            this.classList.add("active");
+            mockupText.style.fontFamily = this.dataset.font;
+        });
+    });
+
+    orientationButtons.forEach(button => {
+        button.addEventListener("click", function () {
+            orientationButtons.forEach(btn => btn.classList.remove("active"));
+            this.classList.add("active");
+
+            mockupText.classList.remove("vertical", "horizontal");
+            mockupText.classList.add(this.dataset.orientation);
+        });
+    });
+
+    categoryButtons.forEach(button => {
+        button.addEventListener("click", function () {
+            categoryButtons.forEach(btn => btn.classList.remove("active"));
+            this.classList.add("active");
+        });
+    });
+
+    copyAllBtn.addEventListener("click", function () {
+        const currentDesign = getCurrentDesign();
+        const designs = {};
+
+        for (let i = 1; i <= totalBottles; i++) {
+            const bottleData = selectedBottles[`garrafa_${i}`] || {};
+
+            designs[`garrafa_${i}`] = {
+                ...currentDesign,
+                bottle: i,
+                model_id: bottleData.model_id || currentDesign.model_id,
+                model_name: bottleData.model_name || currentDesign.model_name,
+                model_image: bottleData.model_image || currentDesign.model_image
+            };
+        }
+
+        sessionStorage.setItem("vip_group_designs", JSON.stringify(designs));
+
+        alert("Design copiado para todas as garrafas!");
+    });
+
+    nextBottleBtn.addEventListener("click", function () {
+        saveCurrentDesign();
+
+        if (currentBottle < totalBottles) {
+            currentBottle++;
+            sessionStorage.setItem("vip_current_bottle", currentBottle);
+            window.location.reload();
+        } else {
+            alert("Todas as garrafas foram personalizadas!");
+        }
+    });
+
+    loadCurrentBottleDesign();
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,385 @@
+/* =========================
+   PÁGINA GRUPO VIP
+========================= */
+
+.vip-group-page {
+    min-height: 100vh;
+    padding: 55px 20px 75px;
+    background: #f7f7f7;
+    position: relative;
+    overflow: hidden;
+}
+
+/* BACKGROUND ANIMADO CLARO */
+
+.vip-group-page::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        120deg,
+        #ffffff 0%,
+        #eeeeee 20%,
+        #dcdcdc 40%,
+        #f8f8f8 60%,
+        #e7e7e7 80%,
+        #ffffff 100%
+    );
+    background-size: 300% 300%;
+    animation: vipGroupFlow 8s linear infinite;
+    z-index: 0;
+}
+
+.vip-group-page::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        120deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.8) 45%,
+        transparent 70%
+    );
+    transform: translateX(-100%);
+    animation: vipGroupLight 5s linear infinite;
+    z-index: 1;
+    pointer-events: none;
+}
+
+@keyframes vipGroupFlow {
+    from {
+        background-position: 0% 50%;
+    }
+
+    to {
+        background-position: 300% 50%;
+    }
+}
+
+@keyframes vipGroupLight {
+    from {
+        transform: translateX(-100%);
+    }
+
+    to {
+        transform: translateX(100%);
+    }
+}
+
+/* TOPO */
+
+.vip-group-header {
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    margin-bottom: 32px;
+}
+
+.vip-group-header h1 {
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 900;
+    color: #111;
+    margin-bottom: 6px;
+}
+
+.vip-group-header p {
+    color: #666;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+/* CONTAINER */
+
+.vip-group-wrapper {
+    width: min(980px, 100%);
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+/* ITEM DA GARRAFA */
+
+.vip-group-item {
+    background: rgba(255, 255, 255, 0.94);
+    border: 1px solid rgba(220, 220, 220, 0.9);
+    border-radius: 20px;
+    padding: 18px;
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 22px;
+    min-height: 320px;
+    box-shadow: 0 14px 35px rgba(0, 0, 0, 0.06);
+    backdrop-filter: blur(10px);
+}
+
+/* PREVIEW */
+
+.vip-group-preview {
+    height: 280px;
+    background: #f2f2f2;
+    border-radius: 16px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.vip-bottle-label {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    background: #111;
+    color: #fff;
+    padding: 7px 13px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.vip-group-bottle-image {
+    max-width: 62%;
+    max-height: 82%;
+    object-fit: contain;
+    display: block;
+    transition: 0.25s ease;
+}
+
+/* CONFIGURAÇÃO */
+
+.vip-group-config {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-right: 10px;
+}
+
+.vip-group-config h2 {
+    font-size: 24px;
+    font-weight: 900;
+    color: #111;
+    margin-bottom: 4px;
+}
+
+.vip-group-config p {
+    color: #777;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 18px;
+}
+
+/* DROPDOWN DE MODELOS */
+
+.vip-model-dropdown {
+    width: 100%;
+    position: relative;
+}
+
+.vip-model-dropdown-btn {
+    width: 100%;
+    min-height: 58px;
+    background: #fff;
+    border: 1px solid #dedede;
+    border-radius: 14px;
+    padding: 0 18px;
+    color: #111;
+    font-size: 15px;
+    font-weight: 900;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: 0.25s ease;
+}
+
+.vip-model-dropdown-btn:hover {
+    border-color: #111;
+}
+
+.vip-model-dropdown-btn i {
+    font-size: 16px;
+    transition: 0.25s ease;
+}
+
+.vip-model-dropdown.open .vip-model-dropdown-btn {
+    border-color: #111;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+}
+
+.vip-model-dropdown.open .vip-model-dropdown-btn i {
+    transform: rotate(180deg);
+}
+
+.vip-model-dropdown-list {
+    width: 100%;
+    max-height: 0;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid transparent;
+    border-radius: 14px;
+    margin-top: 8px;
+    box-shadow: 0 18px 35px rgba(0, 0, 0, 0.08);
+    transition: 0.25s ease;
+}
+
+.vip-model-dropdown.open .vip-model-dropdown-list {
+    max-height: 260px;
+    overflow-y: auto;
+    border-color: #e5e5e5;
+    padding: 8px;
+}
+
+.vip-model-option {
+    width: 100%;
+    min-height: 48px;
+    background: transparent;
+    border: none;
+    border-radius: 10px;
+    padding: 0 14px;
+    color: #111;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+    text-align: left;
+    transition: 0.2s ease;
+}
+
+.vip-model-option:hover {
+    background: #f1f1f1;
+}
+
+.vip-model-option.active {
+    background: #111;
+    color: #fff;
+}
+
+.vip-no-models {
+    background: #fff4f4;
+    color: #b00020;
+    border: 1px solid #ffd0d0;
+    border-radius: 12px;
+    padding: 14px;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+/* REMOVER */
+
+.vip-remove-bottle-btn {
+    width: fit-content;
+    margin-top: 18px;
+    background: transparent;
+    border: none;
+    color: #b00020;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    padding: 0;
+}
+
+.vip-remove-bottle-btn:hover {
+    text-decoration: underline;
+}
+
+/* AÇÕES */
+
+.vip-group-actions {
+    width: min(980px, 100%);
+    margin: 28px auto 0;
+    position: relative;
+    z-index: 2;
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+}
+
+.vip-add-bottle-btn,
+.vip-continue-btn {
+    height: 54px;
+    border-radius: 12px;
+    padding: 0 26px;
+    font-size: 14px;
+    font-weight: 900;
+    cursor: pointer;
+    transition: 0.25s ease;
+}
+
+.vip-add-bottle-btn {
+    background: #fff;
+    color: #111;
+    border: 1px solid #dcdcdc;
+}
+
+.vip-add-bottle-btn:hover {
+    border-color: #111;
+    transform: translateY(-2px);
+}
+
+.vip-continue-btn {
+    background: #111;
+    color: #fff;
+    border: 1px solid #111;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.vip-continue-btn:hover {
+    background: #222;
+    transform: translateY(-2px);
+}
+
+/* RESPONSIVO */
+
+@media (max-width: 900px) {
+    .vip-group-item {
+        grid-template-columns: 1fr;
+        min-height: auto;
+    }
+
+    .vip-group-preview {
+        height: 340px;
+    }
+
+    .vip-group-bottle-image {
+        max-width: 58%;
+    }
+}
+
+@media (max-width: 600px) {
+    .vip-group-page {
+        padding: 40px 14px 60px;
+    }
+
+    .vip-group-header {
+        margin-bottom: 26px;
+    }
+
+    .vip-group-item {
+        padding: 15px;
+        border-radius: 18px;
+        gap: 18px;
+    }
+
+    .vip-group-preview {
+        height: 300px;
+    }
+
+    .vip-group-bottle-image {
+        max-width: 64%;
+        max-height: 84%;
+    }
+
+    .vip-group-actions {
+        flex-direction: column;
+    }
+
+    .vip-add-bottle-btn,
+    .vip-continue-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
