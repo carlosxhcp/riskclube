@@ -297,16 +297,24 @@
 
                 designs[`garrafa_${i}`] = {
                     ...currentDesign,
+
                     bottle: i,
+
                     model_id: bottleData.model_id || currentDesign.model_id,
                     model_name: bottleData.model_name || currentDesign.model_name,
-                    model_image: bottleData.model_image || currentDesign.model_image
+                    model_image: bottleData.model_image || currentDesign.model_image,
+
+                    name: currentDesign.name,
+                    font: currentDesign.font,
+                    orientation: currentDesign.orientation,
+                    category: currentDesign.category
                 };
             }
 
             sessionStorage.setItem("vip_group_designs", JSON.stringify(designs));
+            sessionStorage.setItem("vip_current_bottle", totalBottles);
 
-            alert("Design copiado para todas as garrafas!");
+            window.location.href = "{% url 'customization:vip_group_summary' product.slug %}";
         });
 
         nextBottleBtn.addEventListener("click", function () {
