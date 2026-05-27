@@ -1,0 +1,234 @@
+.vip-summary-page {
+    min-height: 100vh;
+    padding: 55px 40px 90px;
+    background: #f7f7f7;
+    position: relative;
+    overflow: hidden;
+}
+
+.vip-summary-page::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        120deg,
+        #ffffff 0%,
+        #eeeeee 20%,
+        #dcdcdc 40%,
+        #f8f8f8 60%,
+        #e7e7e7 80%,
+        #ffffff 100%
+    );
+    background-size: 300% 300%;
+    animation: vipSummaryFlow 8s linear infinite;
+    z-index: 0;
+}
+
+@keyframes vipSummaryFlow {
+    from {
+        background-position: 0% 50%;
+    }
+
+    to {
+        background-position: 300% 50%;
+    }
+}
+
+.vip-summary-header {
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    margin-bottom: 38px;
+}
+
+.vip-summary-header h1 {
+    font-size: clamp(32px, 5vw, 54px);
+    font-weight: 900;
+    color: #111;
+    margin-bottom: 8px;
+}
+
+.vip-summary-header p {
+    color: #666;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.vip-summary-grid {
+    width: min(1250px, 100%);
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+.vip-summary-card {
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid #e5e5e5;
+    border-radius: 20px;
+    padding: 18px;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.07);
+}
+
+.vip-summary-image-box {
+    height: 320px;
+    background: #f1f1f1;
+    border-radius: 16px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.vip-summary-image-box span {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    background: #111;
+    color: #fff;
+    padding: 7px 13px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 900;
+}
+
+.vip-summary-image-box img {
+    max-width: 78%;
+    max-height: 88%;
+    object-fit: contain;
+}
+
+.vip-summary-text {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    color: #e8e8e8;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    pointer-events: none;
+}
+
+.vip-summary-text.vertical {
+    transform: translate(-50%, -50%) rotate(-90deg);
+}
+
+.vip-summary-text.horizontal {
+    transform: translate(-50%, -50%);
+}
+
+.vip-summary-info {
+    padding-top: 18px;
+}
+
+.vip-summary-info h2 {
+    font-size: 22px;
+    font-weight: 900;
+    color: #111;
+    margin-bottom: 12px;
+}
+
+.vip-summary-info p {
+    margin: 0 0 8px;
+    color: #666;
+    font-size: 14px;
+}
+
+.vip-summary-info strong {
+    color: #111;
+}
+
+.vip-edit-bottle-btn {
+    width: 100%;
+    height: 46px;
+    margin-top: 14px;
+    border-radius: 10px;
+    border: 1px solid #111;
+    background: #fff;
+    color: #111;
+    font-size: 13px;
+    font-weight: 900;
+    cursor: pointer;
+    transition: 0.25s ease;
+}
+
+.vip-edit-bottle-btn:hover {
+    background: #111;
+    color: #fff;
+}
+
+.vip-summary-actions {
+    width: min(650px, 100%);
+    margin: 36px auto 0;
+    position: relative;
+    z-index: 2;
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+}
+
+.vip-summary-back,
+.vip-summary-finish {
+    height: 54px;
+    border-radius: 12px;
+    padding: 0 28px;
+    font-size: 14px;
+    font-weight: 900;
+    cursor: pointer;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.vip-summary-back {
+    background: #fff;
+    color: #111;
+    border: 1px solid #dcdcdc;
+}
+
+.vip-summary-finish {
+    background: #050505;
+    color: #fff;
+    border: 1px solid #050505;
+    gap: 14px;
+}
+
+.vip-summary-empty {
+    grid-column: 1 / -1;
+    background: #fff;
+    border-radius: 18px;
+    padding: 30px;
+    text-align: center;
+    font-weight: 800;
+    color: #777;
+}
+
+@media (max-width: 1000px) {
+    .vip-summary-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 650px) {
+    .vip-summary-page {
+        padding: 40px 14px 70px;
+    }
+
+    .vip-summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .vip-summary-actions {
+        flex-direction: column;
+    }
+
+    .vip-summary-back,
+    .vip-summary-finish {
+        width: 100%;
+    }
+}

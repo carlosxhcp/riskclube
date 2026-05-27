@@ -4,7 +4,7 @@
 
 .vip-group-page {
     min-height: 100vh;
-    padding: 55px 20px 75px;
+    padding: 55px 40px 120px;
     background: #f7f7f7;
     position: relative;
     overflow: hidden;
@@ -34,14 +34,7 @@
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-        120deg,
-        transparent 0%,
-        rgba(255, 255, 255, 0.8) 45%,
-        transparent 70%
-    );
-    transform: translateX(-100%);
-    animation: vipGroupLight 5s linear infinite;
+    background: radial-gradient(circle at left top, rgba(255,255,255,0.8), transparent 28%);
     z-index: 1;
     pointer-events: none;
 }
@@ -56,330 +49,292 @@
     }
 }
 
-@keyframes vipGroupLight {
-    from {
-        transform: translateX(-100%);
-    }
-
-    to {
-        transform: translateX(100%);
-    }
-}
-
 /* TOPO */
 
 .vip-group-header {
     text-align: center;
     position: relative;
     z-index: 2;
-    margin-bottom: 32px;
+    margin-bottom: 38px;
 }
 
 .vip-group-header h1 {
-    font-size: clamp(28px, 4vw, 42px);
+    font-size: clamp(34px, 5vw, 56px);
     font-weight: 900;
     color: #111;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
+    letter-spacing: -1px;
 }
 
 .vip-group-header p {
     color: #666;
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 500;
 }
 
-/* CONTAINER */
+/* GRID */
 
-.vip-group-wrapper {
-    width: min(980px, 100%);
+.vip-model-card-grid {
+    width: min(1500px, 100%);
     margin: 0 auto;
     position: relative;
     z-index: 2;
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 26px;
 }
 
-/* ITEM DA GARRAFA */
+/* CARD */
 
-.vip-group-item {
+.vip-model-card {
     background: rgba(255, 255, 255, 0.94);
     border: 1px solid rgba(220, 220, 220, 0.9);
-    border-radius: 20px;
-    padding: 18px;
-    display: grid;
-    grid-template-columns: 300px 1fr;
-    gap: 22px;
-    min-height: 320px;
-    box-shadow: 0 14px 35px rgba(0, 0, 0, 0.06);
-    backdrop-filter: blur(10px);
-}
-
-/* PREVIEW */
-
-.vip-group-preview {
-    height: 280px;
-    background: #f2f2f2;
-    border-radius: 16px;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-}
-
-.vip-bottle-label {
-    position: absolute;
-    top: 14px;
-    left: 14px;
-    background: #111;
-    color: #fff;
-    padding: 7px 13px;
-    border-radius: 999px;
-    font-size: 12px;
-    font-weight: 800;
-}
-
-.vip-group-bottle-image {
-    max-width: 62%;
-    max-height: 82%;
-    object-fit: contain;
-    display: block;
+    border-radius: 18px;
+    padding: 16px;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.07);
     transition: 0.25s ease;
 }
 
-/* CONFIGURAÇÃO */
-
-.vip-group-config {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding-right: 10px;
+.vip-model-card:hover,
+.vip-model-card.selected {
+    transform: translateY(-4px);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.12);
+    border-color: #111;
 }
 
-.vip-group-config h2 {
-    font-size: 24px;
+.vip-model-card h2 {
+    text-align: center;
+    font-size: 22px;
     font-weight: 900;
     color: #111;
-    margin-bottom: 4px;
-}
-
-.vip-group-config p {
-    color: #777;
-    font-size: 14px;
-    font-weight: 500;
+    text-transform: uppercase;
     margin-bottom: 18px;
 }
 
-/* DROPDOWN DE MODELOS */
+/* IMAGEM */
 
-.vip-model-dropdown {
-    width: 100%;
-    position: relative;
-}
-
-.vip-model-dropdown-btn {
-    width: 100%;
-    min-height: 58px;
-    background: #fff;
-    border: 1px solid #dedede;
-    border-radius: 14px;
-    padding: 0 18px;
-    color: #111;
-    font-size: 15px;
-    font-weight: 900;
-    cursor: pointer;
+.vip-model-image-box {
+    height: 260px;
+    background: #f1f1f1;
+    border-radius: 12px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    transition: 0.25s ease;
-}
-
-.vip-model-dropdown-btn:hover {
-    border-color: #111;
-}
-
-.vip-model-dropdown-btn i {
-    font-size: 16px;
-    transition: 0.25s ease;
-}
-
-.vip-model-dropdown.open .vip-model-dropdown-btn {
-    border-color: #111;
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
-}
-
-.vip-model-dropdown.open .vip-model-dropdown-btn i {
-    transform: rotate(180deg);
-}
-
-.vip-model-dropdown-list {
-    width: 100%;
-    max-height: 0;
+    justify-content: center;
     overflow: hidden;
-    background: #fff;
-    border: 1px solid transparent;
-    border-radius: 14px;
-    margin-top: 8px;
-    box-shadow: 0 18px 35px rgba(0, 0, 0, 0.08);
-    transition: 0.25s ease;
 }
 
-.vip-model-dropdown.open .vip-model-dropdown-list {
-    max-height: 260px;
-    overflow-y: auto;
-    border-color: #e5e5e5;
-    padding: 8px;
+.vip-model-image-box img {
+    width: 82%;
+    height: 82%;
+    object-fit: contain;
 }
 
-.vip-model-option {
-    width: 100%;
-    min-height: 48px;
-    background: transparent;
-    border: none;
-    border-radius: 10px;
-    padding: 0 14px;
-    color: #111;
-    font-size: 14px;
-    font-weight: 800;
-    cursor: pointer;
-    text-align: left;
-    transition: 0.2s ease;
-}
+/* INFO */
 
-.vip-model-option:hover {
-    background: #f1f1f1;
-}
-
-.vip-model-option.active {
-    background: #111;
-    color: #fff;
-}
-
-.vip-no-models {
-    background: #fff4f4;
-    color: #b00020;
-    border: 1px solid #ffd0d0;
-    border-radius: 12px;
-    padding: 14px;
-    font-size: 14px;
-    font-weight: 700;
-}
-
-/* REMOVER */
-
-.vip-remove-bottle-btn {
-    width: fit-content;
-    margin-top: 18px;
-    background: transparent;
-    border: none;
-    color: #b00020;
-    font-size: 13px;
-    font-weight: 800;
-    cursor: pointer;
-    padding: 0;
-}
-
-.vip-remove-bottle-btn:hover {
-    text-decoration: underline;
-}
-
-/* AÇÕES */
-
-.vip-group-actions {
-    width: min(980px, 100%);
-    margin: 28px auto 0;
-    position: relative;
-    z-index: 2;
+.vip-model-info {
     display: flex;
+    align-items: center;
     gap: 14px;
+    margin-top: 20px;
+    min-height: 54px;
+}
+
+.vip-model-icon {
+    width: 46px;
+    height: 46px;
+    background: #f3f3f3;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
     justify-content: center;
 }
 
-.vip-add-bottle-btn,
-.vip-continue-btn {
-    height: 54px;
-    border-radius: 12px;
-    padding: 0 26px;
+.vip-model-icon i {
+    font-size: 23px;
+    color: #111;
+}
+
+.vip-model-info strong {
+    display: block;
+    color: #111;
+    font-size: 15px;
+    font-weight: 900;
+}
+
+.vip-model-info span {
+    display: block;
+    color: #777;
+    font-size: 13px;
+    line-height: 1.25;
+}
+
+/* CONTADOR */
+
+.vip-model-counter {
+    margin: 26px auto 24px;
+    display: grid;
+    grid-template-columns: 56px 1fr 56px;
+    align-items: center;
+    gap: 18px;
+}
+
+.vip-qty-btn {
+    width: 56px;
+    height: 38px;
+    border: none;
+    border-radius: 999px;
+    background: #f0f0f0;
+    color: #111;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.vip-qty-btn:hover {
+    background: #111;
+    color: #fff;
+}
+
+.vip-qty-number {
+    text-align: center;
+    color: #111;
+    font-size: 22px;
+    font-weight: 900;
+}
+
+/* BOTÃO */
+
+.vip-select-model-btn {
+    width: 100%;
+    height: 50px;
+    border-radius: 9px;
+    background: #050505;
+    border: 1px solid #050505;
+    color: #fff;
     font-size: 14px;
     font-weight: 900;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 36px;
     transition: 0.25s ease;
 }
 
-.vip-add-bottle-btn {
+.vip-select-model-btn:hover {
+    background: #222;
+}
+
+/* VAZIO */
+
+.vip-empty-models {
+    grid-column: 1 / -1;
     background: #fff;
-    color: #111;
-    border: 1px solid #dcdcdc;
+    border: 1px solid #eee;
+    border-radius: 16px;
+    padding: 28px;
+    text-align: center;
+    font-weight: 800;
+    color: #777;
 }
 
-.vip-add-bottle-btn:hover {
-    border-color: #111;
-    transform: translateY(-2px);
-}
+/* BARRA INFERIOR */
 
-.vip-continue-btn {
-    background: #111;
-    color: #fff;
-    border: 1px solid #111;
+.vip-group-bottom-bar {
+    width: min(900px, calc(100% - 40px));
+    min-height: 76px;
+    background: rgba(255,255,255,0.96);
+    border: 1px solid #e5e5e5;
+    border-radius: 18px;
+    position: fixed;
+    left: 50%;
+    bottom: 24px;
+    transform: translateX(-50%);
+    z-index: 20;
+    box-shadow: 0 20px 45px rgba(0,0,0,0.12);
     display: flex;
     align-items: center;
-    gap: 16px;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 14px 18px;
+    backdrop-filter: blur(10px);
+}
+
+.vip-group-bottom-bar strong {
+    display: block;
+    color: #111;
+    font-size: 16px;
+    font-weight: 900;
+}
+
+.vip-group-bottom-bar span {
+    display: block;
+    color: #777;
+    font-size: 13px;
+    margin-top: 2px;
+}
+
+/* CONTINUAR */
+
+.vip-continue-btn {
+    min-width: 240px;
+    height: 50px;
+    background: #050505;
+    color: #fff;
+    border: 1px solid #050505;
+    border-radius: 11px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    transition: 0.25s ease;
 }
 
 .vip-continue-btn:hover {
     background: #222;
-    transform: translateY(-2px);
+    color: #fff;
+}
+
+.vip-continue-btn.disabled {
+    opacity: 0.35;
+    pointer-events: auto;
 }
 
 /* RESPONSIVO */
 
-@media (max-width: 900px) {
-    .vip-group-item {
-        grid-template-columns: 1fr;
-        min-height: auto;
-    }
-
-    .vip-group-preview {
-        height: 340px;
-    }
-
-    .vip-group-bottle-image {
-        max-width: 58%;
+@media (max-width: 1200px) {
+    .vip-model-card-grid {
+        grid-template-columns: repeat(2, 1fr);
+        width: min(850px, 100%);
     }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 700px) {
     .vip-group-page {
-        padding: 40px 14px 60px;
+        padding: 38px 14px 150px;
     }
 
-    .vip-group-header {
-        margin-bottom: 26px;
+    .vip-model-card-grid {
+        grid-template-columns: 1fr;
     }
 
-    .vip-group-item {
-        padding: 15px;
-        border-radius: 18px;
-        gap: 18px;
+    .vip-model-image-box {
+        height: 240px;
     }
 
-    .vip-group-preview {
-        height: 300px;
-    }
-
-    .vip-group-bottle-image {
-        max-width: 64%;
-        max-height: 84%;
-    }
-
-    .vip-group-actions {
+    .vip-group-bottom-bar {
         flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+        bottom: 14px;
     }
 
-    .vip-add-bottle-btn,
     .vip-continue-btn {
         width: 100%;
-        justify-content: center;
+        min-width: 0;
     }
 }

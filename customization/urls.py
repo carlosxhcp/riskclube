@@ -19,4 +19,9 @@ urlpatterns = [
     views.vip_group_mockup,
     name="vip_group_mockup"
     ),
+    path(
+    "vip/<slug:slug>/grupo/resumo/",
+    views.vip_group_summary,
+    name="vip_group_summary"
+),
 ]

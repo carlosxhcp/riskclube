@@ -48,3 +48,10 @@ def vip_group_mockup(request, slug):
     return render(request, "customization/vip_group_mockup.html", {
         "product": product,
     })
+
+def vip_group_summary(request, slug):
+    product = get_object_or_404(Product, slug=slug, available=True, is_vip=True)
+
+    return render(request, "customization/vip_group_summary.html", {
+        "product": product,
+    })

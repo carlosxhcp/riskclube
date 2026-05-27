@@ -1,0 +1,111 @@
+{% extends "pages/base.html" %}
+{% load static %}
+
+{% block title %}Resumo Grupo VIP | Risk Clube{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/vip_group_summary.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<section class="vip-summary-page">
+
+    <div class="vip-summary-header">
+        <h1>Resumo da personalização</h1>
+        <p>Confira todas as garrafas antes de continuar</p>
+    </div>
+
+    <div class="vip-summary-grid" id="summaryGrid"></div>
+
+    <div class="vip-summary-actions">
+        <a href="{% url 'customization:vip_group_mockup' product.slug %}" class="vip-summary-back">
+            Editar novamente
+        </a>
+
+        <button type="button" class="vip-summary-finish">
+            Adicionar ao carrinho
+            <i class="bi bi-bag"></i>
+        </button>
+    </div>
+
+</section>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const summaryGrid = document.getElementById("summaryGrid");
+
+    const designs = JSON.parse(sessionStorage.getItem("vip_group_designs")) || {};
+    const totalBottles = Number(sessionStorage.getItem("vip_total_bottles")) || 0;
+
+    if (totalBottles === 0) {
+        summaryGrid.innerHTML = `
+            <div class="vip-summary-empty">
+                Nenhuma garrafa personalizada encontrada.
+            </div>
+        `;
+        return;
+    }
+
+    for (let i = 1; i <= totalBottles; i++) {
+        const design = designs[`garrafa_${i}`];
+
+        if (!design) continue;
+
+        const card = document.createElement("div");
+        card.className = "vip-summary-card";
+
+        card.innerHTML = `
+            <div class="vip-summary-image-box">
+                <span>Garrafa ${i}</span>
+
+                <img src="${design.model_image}" alt="${design.model_name}">
+
+                <div class="vip-summary-text ${design.orientation}">
+                    ${design.name}
+                </div>
+            </div>
+
+            <div class="vip-summary-info">
+                <h2>Garrafa ${i}</h2>
+
+                <p>
+                    <strong>Modelo:</strong>
+                    ${design.model_name}
+                </p>
+
+                <p>
+                    <strong>Nome:</strong>
+                    ${design.name}
+                </p>
+
+                <p>
+                    <strong>Fonte:</strong>
+                    ${design.font}
+                </p>
+
+                <p>
+                    <strong>Orientação:</strong>
+                    ${design.orientation === "vertical" ? "Vertical" : "Horizontal"}
+                </p>
+
+                <button type="button" class="vip-edit-bottle-btn" data-bottle="${i}">
+                    Editar esta garrafa
+                </button>
+            </div>
+        `;
+
+        summaryGrid.appendChild(card);
+    }
+
+    document.querySelectorAll(".vip-edit-bottle-btn").forEach(button => {
+        button.addEventListener("click", function () {
+            const bottleNumber = this.dataset.bottle;
+            sessionStorage.setItem("vip_current_bottle", bottleNumber);
+            window.location.href = "{% url 'customization:vip_group_mockup' product.slug %}";
+        });
+    });
+});
+</script>
+
+{% endblock %}
