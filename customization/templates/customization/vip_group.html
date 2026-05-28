@@ -1,7 +1,7 @@
 {% extends "pages/base.html" %}
 {% load static %}
 
-{% block title %}Grupo VIP | Risk Clube{% endblock %}
+{% block title %}Selecionar Modelos | Risk Clube{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/vip_group.css' %}">
@@ -9,179 +9,164 @@
 
 {% block content %}
 
-<section class="vip-group-page">
+<section class="vip-model-page">
 
-    <div class="vip-group-header">
-        <h1>Selecione o modelo</h1>
-        <p>Escolha o modelo e a quantidade de cada garrafa</p>
+    <div class="vip-model-header">
+        <h1>Selecione os modelos</h1>
+        <p>Você ganhou <strong>10% na compra</strong>, aproveite.</p>
     </div>
 
-    <div class="vip-model-card-grid">
+    <form method="GET" class="vip-model-form">
 
-        {% for model in models %}
-        <div 
-            class="vip-model-card"
-            data-model-id="{{ model.id }}"
-            data-model-name="{{ model.name }}"
-            data-model-image="{% if model.image %}{{ model.image.url }}{% else %}{{ product.image.url }}{% endif %}"
-        >
+        <div class="vip-model-grid">
 
-            <h2>{{ model.name }}</h2>
+            {% for model in models %}
 
-            <div class="vip-model-image-box">
-                <img 
-                    src="{% if model.image %}{{ model.image.url }}{% else %}{{ product.image.url }}{% endif %}" 
-                    alt="{{ model.name }}"
-                >
-            </div>
+            <div class="vip-model-card">
 
-            <div class="vip-model-info">
-                <div class="vip-model-icon">
-                    <i class="bi bi-star"></i>
+                <div class="vip-model-card-top">
+                    <div class="vip-model-top-icon">
+                        <i class="{{ model.icon_class|default:'bi bi-shield-check' }}"></i>
+                    </div>
+
+                    
                 </div>
 
+                <div class="vip-model-image-box">
+                    <img 
+                        src="{{ model.image.url }}" 
+                        alt="{{ model.name }}" 
+                        class="vip-model-image"
+                    >
+                </div>
+
+                <div class="vip-model-info">
+                    <h3>{{ model.name }}</h3>
+                    <p>{{ model.description|default:"Modelo personalizado Risk Clube" }}</p>
+                </div>
+
+                <div class="vip-quantity-box">
+
+                    <button 
+                        type="button" 
+                        class="vip-qty-btn vip-minus"
+                        aria-label="Diminuir quantidade"
+                    >
+                        <i class="bi bi-dash"></i>
+                    </button>
+
+                    <input 
+                        type="number"
+                        name="model_{{ model.id }}"
+                        class="vip-qty-input"
+                        value="0"
+                        min="0"
+                        readonly
+                    >
+
+                    <button 
+                        type="button" 
+                        class="vip-qty-btn vip-plus"
+                        aria-label="Aumentar quantidade"
+                    >
+                        <i class="bi bi-plus"></i>
+                    </button>
+
+                </div>
+
+            </div>
+
+            {% empty %}
+
+            <p class="vip-model-empty">
+                Nenhum modelo cadastrado ainda.
+            </p>
+
+            {% endfor %}
+
+        </div>
+
+        <div class="vip-benefits-box">
+
+            <div class="vip-benefit-item">
+                <i class="bi bi-truck"></i>
                 <div>
-                    <strong>{{ model.name }}</strong>
-                    <span>{{ model.description|default:"Modelo personalizado" }}</span>
+                    <strong>Envio rápido</strong>
+                    <span>Para todo o Brasil</span>
                 </div>
             </div>
 
-            <div class="vip-model-counter">
-                <button type="button" class="vip-qty-btn vip-minus-btn">−</button>
-
-                <span class="vip-qty-number">0</span>
-
-                <button type="button" class="vip-qty-btn vip-plus-btn">+</button>
+            <div class="vip-benefit-item">
+                <i class="bi bi-shield-check"></i>
+                <div>
+                    <strong>Compra 100% segura</strong>
+                    <span>Seus dados protegidos</span>
+                </div>
             </div>
 
+            <div class="vip-benefit-item">
+                <i class="bi bi-award"></i>
+                <div>
+                    <strong>Garantia de qualidade</strong>
+                    <span>Produtos duráveis e testados</span>
+                </div>
+            </div>
 
+            <div class="vip-benefit-item">
+                <i class="bi bi-stars"></i>
+                <div>
+                    <strong>Desconto no PIX</strong>
+                    <span>Pague menos à vista</span>
+                </div>
+            </div>
 
         </div>
-        {% empty %}
-        <div class="vip-empty-models">
-            Nenhum modelo VIP cadastrado.
-        </div>
-        {% endfor %}
 
-    </div>
-
-    <div class="vip-group-bottom-bar">
-        <div>
-            <strong id="totalBottlesText">0 garrafas selecionadas</strong>
-            <span>Escolha pelo menos 2 garrafas para continuar no grupo</span>
+        <div class="vip-warning-box">
+            <i class="bi bi-exclamation-triangle"></i>
+            <p>
+                <strong>Atenção:</strong> Produtos personalizados não podem ser trocados ou devolvidos.
+                Confira todos os detalhes antes de finalizar sua compra.
+            </p>
         </div>
 
-        <a 
-            href="{% url 'customization:vip_group_mockup' product.slug %}" 
-            class="vip-continue-btn disabled"
-            id="continueGroupCustomization"
-        >
-            Continuar personalização
-            <i class="bi bi-chevron-right"></i>
-        </a>
-    </div>
+        <div class="vip-model-actions">
+            <button type="submit" class="vip-continue-btn">
+                Continuar personalização
+                <i class="bi bi-arrow-right"></i>
+            </button>
+        </div>
+
+    </form>
 
 </section>
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    const modelCards = document.querySelectorAll(".vip-model-card");
-    const totalBottlesText = document.getElementById("totalBottlesText");
-    const continueBtn = document.getElementById("continueGroupCustomization");
+    const cards = document.querySelectorAll(".vip-model-card");
 
-    function getTotalQuantity() {
-        let total = 0;
+    cards.forEach(card => {
+        const minusBtn = card.querySelector(".vip-minus");
+        const plusBtn = card.querySelector(".vip-plus");
+        const input = card.querySelector(".vip-qty-input");
 
-        modelCards.forEach(card => {
-            const qty = Number(card.querySelector(".vip-qty-number").textContent);
-            total += qty;
-        });
-
-        return total;
-    }
-
-    function updateTotal() {
-        const total = getTotalQuantity();
-
-        totalBottlesText.textContent = total === 1
-            ? "1 garrafa selecionada"
-            : `${total} garrafas selecionadas`;
-
-        if (total >= 2) {
-            continueBtn.classList.remove("disabled");
-        } else {
-            continueBtn.classList.add("disabled");
-        }
-    }
-
-    function saveSelectedBottles() {
-        const selectedBottles = {};
-        let bottleIndex = 1;
-
-        modelCards.forEach(card => {
-            const qty = Number(card.querySelector(".vip-qty-number").textContent);
-
-            for (let i = 0; i < qty; i++) {
-                selectedBottles[`garrafa_${bottleIndex}`] = {
-                    model_id: card.dataset.modelId,
-                    model_name: card.dataset.modelName,
-                    model_image: card.dataset.modelImage
-                };
-
-                bottleIndex++;
-            }
-        });
-
-        sessionStorage.setItem("vip_selected_bottles", JSON.stringify(selectedBottles));
-        sessionStorage.setItem("vip_total_bottles", bottleIndex - 1);
-        sessionStorage.setItem("vip_current_bottle", 1);
-        sessionStorage.removeItem("vip_group_designs");
-    }
-
-    modelCards.forEach(card => {
-        const minusBtn = card.querySelector(".vip-minus-btn");
-        const plusBtn = card.querySelector(".vip-plus-btn");
-        const qtyNumber = card.querySelector(".vip-qty-number");
-
-        plusBtn.addEventListener("click", function () {
-            let qty = Number(qtyNumber.textContent);
-            qty++;
-            qtyNumber.textContent = qty;
-
+        plusBtn.addEventListener("click", () => {
+            input.value = parseInt(input.value) + 1;
             card.classList.add("selected");
-            updateTotal();
         });
 
-        minusBtn.addEventListener("click", function () {
-            let qty = Number(qtyNumber.textContent);
+        minusBtn.addEventListener("click", () => {
+            let currentValue = parseInt(input.value);
 
-            if (qty > 0) {
-                qty--;
-                qtyNumber.textContent = qty;
+            if (currentValue > 0) {
+                input.value = currentValue - 1;
             }
 
-            if (qty === 0) {
+            if (parseInt(input.value) === 0) {
                 card.classList.remove("selected");
             }
-
-            updateTotal();
         });
-
     });
-
-    continueBtn.addEventListener("click", function (event) {
-        const total = getTotalQuantity();
-
-        if (total < 2) {
-            event.preventDefault();
-            alert("Escolha pelo menos 2 garrafas para personalização em grupo.");
-            return;
-        }
-
-        saveSelectedBottles();
-    });
-
-    updateTotal();
 });
 </script>
 
