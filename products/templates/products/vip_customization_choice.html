@@ -9,12 +9,10 @@
 
 {% block content %}
 
-<!-- PÁGINA DE ESCOLHA DA CUSTOMIZAÇÃO VIP -->
+<!-- PÁGINA VIP -->
 <section class="vip-custom-page">
 
- 
-
-    <!-- TOPO DA PÁGINA -->
+    <!-- TOPO -->
     <div class="vip-custom-header">
 
         <h1>Escolha como personalizar</h1>
@@ -22,35 +20,46 @@
         <p>
             Selecione uma opção para começar
         </p>
+
     </div>
 
-    <!-- CARDS DE OPÇÕES -->
+    <!-- GRID -->
     <div class="vip-options-grid">
 
-        <!-- OPÇÃO INDIVIDUAL -->
-        <div class="vip-option-card">
+        <!-- CARD INDIVIDUAL -->
+        <a 
+            href="{% url 'customization:vip_choose_model' product.slug 'individual' %}" 
+            class="vip-option-card"
+        >
 
-            <!-- IMAGEM INDIVIDUAL -->
+            <!-- IMAGEM -->
             <div class="vip-option-image-box">
+
                 <img 
                     src="{{ product.image.url }}" 
                     alt="{{ product.name }}" 
                     class="vip-option-image"
                 >
+
             </div>
 
-            <!-- TÍTULO INDIVIDUAL -->
+            <!-- TÍTULO -->
             <div class="vip-option-title-row">
-                <i class="bi bi-person"></i>
+
+                <div class="vip-option-title-icon">
+                    <i class="bi bi-person"></i>
+                </div>
 
                 <div>
                     <h2>Individual</h2>
                     <span>1 garrafa</span>
                 </div>
+
             </div>
 
-            <!-- INFORMAÇÕES INDIVIDUAL -->
+            <!-- INFO -->
             <div class="vip-option-info">
+
                 <p>
                     <i class="bi bi-check-circle"></i>
                     Quantidade: 1
@@ -60,20 +69,27 @@
                     <i class="bi bi-check-circle"></i>
                     Sem desconto
                 </p>
+
             </div>
 
-            <!-- BOTÃO INDIVIDUAL -->
-            <a href="{% url 'customization:vip_choose_model' product.slug 'individual' %}" class="vip-option-button">
-    Personalizar 1
-    <i class="bi bi-chevron-right"></i>
-</a>
+            <!-- BOTÃO -->
+            <div class="vip-option-button">
 
-        </div>
+                <span>Personalizar</span>
 
-        <!-- OPÇÃO GRUPO -->
-        <div class="vip-option-card">
+                <i class="bi bi-chevron-right"></i>
 
-            <!-- IMAGENS DO GRUPO -->
+            </div>
+
+        </a>
+
+        <!-- CARD GRUPO -->
+        <a 
+            href="{% url 'customization:vip_choose_model' product.slug 'grupo' %}" 
+            class="vip-option-card"
+        >
+
+            <!-- MOCKUP -->
             <div class="vip-option-image-box vip-group-preview">
 
                 <img 
@@ -96,18 +112,23 @@
 
             </div>
 
-            <!-- TÍTULO GRUPO -->
+            <!-- TÍTULO -->
             <div class="vip-option-title-row">
-                <i class="bi bi-people"></i>
+
+                <div class="vip-option-title-icon">
+                    <i class="bi bi-people"></i>
+                </div>
 
                 <div>
                     <h2>Grupo</h2>
                     <span>2 ou mais garrafas</span>
                 </div>
+
             </div>
 
-            <!-- INFORMAÇÕES GRUPO -->
+            <!-- INFO -->
             <div class="vip-option-info">
+
                 <p>
                     <i class="bi bi-check-circle"></i>
                     Quantidade: 2+
@@ -117,41 +138,126 @@
                     <i class="bi bi-check-circle"></i>
                     10% de desconto aplicado
                 </p>
+
             </div>
 
-            <!-- BOTÃO GRUPO -->
-            <a href="{% url 'customization:vip_choose_model' product.slug 'grupo' %}" class="vip-option-button">
-    Personalizar grupo
-    <i class="bi bi-chevron-right"></i>
-</a>
+            <!-- BOTÃO -->
+            <div class="vip-option-button">
+
+                <span>Personalizar 2 ou +</span>
+
+                <i class="bi bi-chevron-right"></i>
+
+            </div>
+
+        </a>
+
+    </div>
+
+    <!-- BENEFÍCIOS -->
+    <div class="vip-benefits-wrapper">
+
+        <div class="vip-benefits-box">
+
+            <!-- ITEM -->
+            <div class="vip-benefit-item">
+
+                <i class="bi bi-truck"></i>
+
+                <div>
+                    <strong>Envio rápido</strong>
+                    <span>Para todo o Brasil</span>
+                </div>
+
+            </div>
+
+            <!-- ITEM -->
+            <div class="vip-benefit-item">
+
+                <i class="bi bi-shield-check"></i>
+
+                <div>
+                    <strong>Compra 100% segura</strong>
+                    <span>Seus dados protegidos</span>
+                </div>
+
+            </div>
+
+            <!-- ITEM -->
+            <div class="vip-benefit-item">
+
+                <i class="bi bi-award"></i>
+
+                <div>
+                    <strong>Garantia de qualidade</strong>
+                    <span>Produtos duráveis e testados</span>
+                </div>
+
+            </div>
+
+            <!-- ITEM -->
+            <div class="vip-benefit-item">
+
+                <i class="bi bi-ticket-perforated"></i>
+
+                <div>
+                    <strong>Desconto no PIX</strong>
+                    <span>Pague menos à vista</span>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- AVISO -->
+        <div class="vip-warning-box">
+
+            <i class="bi bi-exclamation-triangle"></i>
+
+            <p>
+                <strong>Atenção:</strong>
+                Produtos personalizados não podem ser trocados ou devolvidos.
+                Confira todos os detalhes antes de finalizar sua compra.
+            </p>
 
         </div>
 
     </div>
 
-    <!-- BLOCO DE DESCONTO -->
+    <!-- DESCONTO -->
     <div class="vip-discount-box">
 
-        <!-- DESTAQUE DO DESCONTO -->
+        <!-- ESQUERDA -->
         <div class="vip-discount-highlight">
+
             <div class="vip-discount-icon">
                 <i class="bi bi-tag"></i>
             </div>
 
             <div>
-                <strong>2 ou mais garrafas = 10% OFF</strong>
-                <span>Desconto automático no carrinho</span>
+
+                <strong>
+                    2 ou mais garrafas = 10% OFF
+                </strong>
+
+                <span>
+                    Desconto automático no carrinho
+                </span>
+
             </div>
+
         </div>
 
-        <!-- OBSERVAÇÃO DO DESCONTO -->
+        <!-- DIREITA -->
         <div class="vip-discount-note">
+
             <i class="bi bi-building"></i>
 
             <p>
-                Ideal para presentear mais pessoas,<br>
+                Ideal para presentear mais pessoas,
                 ou fazer algo corporativo.
             </p>
+
         </div>
 
     </div>

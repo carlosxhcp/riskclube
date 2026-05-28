@@ -11,23 +11,46 @@
 
 <section class="vip-model-page">
 
-    <!-- TOPO DA PÁGINA -->
+    <a href="javascript:history.back()" class="vip-back-button">
+        <i class="bi bi-chevron-left"></i>
+        Voltar
+    </a>
+
     <div class="vip-model-header">
         <h1>Selecione o modelo</h1>
-        <p>Escolha o modelo da sua garrafa</p>
+        <p>Escolha a opção que <strong>mais combina</strong> com você.</p>
     </div>
 
-    <!-- GRID DOS MODELOS -->
-    <div class="vip-model-grid">
+    <form 
+    method="GET" 
+    action="
+    {% if custom_type == 'grupo' %}
+        {% url 'customization:vip_group_mockup' product.slug %}
+    {% else %}
+        {% url 'customization:vip_individual_mockup' product.slug %}
+    {% endif %}
+    "
+    class="vip-model-form" 
+    id="vipModelForm"
+>
 
-        {% for model in models %}
+        <div class="vip-model-grid">
 
-            <!-- CARD DO MODELO -->
-            <div class="vip-model-card">
+            {% for model in models %}
 
-                <h2 class="vip-model-name">
-                    {{ model.name }}
-                </h2>
+            <label class="vip-model-card">
+
+                <input 
+                    type="radio" 
+                    name="model_id" 
+                    value="{{ model.id }}" 
+                    class="vip-model-radio"
+                    required
+                >
+
+                <div class="vip-model-check-icon">
+                    <i class="{{ model.icon_class|default:'bi bi-droplet' }}"></i>
+                </div>
 
                 <div class="vip-model-image-box">
                     <img 
@@ -38,35 +61,95 @@
                 </div>
 
                 <div class="vip-model-info">
-
-                    <div class="vip-model-icon">
-                        <i class="{{ model.icon_class }}"></i>
-                    </div>
-
-                    <div>
-                        <h3>{{ model.name }}</h3>
-                        <p>{{ model.description }}</p>
-                    </div>
-
+                    <h3>{{ model.name }}</h3>
+                    <p>{{ model.description|default:"Modelo personalizado Risk Clube" }}</p>
                 </div>
 
-                <a href="#" class="vip-model-button">
-                    Selecionar
-                    <i class="bi bi-chevron-right"></i>
-                </a>
+                <div class="vip-model-select-row">
+                    <span class="vip-fake-radio"></span>
+                    <span>Selecionar modelo</span>
+                </div>
 
-            </div>
+            </label>
 
-        {% empty %}
+            {% empty %}
 
             <p class="vip-model-empty">
                 Nenhum modelo cadastrado ainda.
             </p>
 
-        {% endfor %}
+            {% endfor %}
 
-    </div>
+        </div>
+
+        <div class="vip-bottom-area">
+
+            <div class="vip-benefits-box">
+
+                <div class="vip-benefit-item">
+                    <i class="bi bi-truck"></i>
+                    <div>
+                        <strong>Envio rápido</strong>
+                        <span>Para todo o Brasil</span>
+                    </div>
+                </div>
+
+                <div class="vip-benefit-item">
+                    <i class="bi bi-shield-check"></i>
+                    <div>
+                        <strong>Compra 100% segura</strong>
+                        <span>Seus dados protegidos</span>
+                    </div>
+                </div>
+
+                <div class="vip-benefit-item">
+                    <i class="bi bi-award"></i>
+                    <div>
+                        <strong>Garantia de qualidade</strong>
+                        <span>Produtos duráveis e testados</span>
+                    </div>
+                </div>
+
+                <div class="vip-benefit-item">
+                    <i class="bi bi-ticket-perforated"></i>
+                    <div>
+                        <strong>Desconto no PIX</strong>
+                        <span>Pague menos à vista</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="vip-warning-box">
+                <i class="bi bi-exclamation-triangle"></i>
+                <p>
+                    <strong>Atenção:</strong>
+                    Produtos personalizados não podem ser trocados ou devolvidos.
+                    Confira todos os detalhes antes de finalizar sua compra.
+                </p>
+            </div>
+
+        </div>
+
+    </form>
 
 </section>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("vipModelForm");
+    const radios = document.querySelectorAll(".vip-model-radio");
+
+    radios.forEach(function (radio) {
+        radio.addEventListener("change", function () {
+            if (this.checked) {
+                setTimeout(function () {
+                    form.submit();
+                }, 180);
+            }
+        });
+    });
+});
+</script>
 
 {% endblock %}

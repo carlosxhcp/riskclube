@@ -42,12 +42,59 @@ def vip_choose_model(request, slug, custom_type):
         "models": models,
     })
 
+
+def vip_individual_mockup(request, slug):
+    product = get_object_or_404(Product, slug=slug, available=True, is_vip=True)
+
+    model_id = request.GET.get("model_id")
+
+    bottle_model = get_object_or_404(
+        VipBottleModel,
+        id=model_id,
+        product=product,
+        active=True
+    )
+
+    vip_custom = request.session.get("vip_custom", {})
+    vip_custom["product_id"] = product.id
+    vip_custom["custom_type"] = "individual"
+    vip_custom["model_id"] = bottle_model.id
+    request.session["vip_custom"] = vip_custom
+    request.session.modified = True
+
+    return render(request, "customization/vip_individual_mockup.html", {
+        "product": product,
+        "bottle_model": bottle_model,
+    })
+
+
 def vip_group_mockup(request, slug):
     product = get_object_or_404(Product, slug=slug, available=True, is_vip=True)
 
+    model_id = request.GET.get("model_id")
+
+    bottle_model = None
+
+    if model_id:
+        bottle_model = get_object_or_404(
+            VipBottleModel,
+            id=model_id,
+            product=product,
+            active=True
+        )
+
+        vip_custom = request.session.get("vip_custom", {})
+        vip_custom["product_id"] = product.id
+        vip_custom["custom_type"] = "grupo"
+        vip_custom["model_id"] = bottle_model.id
+        request.session["vip_custom"] = vip_custom
+        request.session.modified = True
+
     return render(request, "customization/vip_group_mockup.html", {
         "product": product,
+        "bottle_model": bottle_model,
     })
+
 
 def vip_group_summary(request, slug):
     product = get_object_or_404(Product, slug=slug, available=True, is_vip=True)

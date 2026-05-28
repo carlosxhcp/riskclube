@@ -9,19 +9,28 @@ urlpatterns = [
         views.vip_choose_type,
         name="vip_choose_type"
     ),
+
     path(
         "produto/<slug:slug>/personalizar/<str:custom_type>/modelos/",
         views.vip_choose_model,
         name="vip_choose_model"
     ),
+
     path(
-    "vip/<slug:slug>/grupo/mockup/",
-    views.vip_group_mockup,
-    name="vip_group_mockup"
+        "vip/<slug:slug>/grupo/mockup/",
+        views.vip_group_mockup,
+        name="vip_group_mockup"
     ),
+
     path(
-    "vip/<slug:slug>/grupo/resumo/",
-    views.vip_group_summary,
-    name="vip_group_summary"
-),
+        "vip/<slug:slug>/grupo/resumo/",
+        views.vip_group_summary,
+        name="vip_group_summary"
+    ),
+
+    path(
+        "vip/<slug:slug>/individual/mockup/",
+        views.vip_individual_mockup,
+        name="vip_individual_mockup"
+    ),
 ]
