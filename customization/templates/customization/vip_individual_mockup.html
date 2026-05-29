@@ -11,23 +11,22 @@
 
 <section class="vip-mockup-page">
 
-    <a href="javascript:history.back()" class="vip-back-link">
-        <i class="bi bi-chevron-left"></i>
-        Voltar
-    </a>
-
     <div class="vip-mockup-layout">
 
-        <!-- LADO ESQUERDO / PREVIEW -->
+        <!-- PREVIEW DA GARRAFA -->
         <div class="vip-preview-area">
+
+            <div class="vip-top-menu">
+                <a href="/">INÍCIO</a>
+                <a href="/shop/">SHOP</a>
+                <a href="#">COMUNIDADE</a>
+            </div>
 
             <div class="vip-bottle-preview">
 
-                <img 
-                    src="{{ bottle_model.image.url }}" 
-                    alt="{{ bottle_model.name }}" 
-                    class="vip-bottle-image"
-                >
+                {% if bottle_model.image %}
+                <img src="{{ bottle_model.image.url }}" alt="{{ bottle_model.name }}" class="vip-bottle-image">
+                {% endif %}
 
                 <div class="vip-custom-text" id="previewText">
                     SEU NOME AQUI
@@ -42,7 +41,7 @@
 
         </div>
 
-        <!-- LADO DIREITO / CONFIGURAÇÕES -->
+        <!-- PAINEL DE CONFIGURAÇÃO -->
         <aside class="vip-config-panel">
 
             <div class="vip-panel-logo">
@@ -59,14 +58,8 @@
                         <i class="bi bi-pencil"></i>
                     </div>
 
-                    <input 
-                        type="text"
-                        name="custom_name"
-                        id="customName"
-                        class="vip-name-input"
-                        placeholder="Digite seu nome"
-                        maxlength="18"
-                    >
+                    <input type="text" name="custom_name" id="customName" class="vip-name-input"
+                        placeholder="Digite seu nome" maxlength="18">
                 </div>
 
                 <!-- FONTES -->
@@ -132,40 +125,57 @@
 
                 </div>
 
-                <!-- CATEGORIA -->
+                <!-- CATEGORIA / OPÇÕES -->
                 <div class="vip-form-group">
 
                     <div class="vip-section-title">
-                        <h3>Escolha sua categoria</h3>
+                        <h3 id="categoryTitle">Escolha sua categoria</h3>
+
+                        <button type="button" id="backCategoriesBtn" class="vip-back-categories">
+                            Voltar
+                        </button>
                     </div>
 
-                    <div class="vip-category-grid">
+                    <!-- LISTA DE CATEGORIAS -->
+                    <div class="vip-category-grid" id="categoryGrid">
 
-                        <label class="vip-category-card active">
-                            <input type="radio" name="category" value="animais" checked>
-                            <i class="bi bi-shield-fill"></i>
-                            <span>Animais</span>
-                        </label>
+                        {% for categoria in categorias %}
+                        <button type="button" class="vip-category-card" data-category="{{ categoria.id }}"
+                            data-category-name="{{ categoria.nome }}">
+                            {% if categoria.icone and categoria.icone.url %}
+                            <img src="{{ categoria.icone.url }}" alt="{{ categoria.nome }}" class="vip-category-icon">
+                            {% endif %}
 
-                        <label class="vip-category-card">
-                            <input type="radio" name="category" value="mistico">
-                            <i class="bi bi-eye"></i>
-                            <span>Místico</span>
-                        </label>
-
-                        <label class="vip-category-card">
-                            <input type="radio" name="category" value="religiao">
-                            <i class="bi bi-cross"></i>
-                            <span>Religião</span>
-                        </label>
-
-                        <label class="vip-category-card">
-                            <input type="radio" name="category" value="time">
-                            <i class="bi bi-tshirt"></i>
-                            <span>Time</span>
-                        </label>
+                            <span>{{ categoria.nome }}</span>
+                        </button>
+                        {% empty %}
+                        <p class="vip-empty-message">
+                            Nenhuma categoria cadastrada.
+                        </p>
+                        {% endfor %}
 
                     </div>
+
+                    <!-- LISTA DE GRAVAÇÕES -->
+                    <div class="vip-engraving-list" id="engravingList">
+
+                        {% for categoria in categorias %}
+                        {% for gravacao in categoria.gravacoes.all %}
+                        {% if gravacao.ativo %}
+                        <button type="button" class="vip-engraving-option" data-category="{{ categoria.id }}"
+                            data-gravacao="{{ gravacao.id }}">
+                            {% if gravacao.imagem and gravacao.imagem.url %}
+                            <img src="{{ gravacao.imagem.url }}" alt="{{ gravacao.nome }}">
+                            {% endif %}
+                        </button>
+                        {% endif %}
+                        {% endfor %}
+                        {% endfor %}
+
+                    </div>
+
+                    <input type="hidden" name="categoria_gravacao" id="categoriaGravacaoInput">
+                    <input type="hidden" name="gravacao" id="gravacaoInput">
 
                 </div>
 
@@ -188,50 +198,110 @@
 </section>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-    const input = document.getElementById("customName");
-    const previewText = document.getElementById("previewText");
+    document.addEventListener("DOMContentLoaded", function () {
+        const input = document.getElementById("customName");
+        const previewText = document.getElementById("previewText");
 
-    const fontCards = document.querySelectorAll(".vip-font-card");
-    const orientationCards = document.querySelectorAll(".vip-orientation-card");
-    const categoryCards = document.querySelectorAll(".vip-category-card");
+        const fontCards = document.querySelectorAll(".vip-font-card");
+        const orientationCards = document.querySelectorAll(".vip-orientation-card");
 
-    input.addEventListener("input", function () {
-        previewText.textContent = this.value.trim() || "SEU NOME AQUI";
-    });
+        const categoryTitle = document.getElementById("categoryTitle");
+        const categoryGrid = document.getElementById("categoryGrid");
+        const engravingList = document.getElementById("engravingList");
+        const backCategoriesBtn = document.getElementById("backCategoriesBtn");
 
-    fontCards.forEach(card => {
-        card.addEventListener("click", function () {
-            fontCards.forEach(item => item.classList.remove("active"));
-            this.classList.add("active");
+        const categoryButtons = document.querySelectorAll(".vip-category-card");
+        const engravingOptions = document.querySelectorAll(".vip-engraving-option");
 
-            const font = this.querySelector("input").value;
-            previewText.dataset.font = font;
+        const categoriaInput = document.getElementById("categoriaGravacaoInput");
+        const gravacaoInput = document.getElementById("gravacaoInput");
+
+        engravingOptions.forEach(option => {
+            option.style.display = "none";
+        });
+
+        input.addEventListener("input", function () {
+            previewText.textContent = this.value.trim() || "SEU NOME AQUI";
+        });
+
+        fontCards.forEach(card => {
+            card.addEventListener("click", function () {
+                fontCards.forEach(item => item.classList.remove("active"));
+                this.classList.add("active");
+            });
+        });
+
+        orientationCards.forEach(card => {
+            card.addEventListener("click", function () {
+                orientationCards.forEach(item => item.classList.remove("active"));
+                this.classList.add("active");
+
+                const orientation = this.querySelector("input").value;
+
+                if (orientation === "horizontal") {
+                    previewText.classList.add("horizontal");
+                } else {
+                    previewText.classList.remove("horizontal");
+                }
+            });
+        });
+
+        categoryButtons.forEach(button => {
+            button.addEventListener("click", function () {
+                const category = this.dataset.category;
+                const categoryName = this.dataset.categoryName;
+
+                categoriaInput.value = category;
+                gravacaoInput.value = "";
+
+                categoryButtons.forEach(item => item.classList.remove("active"));
+                this.classList.add("active");
+
+                categoryTitle.textContent = categoryName;
+
+                categoryGrid.classList.add("hide");
+                backCategoriesBtn.classList.add("show");
+
+                engravingList.classList.remove("show");
+
+                setTimeout(() => {
+                    engravingOptions.forEach(option => {
+                        option.style.display = option.dataset.category === category ? "block" : "none";
+                        option.classList.remove("active");
+                    });
+
+                    engravingList.classList.add("show");
+                }, 180);
+            });
+        });
+
+        backCategoriesBtn.addEventListener("click", function () {
+            categoryTitle.textContent = "Escolha sua categoria";
+
+            categoriaInput.value = "";
+            gravacaoInput.value = "";
+
+            categoryGrid.classList.remove("hide");
+            engravingList.classList.remove("show");
+            backCategoriesBtn.classList.remove("show");
+
+            categoryButtons.forEach(item => item.classList.remove("active"));
+
+            engravingOptions.forEach(option => {
+                option.style.display = "none";
+                option.classList.remove("active");
+            });
+        });
+
+        engravingOptions.forEach(option => {
+            option.addEventListener("click", function () {
+                engravingOptions.forEach(item => item.classList.remove("active"));
+                this.classList.add("active");
+
+                gravacaoInput.value = this.dataset.gravacao;
+            });
         });
     });
-
-    orientationCards.forEach(card => {
-        card.addEventListener("click", function () {
-            orientationCards.forEach(item => item.classList.remove("active"));
-            this.classList.add("active");
-
-            const orientation = this.querySelector("input").value;
-
-            if (orientation === "horizontal") {
-                previewText.classList.add("horizontal");
-            } else {
-                previewText.classList.remove("horizontal");
-            }
-        });
-    });
-
-    categoryCards.forEach(card => {
-        card.addEventListener("click", function () {
-            categoryCards.forEach(item => item.classList.remove("active"));
-            this.classList.add("active");
-        });
-    });
-});
 </script>
 
 {% endblock %}

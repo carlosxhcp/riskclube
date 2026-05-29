@@ -1,52 +1,65 @@
+/* =========================
+   PÁGINA PRINCIPAL
+========================= */
+
 .vip-mockup-page {
     min-height: 100vh;
-    padding: 35px 24px;
-    background: #fafafa;
-    color: #111;
-}
-
-.vip-back-link {
-    width: fit-content;
-    margin: 0 auto 22px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    color: #888;
-    text-decoration: none;
-    font-size: 0.78rem;
-    font-weight: 700;
-}
-
-.vip-back-link:hover {
+    background: #fff;
     color: #111;
 }
 
 .vip-mockup-layout {
-    max-width: 1380px;
-    min-height: 760px;
-    margin: 0 auto;
-    padding: 32px;
-    background: #fff;
-    border: 1px solid #e9e9e9;
-    border-radius: 26px;
+    min-height: 100vh;
     display: grid;
-    grid-template-columns: 1fr 440px;
-    gap: 40px;
-    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.04);
+    grid-template-columns: 1fr 430px;
+    background: #fff;
 }
+
+
+/* =========================
+   LADO ESQUERDO / PREVIEW
+========================= */
 
 .vip-preview-area {
     position: relative;
-    min-height: 690px;
+    min-height: 100vh;
+    background: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
+.vip-top-menu {
+    position: absolute;
+    top: 34px;
+    left: 58px;
+    display: flex;
+    align-items: center;
+    gap: 38px;
+    z-index: 5;
+}
+
+.vip-top-menu a {
+    color: #111;
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 900;
+    letter-spacing: 1.6px;
+}
+
+.vip-top-menu a:hover {
+    color: #555;
+}
+
+
+/* =========================
+   GARRAFA
+========================= */
+
 .vip-bottle-preview {
     position: relative;
-    width: min(430px, 90%);
-    height: 650px;
+    width: min(420px, 82%);
+    height: 760px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -60,13 +73,13 @@
 
 .vip-custom-text {
     position: absolute;
-    top: 43%;
-    left: 50%;
+    top: 49%;
+    left: 51%;
     transform: translate(-50%, -50%) rotate(-90deg);
-    color: rgba(255, 255, 255, 0.72);
+    color: rgba(255, 255, 255, 0.68);
     font-size: 1.45rem;
-    font-weight: 500;
-    letter-spacing: 3px;
+    font-weight: 400;
+    letter-spacing: 4px;
     text-transform: uppercase;
     white-space: nowrap;
     pointer-events: none;
@@ -78,34 +91,44 @@
 
 .vip-live-preview-btn {
     position: absolute;
-    left: 20px;
-    bottom: 20px;
-    border: 1px solid #ddd;
+    left: 56px;
+    bottom: 42px;
+    border: 1px solid #dcdcdc;
     background: #fff;
-    border-radius: 8px;
-    padding: 11px 18px;
-    color: #444;
+    border-radius: 7px;
+    padding: 10px 17px;
+    color: #333;
+    font-size: 0.8rem;
     font-weight: 800;
     display: inline-flex;
     align-items: center;
     gap: 8px;
     cursor: pointer;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.04);
 }
+
+
+/* =========================
+   PAINEL DIREITO
+========================= */
 
 .vip-config-panel {
     background: #fff;
-    border-left: 1px solid #eeeeee;
-    padding: 10px 0 10px 28px;
+    border-left: 1px solid #f0f0f0;
+    padding: 34px 30px 26px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .vip-panel-logo {
     text-align: center;
-    margin-bottom: 30px;
-    font-size: 2.5rem;
+    margin-bottom: 35px;
+    font-size: 2.45rem;
     font-weight: 900;
     font-style: italic;
-    letter-spacing: -2px;
+    letter-spacing: -3px;
+    line-height: 1;
 }
 
 .vip-config-form {
@@ -113,8 +136,13 @@
 }
 
 .vip-form-group {
-    margin-bottom: 32px;
+    margin-bottom: 34px;
 }
+
+
+/* =========================
+   INPUT DO NOME
+========================= */
 
 .vip-input-title {
     display: flex;
@@ -126,17 +154,18 @@
 .vip-input-title label,
 .vip-section-title h3 {
     margin: 0;
-    font-size: 0.92rem;
+    font-size: 0.86rem;
     font-weight: 900;
     text-transform: uppercase;
     letter-spacing: 1px;
 }
 
 .vip-input-title i {
-    width: 32px;
-    height: 32px;
-    border: 1px solid #ddd;
+    width: 31px;
+    height: 31px;
+    border: 1px solid #d6d6d6;
     border-radius: 50%;
+    color: #777;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -145,12 +174,22 @@
 .vip-name-input {
     width: 100%;
     border: none;
-    border-bottom: 1px solid #eee;
-    padding: 12px 0;
+    border-bottom: 1px solid #eeeeee;
+    padding: 10px 0;
     font-size: 1rem;
     outline: none;
-    font-weight: 700;
+    font-weight: 800;
+    text-transform: uppercase;
 }
+
+.vip-name-input::placeholder {
+    color: transparent;
+}
+
+
+/* =========================
+   TÍTULOS DAS SEÇÕES
+========================= */
 
 .vip-section-title {
     display: flex;
@@ -163,77 +202,85 @@
     border: none;
     background: transparent;
     color: #777;
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     font-weight: 900;
     text-transform: uppercase;
     cursor: pointer;
 }
 
+
+/* =========================
+   FONTES
+========================= */
+
 .vip-font-options {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 14px;
+    gap: 18px;
 }
 
 .vip-font-card {
-    height: 82px;
+    height: 78px;
     border: 1px solid transparent;
-    border-radius: 10px;
+    border-radius: 8px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 7px;
     cursor: pointer;
     color: #222;
 }
 
 .vip-font-card.active {
     border-color: #111;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
 .vip-font-card input,
-.vip-orientation-card input,
-.vip-category-card input {
+.vip-orientation-card input {
     display: none;
 }
 
 .vip-font-card span {
-    font-size: 1.4rem;
+    font-size: 1.25rem;
     font-weight: 800;
 }
 
 .vip-font-card small {
-    font-size: 0.5rem;
+    font-size: 0.46rem;
     font-weight: 900;
     text-transform: uppercase;
     color: #666;
 }
 
+
+/* =========================
+   ORIENTAÇÃO
+========================= */
+
 .vip-orientation-options {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 14px;
+    gap: 16px;
 }
 
 .vip-orientation-card {
     height: 58px;
     border: 1px solid transparent;
-    border-radius: 10px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 11px;
     cursor: pointer;
-    font-size: 0.78rem;
+    font-size: 0.74rem;
     font-weight: 900;
     text-transform: uppercase;
     color: #777;
 }
 
 .vip-orientation-card i {
-    font-size: 1.3rem;
+    font-size: 1.28rem;
 }
 
 .vip-orientation-card.active {
@@ -241,45 +288,193 @@
     color: #111;
 }
 
+
+/* =========================
+   CATEGORIAS
+========================= */
+
 .vip-category-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
+    gap: 10px;
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    transition: 0.28s ease;
+}
+
+.vip-category-grid.hide {
+    opacity: 0;
+    transform: translateY(12px) scale(0.96);
+    pointer-events: none;
+    position: absolute;
 }
 
 .vip-category-card {
+    border: none;
+    background: transparent;
+    padding: 0;
     cursor: pointer;
     text-align: center;
 }
 
+.vip-category-icon,
 .vip-category-card i {
-    width: 78px;
-    height: 78px;
+    width: 69px;
+    height: 69px;
     margin: 0 auto 8px;
     background: #050505;
-    border-radius: 9px;
+    border-radius: 8px;
     color: #fff;
     font-size: 2rem;
+    object-fit: contain;
+    padding: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: 0.25s ease;
+}
+
+.vip-category-icon {
+    display: block;
+}
+
+.vip-category-card:hover .vip-category-icon,
+.vip-category-card:hover i {
+    transform: translateY(-3px) scale(1.04);
+    box-shadow: 0 10px 22px rgba(0,0,0,0.14);
 }
 
 .vip-category-card span {
     display: block;
-    font-size: 0.68rem;
+    font-size: 0.57rem;
     font-weight: 900;
     text-transform: uppercase;
 }
 
+.vip-category-card.active .vip-category-icon,
 .vip-category-card.active i {
     box-shadow: 0 0 0 3px rgba(0,0,0,0.12);
 }
 
+
+/* =========================
+   BOTÃO VOLTAR CATEGORIAS
+========================= */
+
+.vip-back-categories {
+    opacity: 0;
+    transform: translateX(8px);
+    pointer-events: none;
+    transition: 0.25s ease;
+}
+
+.vip-back-categories.show {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+}
+
+
+/* =========================
+   LISTA DE GRAVAÇÕES
+========================= */
+
+.vip-engraving-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    opacity: 0;
+    transform: translateY(14px) scale(0.96);
+    pointer-events: none;
+    max-height: 0;
+    overflow: hidden;
+    transition: 0.35s ease;
+}
+
+.vip-engraving-list.show {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+    max-height: 260px;
+}
+
+.vip-engraving-option {
+    height: 68px;
+    border: 1px solid #e5e5e5;
+    background: #fff;
+    border-radius: 8px;
+    padding: 5px;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(12px) scale(0.92);
+    animation: engravingFade 0.35s ease forwards;
+    transition: 0.2s ease;
+}
+
+.vip-engraving-list.show .vip-engraving-option:nth-child(1) { animation-delay: 0.03s; }
+.vip-engraving-list.show .vip-engraving-option:nth-child(2) { animation-delay: 0.06s; }
+.vip-engraving-list.show .vip-engraving-option:nth-child(3) { animation-delay: 0.09s; }
+.vip-engraving-list.show .vip-engraving-option:nth-child(4) { animation-delay: 0.12s; }
+.vip-engraving-list.show .vip-engraving-option:nth-child(5) { animation-delay: 0.15s; }
+.vip-engraving-list.show .vip-engraving-option:nth-child(6) { animation-delay: 0.18s; }
+.vip-engraving-list.show .vip-engraving-option:nth-child(7) { animation-delay: 0.21s; }
+.vip-engraving-list.show .vip-engraving-option:nth-child(8) { animation-delay: 0.24s; }
+
+.vip-engraving-option:hover {
+    transform: translateY(-3px) scale(1.04);
+    border-color: #111;
+    box-shadow: 0 8px 18px rgba(0,0,0,0.10);
+}
+
+.vip-engraving-option.active {
+    border-color: #111;
+    box-shadow: 0 0 0 2px rgba(0,0,0,0.12);
+}
+
+.vip-engraving-option img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+@keyframes engravingFade {
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.92);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+
+/* =========================
+   MENSAGEM VAZIA
+========================= */
+
+.vip-empty-message {
+    grid-column: 1 / -1;
+    margin: 0;
+    padding: 18px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    color: #777;
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-align: center;
+}
+
+
+/* =========================
+   PREÇO E BOTÃO CONTINUAR
+========================= */
+
 .vip-price-box {
-    margin-top: 48px;
+    margin-top: 66px;
     margin-bottom: 18px;
-    font-size: 1.25rem;
+    font-size: 1.06rem;
     font-weight: 900;
 }
 
@@ -287,10 +482,10 @@
     width: 100%;
     height: 58px;
     border: none;
-    border-radius: 8px;
+    border-radius: 7px;
     background: #050505;
     color: #fff;
-    font-size: 0.88rem;
+    font-size: 0.8rem;
     font-weight: 900;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -298,14 +493,18 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 18px;
+    gap: 70px;
 }
 
 .vip-continue-button:hover {
     background: #222;
 }
 
-/* RESPONSIVO */
+
+/* =========================
+   RESPONSIVO TABLET
+========================= */
+
 @media (max-width: 992px) {
     .vip-mockup-layout {
         grid-template-columns: 1fr;
@@ -314,27 +513,41 @@
     .vip-config-panel {
         border-left: none;
         border-top: 1px solid #eee;
-        padding: 28px 0 0;
-    }
-}
-
-@media (max-width: 576px) {
-    .vip-mockup-page {
-        padding: 20px 10px;
-    }
-
-    .vip-mockup-layout {
-        padding: 14px;
-        border-radius: 18px;
-        gap: 20px;
+        padding: 32px 20px 40px;
     }
 
     .vip-preview-area {
-        min-height: 430px;
+        min-height: 650px;
     }
 
     .vip-bottle-preview {
-        height: 410px;
+        height: 560px;
+    }
+}
+
+
+/* =========================
+   RESPONSIVO MOBILE
+========================= */
+
+@media (max-width: 576px) {
+    .vip-preview-area {
+        min-height: 520px;
+    }
+
+    .vip-top-menu {
+        top: 22px;
+        left: 20px;
+        gap: 20px;
+    }
+
+    .vip-top-menu a {
+        font-size: 0.65rem;
+    }
+
+    .vip-bottle-preview {
+        width: 86%;
+        height: 460px;
     }
 
     .vip-custom-text {
@@ -343,8 +556,8 @@
     }
 
     .vip-live-preview-btn {
-        left: 10px;
-        bottom: 10px;
+        left: 20px;
+        bottom: 22px;
         padding: 8px 12px;
         font-size: 0.7rem;
     }
@@ -353,13 +566,62 @@
         font-size: 2rem;
     }
 
-    .vip-font-options,
-    .vip-category-grid {
-        grid-template-columns: repeat(2, 1fr);
+    .vip-font-options {
+        gap: 7px;
     }
 
-    .vip-category-card i {
-        width: 70px;
-        height: 70px;
+    .vip-font-card {
+        height: 62px;
     }
-}       
+
+    .vip-font-card span {
+        font-size: 1rem;
+    }
+
+    .vip-font-card small {
+        font-size: 0.4rem;
+    }
+
+    .vip-orientation-options {
+        gap: 8px;
+    }
+
+    .vip-orientation-card {
+        height: 50px;
+        font-size: 0.65rem;
+    }
+
+    .vip-category-grid {
+        gap: 7px;
+    }
+
+    .vip-category-icon,
+    .vip-category-card i {
+        width: 55px;
+        height: 55px;
+        font-size: 1.5rem;
+        padding: 11px;
+    }
+
+    .vip-category-card span {
+        font-size: 0.48rem;
+    }
+
+    .vip-engraving-list {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 7px;
+    }
+
+    .vip-engraving-option {
+        height: 55px;
+        padding: 4px;
+    }
+
+    .vip-price-box {
+        margin-top: 38px;
+    }
+
+    .vip-continue-button {
+        gap: 42px;
+    }
+}

@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from products.models import Product
-from .models import VipBottleModel
+from .models import VipBottleModel, CategoriaGravacao
 
 
 def vip_choose_type(request, slug):
@@ -27,7 +27,7 @@ def vip_choose_model(request, slug, custom_type):
     request.session["vip_custom"] = vip_custom
     request.session.modified = True
 
-    models = VipBottleModel.objects.filter(product=product, active=True)
+    models = VipBottleModel.objects.filter(product=product, is_active=True)
 
     if custom_type == "grupo":
         return render(request, "customization/vip_group.html", {
@@ -43,28 +43,24 @@ def vip_choose_model(request, slug, custom_type):
     })
 
 
-def vip_individual_mockup(request, slug):
+def vip_individual_mockup(request, slug, model_id):
     product = get_object_or_404(Product, slug=slug, available=True, is_vip=True)
-
-    model_id = request.GET.get("model_id")
 
     bottle_model = get_object_or_404(
         VipBottleModel,
         id=model_id,
         product=product,
-        active=True
+        is_active=True
     )
 
-    vip_custom = request.session.get("vip_custom", {})
-    vip_custom["product_id"] = product.id
-    vip_custom["custom_type"] = "individual"
-    vip_custom["model_id"] = bottle_model.id
-    request.session["vip_custom"] = vip_custom
-    request.session.modified = True
+    categorias = CategoriaGravacao.objects.filter(
+        ativo=True
+    ).prefetch_related("gravacoes")
 
     return render(request, "customization/vip_individual_mockup.html", {
         "product": product,
         "bottle_model": bottle_model,
+        "categorias": categorias,
     })
 
 
@@ -72,7 +68,6 @@ def vip_group_mockup(request, slug):
     product = get_object_or_404(Product, slug=slug, available=True, is_vip=True)
 
     model_id = request.GET.get("model_id")
-
     bottle_model = None
 
     if model_id:
@@ -80,7 +75,7 @@ def vip_group_mockup(request, slug):
             VipBottleModel,
             id=model_id,
             product=product,
-            active=True
+            is_active=True
         )
 
         vip_custom = request.session.get("vip_custom", {})

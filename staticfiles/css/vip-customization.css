@@ -4,31 +4,17 @@
 
 .vip-custom-page {
     min-height: 100vh;
-    padding: 60px 20px 80px;
+    padding: 55px 20px 80px;
     position: relative;
     overflow: hidden;
-    background: #050505;
-}
-
-/* BACKGROUND ANIMADO VIP */
-
-.vip-custom-page {
-    background: #f7f7f7;
+    background: #f4f4f4;
 }
 
 .vip-custom-page::before {
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-        120deg,
-        #ffffff 0%,
-        #f1f1f1 20%,
-        #dcdcdc 40%,
-        #f8f8f8 60%,
-        #e7e7e7 80%,
-        #ffffff 100%
-    );
+    background: linear-gradient(120deg, #ffffff, #f1f1f1, #e7e7e7, #ffffff);
     background-size: 300% 300%;
     animation: vipFlowBackground 8s linear infinite;
     z-index: 0;
@@ -38,12 +24,7 @@
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-        120deg,
-        transparent 0%,
-        rgba(255, 255, 255, 0.75) 45%,
-        transparent 70%
-    );
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,.75), transparent);
     transform: translateX(-100%);
     animation: vipLightMove 5s linear infinite;
     z-index: 1;
@@ -51,36 +32,13 @@
 }
 
 @keyframes vipFlowBackground {
-    from {
-        background-position: 0% 50%;
-    }
-
-    to {
-        background-position: 300% 50%;
-    }
+    from { background-position: 0% 50%; }
+    to { background-position: 300% 50%; }
 }
 
 @keyframes vipLightMove {
-    from {
-        transform: translateX(-100%);
-    }
-
-    to {
-        transform: translateX(100%);
-    }
-}
-
-/* MARCA D'ÁGUA */
-
-.vip-bg-logo {
-    position: absolute;
-    left: -80px;
-    top: 90px;
-    width: 420px;
-    opacity: 0.04;
-    pointer-events: none;
-    z-index: 2;
-    filter: brightness(0) invert(1);
+    from { transform: translateX(-100%); }
+    to { transform: translateX(100%); }
 }
 
 /* TOPO */
@@ -92,27 +50,20 @@
     margin-bottom: 28px;
 }
 
-.vip-custom-logo {
-    width: 220px;
-    max-width: 70%;
-    margin-bottom: 22px;
-    filter: drop-shadow(0 8px 22px rgba(255, 255, 255, 0.15));
-}
-
 .vip-custom-header h1 {
     font-size: clamp(28px, 4vw, 42px);
-    font-weight: 800;
+    font-weight: 900;
     color: #111;
     margin-bottom: 8px;
 }
 
 .vip-custom-header p {
-    color: #777;
-    font-size: 16px;
-    font-weight: 500;
+    color: #666;
+    font-size: 15px;
+    font-weight: 600;
 }
 
-/* GRID DOS CARDS */
+/* CARDS */
 
 .vip-options-grid {
     width: min(760px, 100%);
@@ -124,24 +75,20 @@
     z-index: 3;
 }
 
-/* CARD */
-
 .vip-option-card {
-    background: rgba(255, 255, 255, 0.94);
-    border: 1px solid rgba(255, 255, 255, 0.45);
+    background: rgba(255,255,255,.96);
+    border: 1px solid #fff;
     border-radius: 18px;
     padding: 18px;
-    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
-    backdrop-filter: blur(10px);
-    transition: 0.3s ease;
+    box-shadow: 0 18px 45px rgba(0,0,0,.18);
     text-decoration: none;
     color: inherit;
     display: block;
+    transition: .3s ease;
 }
 
 .vip-option-card:hover {
-    transform: translateY(-6px);
-    text-decoration: none;
+    transform: translateY(-5px);
     color: inherit;
 }
 
@@ -149,7 +96,7 @@
 
 .vip-option-image-box {
     height: 330px;
-    background: #f2f2f2;
+    background: #f1f1f1;
     border-radius: 12px;
     display: flex;
     align-items: center;
@@ -166,11 +113,7 @@
     display: block;
 }
 
-/* PREVIEW GRUPO COM VÁRIAS GARRAFAS */
-
-.vip-group-preview {
-    position: relative;
-}
+/* GRUPO */
 
 .vip-group-preview .vip-bottle {
     position: absolute;
@@ -184,8 +127,8 @@
 .vip-bottle-left {
     left: 8%;
     bottom: 4%;
-    opacity: 0.75;
-    transform: scale(0.88);
+    opacity: .75;
+    transform: scale(.88);
     z-index: 1;
 }
 
@@ -199,19 +142,19 @@
 .vip-bottle-right {
     right: 8%;
     bottom: 4%;
-    opacity: 0.75;
-    transform: scale(0.88);
+    opacity: .75;
+    transform: scale(.88);
     z-index: 2;
 }
 
-/* TÍTULO DO CARD */
+/* TÍTULO */
 
 .vip-option-title-row {
     display: flex;
     align-items: center;
     gap: 14px;
     padding-bottom: 18px;
-    border-bottom: 1px solid #eeeeee;
+    border-bottom: 1px solid #e9e9e9;
 }
 
 .vip-option-title-row i {
@@ -221,7 +164,7 @@
 
 .vip-option-title-row h2 {
     font-size: 22px;
-    font-weight: 800;
+    font-weight: 900;
     color: #111;
     margin: 0;
 }
@@ -229,7 +172,7 @@
 .vip-option-title-row span {
     color: #777;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 600;
 }
 
 /* INFOS */
@@ -240,9 +183,9 @@
 
 .vip-option-info p {
     margin: 0 0 10px;
-    color: #777;
+    color: #666;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 700;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -254,7 +197,7 @@
 
 .vip-option-info .vip-green,
 .vip-option-info .vip-green i {
-    color: #00b84f;
+    color: #19c765;
 }
 
 /* BOTÃO */
@@ -265,121 +208,224 @@
     background: #050505;
     color: #fff;
     border-radius: 10px;
-    text-decoration: none;
     font-size: 15px;
-    font-weight: 800;
+    font-weight: 900;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 42px;
-    transition: 0.25s ease;
 }
 
 .vip-option-button:hover {
     background: #222;
-    color: #fff;
 }
 
-/* DESCONTO */
+/* BENEFÍCIOS NOVO ESTILO */
 
-.vip-discount-box {
-    width: min(420px, 100%);
+.vip-benefits-wrapper {
+    width: min(760px, 100%);
     margin: 70px auto 0;
     position: relative;
     z-index: 3;
 }
 
-.vip-discount-highlight {
-    background: rgba(239, 251, 243, 0.96);
-    border-radius: 12px;
-    padding: 14px 18px;
+.vip-benefits-box {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px;
+}
+
+.vip-benefit-item {
+    background: rgba(255,255,255,.9);
+    padding: 18px 20px;
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 16px;
+    box-shadow: 0 12px 30px rgba(0,0,0,.06);
 }
 
-.vip-discount-icon {
-    width: 46px;
-    height: 46px;
-    background: #00b84f;
-    color: #fff;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.vip-discount-icon i {
-    font-size: 22px;
-}
-
-.vip-discount-highlight strong {
-    color: #00b84f;
-    font-size: 16px;
-    display: block;
-}
-
-.vip-discount-highlight span {
-    color: #555;
-    font-size: 13px;
-}
-
-.vip-discount-note {
-    background: rgba(255, 255, 255, 0.96);
-    padding: 18px;
-    display: flex;
-    align-items: center;
-    gap: 18px;
-}
-
-.vip-discount-note i {
-    font-size: 30px;
+.vip-benefit-item i {
+    font-size: 26px;
     color: #444;
 }
 
-.vip-discount-note p {
-    margin: 0;
-    color: #333;
-    font-size: 14px;
+.vip-benefit-item strong {
+    display: block;
+    color: #111;
+    font-size: 15px;
+    font-weight: 900;
+}
+
+.vip-benefit-item span {
+    color: #666;
+    font-size: 13px;
     font-weight: 600;
 }
 
-.vip-option-card {
-    text-decoration: none;
-    color: inherit;
-    display: block;
+.vip-benefit-item.vip-benefit-green {
+    background: #eafff1;
 }
 
-/* RESPONSIVO */
+.vip-benefit-item.vip-benefit-green i,
+.vip-benefit-item.vip-benefit-green strong {
+    color: #19c765;
+}
+
+/* ESCONDE AVISO ANTIGO */
+
+.vip-warning-box {
+    display: none;
+}
+
+.vip-discount-box {
+    display: none;
+}
+
+/* =========================
+   MOBILE IGUAL REFERÊNCIA
+========================= */
 
 @media (max-width: 768px) {
     .vip-custom-page {
-        padding: 40px 14px 60px;
+        padding: 24px 10px 55px;
+        background: #f4f4f4;
+    }
+
+    .vip-custom-header {
+        margin-bottom: 18px;
+    }
+
+    .vip-custom-header h1 {
+        font-size: 21px;
+        line-height: 1.1;
+        margin-bottom: 5px;
+    }
+
+    .vip-custom-header p {
+        font-size: 10px;
     }
 
     .vip-options-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        width: 100%;
+    }
+
+    .vip-option-card {
+        border-radius: 10px;
+        padding: 8px;
+        box-shadow: 0 10px 26px rgba(0,0,0,.12);
     }
 
     .vip-option-image-box {
-        height: 300px;
+        height: 145px;
+        border-radius: 7px;
+        margin-bottom: 10px;
     }
 
-    .vip-custom-logo {
-        width: 170px;
+    .vip-option-image {
+        max-width: 78%;
+        max-height: 92%;
     }
-}
 
-@media (max-width: 480px) {
     .vip-group-preview .vip-bottle {
-        width: 46%;
+        width: 43%;
+        height: 86%;
     }
 
     .vip-bottle-left {
-        left: 4%;
+        left: 2%;
     }
 
     .vip-bottle-right {
-        right: 4%;
+        right: 2%;
+    }
+
+    .vip-option-title-row {
+        gap: 7px;
+        padding-bottom: 9px;
+    }
+
+    .vip-option-title-row i {
+        font-size: 17px;
+    }
+
+    .vip-option-title-row h2 {
+        font-size: 14px;
+    }
+
+    .vip-option-title-row span {
+        font-size: 9px;
+    }
+
+    .vip-option-info {
+        padding: 10px 0 6px;
+    }
+
+    .vip-option-info p {
+        font-size: 9px;
+        gap: 7px;
+        margin-bottom: 8px;
+    }
+
+    .vip-option-button {
+        height: 38px;
+        border-radius: 7px;
+        font-size: 10px;
+        gap: 18px;
+    }
+
+    .vip-benefits-wrapper {
+        margin-top: 48px;
+        width: 100%;
+    }
+
+    .vip-benefits-box {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px 10px;
+    }
+
+    .vip-benefit-item {
+        min-height: 48px;
+        padding: 10px 12px;
+        gap: 10px;
+        box-shadow: 0 8px 22px rgba(0,0,0,.05);
+    }
+
+    .vip-benefit-item:nth-child(1) {
+        grid-column: 1 / 2;
+    }
+
+    .vip-benefit-item:nth-child(2) {
+        grid-column: 2 / 3;
+        background: #eafff1;
+    }
+
+    .vip-benefit-item:nth-child(3) {
+        grid-column: 2 / 3;
+    }
+
+    .vip-benefit-item:nth-child(4) {
+         display: flex;
+    }
+
+    .vip-benefit-item i {
+        font-size: 17px;
+    }
+
+    .vip-benefit-item strong {
+        font-size: 9px;
+        line-height: 1.15;
+    }
+
+    .vip-benefit-item span {
+        font-size: 8px;
+        line-height: 1.2;
+    }
+
+    .vip-benefit-item:nth-child(2) i,
+    .vip-benefit-item:nth-child(2) strong {
+        color: #19c765;
     }
 }

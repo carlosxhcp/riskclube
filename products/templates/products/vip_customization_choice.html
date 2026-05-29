@@ -27,19 +27,12 @@
     <div class="vip-options-grid">
 
         <!-- CARD INDIVIDUAL -->
-        <a 
-            href="{% url 'customization:vip_choose_model' product.slug 'individual' %}" 
-            class="vip-option-card"
-        >
+        <a href="{% url 'customization:vip_choose_model' product.slug 'individual' %}" class="vip-option-card">
 
             <!-- IMAGEM -->
             <div class="vip-option-image-box">
 
-                <img 
-                    src="{{ product.image.url }}" 
-                    alt="{{ product.name }}" 
-                    class="vip-option-image"
-                >
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="vip-option-image">
 
             </div>
 
@@ -84,31 +77,19 @@
         </a>
 
         <!-- CARD GRUPO -->
-        <a 
-            href="{% url 'customization:vip_choose_model' product.slug 'grupo' %}" 
-            class="vip-option-card"
-        >
+        <a href="{% url 'customization:vip_choose_model' product.slug 'grupo' %}" class="vip-option-card">
 
             <!-- MOCKUP -->
             <div class="vip-option-image-box vip-group-preview">
 
-                <img 
-                    src="{{ product.image.url }}" 
-                    alt="{{ product.name }}" 
-                    class="vip-option-image vip-bottle vip-bottle-left"
-                >
+                <img src="{{ product.image.url }}" alt="{{ product.name }}"
+                    class="vip-option-image vip-bottle vip-bottle-left">
 
-                <img 
-                    src="{{ product.image.url }}" 
-                    alt="{{ product.name }}" 
-                    class="vip-option-image vip-bottle vip-bottle-center"
-                >
+                <img src="{{ product.image.url }}" alt="{{ product.name }}"
+                    class="vip-option-image vip-bottle vip-bottle-center">
 
-                <img 
-                    src="{{ product.image.url }}" 
-                    alt="{{ product.name }}" 
-                    class="vip-option-image vip-bottle vip-bottle-right"
-                >
+                <img src="{{ product.image.url }}" alt="{{ product.name }}"
+                    class="vip-option-image vip-bottle vip-bottle-right">
 
             </div>
 
@@ -159,69 +140,41 @@
 
         <div class="vip-benefits-box">
 
-            <!-- ITEM -->
             <div class="vip-benefit-item">
-
-                <i class="bi bi-truck"></i>
+                <i class="bi bi-person-badge"></i>
 
                 <div>
-                    <strong>Envio rápido</strong>
-                    <span>Para todo o Brasil</span>
+                    <strong>Não é apenas uma garrafa, é uma extensão da sua personalidade.</strong>
                 </div>
-
             </div>
 
-            <!-- ITEM -->
-            <div class="vip-benefit-item">
-
-                <i class="bi bi-shield-check"></i>
+            <div class="vip-benefit-item vip-benefit-green">
+                <i class="bi bi-tag"></i>
 
                 <div>
-                    <strong>Compra 100% segura</strong>
-                    <span>Seus dados protegidos</span>
+                    <strong>2 ou mais garrafas = 10% OFF</strong>
+                    <span>Desconto automático no carrinho</span>
                 </div>
-
             </div>
 
-            <!-- ITEM -->
             <div class="vip-benefit-item">
-
-                <i class="bi bi-award"></i>
+                <i class="bi bi-building"></i>
 
                 <div>
-                    <strong>Garantia de qualidade</strong>
-                    <span>Produtos duráveis e testados</span>
+                    <strong>Ideal para presentear mais pessoas, ou fazer algo corporativo.</strong>
                 </div>
-
             </div>
+<div class="vip-benefit-item">
+            <i class="bi bi-stars"></i>
 
-            <!-- ITEM -->
-            <div class="vip-benefit-item">
-
-                <i class="bi bi-ticket-perforated"></i>
-
-                <div>
-                    <strong>Desconto no PIX</strong>
-                    <span>Pague menos à vista</span>
-                </div>
-
+            <div>
+                <strong>Personalização exclusiva feita para deixar sua garrafa única.</strong>
             </div>
+        </div>
 
         </div>
 
-        <!-- AVISO -->
-        <div class="vip-warning-box">
-
-            <i class="bi bi-exclamation-triangle"></i>
-
-            <p>
-                <strong>Atenção:</strong>
-                Produtos personalizados não podem ser trocados ou devolvidos.
-                Confira todos os detalhes antes de finalizar sua compra.
-            </p>
-
-        </div>
-
+        
     </div>
 
     <!-- DESCONTO -->
