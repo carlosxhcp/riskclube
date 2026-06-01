@@ -66,20 +66,6 @@ class ProductImage(models.Model):
     def __str__(self):
         return f"Imagem de {self.product.name}"
 
-
-class CommunityImage(models.Model):
-    image = models.ImageField(upload_to="community/")
-    alt = models.CharField(max_length=120, blank=True)
-    active = models.BooleanField(default=True)
-    created = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        ordering = ["-created"]
-
-    def __str__(self):
-        return self.alt or "Imagem da comunidade"
-
-
 class ProductVariant(models.Model):
     product = models.ForeignKey(
         Product,

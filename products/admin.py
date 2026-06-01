@@ -5,9 +5,9 @@ from .models import (
     Product,
     ProductImage,
     ProductVariant,
-    CommunityImage,
     EngravingMockup,
 )
+
 
 
 class ProductImageInline(admin.TabularInline):
@@ -163,20 +163,3 @@ class ProductAdmin(admin.ModelAdmin):
 
     preview.short_description = "Prévia"
 
-
-@admin.register(CommunityImage)
-class CommunityImageAdmin(admin.ModelAdmin):
-    list_display = ("preview", "alt", "active")
-    list_filter = ("active",)
-    fields = ("preview", "image", "alt", "active")
-    readonly_fields = ("preview",)
-
-    def preview(self, obj):
-        if obj and obj.image:
-            return format_html(
-                '<img src="{}" style="width:90px;height:90px;object-fit:cover;border-radius:10px;border:1px solid #ddd;">',
-                obj.image.url
-            )
-        return "Sem imagem"
-
-    preview.short_description = "Prévia"

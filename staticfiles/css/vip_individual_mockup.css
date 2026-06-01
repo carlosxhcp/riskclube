@@ -1,3 +1,7 @@
+/* =========================
+   PÁGINA PRINCIPAL
+========================= */
+
 .vip-mockup-page {
     min-height: 100vh;
     background: #fff;
@@ -11,7 +15,10 @@
     background: #fff;
 }
 
-/* LADO ESQUERDO */
+
+/* =========================
+   LADO ESQUERDO / PREVIEW
+========================= */
 
 .vip-preview-area {
     position: relative;
@@ -43,6 +50,11 @@
 .vip-top-menu a:hover {
     color: #555;
 }
+
+
+/* =========================
+   GARRAFA
+========================= */
 
 .vip-bottle-preview {
     position: relative;
@@ -95,7 +107,10 @@
     box-shadow: 0 5px 15px rgba(0,0,0,0.04);
 }
 
-/* PAINEL DIREITO */
+
+/* =========================
+   PAINEL DIREITO
+========================= */
 
 .vip-config-panel {
     background: #fff;
@@ -124,7 +139,10 @@
     margin-bottom: 34px;
 }
 
-/* INPUT */
+
+/* =========================
+   INPUT DO NOME
+========================= */
 
 .vip-input-title {
     display: flex;
@@ -168,7 +186,10 @@
     color: transparent;
 }
 
-/* TÍTULOS */
+
+/* =========================
+   TÍTULOS DAS SEÇÕES
+========================= */
 
 .vip-section-title {
     display: flex;
@@ -187,7 +208,10 @@
     cursor: pointer;
 }
 
-/* FONTES */
+
+/* =========================
+   FONTES
+========================= */
 
 .vip-font-options {
     display: grid;
@@ -213,8 +237,7 @@
 }
 
 .vip-font-card input,
-.vip-orientation-card input,
-.vip-category-card input {
+.vip-orientation-card input {
     display: none;
 }
 
@@ -230,7 +253,10 @@
     color: #666;
 }
 
-/* ORIENTAÇÃO */
+
+/* =========================
+   ORIENTAÇÃO
+========================= */
 
 .vip-orientation-options {
     display: grid;
@@ -262,7 +288,10 @@
     color: #111;
 }
 
-/* CATEGORIAS */
+
+/* =========================
+   CATEGORIAS
+========================= */
 
 .vip-category-grid {
     display: grid;
@@ -281,10 +310,14 @@
 }
 
 .vip-category-card {
+    border: none;
+    background: transparent;
+    padding: 0;
     cursor: pointer;
     text-align: center;
 }
 
+.vip-category-icon,
 .vip-category-card i {
     width: 69px;
     height: 69px;
@@ -293,12 +326,19 @@
     border-radius: 8px;
     color: #fff;
     font-size: 2rem;
+    object-fit: contain;
+    padding: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: 0.25s ease;
 }
 
+.vip-category-icon {
+    display: block;
+}
+
+.vip-category-card:hover .vip-category-icon,
 .vip-category-card:hover i {
     transform: translateY(-3px) scale(1.04);
     box-shadow: 0 10px 22px rgba(0,0,0,0.14);
@@ -311,11 +351,15 @@
     text-transform: uppercase;
 }
 
+.vip-category-card.active .vip-category-icon,
 .vip-category-card.active i {
     box-shadow: 0 0 0 3px rgba(0,0,0,0.12);
 }
 
-/* OPÇÕES DE GRAVAÇÃO */
+
+/* =========================
+   BOTÃO VOLTAR CATEGORIAS
+========================= */
 
 .vip-back-categories {
     opacity: 0;
@@ -329,6 +373,11 @@
     transform: translateX(0);
     pointer-events: auto;
 }
+
+
+/* =========================
+   LISTA DE GRAVAÇÕES
+========================= */
 
 .vip-engraving-list {
     display: grid;
@@ -400,7 +449,27 @@
     }
 }
 
-/* PREÇO E BOTÃO */
+
+/* =========================
+   MENSAGEM VAZIA
+========================= */
+
+.vip-empty-message {
+    grid-column: 1 / -1;
+    margin: 0;
+    padding: 18px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    color: #777;
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-align: center;
+}
+
+
+/* =========================
+   PREÇO E BOTÃO CONTINUAR
+========================= */
 
 .vip-price-box {
     margin-top: 66px;
@@ -431,7 +500,10 @@
     background: #222;
 }
 
-/* RESPONSIVO */
+
+/* =========================
+   RESPONSIVO TABLET
+========================= */
 
 @media (max-width: 992px) {
     .vip-mockup-layout {
@@ -452,6 +524,11 @@
         height: 560px;
     }
 }
+
+
+/* =========================
+   RESPONSIVO MOBILE
+========================= */
 
 @media (max-width: 576px) {
     .vip-preview-area {
@@ -518,10 +595,12 @@
         gap: 7px;
     }
 
+    .vip-category-icon,
     .vip-category-card i {
         width: 55px;
         height: 55px;
         font-size: 1.5rem;
+        padding: 11px;
     }
 
     .vip-category-card span {

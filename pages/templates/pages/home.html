@@ -85,35 +85,112 @@
 </section>
 
 <!-- SEÇÃO COMUNIDADE -->
-<section class="community-section">
+<section class="community-section" id="comunidade">
 
-    <h2 class="community-title">
-        COMUNIDADE
-    </h2>
+    <!-- CABEÇALHO -->
+    <div class="community-header">
 
-    <div class="community-grid">
+        <span class="community-label">
+            Vozes reais. Estilo que inspira.
+        </span>
 
-        {% for item in community_images %}
+        <h2 class="community-title">
+            COMUNIDADE
+        </h2>
 
-        <!-- IMAGEM DA COMUNIDADE -->
-        <img src="{{ item.image.url }}" alt="{{ item.alt }}">
-
-        {% empty %}
-
-        <!-- MENSAGEM CASO NÃO TENHA IMAGENS -->
-        <p class="community-empty">
-            Nenhuma imagem cadastrada ainda.
+        <p class="community-subtitle">
+            Avaliações de pessoas que usam, falam e vivem o estilo RISK.
         </p>
-
-        {% endfor %}
 
     </div>
 
-    <p class="community-text">
-        Você pode nos apoiar postando nas redes da forma que se sentir confortável marcando @riskclube — aproveite sua
-        nova garrafa.
-    </p>
+    <!-- AVALIAÇÕES -->
+    <div class="community-carousel">
+
+        <div class="community-track">
+
+            {% for item in community_images %}
+
+            <article class="community-card">
+
+                <!-- FOTO -->
+                <div class="community-photo-box">
+
+                    {% if item.photo %}
+                        <img
+                            src="{{ item.photo.url }}"
+                            alt="{{ item.instagram }}"
+                        >
+                    {% endif %}
+
+                    <span class="community-instagram">
+                        @{{ item.instagram }}
+                    </span>
+
+                </div>
+
+                <!-- CONTEÚDO -->
+                <div class="community-content">
+
+                    <!-- ESTRELAS -->
+                    <div class="community-stars">
+
+                        {% for i in "12345" %}
+
+                            {% if forloop.counter <= item.rating %}
+                                ★
+                            {% else %}
+                                ☆
+                            {% endif %}
+
+                        {% endfor %}
+
+                        <span>{{ item.rating }},0</span>
+
+                    </div>
+
+                    <!-- TÍTULO -->
+                    <h3>
+                        {{ item.title }}
+                    </h3>
+
+                    <!-- DESCRIÇÃO -->
+                    <p>
+                        {{ item.description }}
+                    </p>
+
+                </div>
+
+            </article>
+
+            {% empty %}
+
+            <div class="community-empty">
+
+                <h3>
+                    Seja o primeiro a avaliar!
+                </h3>
+
+                <p>
+                    Ainda não existem avaliações cadastradas.
+                </p>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+    <!-- TEXTO FINAL -->
+    <div class="community-footer">
+
+        <p>
+            Compartilhe sua experiência com a RISK e faça parte da nossa comunidade.
+        </p>
+
+    </div>
 
 </section>
-
 {% endblock %}
