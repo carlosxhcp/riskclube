@@ -49,8 +49,8 @@
 
 .vip-top-menu a:hover {
     color: #555;
-}
 
+}
 
 /* =========================
    GARRAFA
@@ -58,8 +58,8 @@
 
 .vip-bottle-preview {
     position: relative;
-    width: min(420px, 82%);
-    height: 760px;
+    width: min(620px, 92%);
+    height: 940px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -73,11 +73,11 @@
 
 .vip-custom-text {
     position: absolute;
-    top: 49%;
+    top: 55%;
     left: 51%;
     transform: translate(-50%, -50%) rotate(-90deg);
     color: rgba(255, 255, 255, 0.68);
-    font-size: 1.45rem;
+    font-size: 1.7rem;
     font-weight: 400;
     letter-spacing: 4px;
     text-transform: uppercase;
@@ -261,33 +261,58 @@
 .vip-orientation-options {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 16px;
+    gap: 14px;
 }
 
 .vip-orientation-card {
-    height: 58px;
-    border: 1px solid transparent;
-    border-radius: 8px;
+    border: 1px solid #e6e6e6;
+    border-radius: 12px;
+    min-height: 95px;
+    padding: 16px;
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 11px;
+    gap: 14px;
     cursor: pointer;
-    font-size: 0.74rem;
-    font-weight: 900;
-    text-transform: uppercase;
-    color: #777;
+    transition: .25s;
+    background: #fff;
 }
 
-.vip-orientation-card i {
-    font-size: 1.28rem;
+.vip-orientation-card input {
+    display: none;
+}
+
+.vip-orientation-card:hover {
+    border-color: #111;
 }
 
 .vip-orientation-card.active {
     border-color: #111;
-    color: #111;
+    background: #fafafa;
 }
 
+.vip-orientation-icon {
+    font-size: 2rem;
+    color: #111;
+    flex-shrink: 0;
+}
+
+.vip-orientation-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.vip-orientation-info strong {
+    font-size: .9rem;
+    font-weight: 900;
+    letter-spacing: 1px;
+}
+
+.vip-orientation-info small {
+    margin-top: 4px;
+    color: #777;
+    font-size: .75rem;
+    font-weight: 700;
+}
 
 /* =========================
    CATEGORIAS

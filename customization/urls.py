@@ -29,8 +29,8 @@ urlpatterns = [
     ),
 
     path(
-        "vip/<slug:slug>/individual/mockup/",
-        views.vip_individual_mockup,
-        name="vip_individual_mockup"
-    ),
+    "vip/<slug:slug>/individual/mockup/<int:model_id>/",
+    views.vip_individual_mockup,
+    name="vip_individual_mockup"
+)
 ]

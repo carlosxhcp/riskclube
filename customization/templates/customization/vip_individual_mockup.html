@@ -16,12 +16,6 @@
         <!-- PREVIEW DA GARRAFA -->
         <div class="vip-preview-area">
 
-            <div class="vip-top-menu">
-                <a href="/">INÍCIO</a>
-                <a href="/shop/">SHOP</a>
-                <a href="#">COMUNIDADE</a>
-            </div>
-
             <div class="vip-bottle-preview">
 
                 {% if bottle_model.image %}
@@ -29,7 +23,7 @@
                 {% endif %}
 
                 <div class="vip-custom-text" id="previewText">
-                    SEU NOME AQUI
+                    NOME
                 </div>
 
             </div>
@@ -51,6 +45,46 @@
             <form method="POST" class="vip-config-form">
                 {% csrf_token %}
 
+            
+
+                <!-- ORIENTAÇÃO -->
+                <div class="vip-form-group">
+
+                    <div class="vip-section-title">
+                        <h3>Posicionamento</h3>
+                    </div>
+
+                    <div class="vip-orientation-options">
+
+                        <label class="vip-orientation-card active">
+                            <input type="radio" name="orientation" value="vertical" checked>
+
+                            <div class="vip-orientation-icon">
+                                <i class="bi bi-arrows-vertical"></i>
+                            </div>
+
+                            <div class="vip-orientation-info">
+                                <strong>VERTICAL</strong>
+                                <small>Máx. 15 caracteres</small>
+                            </div>
+                        </label>
+
+                        <label class="vip-orientation-card">
+                            <input type="radio" name="orientation" value="horizontal">
+
+                            <div class="vip-orientation-icon">
+                                <i class="bi bi-arrows"></i>
+                            </div>
+
+                            <div class="vip-orientation-info">
+                                <strong>HORIZONTAL</strong>
+                                <small>Máx. 5 caracteres</small>
+                            </div>
+                        </label>
+
+                    </div>
+
+                </div>
                 <!-- NOME -->
                 <div class="vip-form-group">
                     <div class="vip-input-title">
@@ -59,7 +93,7 @@
                     </div>
 
                     <input type="text" name="custom_name" id="customName" class="vip-name-input"
-                        placeholder="Digite seu nome" maxlength="18">
+                        placeholder="Digite seu nome" maxlength="15">
                 </div>
 
                 <!-- FONTES -->
@@ -94,31 +128,6 @@
                             <input type="radio" name="font" value="raleway">
                             <span>Aa</span>
                             <small>Raleway</small>
-                        </label>
-
-                    </div>
-
-                </div>
-
-                <!-- ORIENTAÇÃO -->
-                <div class="vip-form-group">
-
-                    <div class="vip-section-title">
-                        <h3>Orientação</h3>
-                    </div>
-
-                    <div class="vip-orientation-options">
-
-                        <label class="vip-orientation-card active">
-                            <input type="radio" name="orientation" value="vertical" checked>
-                            <i class="bi bi-arrows-vertical"></i>
-                            <span>Vertical</span>
-                        </label>
-
-                        <label class="vip-orientation-card">
-                            <input type="radio" name="orientation" value="horizontal">
-                            <i class="bi bi-arrows"></i>
-                            <span>Horizontal</span>
                         </label>
 
                     </div>
@@ -221,7 +230,19 @@
         });
 
         input.addEventListener("input", function () {
-            previewText.textContent = this.value.trim() || "SEU NOME AQUI";
+
+            const orientation =
+                document.querySelector('input[name="orientation"]:checked').value;
+
+            const maxChars =
+                orientation === "horizontal" ? 5 : 15;
+
+            if (this.value.length > maxChars) {
+                this.value = this.value.substring(0, maxChars);
+            }
+
+            previewText.textContent =
+                this.value.trim() || "NOME";
         });
 
         fontCards.forEach(card => {
@@ -232,18 +253,49 @@
         });
 
         orientationCards.forEach(card => {
+
             card.addEventListener("click", function () {
-                orientationCards.forEach(item => item.classList.remove("active"));
+
+                orientationCards.forEach(item =>
+                    item.classList.remove("active")
+                );
+
                 this.classList.add("active");
 
-                const orientation = this.querySelector("input").value;
+                const radio =
+                    this.querySelector("input");
+
+                radio.checked = true;
+
+                const orientation = radio.value;
 
                 if (orientation === "horizontal") {
+
                     previewText.classList.add("horizontal");
+
+                    input.setAttribute("maxlength", "5");
+
+                    if (input.value.length > 5) {
+                        input.value =
+                            input.value.substring(0, 5);
+                    }
+
                 } else {
+
                     previewText.classList.remove("horizontal");
+
+                    input.setAttribute("maxlength", "15");
+
+                    if (input.value.length > 15) {
+                        input.value =
+                            input.value.substring(0, 15);
+                    }
                 }
+
+                previewText.textContent =
+                    input.value.trim() || "NOME";
             });
+
         });
 
         categoryButtons.forEach(button => {

@@ -21,134 +21,128 @@
         <p>Escolha a opção que <strong>mais combina</strong> com você.</p>
     </div>
 
-    <form 
-    method="GET" 
-    action="
-    {% if custom_type == 'grupo' %}
-        {% url 'customization:vip_group_mockup' product.slug %}
-    {% else %}
-        {% url 'customization:vip_individual_mockup' product.slug %}
-    {% endif %}
-    "
-    class="vip-model-form" 
-    id="vipModelForm"
->
+    <div class="vip-model-grid">
 
-        <div class="vip-model-grid">
+        {% for model in models %}
 
-            {% for model in models %}
+        <label
+            class="vip-model-card"
+            data-url="{% url 'customization:vip_individual_mockup' product.slug model.id %}"
+        >
 
-            <label class="vip-model-card">
+            <input
+                type="radio"
+                name="model_id"
+                value="{{ model.id }}"
+                class="vip-model-radio"
+            >
 
-                <input 
-                    type="radio" 
-                    name="model_id" 
-                    value="{{ model.id }}" 
-                    class="vip-model-radio"
-                    required
-                >
-
-                <div class="vip-model-check-icon">
-                    <i class="{{ model.icon_class|default:'bi bi-droplet' }}"></i>
-                </div>
-
-                <div class="vip-model-image-box">
-                    <img 
-                        src="{{ model.image.url }}" 
-                        alt="{{ model.name }}" 
-                        class="vip-model-image"
-                    >
-                </div>
-
-                <div class="vip-model-info">
-                    <h3>{{ model.name }}</h3>
-                    <p>{{ model.description|default:"Modelo personalizado Risk Clube" }}</p>
-                </div>
-
-                <div class="vip-model-select-row">
-                    <span class="vip-fake-radio"></span>
-                    <span>Selecionar modelo</span>
-                </div>
-
-            </label>
-
-            {% empty %}
-
-            <p class="vip-model-empty">
-                Nenhum modelo cadastrado ainda.
-            </p>
-
-            {% endfor %}
-
-        </div>
-
-        <div class="vip-bottom-area">
-
-            <div class="vip-benefits-box">
-
-                <div class="vip-benefit-item">
-                    <i class="bi bi-truck"></i>
-                    <div>
-                        <strong>Envio rápido</strong>
-                        <span>Para todo o Brasil</span>
-                    </div>
-                </div>
-
-                <div class="vip-benefit-item">
-                    <i class="bi bi-shield-check"></i>
-                    <div>
-                        <strong>Compra 100% segura</strong>
-                        <span>Seus dados protegidos</span>
-                    </div>
-                </div>
-
-                <div class="vip-benefit-item">
-                    <i class="bi bi-award"></i>
-                    <div>
-                        <strong>Garantia de qualidade</strong>
-                        <span>Produtos duráveis e testados</span>
-                    </div>
-                </div>
-
-                <div class="vip-benefit-item">
-                    <i class="bi bi-ticket-perforated"></i>
-                    <div>
-                        <strong>Desconto no PIX</strong>
-                        <span>Pague menos à vista</span>
-                    </div>
-                </div>
-
+            <div class="vip-model-check-icon">
+                <i class="{{ model.icon_class|default:'bi bi-droplet' }}"></i>
             </div>
 
-            <div class="vip-warning-box">
-                <i class="bi bi-exclamation-triangle"></i>
+            <div class="vip-model-image-box">
+                <img
+                    src="{{ model.image.url }}"
+                    alt="{{ model.name }}"
+                    class="vip-model-image"
+                >
+            </div>
+
+            <div class="vip-model-info">
+                <h3>{{ model.name }}</h3>
+
                 <p>
-                    <strong>Atenção:</strong>
-                    Produtos personalizados não podem ser trocados ou devolvidos.
-                    Confira todos os detalhes antes de finalizar sua compra.
+                    {{ model.description|default:"Modelo personalizado Risk Clube" }}
                 </p>
             </div>
 
+            <div class="vip-model-select-row">
+                <span class="vip-fake-radio"></span>
+                <span>Selecionar modelo</span>
+            </div>
+
+        </label>
+
+        {% empty %}
+
+        <p class="vip-model-empty">
+            Nenhum modelo cadastrado ainda.
+        </p>
+
+        {% endfor %}
+
+    </div>
+
+    <div class="vip-bottom-area">
+
+        <div class="vip-benefits-box">
+
+            <div class="vip-benefit-item">
+                <i class="bi bi-truck"></i>
+                <div>
+                    <strong>Envio rápido</strong>
+                    <span>Para todo o Brasil</span>
+                </div>
+            </div>
+
+            <div class="vip-benefit-item">
+                <i class="bi bi-shield-check"></i>
+                <div>
+                    <strong>Compra 100% segura</strong>
+                    <span>Seus dados protegidos</span>
+                </div>
+            </div>
+
+            <div class="vip-benefit-item">
+                <i class="bi bi-award"></i>
+                <div>
+                    <strong>Garantia de qualidade</strong>
+                    <span>Produtos duráveis e testados</span>
+                </div>
+            </div>
+
+            <div class="vip-benefit-item">
+                <i class="bi bi-ticket-perforated"></i>
+                <div>
+                    <strong>Desconto no PIX</strong>
+                    <span>Pague menos à vista</span>
+                </div>
+            </div>
+
         </div>
 
-    </form>
+        <div class="vip-warning-box">
+            <i class="bi bi-exclamation-triangle"></i>
+
+            <p>
+                <strong>Atenção:</strong>
+                Produtos personalizados não podem ser trocados ou devolvidos.
+                Confira todos os detalhes antes de finalizar sua compra.
+            </p>
+        </div>
+
+    </div>
 
 </section>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-    const form = document.getElementById("vipModelForm");
-    const radios = document.querySelectorAll(".vip-model-radio");
+document.addEventListener("DOMContentLoaded", () => {
 
-    radios.forEach(function (radio) {
-        radio.addEventListener("change", function () {
-            if (this.checked) {
-                setTimeout(function () {
-                    form.submit();
-                }, 180);
-            }
+    document.querySelectorAll(".vip-model-card").forEach(card => {
+
+        card.addEventListener("click", () => {
+
+            const url = card.dataset.url;
+
+            setTimeout(() => {
+                window.location.href = url;
+            }, 150);
+
         });
+
     });
+
 });
 </script>
 
