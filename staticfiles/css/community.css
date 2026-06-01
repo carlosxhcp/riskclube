@@ -1,0 +1,207 @@
+.community-track {
+    align-items: center;
+}
+
+.community-card {
+    width: 100%;
+    max-width: 1050px;
+    margin: 0 auto;
+}
+
+.community-header {
+    max-width: 1050px;
+    margin: 0 auto 55px;
+}
+
+.community-footer {
+    max-width: 1050px;
+    margin: 100px auto 0;
+}
+
+
+/* =========================
+   RESPONSIVO MOBILE
+========================= */
+
+@media (max-width: 768px) {
+
+    .community-section {
+        padding: 60px 18px;
+    }
+
+    .community-header {
+        margin-bottom: 45px;
+    }
+
+    .community-track {
+        gap: 60px;
+    }
+
+    /* AVALIAÇÕES ÍMPARES */
+    .community-card:nth-child(odd) {
+        display: grid;
+        grid-template-columns: 180px 1fr;
+        gap: 25px;
+        align-items: center;
+        max-width: 100%;
+    }
+
+    /* AVALIAÇÕES PARES */
+    .community-card:nth-child(even) {
+        display: grid;
+        grid-template-columns: 1fr 180px;
+        gap: 25px;
+        align-items: center;
+        max-width: 100%;
+    }
+
+    .community-photo-box {
+        width: 180px;
+        height: 180px;
+    }
+
+    .community-card:nth-child(odd) .community-photo-box {
+        transform: rotate(-3deg);
+    }
+
+    .community-card:nth-child(even) .community-photo-box {
+        grid-column: 2;
+        grid-row: 1;
+        transform: rotate(3deg);
+    }
+
+    .community-card:nth-child(even) .community-content {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    .community-card:nth-child(even) .community-instagram {
+        left: auto;
+        right: -12px;
+        transform: rotate(8deg);
+    }
+
+    .community-content {
+        max-width: 100%;
+    }
+
+    .community-stars {
+        font-size: 15px;
+        letter-spacing: 2px;
+        margin-bottom: 12px;
+    }
+
+    .community-stars span {
+        font-size: 12px;
+    }
+
+    .community-content h3 {
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+
+    .community-content p {
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .community-instagram {
+        font-size: 11px;
+        padding: 6px 12px;
+    }
+}
+
+/* =========================
+   CELULAR PEQUENO
+========================= */
+
+@media (max-width: 480px) {
+
+    .community-track {
+        gap: 50px;
+    }
+
+    .community-card:nth-child(odd) {
+        grid-template-columns: 140px 1fr;
+        gap: 18px;
+    }
+
+    .community-card:nth-child(even) {
+        grid-template-columns: 1fr 140px;
+        gap: 18px;
+    }
+
+    .community-photo-box {
+        width: 140px;
+        height: 140px;
+    }
+
+    .community-title {
+        letter-spacing: -1px;
+    }
+
+    .community-content h3 {
+        font-size: 17px;
+    }
+
+    .community-content p {
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+    .community-stars {
+        font-size: 13px;
+    }
+
+    .community-stars span {
+        font-size: 11px;
+    }
+
+    .community-instagram {
+        font-size: 10px;
+        padding: 5px 10px;
+    }
+}
+
+.community-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    margin-top: 50px;
+}
+
+.community-page-btn {
+    border: none;
+    background: transparent;
+    font-size: 22px;
+    cursor: pointer;
+    color: #444;
+}
+
+.community-page-numbers {
+    display: flex;
+    gap: 10px;
+}
+
+.community-page-number {
+    width: 36px;
+    height: 36px;
+
+    border: 1px solid #ddd;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    font-weight: 700;
+    transition: .3s;
+}
+
+.community-page-number.active {
+    background: #000;
+    color: #fff;
+    border-color: #000;
+}

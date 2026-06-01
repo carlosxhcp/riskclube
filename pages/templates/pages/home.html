@@ -5,6 +5,7 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/home.css' %}">
+<link rel="stylesheet" href="{% static 'css/community.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -182,7 +183,19 @@
         </div>
 
     </div>
+    <div class="community-pagination">
 
+    <button class="community-page-btn prev">
+        &#10094;
+    </button>
+
+    <div class="community-page-numbers"></div>
+
+    <button class="community-page-btn next">
+        &#10095;
+    </button>
+
+</div>
     <!-- TEXTO FINAL -->
     <div class="community-footer">
 
@@ -193,4 +206,77 @@
     </div>
 
 </section>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    const cards = [...document.querySelectorAll(".community-card")];
+
+    const perPage = 3;
+    const totalPages = Math.ceil(cards.length / perPage);
+
+    const numbersContainer =
+        document.querySelector(".community-page-numbers");
+
+    let currentPage = 1;
+
+    function renderPage(page){
+
+        currentPage = page;
+
+        cards.forEach((card,index)=>{
+
+            const start = (page - 1) * perPage;
+            const end = start + perPage;
+
+            card.style.display =
+                index >= start && index < end
+                ? "grid"
+                : "none";
+        });
+
+        document
+            .querySelectorAll(".community-page-number")
+            .forEach(btn=>btn.classList.remove("active"));
+
+        document
+            .querySelector(`[data-page="${page}"]`)
+            .classList.add("active");
+    }
+
+    for(let i=1;i<=totalPages;i++){
+
+        const btn = document.createElement("div");
+
+        btn.className = "community-page-number";
+        btn.dataset.page = i;
+        btn.textContent = i;
+
+        btn.addEventListener("click",()=>renderPage(i));
+
+        numbersContainer.appendChild(btn);
+    }
+
+    document
+        .querySelector(".prev")
+        .addEventListener("click",()=>{
+
+            if(currentPage > 1){
+                renderPage(currentPage - 1);
+            }
+        });
+
+    document
+        .querySelector(".next")
+        .addEventListener("click",()=>{
+
+            if(currentPage < totalPages){
+                renderPage(currentPage + 1);
+            }
+        });
+
+    renderPage(1);
+
+});
+</script>
 {% endblock %}
