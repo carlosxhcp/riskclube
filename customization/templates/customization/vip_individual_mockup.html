@@ -10,65 +10,37 @@
 {% block content %}
 
 <section class="vip-mockup-page">
-
     <div class="vip-mockup-layout">
 
-        <!-- PREVIEW DA GARRAFA -->
+        <!-- PREVIEW 3D DA GARRAFA -->
         <div class="vip-preview-area">
 
             <div class="vip-bottle-view-selector">
-
                 <button type="button" class="vip-view-btn active" data-view="front">
                     Frente
                 </button>
 
-                {% if bottle_model.back_image %}
                 <button type="button" class="vip-view-btn" data-view="back">
                     Verso
                 </button>
-                {% endif %}
-
             </div>
 
-            <div class="vip-bottle-preview">
+            <div class="vip-bottle-preview vip-bottle-preview-3d">
 
-                {% if bottle_model.image %}
-                <img src="{{ bottle_model.image.url }}" alt="{{ bottle_model.name }}" class="vip-bottle-image active"
-                    id="frontBottle">
-                {% endif %}
-
-                {% if product.back_image %}
-                <button type="button" class="vip-view-btn" data-view="back">
-                    Verso
-                </button>
-                {% endif %}
-
-                <div class="vip-custom-text" id="previewText">
-                    NOME
+                <div id="vip3dViewer" class="vip-3d-viewer">
+                    <div class="vip-3d-loading" id="vip3dLoading">
+                        Carregando mockup 3D...
+                    </div>
                 </div>
 
-                <div class="vip-engravings-layer">
-
-                    <div class="engraving-slot slot-1 active-slot" data-slot="1">1</div>
-                    <div class="engraving-slot slot-2" data-slot="2">2</div>
-                    <div class="engraving-slot slot-3" data-slot="3">3</div>
-                    <div class="engraving-slot slot-4" data-slot="4">4</div>
-                    <div class="engraving-slot slot-5" data-slot="5">5</div>
-                    <div class="engraving-slot slot-6" data-slot="6">6</div>
-                    <div class="engraving-slot slot-7" data-slot="7">7</div>
-                    <div class="engraving-slot slot-8" data-slot="8">8</div>
-
-                </div>
 
                 <input type="hidden" name="engravings_data" id="engravingsData">
-
             </div>
 
-            <button type="button" class="vip-live-preview-btn">
+            <button type="button" class="vip-live-preview-btn" id="saveMockupImage">
                 <i class="bi bi-eye"></i>
-                Live Preview
+                Salvar preview
             </button>
-
         </div>
 
         <!-- PAINEL DE CONFIGURAÇÃO -->
@@ -81,17 +53,13 @@
             <form method="POST" class="vip-config-form">
                 {% csrf_token %}
 
-
-
                 <!-- ORIENTAÇÃO -->
                 <div class="vip-form-group">
-
                     <div class="vip-section-title">
                         <h3>Posicionamento</h3>
                     </div>
 
                     <div class="vip-orientation-options">
-
                         <label class="vip-orientation-card active">
                             <input type="radio" name="orientation" value="vertical" checked>
 
@@ -117,10 +85,9 @@
                                 <small>Máx. 5 caracteres</small>
                             </div>
                         </label>
-
                     </div>
-
                 </div>
+
                 <!-- NOME -->
                 <div class="vip-form-group">
                     <div class="vip-input-title">
@@ -134,45 +101,40 @@
 
                 <!-- FONTES -->
                 <div class="vip-form-group">
-
                     <div class="vip-section-title">
                         <h3>Fonte</h3>
                         <button type="button">Ver todas</button>
                     </div>
 
                     <div class="vip-font-options">
-
-                        <label class="vip-font-card active">
+                        <label class="vip-font-card active" data-font-family="Arial Black, Arial, sans-serif">
                             <input type="radio" name="font" value="gotham" checked>
                             <span>Aa</span>
                             <small>Gotham</small>
                         </label>
 
-                        <label class="vip-font-card">
+                        <label class="vip-font-card" data-font-family="Montserrat, Arial, sans-serif">
                             <input type="radio" name="font" value="montserrat">
                             <span>Aa</span>
                             <small>Montserrat</small>
                         </label>
 
-                        <label class="vip-font-card">
+                        <label class="vip-font-card" data-font-family="Helvetica, Arial, sans-serif">
                             <input type="radio" name="font" value="helvetika">
                             <span>Aa</span>
                             <small>Helvetika</small>
                         </label>
 
-                        <label class="vip-font-card">
+                        <label class="vip-font-card" data-font-family="Raleway, Arial, sans-serif">
                             <input type="radio" name="font" value="raleway">
                             <span>Aa</span>
                             <small>Raleway</small>
                         </label>
-
                     </div>
-
                 </div>
 
                 <!-- CATEGORIA / OPÇÕES -->
                 <div class="vip-form-group">
-
                     <div class="vip-section-title">
                         <h3 id="categoryTitle">Escolha sua categoria</h3>
 
@@ -183,7 +145,6 @@
 
                     <!-- LISTA DE CATEGORIAS -->
                     <div class="vip-category-grid" id="categoryGrid">
-
                         {% for categoria in categorias %}
                         <button type="button" class="vip-category-card" data-category="{{ categoria.id }}"
                             data-category-name="{{ categoria.nome }}">
@@ -198,12 +159,10 @@
                             Nenhuma categoria cadastrada.
                         </p>
                         {% endfor %}
-
                     </div>
 
                     <!-- LISTA DE GRAVAÇÕES -->
                     <div class="vip-engraving-list" id="engravingList">
-
                         {% for categoria in categorias %}
                         {% for gravacao in categoria.gravacoes.all %}
                         {% if gravacao.ativo %}
@@ -216,12 +175,10 @@
                         {% endif %}
                         {% endfor %}
                         {% endfor %}
-
                     </div>
 
                     <input type="hidden" name="categoria_gravacao" id="categoriaGravacaoInput">
                     <input type="hidden" name="gravacao" id="gravacaoInput">
-
                 </div>
 
                 <!-- PREÇO -->
@@ -233,17 +190,12 @@
                     Continuar
                     <i class="bi bi-arrow-right"></i>
                 </button>
-
             </form>
-
         </aside>
-
     </div>
 
     <div class="engraving-modal" id="engravingModal">
-
         <div class="engraving-modal-content">
-
             <div class="engraving-modal-header">
                 <h3 id="modalTitle">
                     Escolha a gravação
@@ -254,23 +206,28 @@
                 </button>
             </div>
 
-            <div class="engraving-modal-grid" id="engravingModalGrid">
-
-            </div>
-
+            <div class="engraving-modal-grid" id="engravingModalGrid"></div>
         </div>
-
     </div>
-
 </section>
 
+<script type="importmap">
+{
+    "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    }
+}
+</script>
 
+<script type="module">
+    import * as THREE from "three";
+    import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+    import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+    import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js";
 
-<script>document.addEventListener("DOMContentLoaded", function () {
-
+    document.addEventListener("DOMContentLoaded", function () {
         const input = document.getElementById("customName");
-        const previewText = document.getElementById("previewText");
-
         const fontCards = document.querySelectorAll(".vip-font-card");
         const orientationCards = document.querySelectorAll(".vip-orientation-card");
 
@@ -286,23 +243,14 @@
         const gravacaoInput = document.getElementById("gravacaoInput");
 
         const slots = document.querySelectorAll(".engraving-slot");
-
-        const engravingsDataInput =
-            document.getElementById("engravingsData");
-
-        const engravingModal =
-            document.getElementById("engravingModal");
-
-        const engravingModalGrid =
-            document.getElementById("engravingModalGrid");
-
-        const closeEngravingModal =
-            document.getElementById("closeEngravingModal");
-
-        const modalTitle =
-            document.getElementById("modalTitle");
+        const engravingsDataInput = document.getElementById("engravingsData");
+        const engravingModal = document.getElementById("engravingModal");
+        const engravingModalGrid = document.getElementById("engravingModalGrid");
+        const closeEngravingModal = document.getElementById("closeEngravingModal");
+        const modalTitle = document.getElementById("modalTitle");
 
         let currentSlot = null;
+        let selectedFontFamily = "Arial Black, Arial, sans-serif";
 
         const selectedEngravings = {
             1: null,
@@ -320,28 +268,316 @@
         });
 
         /* =======================
+           3D OTIMIZADO
+        ======================= */
+
+        const container = document.getElementById("vip3dViewer");
+        const loadingMessage = document.getElementById("vip3dLoading");
+        const isMobile = window.matchMedia("(max-width: 768px), (pointer: coarse)").matches;
+
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xffffff);
+
+        const camera = new THREE.PerspectiveCamera(
+            25,
+            Math.max(container.clientWidth, 1) / Math.max(container.clientHeight, 1),
+            0.1,
+            100
+        );
+
+        const renderer = new THREE.WebGLRenderer({
+            antialias: !isMobile,
+            preserveDrawingBuffer: true,
+            powerPreference: "high-performance",
+            alpha: false
+        });
+
+        renderer.setSize(container.clientWidth, container.clientHeight, false);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile ? 1.25 : 1.75));
+        renderer.outputColorSpace = THREE.SRGBColorSpace;
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1;
+        container.appendChild(renderer.domElement);
+
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = !isMobile;
+        controls.dampingFactor = 0.06;
+        controls.enablePan = false;
+        controls.enableZoom = true;
+        controls.rotateSpeed = isMobile ? 0.55 : 0.8;
+        controls.zoomSpeed = 0.7;
+        controls.target.set(0, 1.2, 0);
+
+        scene.add(new THREE.AmbientLight(0xffffff, 0.95));
+
+        const frontLight = new THREE.DirectionalLight(0xffffff, 1.75);
+        frontLight.position.set(2, 4, 5);
+        scene.add(frontLight);
+
+        const sideLight = new THREE.DirectionalLight(0xffffff, 1.8);
+        sideLight.position.set(-4, 3, 2);
+        scene.add(sideLight);
+
+        let bottleModel = null;
+        let printArea = null;
+        let originalPrintAreaPosition = null;
+        let originalPrintAreaScale = null;
+        let originalPrintAreaRotation = null;
+        let currentTextTexture = null;
+
+        let needsRender = true;
+        let lastFrameTime = 0;
+        const targetFPS = isMobile ? 30 : 60;
+        const frameInterval = 1000 / targetFPS;
+
+        function requestRender() {
+            needsRender = true;
+        }
+
+        function disposeMaterial(material) {
+            if (!material) return;
+            const materials = Array.isArray(material) ? material : [material];
+
+            materials.forEach((mat) => {
+                if (mat.map) mat.map.dispose();
+                mat.dispose();
+            });
+        }
+
+        function resizeRenderer() {
+            const width = Math.max(container.clientWidth, 1);
+            const height = Math.max(container.clientHeight, 1);
+
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+            renderer.setSize(width, height, false);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile ? 1.25 : 1.75));
+            requestRender();
+        }
+
+        function fitCameraToModel(object) {
+            const box = new THREE.Box3().setFromObject(object);
+            const size = box.getSize(new THREE.Vector3());
+            const center = box.getCenter(new THREE.Vector3());
+            const maxSize = Math.max(size.x, size.y, size.z);
+            const distance = maxSize / (2 * Math.tan((camera.fov * Math.PI) / 360));
+
+            camera.position.set(center.x - distance * 1.35, center.y + distance * 0.55, center.z + distance);
+            camera.near = Math.max(distance / 100, 0.1);
+            camera.far = distance * 100;
+            camera.updateProjectionMatrix();
+
+            controls.target.copy(center);
+            controls.update();
+        }
+
+        function createTextTexture() {
+            const orientation = document.querySelector('input[name="orientation"]:checked').value;
+            const text = (input.value || "NOME").trim().toUpperCase();
+
+            const canvas = document.createElement("canvas");
+            canvas.width = isMobile ? 768 : 1024;
+            canvas.height = isMobile ? 768 : 1024;
+
+            const ctx = canvas.getContext("2d", { alpha: true });
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = "#3d3d3d";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+
+            const maxWidth = canvas.width * 0.78;
+            let fontSize = orientation === "horizontal" ? 160 : 130;
+
+            do {
+                ctx.font = `900 ${fontSize}px ${selectedFontFamily}`;
+                fontSize -= 4;
+            } while (ctx.measureText(text).width > maxWidth && fontSize > 38);
+
+            ctx.save();
+            ctx.translate(canvas.width / 2, canvas.height / 2);
+
+            /*
+             * Correção final da orientação do texto no print_area.
+             * A UV da malha está invertida, então o canvas precisa compensar antes
+             * de virar textura.
+             *
+             * Horizontal: espelha e gira 180° para não ficar de cabeça para baixo.
+             * Vertical: espelha e gira -90° para manter a leitura correta.
+             */
+            ctx.scale(-1, 1);
+
+            if (orientation === "horizontal") {
+                ctx.rotate(Math.PI);
+            } else {
+                ctx.rotate(-Math.PI / 2);
+            }
+
+            ctx.fillText(text, 0, 0);
+            ctx.restore();
+
+            const texture = new THREE.CanvasTexture(canvas);
+            texture.colorSpace = THREE.SRGBColorSpace;
+            texture.flipY = false;
+            texture.wrapS = THREE.ClampToEdgeWrapping;
+            texture.wrapT = THREE.ClampToEdgeWrapping;
+            texture.generateMipmaps = false;
+            texture.minFilter = THREE.LinearFilter;
+            texture.magFilter = THREE.LinearFilter;
+
+            return texture;
+        }
+
+        function updatePrintText() {
+            if (!printArea) return;
+
+            if (currentTextTexture) {
+                currentTextTexture.dispose();
+            }
+
+            currentTextTexture = createTextTexture();
+
+            disposeMaterial(printArea.material);
+            printArea.material = new THREE.MeshStandardMaterial({
+                map: currentTextTexture,
+                transparent: true,
+                roughness: 0.45,
+                metalness: 0,
+                side: THREE.DoubleSide
+            });
+
+            requestRender();
+        }
+
+        const loader = new GLTFLoader();
+        const dracoLoader = new DRACOLoader();
+
+        dracoLoader.setDecoderPath("https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/draco/");
+        loader.setDRACOLoader(dracoLoader);
+
+        loader.load(
+            "{% static 'models/garrafa.glb' %}",
+            function (gltf) {
+                bottleModel = gltf.scene;
+
+                bottleModel.position.set(0, 0, 0);
+                bottleModel.rotation.y = -3;
+                bottleModel.rotation.x = -0.1;
+                bottleModel.scale.set(1.5, 1.5, 1.5);
+
+                scene.add(bottleModel);
+
+                const bottleMaterial = new THREE.MeshStandardMaterial({
+                    color: "#d8d8d8",
+                    roughness: 0.72,
+                    metalness: 0.05
+                });
+
+                bottleModel.traverse((child) => {
+                    if (child.isMesh && child.name !== "print_area") {
+                        disposeMaterial(child.material);
+                        child.material = bottleMaterial;
+                        child.frustumCulled = true;
+                        child.castShadow = false;
+                        child.receiveShadow = false;
+                    }
+                });
+
+                printArea = bottleModel.getObjectByName("print_area");
+
+                if (!printArea) {
+                    loadingMessage.textContent = "Objeto print_area não encontrado no GLB.";
+                    alert("Objeto print_area não encontrado no GLB. Confira se o nome no Blender está exatamente: print_area");
+                    return;
+                }
+
+                originalPrintAreaPosition = printArea.position.clone();
+                originalPrintAreaScale = printArea.scale.clone();
+                originalPrintAreaRotation = printArea.rotation.clone();
+
+                fitCameraToModel(bottleModel);
+                updatePrintText();
+
+                loadingMessage.style.display = "none";
+                requestRender();
+            },
+            undefined,
+            function (error) {
+                console.error("Erro ao carregar modelo:", error);
+                loadingMessage.textContent = "Erro ao carregar o modelo 3D.";
+                alert("Erro ao carregar o modelo 3D. Confira o caminho static/models/garrafa.glb");
+            }
+        );
+
+        controls.addEventListener("change", requestRender);
+
+        function animate(time) {
+            requestAnimationFrame(animate);
+
+            if (time - lastFrameTime < frameInterval) return;
+            lastFrameTime = time;
+
+            const controlsChanged = controls.enableDamping ? controls.update() : false;
+
+            if (needsRender || controlsChanged) {
+                renderer.render(scene, camera);
+                needsRender = false;
+            }
+        }
+
+        requestAnimationFrame(animate);
+
+        let resizeTimer = null;
+        window.addEventListener("resize", function () {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(resizeRenderer, 120);
+        }, { passive: true });
+
+        window.addEventListener("orientationchange", function () {
+            setTimeout(resizeRenderer, 250);
+        }, { passive: true });
+
+        document.querySelectorAll(".vip-view-btn").forEach(button => {
+            button.addEventListener("click", function () {
+                document.querySelectorAll(".vip-view-btn").forEach(item => item.classList.remove("active"));
+                this.classList.add("active");
+
+                if (!bottleModel) return;
+
+                if (this.dataset.view === "back") {
+                    bottleModel.rotation.y = 0.15;
+                } else {
+                    bottleModel.rotation.y = -3;
+                }
+
+                requestRender();
+            });
+        });
+
+        document.getElementById("saveMockupImage").addEventListener("click", function () {
+            renderer.render(scene, camera);
+
+            const image = renderer.domElement.toDataURL("image/png");
+            const link = document.createElement("a");
+
+            link.href = image;
+            link.download = "mockup-garrafa.png";
+            link.click();
+        });
+
+        /* =======================
            NOME
         ======================= */
 
         input.addEventListener("input", function () {
-
-            const orientation =
-                document.querySelector(
-                    'input[name="orientation"]:checked'
-                ).value;
-
-            const maxChars =
-                orientation === "horizontal"
-                    ? 5
-                    : 15;
+            const orientation = document.querySelector('input[name="orientation"]:checked').value;
+            const maxChars = orientation === "horizontal" ? 5 : 15;
 
             if (this.value.length > maxChars) {
-                this.value =
-                    this.value.substring(0, maxChars);
+                this.value = this.value.substring(0, maxChars);
             }
 
-            previewText.textContent =
-                this.value.trim() || "NOME";
+            updatePrintText();
         });
 
         /* =======================
@@ -349,16 +585,17 @@
         ======================= */
 
         fontCards.forEach(card => {
-
             card.addEventListener("click", function () {
-
-                fontCards.forEach(item =>
-                    item.classList.remove("active")
-                );
-
+                fontCards.forEach(item => item.classList.remove("active"));
                 this.classList.add("active");
-            });
 
+                const radio = this.querySelector("input");
+                radio.checked = true;
+
+                selectedFontFamily = this.dataset.fontFamily || "Arial Black, Arial, sans-serif";
+
+                updatePrintText();
+            });
         });
 
         /* =======================
@@ -366,60 +603,31 @@
         ======================= */
 
         orientationCards.forEach(card => {
-
             card.addEventListener("click", function () {
-
-                orientationCards.forEach(item =>
-                    item.classList.remove("active")
-                );
-
+                orientationCards.forEach(item => item.classList.remove("active"));
                 this.classList.add("active");
 
-                const radio =
-                    this.querySelector("input");
-
+                const radio = this.querySelector("input");
                 radio.checked = true;
 
-                const orientation =
-                    radio.value;
+                const orientation = radio.value;
 
                 if (orientation === "horizontal") {
-
-                    previewText.classList.add("horizontal");
-
-                    input.setAttribute(
-                        "maxlength",
-                        "5"
-                    );
+                    input.setAttribute("maxlength", "5");
 
                     if (input.value.length > 5) {
-
-                        input.value =
-                            input.value.substring(0, 5);
+                        input.value = input.value.substring(0, 5);
                     }
-
                 } else {
-
-                    previewText.classList.remove(
-                        "horizontal"
-                    );
-
-                    input.setAttribute(
-                        "maxlength",
-                        "15"
-                    );
+                    input.setAttribute("maxlength", "15");
 
                     if (input.value.length > 15) {
-
-                        input.value =
-                            input.value.substring(0, 15);
+                        input.value = input.value.substring(0, 15);
                     }
                 }
 
-                previewText.textContent =
-                    input.value.trim() || "NOME";
+                updatePrintText();
             });
-
         });
 
         /* =======================
@@ -427,131 +635,69 @@
         ======================= */
 
         categoryButtons.forEach(button => {
-
             button.addEventListener("click", function () {
+                const category = this.dataset.category;
+                const categoryName = this.dataset.categoryName;
 
-                const category =
-                    this.dataset.category;
-
-                const categoryName =
-                    this.dataset.categoryName;
-
-                categoriaInput.value =
-                    category;
-
+                categoriaInput.value = category;
                 gravacaoInput.value = "";
 
-                categoryButtons.forEach(item =>
-                    item.classList.remove("active")
-                );
-
+                categoryButtons.forEach(item => item.classList.remove("active"));
                 this.classList.add("active");
 
-                categoryTitle.textContent =
-                    categoryName;
-
+                categoryTitle.textContent = categoryName;
                 categoryGrid.classList.add("hide");
+                backCategoriesBtn.classList.add("show");
 
-                backCategoriesBtn.classList.add(
-                    "show"
-                );
+                engravingOptions.forEach(option => {
+                    option.style.display = option.dataset.category === category ? "block" : "none";
+                    option.classList.remove("active");
+                });
 
-                engravingList.classList.remove(
-                    "show"
-                );
-
-                setTimeout(() => {
-
-                    engravingOptions.forEach(option => {
-
-                        option.style.display =
-                            option.dataset.category === category
-                                ? "block"
-                                : "none";
-
-                        option.classList.remove(
-                            "active"
-                        );
-                    });
-
-                }, 180);
-
+                engravingList.classList.add("show");
             });
-
         });
 
         /* =======================
            VOLTAR CATEGORIA
         ======================= */
 
-        backCategoriesBtn.addEventListener(
-            "click",
-            function () {
+        backCategoriesBtn.addEventListener("click", function () {
+            categoryTitle.textContent = "Escolha sua categoria";
 
-                categoryTitle.textContent =
-                    "Escolha sua categoria";
+            categoriaInput.value = "";
+            gravacaoInput.value = "";
 
-                categoriaInput.value = "";
+            categoryGrid.classList.remove("hide");
+            backCategoriesBtn.classList.remove("show");
+            engravingList.classList.remove("show");
 
-                gravacaoInput.value = "";
+            categoryButtons.forEach(item => item.classList.remove("active"));
 
-                categoryGrid.classList.remove(
-                    "hide"
-                );
-
-                backCategoriesBtn.classList.remove(
-                    "show"
-                );
-
-                categoryButtons.forEach(item =>
-                    item.classList.remove("active")
-                );
-
-                engravingOptions.forEach(option => {
-
-                    option.style.display = "none";
-
-                    option.classList.remove(
-                        "active"
-                    );
-
-                });
-
-            }
-        );
+            engravingOptions.forEach(option => {
+                option.style.display = "none";
+                option.classList.remove("active");
+            });
+        });
 
         /* =======================
            SLOTS
         ======================= */
 
         slots.forEach(slot => {
-
             slot.addEventListener("click", () => {
-
                 if (!categoriaInput.value) {
-
-                    alert(
-                        "Escolha uma categoria primeiro."
-                    );
-
+                    alert("Escolha uma categoria primeiro.");
                     return;
                 }
 
-                currentSlot =
-                    Number(slot.dataset.slot);
+                currentSlot = Number(slot.dataset.slot);
 
-                slots.forEach(item =>
-                    item.classList.remove("active-slot")
-                );
-
-                slot.classList.add(
-                    "active-slot"
-                );
+                slots.forEach(item => item.classList.remove("active-slot"));
+                slot.classList.add("active-slot");
 
                 openEngravingModal();
-
             });
-
         });
 
         /* =======================
@@ -559,155 +705,93 @@
         ======================= */
 
         function openEngravingModal() {
-
             if (!categoriaInput.value) {
                 alert("Escolha uma categoria primeiro.");
                 return;
             }
 
-            modalTitle.textContent =
-                `Escolha a gravação do espaço ${currentSlot}`;
-
+            modalTitle.textContent = `Escolha a gravação do espaço ${currentSlot}`;
             engravingModalGrid.innerHTML = "";
 
-            const removeBtn =
-                document.createElement("div");
-
-            removeBtn.className =
-                "modal-engraving-item remove-item";
-
-            removeBtn.innerHTML =
-                "<strong>Remover</strong>";
+            const removeBtn = document.createElement("div");
+            removeBtn.className = "modal-engraving-item remove-item";
+            removeBtn.innerHTML = "<strong>Remover</strong>";
 
             removeBtn.addEventListener("click", () => {
-
                 selectedEngravings[currentSlot] = null;
-
                 renderSlots();
-
                 engravingModal.classList.remove("show");
             });
 
             engravingModalGrid.appendChild(removeBtn);
 
-            const visibleOptions =
-                [...engravingOptions].filter(option =>
-                    option.dataset.category === categoriaInput.value
-                );
-
-            console.log(
-                "Gravações encontradas:",
-                visibleOptions.length
+            const visibleOptions = [...engravingOptions].filter(option =>
+                option.dataset.category === categoriaInput.value
             );
 
             visibleOptions.forEach(option => {
-
-                const img =
-                    option.querySelector("img");
+                const img = option.querySelector("img");
 
                 if (!img) return;
 
-                const item =
-                    document.createElement("div");
-
-                item.className =
-                    "modal-engraving-item";
-
-                item.innerHTML =
-                    `<img src="${img.src}" alt="">`;
+                const item = document.createElement("div");
+                item.className = "modal-engraving-item";
+                item.innerHTML = `<img src="${img.src}" alt="">`;
 
                 item.addEventListener("click", () => {
-
                     selectedEngravings[currentSlot] = {
                         id: option.dataset.gravacao,
                         image: img.src
                     };
 
-                    renderSlots();
+                    gravacaoInput.value = option.dataset.gravacao;
 
+                    renderSlots();
                     engravingModal.classList.remove("show");
                 });
 
                 engravingModalGrid.appendChild(item);
-
             });
 
             engravingModal.classList.add("show");
         }
 
-        closeEngravingModal.addEventListener(
-            "click",
-            () => {
+        closeEngravingModal.addEventListener("click", () => {
+            engravingModal.classList.remove("show");
+        });
 
-                engravingModal.classList.remove(
-                    "show"
-                );
-
+        engravingModal.addEventListener("click", e => {
+            if (e.target === engravingModal) {
+                engravingModal.classList.remove("show");
             }
-        );
-
-        engravingModal.addEventListener(
-            "click",
-            e => {
-
-                if (
-                    e.target === engravingModal
-                ) {
-
-                    engravingModal.classList.remove(
-                        "show"
-                    );
-
-                }
-
-            }
-        );
+        });
 
         /* =======================
            RENDER
         ======================= */
 
         function renderSlots() {
-
             slots.forEach(slot => {
-
-                const slotId =
-                    Number(slot.dataset.slot);
-
-                const engraving =
-                    selectedEngravings[slotId];
+                const slotId = Number(slot.dataset.slot);
+                const engraving = selectedEngravings[slotId];
 
                 if (engraving) {
-
-                    slot.innerHTML = `
-                    <img
-                        src="${engraving.image}"
-                        class="slot-image"
-                    >
-                `;
-
+                    slot.innerHTML = `<img src="${engraving.image}" class="slot-image" alt="">`;
                 } else {
-
-                    slot.textContent =
-                        slotId;
+                    slot.textContent = slotId;
                 }
-
             });
 
             saveEngravingsData();
         }
 
         function saveEngravingsData() {
-
             if (!engravingsDataInput) return;
-
-            engravingsDataInput.value =
-                JSON.stringify(
-                    selectedEngravings
-                );
+            engravingsDataInput.value = JSON.stringify(selectedEngravings);
         }
 
         renderSlots();
+    });
+</script>
 
-    });</script>
 {% endblock %}
