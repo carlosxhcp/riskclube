@@ -106,6 +106,7 @@ class EngravingMockupInline(admin.TabularInline):
 class ProductAdmin(admin.ModelAdmin):
     list_display = (
         "preview",
+        "back_preview",
         "name",
         "price",
         "available",
@@ -143,6 +144,7 @@ class ProductAdmin(admin.ModelAdmin):
                 "default_color_hex",
                 "image",
                 "image_hover",
+                "back_image",
             )
         }),
     )
@@ -163,3 +165,12 @@ class ProductAdmin(admin.ModelAdmin):
 
     preview.short_description = "Prévia"
 
+    def back_preview(self, obj):
+        if obj and obj.back_image:
+            return format_html(
+                '<img src="{}" style="width:55px;height:55px;object-fit:cover;border-radius:8px;border:1px solid #ddd;">',
+                obj.back_image.url
+            )
+        return "Sem imagem"
+
+    back_preview.short_description = "Verso"

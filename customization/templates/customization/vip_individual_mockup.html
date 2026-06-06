@@ -16,15 +16,51 @@
         <!-- PREVIEW DA GARRAFA -->
         <div class="vip-preview-area">
 
+            <div class="vip-bottle-view-selector">
+
+                <button type="button" class="vip-view-btn active" data-view="front">
+                    Frente
+                </button>
+
+                {% if bottle_model.back_image %}
+                <button type="button" class="vip-view-btn" data-view="back">
+                    Verso
+                </button>
+                {% endif %}
+
+            </div>
+
             <div class="vip-bottle-preview">
 
                 {% if bottle_model.image %}
-                <img src="{{ bottle_model.image.url }}" alt="{{ bottle_model.name }}" class="vip-bottle-image">
+                <img src="{{ bottle_model.image.url }}" alt="{{ bottle_model.name }}" class="vip-bottle-image active"
+                    id="frontBottle">
+                {% endif %}
+
+                {% if product.back_image %}
+                <button type="button" class="vip-view-btn" data-view="back">
+                    Verso
+                </button>
                 {% endif %}
 
                 <div class="vip-custom-text" id="previewText">
                     NOME
                 </div>
+
+                <div class="vip-engravings-layer">
+
+                    <div class="engraving-slot slot-1 active-slot" data-slot="1">1</div>
+                    <div class="engraving-slot slot-2" data-slot="2">2</div>
+                    <div class="engraving-slot slot-3" data-slot="3">3</div>
+                    <div class="engraving-slot slot-4" data-slot="4">4</div>
+                    <div class="engraving-slot slot-5" data-slot="5">5</div>
+                    <div class="engraving-slot slot-6" data-slot="6">6</div>
+                    <div class="engraving-slot slot-7" data-slot="7">7</div>
+                    <div class="engraving-slot slot-8" data-slot="8">8</div>
+
+                </div>
+
+                <input type="hidden" name="engravings_data" id="engravingsData">
 
             </div>
 
@@ -45,7 +81,7 @@
             <form method="POST" class="vip-config-form">
                 {% csrf_token %}
 
-            
+
 
                 <!-- ORIENTAÇÃO -->
                 <div class="vip-form-group">
@@ -204,10 +240,34 @@
 
     </div>
 
+    <div class="engraving-modal" id="engravingModal">
+
+        <div class="engraving-modal-content">
+
+            <div class="engraving-modal-header">
+                <h3 id="modalTitle">
+                    Escolha a gravação
+                </h3>
+
+                <button type="button" id="closeEngravingModal">
+                    ×
+                </button>
+            </div>
+
+            <div class="engraving-modal-grid" id="engravingModalGrid">
+
+            </div>
+
+        </div>
+
+    </div>
+
 </section>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
+
+
+<script>document.addEventListener("DOMContentLoaded", function () {
+
         const input = document.getElementById("customName");
         const previewText = document.getElementById("previewText");
 
@@ -225,32 +285,85 @@
         const categoriaInput = document.getElementById("categoriaGravacaoInput");
         const gravacaoInput = document.getElementById("gravacaoInput");
 
+        const slots = document.querySelectorAll(".engraving-slot");
+
+        const engravingsDataInput =
+            document.getElementById("engravingsData");
+
+        const engravingModal =
+            document.getElementById("engravingModal");
+
+        const engravingModalGrid =
+            document.getElementById("engravingModalGrid");
+
+        const closeEngravingModal =
+            document.getElementById("closeEngravingModal");
+
+        const modalTitle =
+            document.getElementById("modalTitle");
+
+        let currentSlot = null;
+
+        const selectedEngravings = {
+            1: null,
+            2: null,
+            3: null,
+            4: null,
+            5: null,
+            6: null,
+            7: null,
+            8: null
+        };
+
         engravingOptions.forEach(option => {
             option.style.display = "none";
         });
 
+        /* =======================
+           NOME
+        ======================= */
+
         input.addEventListener("input", function () {
 
             const orientation =
-                document.querySelector('input[name="orientation"]:checked').value;
+                document.querySelector(
+                    'input[name="orientation"]:checked'
+                ).value;
 
             const maxChars =
-                orientation === "horizontal" ? 5 : 15;
+                orientation === "horizontal"
+                    ? 5
+                    : 15;
 
             if (this.value.length > maxChars) {
-                this.value = this.value.substring(0, maxChars);
+                this.value =
+                    this.value.substring(0, maxChars);
             }
 
             previewText.textContent =
                 this.value.trim() || "NOME";
         });
 
+        /* =======================
+           FONTES
+        ======================= */
+
         fontCards.forEach(card => {
+
             card.addEventListener("click", function () {
-                fontCards.forEach(item => item.classList.remove("active"));
+
+                fontCards.forEach(item =>
+                    item.classList.remove("active")
+                );
+
                 this.classList.add("active");
             });
+
         });
+
+        /* =======================
+           ORIENTAÇÃO
+        ======================= */
 
         orientationCards.forEach(card => {
 
@@ -267,26 +380,37 @@
 
                 radio.checked = true;
 
-                const orientation = radio.value;
+                const orientation =
+                    radio.value;
 
                 if (orientation === "horizontal") {
 
                     previewText.classList.add("horizontal");
 
-                    input.setAttribute("maxlength", "5");
+                    input.setAttribute(
+                        "maxlength",
+                        "5"
+                    );
 
                     if (input.value.length > 5) {
+
                         input.value =
                             input.value.substring(0, 5);
                     }
 
                 } else {
 
-                    previewText.classList.remove("horizontal");
+                    previewText.classList.remove(
+                        "horizontal"
+                    );
 
-                    input.setAttribute("maxlength", "15");
+                    input.setAttribute(
+                        "maxlength",
+                        "15"
+                    );
 
                     if (input.value.length > 15) {
+
                         input.value =
                             input.value.substring(0, 15);
                     }
@@ -298,62 +422,292 @@
 
         });
 
-        categoryButtons.forEach(button => {
-            button.addEventListener("click", function () {
-                const category = this.dataset.category;
-                const categoryName = this.dataset.categoryName;
+        /* =======================
+           CATEGORIAS
+        ======================= */
 
-                categoriaInput.value = category;
+        categoryButtons.forEach(button => {
+
+            button.addEventListener("click", function () {
+
+                const category =
+                    this.dataset.category;
+
+                const categoryName =
+                    this.dataset.categoryName;
+
+                categoriaInput.value =
+                    category;
+
                 gravacaoInput.value = "";
 
-                categoryButtons.forEach(item => item.classList.remove("active"));
+                categoryButtons.forEach(item =>
+                    item.classList.remove("active")
+                );
+
                 this.classList.add("active");
 
-                categoryTitle.textContent = categoryName;
+                categoryTitle.textContent =
+                    categoryName;
 
                 categoryGrid.classList.add("hide");
-                backCategoriesBtn.classList.add("show");
 
-                engravingList.classList.remove("show");
+                backCategoriesBtn.classList.add(
+                    "show"
+                );
+
+                engravingList.classList.remove(
+                    "show"
+                );
 
                 setTimeout(() => {
+
                     engravingOptions.forEach(option => {
-                        option.style.display = option.dataset.category === category ? "block" : "none";
-                        option.classList.remove("active");
+
+                        option.style.display =
+                            option.dataset.category === category
+                                ? "block"
+                                : "none";
+
+                        option.classList.remove(
+                            "active"
+                        );
                     });
 
-                    engravingList.classList.add("show");
                 }, 180);
+
             });
+
         });
 
-        backCategoriesBtn.addEventListener("click", function () {
-            categoryTitle.textContent = "Escolha sua categoria";
+        /* =======================
+           VOLTAR CATEGORIA
+        ======================= */
 
-            categoriaInput.value = "";
-            gravacaoInput.value = "";
+        backCategoriesBtn.addEventListener(
+            "click",
+            function () {
 
-            categoryGrid.classList.remove("hide");
-            engravingList.classList.remove("show");
-            backCategoriesBtn.classList.remove("show");
+                categoryTitle.textContent =
+                    "Escolha sua categoria";
 
-            categoryButtons.forEach(item => item.classList.remove("active"));
+                categoriaInput.value = "";
 
-            engravingOptions.forEach(option => {
-                option.style.display = "none";
-                option.classList.remove("active");
+                gravacaoInput.value = "";
+
+                categoryGrid.classList.remove(
+                    "hide"
+                );
+
+                backCategoriesBtn.classList.remove(
+                    "show"
+                );
+
+                categoryButtons.forEach(item =>
+                    item.classList.remove("active")
+                );
+
+                engravingOptions.forEach(option => {
+
+                    option.style.display = "none";
+
+                    option.classList.remove(
+                        "active"
+                    );
+
+                });
+
+            }
+        );
+
+        /* =======================
+           SLOTS
+        ======================= */
+
+        slots.forEach(slot => {
+
+            slot.addEventListener("click", () => {
+
+                if (!categoriaInput.value) {
+
+                    alert(
+                        "Escolha uma categoria primeiro."
+                    );
+
+                    return;
+                }
+
+                currentSlot =
+                    Number(slot.dataset.slot);
+
+                slots.forEach(item =>
+                    item.classList.remove("active-slot")
+                );
+
+                slot.classList.add(
+                    "active-slot"
+                );
+
+                openEngravingModal();
+
             });
+
         });
 
-        engravingOptions.forEach(option => {
-            option.addEventListener("click", function () {
-                engravingOptions.forEach(item => item.classList.remove("active"));
-                this.classList.add("active");
+        /* =======================
+           MODAL
+        ======================= */
 
-                gravacaoInput.value = this.dataset.gravacao;
+        function openEngravingModal() {
+
+            if (!categoriaInput.value) {
+                alert("Escolha uma categoria primeiro.");
+                return;
+            }
+
+            modalTitle.textContent =
+                `Escolha a gravação do espaço ${currentSlot}`;
+
+            engravingModalGrid.innerHTML = "";
+
+            const removeBtn =
+                document.createElement("div");
+
+            removeBtn.className =
+                "modal-engraving-item remove-item";
+
+            removeBtn.innerHTML =
+                "<strong>Remover</strong>";
+
+            removeBtn.addEventListener("click", () => {
+
+                selectedEngravings[currentSlot] = null;
+
+                renderSlots();
+
+                engravingModal.classList.remove("show");
             });
-        });
-    });
-</script>
 
+            engravingModalGrid.appendChild(removeBtn);
+
+            const visibleOptions =
+                [...engravingOptions].filter(option =>
+                    option.dataset.category === categoriaInput.value
+                );
+
+            console.log(
+                "Gravações encontradas:",
+                visibleOptions.length
+            );
+
+            visibleOptions.forEach(option => {
+
+                const img =
+                    option.querySelector("img");
+
+                if (!img) return;
+
+                const item =
+                    document.createElement("div");
+
+                item.className =
+                    "modal-engraving-item";
+
+                item.innerHTML =
+                    `<img src="${img.src}" alt="">`;
+
+                item.addEventListener("click", () => {
+
+                    selectedEngravings[currentSlot] = {
+                        id: option.dataset.gravacao,
+                        image: img.src
+                    };
+
+                    renderSlots();
+
+                    engravingModal.classList.remove("show");
+                });
+
+                engravingModalGrid.appendChild(item);
+
+            });
+
+            engravingModal.classList.add("show");
+        }
+
+        closeEngravingModal.addEventListener(
+            "click",
+            () => {
+
+                engravingModal.classList.remove(
+                    "show"
+                );
+
+            }
+        );
+
+        engravingModal.addEventListener(
+            "click",
+            e => {
+
+                if (
+                    e.target === engravingModal
+                ) {
+
+                    engravingModal.classList.remove(
+                        "show"
+                    );
+
+                }
+
+            }
+        );
+
+        /* =======================
+           RENDER
+        ======================= */
+
+        function renderSlots() {
+
+            slots.forEach(slot => {
+
+                const slotId =
+                    Number(slot.dataset.slot);
+
+                const engraving =
+                    selectedEngravings[slotId];
+
+                if (engraving) {
+
+                    slot.innerHTML = `
+                    <img
+                        src="${engraving.image}"
+                        class="slot-image"
+                    >
+                `;
+
+                } else {
+
+                    slot.textContent =
+                        slotId;
+                }
+
+            });
+
+            saveEngravingsData();
+        }
+
+        function saveEngravingsData() {
+
+            if (!engravingsDataInput) return;
+
+            engravingsDataInput.value =
+                JSON.stringify(
+                    selectedEngravings
+                );
+        }
+
+        renderSlots();
+
+    });</script>
 {% endblock %}

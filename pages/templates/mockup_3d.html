@@ -5,56 +5,116 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>Mockup 3D</title>
 
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
         body {
             margin: 0;
+            width: 100%;
+            min-height: 100%;
             background: #111;
             font-family: Arial, sans-serif;
             color: #fff;
+            overflow: hidden;
+            touch-action: manipulation;
         }
 
         .mockup-page {
             width: 100%;
-            min-height: 100vh;
+            height: 100vh;
+            height: 100dvh;
             display: flex;
             flex-direction: column;
+            background: #111;
         }
 
         .mockup-header {
-            padding: 20px;
+            padding: 12px;
             background: #000;
-            display: flex;
-            gap: 15px;
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 8px;
             align-items: center;
-            justify-content: center;
-            flex-wrap: wrap;
+            flex: 0 0 auto;
+        }
+
+        .mockup-header input,
+        .mockup-header button,
+        .file-label {
+            width: 100%;
+            min-height: 42px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
         }
 
         .mockup-header input {
+            grid-column: 1 / -1;
             background: #fff;
             color: #000;
             padding: 10px;
-            border: none;
         }
 
         .mockup-header button {
             background: #fff;
             color: #000;
-            border: none;
-            padding: 11px 18px;
+            padding: 10px 8px;
             cursor: pointer;
-            font-weight: bold;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        .mockup-header button:hover {
-            opacity: 0.8;
+        .mockup-header button:active {
+            transform: scale(0.98);
+            opacity: 0.85;
         }
 
         #viewer {
             width: 100%;
-            height: calc(100vh - 90px);
+            flex: 1 1 auto;
+            min-height: 0;
+            position: relative;
+            overflow: hidden;
+            background: #1a1a1a;
+        }
+
+        #viewer canvas {
+            display: block;
+            width: 100% !important;
+            height: 100% !important;
+            touch-action: none;
+        }
+
+        .loading-message {
+            position: absolute;
+            inset: 0;
+            display: grid;
+            place-items: center;
+            padding: 20px;
+            text-align: center;
+            color: #ddd;
+            pointer-events: none;
+        }
+
+        @media (max-width: 600px) {
+            .mockup-header {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                padding: 10px;
+                gap: 7px;
+            }
+
+            .mockup-header input,
+            .mockup-header button {
+                min-height: 40px;
+                font-size: 12px;
+                padding: 8px 6px;
+            }
         }
     </style>
 </head>
@@ -62,7 +122,6 @@
 <body>
 
     <div class="mockup-page">
-
         <div class="mockup-header">
             <input type="file" id="imageUpload" accept="image/png, image/jpeg, image/webp">
 
@@ -73,11 +132,12 @@
             <button type="button" id="moveLeft">Esquerda</button>
             <button type="button" id="moveRight">Direita</button>
             <button type="button" id="resetLogo">Resetar</button>
-            <button type="button" id="saveMockup">Salvar imagem</button>
+            <button type="button" id="saveMockup">Salvar</button>
         </div>
 
-        <div id="viewer"></div>
-
+        <div id="viewer">
+            <div class="loading-message" id="loadingMessage">Carregando mockup...</div>
+        </div>
     </div>
 
     <script type="importmap">
@@ -96,36 +156,44 @@
         import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js";
 
         const container = document.getElementById("viewer");
+        const loadingMessage = document.getElementById("loadingMessage");
+        const isMobile = window.matchMedia("(max-width: 768px), (pointer: coarse)").matches;
 
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0x1a1a1a);
+
         const camera = new THREE.PerspectiveCamera(
             25,
-            container.clientWidth / container.clientHeight,
+            Math.max(container.clientWidth, 1) / Math.max(container.clientHeight, 1),
             0.1,
             100
         );
-
         camera.position.set(-70, 30, 50);
 
         const renderer = new THREE.WebGLRenderer({
-            antialias: true,
-            preserveDrawingBuffer: true
+            antialias: !isMobile,
+            preserveDrawingBuffer: true,
+            powerPreference: "high-performance",
+            alpha: false
         });
 
-        renderer.setSize(container.clientWidth, container.clientHeight);
-        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(container.clientWidth, container.clientHeight, false);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile ? 1.25 : 1.75));
         renderer.outputColorSpace = THREE.SRGBColorSpace;
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
         renderer.toneMappingExposure = 1;
         container.appendChild(renderer.domElement);
 
         const controls = new OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true;
+        controls.enableDamping = !isMobile;
+        controls.dampingFactor = 0.06;
+        controls.enablePan = false;
+        controls.enableZoom = true;
+        controls.rotateSpeed = isMobile ? 0.55 : 0.8;
+        controls.zoomSpeed = 0.7;
         controls.target.set(0, 1.2, 0);
 
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
-        scene.add(ambientLight);
+        scene.add(new THREE.AmbientLight(0xffffff, 0.9));
 
         const frontLight = new THREE.DirectionalLight(0xffffff, 1.8);
         frontLight.position.set(2, 4, 5);
@@ -140,50 +208,127 @@
         let originalPrintAreaPosition = null;
         let originalPrintAreaScale = null;
         let originalPrintAreaRotation = null;
+        let currentLogoTexture = null;
+        let needsRender = true;
+        let lastFrameTime = 0;
+        const targetFPS = isMobile ? 30 : 60;
+        const frameInterval = 1000 / targetFPS;
+
+        function requestRender() {
+            needsRender = true;
+        }
+
+        function disposeMaterial(material) {
+            if (!material) return;
+            const materials = Array.isArray(material) ? material : [material];
+            materials.forEach((mat) => {
+                if (mat.map) mat.map.dispose();
+                mat.dispose();
+            });
+        }
+
+        function resizeRenderer() {
+            const width = Math.max(container.clientWidth, 1);
+            const height = Math.max(container.clientHeight, 1);
+
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+            renderer.setSize(width, height, false);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile ? 1.25 : 1.75));
+            requestRender();
+        }
+
+        function fitCameraToModel(object) {
+            const box = new THREE.Box3().setFromObject(object);
+            const size = box.getSize(new THREE.Vector3());
+            const center = box.getCenter(new THREE.Vector3());
+            const maxSize = Math.max(size.x, size.y, size.z);
+            const distance = maxSize / (2 * Math.tan((camera.fov * Math.PI) / 360));
+
+            camera.position.set(center.x - distance * 1.35, center.y + distance * 0.55, center.z + distance);
+            camera.near = Math.max(distance / 100, 0.1);
+            camera.far = distance * 100;
+            camera.updateProjectionMatrix();
+
+            controls.target.copy(center);
+            controls.update();
+        }
+
+        function createResizedTexture(file, callback) {
+            const imageUrl = URL.createObjectURL(file);
+            const image = new Image();
+            image.onload = function () {
+                const maxSize = isMobile ? 1024 : 1536;
+                const scale = Math.min(1, maxSize / Math.max(image.width, image.height));
+                const width = Math.max(1, Math.round(image.width * scale));
+                const height = Math.max(1, Math.round(image.height * scale));
+
+                const canvas = document.createElement("canvas");
+                canvas.width = width;
+                canvas.height = height;
+
+                const ctx = canvas.getContext("2d", { alpha: true });
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = "high";
+                ctx.drawImage(image, 0, 0, width, height);
+
+                const texture = new THREE.CanvasTexture(canvas);
+                texture.colorSpace = THREE.SRGBColorSpace;
+                texture.flipY = false;
+                texture.wrapS = THREE.ClampToEdgeWrapping;
+                texture.wrapT = THREE.ClampToEdgeWrapping;
+                texture.generateMipmaps = false;
+                texture.minFilter = THREE.LinearFilter;
+                texture.magFilter = THREE.LinearFilter;
+
+                URL.revokeObjectURL(imageUrl);
+                callback(texture);
+            };
+
+            image.onerror = function () {
+                URL.revokeObjectURL(imageUrl);
+                alert("Não foi possível carregar essa imagem.");
+            };
+
+            image.src = imageUrl;
+        }
 
         const loader = new GLTFLoader();
-
         const dracoLoader = new DRACOLoader();
         dracoLoader.setDecoderPath("https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/draco/");
-
         loader.setDRACOLoader(dracoLoader);
 
         loader.load(
             "{% static 'models/garrafa.glb' %}",
             function (gltf) {
                 bottleModel = gltf.scene;
-
                 bottleModel.position.set(0, 0, 0);
                 bottleModel.rotation.y = -3;
                 bottleModel.rotation.x = -0.1;
                 bottleModel.scale.set(1.5, 1.5, 1.5);
-
                 scene.add(bottleModel);
 
-                console.log("OBJETOS DO GLB:");
+                const bottleMaterial = new THREE.MeshStandardMaterial({
+                    color: "#d8d8d8",
+                    roughness: 0.72,
+                    metalness: 0.05
+                });
 
                 bottleModel.traverse((child) => {
-                    console.log(child.name, child.type);
-
-                    if (child.isMesh) {
-                        if (child.name !== "print_area") {
-                            child.material = new THREE.MeshStandardMaterial({
-                                color: "#d8d8d8",
-                                roughness: 0.72,
-                                metalness: 0.05
-                            });
-
-                            child.castShadow = true;
-                            child.receiveShadow = true;
-                        }
+                    if (child.isMesh && child.name !== "print_area") {
+                        disposeMaterial(child.material);
+                        child.material = bottleMaterial;
+                        child.frustumCulled = true;
+                        child.castShadow = false;
+                        child.receiveShadow = false;
                     }
                 });
 
                 printArea = bottleModel.getObjectByName("print_area");
 
                 if (!printArea) {
+                    loadingMessage.textContent = "Objeto print_area não encontrado no GLB.";
                     alert("Objeto print_area não encontrado no GLB. Confira se o nome no Blender está exatamente: print_area");
-                    console.log("Modelo carregado:", bottleModel);
                     return;
                 }
 
@@ -191,6 +336,7 @@
                 originalPrintAreaScale = printArea.scale.clone();
                 originalPrintAreaRotation = printArea.rotation.clone();
 
+                disposeMaterial(printArea.material);
                 printArea.material = new THREE.MeshStandardMaterial({
                     color: 0xffffff,
                     transparent: true,
@@ -199,17 +345,21 @@
                     metalness: 0,
                     side: THREE.DoubleSide
                 });
+
+                fitCameraToModel(bottleModel);
+                loadingMessage.style.display = "none";
+                requestRender();
             },
             undefined,
             function (error) {
                 console.error("Erro ao carregar modelo:", error);
+                loadingMessage.textContent = "Erro ao carregar o modelo 3D.";
                 alert("Erro ao carregar o modelo 3D. Confira o caminho static/models/garrafa.glb");
             }
         );
 
         document.getElementById("imageUpload").addEventListener("change", function (event) {
             const file = event.target.files[0];
-
             if (!file) return;
 
             if (!printArea) {
@@ -217,16 +367,11 @@
                 return;
             }
 
-            const imageUrl = URL.createObjectURL(file);
-            const textureLoader = new THREE.TextureLoader();
+            createResizedTexture(file, function (texture) {
+                if (currentLogoTexture) currentLogoTexture.dispose();
+                currentLogoTexture = texture;
 
-            textureLoader.load(imageUrl, function (texture) {
-                texture.colorSpace = THREE.SRGBColorSpace;
-                texture.flipY = false;
-
-                texture.wrapS = THREE.ClampToEdgeWrapping;
-                texture.wrapT = THREE.ClampToEdgeWrapping;
-
+                disposeMaterial(printArea.material);
                 printArea.material = new THREE.MeshStandardMaterial({
                     map: texture,
                     transparent: true,
@@ -235,38 +380,38 @@
                     side: THREE.DoubleSide
                 });
 
-                URL.revokeObjectURL(imageUrl);
+                requestRender();
             });
         });
 
-        document.getElementById("increaseLogo").addEventListener("click", function () {
+        function changeLogo(callback) {
             if (!printArea) return;
-            printArea.scale.multiplyScalar(1.1);
+            callback();
+            requestRender();
+        }
+
+        document.getElementById("increaseLogo").addEventListener("click", function () {
+            changeLogo(() => printArea.scale.multiplyScalar(1.1));
         });
 
         document.getElementById("decreaseLogo").addEventListener("click", function () {
-            if (!printArea) return;
-            printArea.scale.multiplyScalar(0.9);
+            changeLogo(() => printArea.scale.multiplyScalar(0.9));
         });
 
         document.getElementById("moveUp").addEventListener("click", function () {
-            if (!printArea) return;
-            printArea.position.y += 0.02;
+            changeLogo(() => printArea.position.y += 0.02);
         });
 
         document.getElementById("moveDown").addEventListener("click", function () {
-            if (!printArea) return;
-            printArea.position.y -= 0.02;
+            changeLogo(() => printArea.position.y -= 0.02);
         });
 
         document.getElementById("moveLeft").addEventListener("click", function () {
-            if (!printArea) return;
-            printArea.position.x -= 0.02;
+            changeLogo(() => printArea.position.x -= 0.02);
         });
 
         document.getElementById("moveRight").addEventListener("click", function () {
-            if (!printArea) return;
-            printArea.position.x += 0.02;
+            changeLogo(() => printArea.position.x += 0.02);
         });
 
         document.getElementById("resetLogo").addEventListener("click", function () {
@@ -275,30 +420,45 @@
             printArea.position.copy(originalPrintAreaPosition);
             printArea.scale.copy(originalPrintAreaScale);
             printArea.rotation.copy(originalPrintAreaRotation);
+            requestRender();
         });
 
         document.getElementById("saveMockup").addEventListener("click", function () {
+            renderer.render(scene, camera);
             const image = renderer.domElement.toDataURL("image/png");
-
             const link = document.createElement("a");
             link.href = image;
             link.download = "mockup-garrafa.png";
             link.click();
         });
 
-        function animate() {
+        controls.addEventListener("change", requestRender);
+
+        function animate(time) {
             requestAnimationFrame(animate);
-            controls.update();
-            renderer.render(scene, camera);
+
+            if (time - lastFrameTime < frameInterval) return;
+            lastFrameTime = time;
+
+            const controlsChanged = controls.enableDamping ? controls.update() : false;
+
+            if (needsRender || controlsChanged) {
+                renderer.render(scene, camera);
+                needsRender = false;
+            }
         }
 
-        animate();
+        requestAnimationFrame(animate);
 
+        let resizeTimer = null;
         window.addEventListener("resize", function () {
-            camera.aspect = container.clientWidth / container.clientHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(container.clientWidth, container.clientHeight);
-        });
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(resizeRenderer, 120);
+        }, { passive: true });
+
+        window.addEventListener("orientationchange", function () {
+            setTimeout(resizeRenderer, 250);
+        }, { passive: true });
     </script>
 
 </body>

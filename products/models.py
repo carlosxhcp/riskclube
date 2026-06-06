@@ -24,6 +24,13 @@ class Product(models.Model):
         default="#000000"
     )
 
+    back_image = models.ImageField(
+        upload_to="products/",
+        blank=True,
+        null=True,
+        verbose_name="Imagem do verso"
+    )
+
     available = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
 
