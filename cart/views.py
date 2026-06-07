@@ -51,7 +51,6 @@ def get_cart_payload(request):
     for cart_key, item in cart.items():
         quantity = int(item.get("quantity", 1))
         price = to_decimal(item.get("price", 0))
-
         item_subtotal = price * quantity
         subtotal += item_subtotal
 
@@ -79,11 +78,9 @@ def get_cart_payload(request):
             "cep": shipping.get("cep", "") if shipping else "",
             "icon": "",
         }
-
         request.session["shipping"] = shipping
         request.session.modified = True
         shipping_price = Decimal("0.00")
-
     else:
         if shipping and shipping.get("id") == "free":
             request.session.pop("shipping", None)
@@ -93,12 +90,10 @@ def get_cart_payload(request):
         shipping_price = to_decimal(shipping.get("price", 0)) if shipping else Decimal("0.00")
 
     remaining = FREE_SHIPPING_LIMIT - subtotal
-
     if remaining < 0:
         remaining = Decimal("0.00")
 
     progress = min((subtotal / FREE_SHIPPING_LIMIT) * 100, 100)
-
     total = subtotal + shipping_price
 
     return {
@@ -207,13 +202,10 @@ def cart_update(request):
                 "success": False,
                 "error": "Quantidade inválida.",
             }, status=400)
-
     elif action == "increase":
         new_quantity = current_quantity + 1
-
     elif action == "decrease":
         new_quantity = current_quantity - 1
-
     else:
         return JsonResponse({
             "success": False,
@@ -268,25 +260,18 @@ def calculate_shipping(request):
         return JsonResponse({
             "success": True,
             "free_shipping": True,
-            "options": [
-                {
-                    "id": "free",
-                    "name": "Frete grátis",
-                    "company": "",
-                    "price": 0,
-                    "delivery_time": "",
-                    "cep": cep,
-                    "icon": "",
-                }
-            ],
+            "options": [{
+                "id": "free",
+                "name": "Frete grátis",
+                "company": "",
+                "price": 0,
+                "delivery_time": "",
+                "cep": cep,
+                "icon": "",
+            }],
         })
 
-    required_settings = [
-        "MELHOR_ENVIO_TOKEN",
-        "MELHOR_ENVIO_ORIGIN_CEP",
-    ]
-
-    for setting_name in required_settings:
+    for setting_name in ["MELHOR_ENVIO_TOKEN", "MELHOR_ENVIO_ORIGIN_CEP"]:
         if not getattr(settings, setting_name, None):
             return JsonResponse({
                 "success": False,
@@ -318,12 +303,8 @@ def calculate_shipping(request):
     )
 
     payload = {
-        "from": {
-            "postal_code": settings.MELHOR_ENVIO_ORIGIN_CEP,
-        },
-        "to": {
-            "postal_code": cep,
-        },
+        "from": {"postal_code": settings.MELHOR_ENVIO_ORIGIN_CEP},
+        "to": {"postal_code": cep},
         "products": products,
         "options": {
             "receipt": False,
@@ -373,15 +354,35 @@ def calculate_shipping(request):
         company_name = (company_data.get("name") or "").strip()
         company_name_lower = company_name.lower()
 
-        is_loggi = "loggi" in company_name_lower
+        search_text = f"{company_name_lower} {option_name_lower}"
+
+        blocked_companies = [
+            "jadlog",
+            "azul",
+            "latam",
+            "buslog",
+            "via brasil",
+            "braspag",
+            "total express",
+        ]
+
+        if any(blocked in search_text for blocked in blocked_companies):
+            continue
+
+        is_loggi = "loggi" in search_text
 
         is_correios = (
-            "correios" in company_name_lower
-            or "sedex" in option_name_lower
-            or "pac" in option_name_lower
+            "correios" in search_text
+            or "sedex" in search_text
+            or "pac" in search_text
         )
 
-        if not is_loggi and not is_correios:
+        if not (is_loggi or is_correios):
+            continue
+
+        price = option.get("price") or option.get("custom_price")
+
+        if not price:
             continue
 
         company_icon = (
@@ -389,11 +390,6 @@ def calculate_shipping(request):
             or company_data.get("logo")
             or ""
         )
-
-        price = option.get("price") or option.get("custom_price")
-
-        if not price:
-            continue
 
         options.append({
             "id": str(option.get("id")),
@@ -468,13 +464,11 @@ def checkout_infinitepay(request, product_id):
     payload = {
         "handle": settings.INFINITEPAY_HANDLE,
         "redirect_url": f"{settings.SITE_URL}/sucesso/",
-        "items": [
-            {
-                "quantity": 1,
-                "price": money_to_cents(product.price),
-                "description": product.name,
-            }
-        ],
+        "items": [{
+            "quantity": 1,
+            "price": money_to_cents(product.price),
+            "description": product.name,
+        }],
     }
 
     response = requests.post(
@@ -524,12 +518,10 @@ def checkout_infinitepay_cart(request):
         if engraving_name:
             description_parts.append(f"Gravação: {engraving_name}")
 
-        description = " | ".join(description_parts)
-
         items.append({
             "quantity": int(item.get("quantity", 1)),
             "price": money_to_cents(item.get("price", 0)),
-            "description": description,
+            "description": " | ".join(description_parts),
         })
 
     if subtotal >= FREE_SHIPPING_LIMIT:
