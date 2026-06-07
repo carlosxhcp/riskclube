@@ -314,10 +314,18 @@ async function calculateShipping() {
                     ${index === 0 ? "checked" : ""}
                 >
 
-                <span>
-                    ${option.company ? option.company + " - " : ""}${option.name}
-                    ${option.delivery_time ? `<small>${option.delivery_time} dias úteis</small>` : ""}
-                </span>
+                <div class="shipping-option-info">
+                    ${
+                        option.icon
+                            ? `<img src="${option.icon}" class="shipping-company-icon" alt="${option.company || option.name}">`
+                            : `<span class="shipping-company-fallback">🚚</span>`
+                    }
+
+                    <span>
+                        ${option.company ? option.company + " - " : ""}${option.name}
+                        ${option.delivery_time ? `<small>${option.delivery_time} dias úteis</small>` : ""}
+                    </span>
+                </div>
 
                 <strong>${formatMoney(option.price)}</strong>
             </label>

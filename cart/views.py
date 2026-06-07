@@ -124,10 +124,7 @@ def cart_add_ajax(request):
     try:
         data = json.loads(request.body)
     except json.JSONDecodeError:
-        return JsonResponse({
-            "success": False,
-            "error": "Dados inválidos.",
-        }, status=400)
+        return JsonResponse({"success": False, "error": "Dados inválidos."}, status=400)
 
     product_id = data.get("product_id")
 
@@ -141,14 +138,12 @@ def cart_add_ajax(request):
 
     size = data.get("size") or "Único"
     color = data.get("color") or ""
-
     engraving_name = data.get("engraving_name") or ""
     engraving_image = data.get("engraving_image") or ""
 
     product = get_object_or_404(Product, id=product_id)
 
     cart = request.session.get("cart", {})
-
     cart_key = f"{product.id}_{color}_{size}_{engraving_name}"
 
     final_image = (
@@ -188,10 +183,7 @@ def cart_update(request):
     try:
         data = json.loads(request.body)
     except json.JSONDecodeError:
-        return JsonResponse({
-            "success": False,
-            "error": "Dados inválidos.",
-        }, status=400)
+        return JsonResponse({"success": False, "error": "Dados inválidos."}, status=400)
 
     cart_key = str(data.get("cart_key"))
     action = data.get("action")
@@ -246,25 +238,16 @@ def calculate_shipping(request):
     try:
         data = json.loads(request.body)
     except json.JSONDecodeError:
-        return JsonResponse({
-            "success": False,
-            "error": "Dados inválidos.",
-        }, status=400)
+        return JsonResponse({"success": False, "error": "Dados inválidos."}, status=400)
 
     cep = str(data.get("cep", "")).replace("-", "").replace(".", "").strip()
     cart = request.session.get("cart", {})
 
     if not cep or len(cep) != 8 or not cep.isdigit():
-        return JsonResponse({
-            "success": False,
-            "error": "CEP inválido.",
-        }, status=400)
+        return JsonResponse({"success": False, "error": "CEP inválido."}, status=400)
 
     if not cart:
-        return JsonResponse({
-            "success": False,
-            "error": "Carrinho vazio.",
-        }, status=400)
+        return JsonResponse({"success": False, "error": "Carrinho vazio."}, status=400)
 
     subtotal = get_cart_subtotal(cart)
 
@@ -390,23 +373,22 @@ def calculate_shipping(request):
         company_name = (company_data.get("name") or "").strip()
         company_name_lower = company_name.lower()
 
+        is_loggi = "loggi" in company_name_lower
+
+        is_correios = (
+            "correios" in company_name_lower
+            or "sedex" in option_name_lower
+            or "pac" in option_name_lower
+        )
+
+        if not is_loggi and not is_correios:
+            continue
+
         company_icon = (
             company_data.get("picture")
             or company_data.get("logo")
             or ""
         )
-
-        allow_option = False
-
-        if "sedex" in option_name_lower:
-            allow_option = True
-        elif "jadlog" in company_name_lower or "jadlog.com" in option_name_lower:
-            allow_option = True
-        elif "loggi" in company_name_lower and "express" in option_name_lower:
-            allow_option = True
-
-        if not allow_option:
-            continue
 
         price = option.get("price") or option.get("custom_price")
 
@@ -443,18 +425,12 @@ def select_shipping(request):
     try:
         data = json.loads(request.body)
     except json.JSONDecodeError:
-        return JsonResponse({
-            "success": False,
-            "error": "Dados inválidos.",
-        }, status=400)
+        return JsonResponse({"success": False, "error": "Dados inválidos."}, status=400)
 
     cart = request.session.get("cart", {})
 
     if not cart:
-        return JsonResponse({
-            "success": False,
-            "error": "Carrinho vazio.",
-        }, status=400)
+        return JsonResponse({"success": False, "error": "Carrinho vazio."}, status=400)
 
     subtotal = get_cart_subtotal(cart)
 
@@ -468,10 +444,7 @@ def select_shipping(request):
         icon = data.get("icon", "")
 
         if price <= 0:
-            return JsonResponse({
-                "success": False,
-                "error": "Frete inválido.",
-            }, status=400)
+            return JsonResponse({"success": False, "error": "Frete inválido."}, status=400)
 
     shipping = {
         "id": data.get("id"),

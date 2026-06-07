@@ -204,3 +204,33 @@
         align-items: flex-start;
     }
 }
+
+.shipping-option-info {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.shipping-company-icon {
+    width: 44px;
+    height: 32px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.shipping-company-fallback {
+    width: 44px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.shipping-option-info span {
+    flex: 1;
+    min-width: 0;
+}
