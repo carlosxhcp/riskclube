@@ -132,10 +132,21 @@ async function loadCart() {
 // =============================
 
 function renderCart(data) {
+    const previousHadShipping = lastCartData && lastCartData.shipping;
+    const nowHasShipping = data && data.shipping;
+
     lastCartData = data;
 
     updateCartCount(data);
     updateTotals(data);
+
+    if (shippingOptionsBox && !nowHasShipping) {
+        if (data.items && data.items.length > 0 && previousHadShipping) {
+            shippingOptionsBox.innerHTML = `<p>Calcule o frete novamente.</p>`;
+        } else if (!data.items || data.items.length === 0) {
+            shippingOptionsBox.innerHTML = "";
+        }
+    }
 
     if (freeShippingProgress) {
         freeShippingProgress.style.width = `${data.free_shipping_progress || 0}%`;
