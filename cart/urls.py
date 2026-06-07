@@ -8,6 +8,9 @@ urlpatterns = [
     path("data/", views.cart_data, name="cart_data"),
     path("update/", views.cart_update, name="cart_update"),
 
+    path("calculate-shipping/", views.calculate_shipping, name="calculate_shipping"),
+    path("select-shipping/", views.select_shipping, name="select_shipping"),
+
     path(
         "infinitepay/checkout/<int:product_id>/",
         views.checkout_infinitepay,
@@ -19,6 +22,4 @@ urlpatterns = [
         views.checkout_infinitepay_cart,
         name="checkout_infinitepay_cart"
     ),
-    path("cart/calculate-shipping/", views.calculate_shipping, name="calculate_shipping"),
-    path("cart/select-shipping/", views.select_shipping, name="select_shipping"),
 ]
