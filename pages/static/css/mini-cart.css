@@ -1,58 +1,11 @@
-/* ============================= */
-/* BOTÕES DE QUANTIDADE */
-/* ============================= */
-
-.cart-qty-controls {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 10px;
-}
-
-.cart-qty-controls button {
-    width: 28px;
-    height: 28px;
-    border: 1px solid #ddd;
-    background: #fff;
-    color: #111;
-    font-size: 16px;
-    line-height: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: .2s ease;
-}
-
-.cart-qty-controls button:hover {
-    border-color: #111;
-}
-
-.cart-qty-controls button:disabled {
-    opacity: .45;
-    cursor: not-allowed;
-}
-
-.cart-qty-controls span {
-    min-width: 18px;
-    text-align: center;
-    font-size: 13px;
-    font-weight: 600;
-    color: #111;
-}
-
-/* ============================= */
-/* BLOCO DE FRETE DO MINI CARRINHO */
-/* ============================= */
-
-.mini-shipping-box {
+.cart-shipping-box {
     margin: 14px 0 16px;
     padding: 14px 0;
     border-top: 1px solid #e5e5e5;
     border-bottom: 1px solid #e5e5e5;
 }
 
-.mini-shipping-title {
+.cart-shipping-label {
     font-size: 12px;
     font-weight: 600;
     color: #111;
@@ -61,16 +14,12 @@
     letter-spacing: .04em;
 }
 
-/* ============================= */
-/* FORMULÁRIO DE CEP */
-/* ============================= */
-
-.mini-shipping-form {
+.cart-shipping-form {
     display: flex;
     gap: 8px;
 }
 
-.mini-shipping-form input {
+.cart-shipping-form input {
     width: 100%;
     height: 38px;
     border: 1px solid #ddd;
@@ -80,11 +29,7 @@
     color: #111;
 }
 
-.mini-shipping-form input:focus {
-    border-color: #111;
-}
-
-.mini-shipping-form button {
+.cart-shipping-form button {
     min-width: 90px;
     height: 38px;
     border: 1px solid #111;
@@ -96,97 +41,92 @@
     cursor: pointer;
 }
 
-.mini-shipping-form button:disabled {
-    opacity: .6;
-    cursor: not-allowed;
-}
-
-/* ============================= */
-/* MENSAGEM DO FRETE */
-/* ============================= */
-
-.mini-shipping-message {
-    margin-top: 8px;
-    font-size: 12px;
-    color: #555;
-}
-
-.mini-shipping-message.error {
-    color: #b00020;
-}
-
-/* ============================= */
-/* OPÇÕES DE FRETE */
-/* ============================= */
-
-.mini-shipping-options {
+.shipping-options {
     margin-top: 10px;
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
-.mini-shipping-option {
+.shipping-option {
     width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
     border: 1px solid #ddd;
     background: #fff;
     color: #111;
     padding: 10px;
     cursor: pointer;
-    text-align: left;
     transition: .2s ease;
 }
 
-.mini-shipping-option:hover,
-.mini-shipping-option.selected {
+.shipping-option:hover {
     border-color: #111;
 }
 
-.mini-shipping-option:disabled {
-    opacity: .55;
-    cursor: not-allowed;
+.shipping-option input {
+    accent-color: #111;
 }
 
-.mini-shipping-option-main {
+.shipping-option span {
+    flex: 1;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
+    flex-direction: column;
     font-size: 13px;
     font-weight: 600;
 }
 
-.mini-shipping-option-left {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    min-width: 0;
-}
-
-.mini-shipping-icon {
-    width: 38px;
-    max-height: 26px;
-    object-fit: contain;
-    flex-shrink: 0;
-}
-
-.mini-shipping-truck-icon {
-    font-size: 22px;
-}
-
-.mini-shipping-option-sub {
+.shipping-option small {
     margin-top: 3px;
     font-size: 11px;
     color: #666;
 }
 
-.mini-change-shipping {
-    margin-top: 8px;
-    border: 0;
-    background: transparent;
+.shipping-option strong {
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.shipping-option:has(input:checked) {
+    border-color: #111;
+    background: #f7f7f7;
+}
+
+.cart-qty-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.cart-qty-controls button {
+    width: 32px;
+    height: 32px;
+    border: 1px solid #ddd;
+    background: #fff;
     color: #111;
-    padding: 0;
-    font-size: 12px;
-    text-decoration: underline;
+    font-size: 18px;
+    font-weight: 600;
     cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: all .2s ease;
+}
+
+.cart-qty-controls button:hover {
+    background: #111;
+    color: #fff;
+    border-color: #111;
+}
+
+.cart-qty-controls span {
+    min-width: 20px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
 }

@@ -1,0 +1,277 @@
+.exchange-page {
+    background: #fff;
+    color: #111;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.exchange-hero {
+    padding: 90px 20px 70px;
+    text-align: center;
+    background: #f7f7f7;
+}
+
+.exchange-label {
+    display: inline-block;
+    margin-bottom: 18px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.exchange-hero h1 {
+    margin: 0 0 20px;
+    font-size: clamp(36px, 6vw, 72px);
+    font-weight: 900;
+    letter-spacing: -2px;
+    text-transform: uppercase;
+}
+
+.exchange-hero p {
+    max-width: 720px;
+    margin: 0 auto;
+    font-size: 16px;
+    line-height: 1.8;
+    color: #555;
+}
+
+.exchange-container {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 70px 20px 90px;
+}
+
+.exchange-card {
+    background: #fff;
+    border: 1px solid #e8e8e8;
+    padding: 32px;
+    border-radius: 18px;
+}
+
+.highlight-card {
+    margin-bottom: 28px;
+    background: #111;
+    color: #fff;
+}
+
+.highlight-card p {
+    color: #e5e5e5;
+}
+
+.exchange-card h2,
+.exchange-card h3 {
+    margin-bottom: 14px;
+    font-weight: 800;
+}
+
+.exchange-card p {
+    margin: 0;
+    color: #555;
+    line-height: 1.7;
+}
+
+.exchange-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+}
+
+.exchange-icon {
+    width: 46px;
+    height: 46px;
+    margin-bottom: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f3f3f3;
+    border-radius: 50%;
+    font-size: 22px;
+}
+
+.exchange-steps,
+.exchange-rules,
+.exchange-contact {
+    margin-top: 70px;
+}
+
+.exchange-steps h2,
+.exchange-rules h2,
+.exchange-contact h2 {
+    margin-bottom: 28px;
+    font-size: 32px;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.steps-list {
+    border-top: 1px solid #e5e5e5;
+}
+
+.step-item {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 24px;
+    padding: 28px 0;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.step-item span {
+    font-size: 26px;
+    font-weight: 900;
+}
+
+.step-item h4 {
+    margin-bottom: 8px;
+    font-weight: 800;
+}
+
+.step-item p {
+    margin: 0;
+    color: #555;
+    line-height: 1.7;
+}
+
+.exchange-rules {
+    padding: 36px;
+    background: #f7f7f7;
+    border-radius: 18px;
+}
+
+.exchange-rules ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.exchange-rules li {
+    margin-bottom: 12px;
+    color: #444;
+    line-height: 1.7;
+}
+
+.exchange-rules li:last-child {
+    margin-bottom: 0;
+}
+
+.exchange-contact {
+    text-align: center;
+    padding: 55px 25px;
+    border: 1px solid #e8e8e8;
+    border-radius: 22px;
+}
+
+.exchange-contact p {
+    max-width: 620px;
+    margin: 0 auto 28px;
+    color: #555;
+    line-height: 1.7;
+}
+
+.exchange-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 50px;
+    padding: 0 34px;
+    background: #111;
+    color: #fff;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: 0.25s ease;
+}
+
+.exchange-button:hover {
+    background: #333;
+    color: #fff;
+}
+
+@media (max-width: 992px) {
+    .exchange-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .exchange-hero {
+        padding: 65px 18px 50px;
+    }
+
+    .exchange-container {
+        padding: 45px 18px 70px;
+    }
+
+    .exchange-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .exchange-card {
+        padding: 26px;
+    }
+
+    .step-item {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .exchange-steps h2,
+    .exchange-rules h2,
+    .exchange-contact h2 {
+        font-size: 25px;
+    }
+
+    .exchange-rules {
+        padding: 28px;
+    }
+}
+
+
+.personalized-warning {
+    display: flex;
+    gap: 22px;
+    align-items: flex-start;
+    margin-bottom: 28px;
+    padding: 30px;
+    background: #fff3cd;
+    border: 2px solid #ffcc00;
+    border-radius: 18px;
+    color: #111;
+}
+
+.personalized-warning .warning-icon {
+    min-width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: #111;
+    color: #ffcc00;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+}
+
+.personalized-warning h2 {
+    margin-bottom: 10px;
+    font-size: 24px;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.personalized-warning p {
+    margin: 0;
+    color: #333;
+    line-height: 1.7;
+}
+
+@media (max-width: 576px) {
+    .personalized-warning {
+        flex-direction: column;
+        padding: 24px;
+    }
+
+    .personalized-warning h2 {
+        font-size: 20px;
+    }
+}
