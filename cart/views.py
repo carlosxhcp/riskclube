@@ -356,20 +356,10 @@ def calculate_shipping(request):
 
         search_text = f"{company_name_lower} {option_name_lower}"
 
-        blocked_companies = [
-            "jadlog",
-            "azul",
-            "latam",
-            "buslog",
-            "via brasil",
-            "braspag",
-            "total express",
-        ]
-
-        if any(blocked in search_text for blocked in blocked_companies):
-            continue
-
-        is_loggi = "loggi" in search_text
+        is_loggi_express = (
+            "loggi" in search_text
+            and "express" in search_text
+        )
 
         is_correios = (
             "correios" in search_text
@@ -377,7 +367,7 @@ def calculate_shipping(request):
             or "pac" in search_text
         )
 
-        if not (is_loggi or is_correios):
+        if not (is_loggi_express or is_correios):
             continue
 
         price = option.get("price") or option.get("custom_price")
