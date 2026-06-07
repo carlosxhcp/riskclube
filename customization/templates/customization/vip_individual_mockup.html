@@ -26,6 +26,29 @@
         width: 100% !important;
         height: 100% !important;
         touch-action: none;
+        cursor: grab;
+    }
+
+    .vip-3d-viewer canvas.is-dragging-engraving {
+        cursor: grabbing;
+    }
+
+    .vip-drag-hint {
+        position: absolute;
+        left: 50%;
+        bottom: 18px;
+        z-index: 3;
+        transform: translateX(-50%);
+        padding: 9px 14px;
+        border-radius: 999px;
+        background: rgba(17, 17, 17, .82);
+        color: #fff;
+        font-size: .68rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: .08em;
+        pointer-events: none;
+        opacity: .9;
     }
 
     .vip-3d-loading {
@@ -43,81 +66,97 @@
         pointer-events: none;
     }
 
-    .vip-upload-card {
-        border: 1px dashed #cfcfcf;
-        border-radius: 14px;
-        padding: 18px;
-        background: #fafafa;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-        transition: .25s ease;
-    }
-
-    .vip-upload-card:hover {
-        border-color: #111;
-        background: #fff;
-    }
-
-    .vip-upload-card input {
-        display: none;
-    }
-
-    .vip-upload-text {
+    .vip-engraving-categories {
         display: flex;
         flex-direction: column;
-        gap: 4px;
+        gap: 14px;
     }
 
-    .vip-upload-text strong {
-        font-size: .82rem;
-        font-weight: 900;
-        text-transform: uppercase;
-        letter-spacing: 1px;
+    .vip-engraving-category {
+        border: 1px solid #eeeeee;
+        border-radius: 16px;
+        padding: 12px;
+        background: #fafafa;
     }
 
-    .vip-upload-text small {
-        font-size: .72rem;
-        color: #777;
-        font-weight: 700;
-    }
-
-    .vip-upload-thumb {
-        width: 58px;
-        height: 58px;
-        border-radius: 10px;
-        background: #eee;
+    .vip-engraving-category-title {
         display: flex;
         align-items: center;
-        justify-content: center;
-        overflow: hidden;
-        flex-shrink: 0;
-        font-size: 1.4rem;
-        color: #777;
+        gap: 8px;
+        margin-bottom: 10px;
+        font-size: .72rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: .08em;
+        color: #111;
     }
 
-    .vip-upload-thumb img {
-        width: 100%;
-        height: 100%;
+    .vip-engraving-category-title img {
+        width: 22px;
+        height: 22px;
+        object-fit: contain;
+        border-radius: 6px;
+    }
+
+    .vip-engraving-options {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .vip-engraving-card {
+        position: relative;
+        min-height: 92px;
+        border: 1px solid #e5e5e5;
+        border-radius: 14px;
+        background: #fff;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        cursor: pointer;
+        transition: .2s ease;
+    }
+
+    .vip-engraving-card:hover,
+    .vip-engraving-card.active {
+        border-color: #111;
+        box-shadow: 0 8px 22px rgba(0, 0, 0, .08);
+        transform: translateY(-1px);
+    }
+
+    .vip-engraving-card input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .vip-engraving-card img {
+        width: 54px;
+        height: 54px;
         object-fit: contain;
     }
 
-    .vip-clear-upload {
-        margin-top: 10px;
-        border: none;
-        background: transparent;
-        color: #777;
-        font-size: .7rem;
-        font-weight: 900;
+    .vip-engraving-card small {
+        max-width: 100%;
+        color: #555;
+        font-size: .64rem;
+        font-weight: 800;
+        text-align: center;
         text-transform: uppercase;
-        cursor: pointer;
-        padding: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
-    .vip-clear-upload:hover {
-        color: #111;
+    .vip-empty-engraving {
+        margin: 0;
+        color: #777;
+        font-size: .75rem;
+        font-weight: 700;
+        line-height: 1.45;
     }
 
     @media (max-width: 992px) {
@@ -149,6 +188,7 @@
             <div class="vip-bottle-preview vip-bottle-preview-3d">
                 <div id="vip3dViewer" class="vip-3d-viewer">
                     <div class="vip-3d-loading" id="vip3dLoading">Carregando mockup 3D...</div>
+                    <div class="vip-drag-hint" id="vipDragHint">Clique no nome ou na gravação e arraste individualmente</div>
                 </div>
             </div>
 
@@ -163,6 +203,10 @@
 
             <form method="POST" enctype="multipart/form-data" class="vip-config-form">
                 {% csrf_token %}
+                <input type="hidden" name="name_offset_x" id="nameOffsetX" value="0">
+                <input type="hidden" name="name_offset_y" id="nameOffsetY" value="0">
+                <input type="hidden" name="engraving_offset_x" id="engravingOffsetX" value="0">
+                <input type="hidden" name="engraving_offset_y" id="engravingOffsetY" value="0">
 
                 <div class="vip-form-group">
                     <div class="vip-section-title">
@@ -234,26 +278,44 @@
 
                 <div class="vip-form-group">
                     <div class="vip-section-title">
-                        <h3>Imagem da gravação</h3>
+                        <h3>Escolha a gravação</h3>
                     </div>
 
-                    <label class="vip-upload-card" for="slot9ImageUpload">
-                        <span class="vip-upload-text">
-                            <strong>Enviar imagem</strong>
-                            <small>A imagem vai aparecer no slot_9 criado no Blender.</small>
-                        </span>
+                    <div class="vip-engraving-categories" id="engravingCategories">
+                        {% for categoria in categorias %}
+                            <div class="vip-engraving-category">
+                                <div class="vip-engraving-category-title">
+                                    {% if categoria.icone %}
+                                        <img src="{{ categoria.icone.url }}" alt="{{ categoria.nome }}">
+                                    {% endif %}
+                                    <span>{{ categoria.nome }}</span>
+                                </div>
 
-                        <span class="vip-upload-thumb" id="uploadThumb">
-                            <i class="bi bi-image"></i>
-                        </span>
+                                <div class="vip-engraving-options">
+                                    {% for gravacao in categoria.gravacoes.all %}
+                                        {% if gravacao.ativo %}
+                                            <label class="vip-engraving-card">
+                                                <input
+                                                    type="radio"
+                                                    name="gravacao_id"
+                                                    value="{{ gravacao.id }}"
+                                                    data-image-url="{{ gravacao.imagem.url }}"
+                                                    data-name="{{ gravacao.nome|default:'Gravação' }}"
+                                                >
 
-                        <input type="file" id="slot9ImageUpload" name="slot_9_image"
-                            accept="image/png, image/jpeg, image/webp">
-                    </label>
-
-                    <button type="button" class="vip-clear-upload" id="clearSlot9Image">
-                        Remover imagem
-                    </button>
+                                                <img src="{{ gravacao.imagem.url }}" alt="{{ gravacao.nome|default:'Gravação' }}">
+                                                <small>{{ gravacao.nome|default:"Gravação" }}</small>
+                                            </label>
+                                        {% endif %}
+                                    {% empty %}
+                                        <p class="vip-empty-engraving">Nenhuma gravação cadastrada nessa categoria.</p>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% empty %}
+                            <p class="vip-empty-engraving">Nenhuma categoria de gravação ativa foi cadastrada.</p>
+                        {% endfor %}
+                    </div>
                 </div>
 
                 <div class="vip-price-box">
@@ -288,14 +350,18 @@
         const input = document.getElementById("customName");
         const fontCards = document.querySelectorAll(".vip-font-card");
         const orientationCards = document.querySelectorAll(".vip-orientation-card");
-        const imageUpload = document.getElementById("slot9ImageUpload");
-        const clearSlot9Image = document.getElementById("clearSlot9Image");
-        const uploadThumb = document.getElementById("uploadThumb");
+        const engravingCards = document.querySelectorAll(".vip-engraving-card");
+        const engravingRadios = document.querySelectorAll('input[name="gravacao_id"]');
+        const nameOffsetXInput = document.getElementById("nameOffsetX");
+        const nameOffsetYInput = document.getElementById("nameOffsetY");
+        const engravingOffsetXInput = document.getElementById("engravingOffsetX");
+        const engravingOffsetYInput = document.getElementById("engravingOffsetY");
 
         let selectedFontFamily = "Arial Black, Arial, sans-serif";
 
         const container = document.getElementById("vip3dViewer");
         const loadingMessage = document.getElementById("vip3dLoading");
+        const dragHint = document.getElementById("vipDragHint");
         const isMobile = window.matchMedia("(max-width: 768px), (pointer: coarse)").matches;
 
         /*
@@ -356,14 +422,112 @@
         let slot9Meshes = [];
         let currentTextTexture = null;
         let currentSlot9Texture = null;
-        let pendingSlot9File = null;
+        let currentSlot9Image = null;
+        let pendingSlot9ImageUrl = null;
         let needsRender = true;
+        const nameOffset = { x: 0, y: 0 };
+        const engravingOffset = { x: 0, y: 0 };
+        const dragState = {
+            active: false,
+            target: null,
+            startX: 0,
+            startY: 0,
+            startOffsetX: 0,
+            startOffsetY: 0
+        };
+        const raycaster = new THREE.Raycaster();
+        const pointer = new THREE.Vector2();
+        const DRAG_SENSITIVITY = 1.35;
+
+        /*
+         * Se o arraste ficar invertido por causa da UV/rotação do canvas,
+         * altere estes valores entre 1 e -1.
+         * Nesta versão deixei invertido porque o movimento estava ao contrário.
+         */
+        const DRAG_DIRECTION_X = -1;
+        const DRAG_DIRECTION_Y = -1;
         let lastFrameTime = 0;
         const targetFPS = isMobile ? 30 : 60;
         const frameInterval = 1000 / targetFPS;
 
         function requestRender() {
             needsRender = true;
+        }
+
+        function clamp(value, min, max) {
+            return Math.min(Math.max(value, min), max);
+        }
+
+        function updateOffsetInputs() {
+            nameOffsetXInput.value = nameOffset.x.toFixed(4);
+            nameOffsetYInput.value = nameOffset.y.toFixed(4);
+            engravingOffsetXInput.value = engravingOffset.x.toFixed(4);
+            engravingOffsetYInput.value = engravingOffset.y.toFixed(4);
+        }
+
+        function applyNameCanvasOffset(ctx, canvas) {
+            ctx.translate(
+                canvas.width / 2 + nameOffset.x * canvas.width,
+                canvas.height / 2 + nameOffset.y * canvas.height
+            );
+        }
+
+        function applyEngravingCanvasOffset(ctx, canvas) {
+            ctx.translate(
+                canvas.width / 2 + engravingOffset.x * canvas.width,
+                canvas.height / 2 + engravingOffset.y * canvas.height
+            );
+        }
+
+        function getEditableDragMeshes() {
+            const meshes = [];
+
+            if (printArea) meshes.push(printArea);
+
+            slot9Meshes.forEach((mesh) => {
+                if (mesh && !meshes.includes(mesh)) meshes.push(mesh);
+            });
+
+            return meshes;
+        }
+
+        function getDragTargetFromPointer(event) {
+            const meshes = getEditableDragMeshes();
+            if (!meshes.length) return null;
+
+            const rect = renderer.domElement.getBoundingClientRect();
+            pointer.x = ((event.clientX - rect.left) / Math.max(rect.width, 1)) * 2 - 1;
+            pointer.y = -((event.clientY - rect.top) / Math.max(rect.height, 1)) * 2 + 1;
+
+            raycaster.setFromCamera(pointer, camera);
+            const intersections = raycaster.intersectObjects(meshes, false);
+            if (!intersections.length) return null;
+
+            const clickedMesh = intersections[0].object;
+
+            if (slot9Meshes.includes(clickedMesh)) {
+                return "engraving";
+            }
+
+            if (clickedMesh === printArea) {
+                return "name";
+            }
+
+            return null;
+        }
+
+        function redrawDraggedElement() {
+            updateOffsetInputs();
+
+            if (dragState.target === "name") {
+                updatePrintText();
+            }
+
+            if (dragState.target === "engraving" && currentSlot9Image) {
+                redrawSlot9ImageTexture();
+            }
+
+            requestRender();
         }
 
         function disposeMaterial(material) {
@@ -440,7 +604,7 @@
             } while (ctx.measureText(text).width > maxWidth && fontSize > 38);
 
             ctx.save();
-            ctx.translate(canvas.width / 2, canvas.height / 2);
+            applyNameCanvasOffset(ctx, canvas);
             ctx.scale(-1, 1);
 
             if (orientation === "horizontal") {
@@ -604,143 +768,137 @@
             });
         }
 
-        function createSlot9ImageTexture(file, onReady) {
-            const imageUrl = URL.createObjectURL(file);
+        function createSlot9TextureFromImage(image) {
+            const canvas = document.createElement("canvas");
+            canvas.width = isMobile ? 768 : 1024;
+            canvas.height = isMobile ? 768 : 1024;
+
+            const ctx = canvas.getContext("2d", { alpha: true });
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const padding = canvas.width * 0.12;
+            const availableWidth = canvas.width - padding * 2;
+            const availableHeight = canvas.height - padding * 2;
+            const scale = Math.min(availableWidth / image.width, availableHeight / image.height);
+            const drawWidth = image.width * scale;
+            const drawHeight = image.height * scale;
+
+            ctx.save();
+            applyEngravingCanvasOffset(ctx, canvas);
+
+            if (USER_IMAGE_ROTATION) {
+                ctx.rotate(USER_IMAGE_ROTATION);
+            }
+
+            if (USER_IMAGE_MIRROR_X) {
+                ctx.scale(-1, 1);
+            }
+
+            ctx.drawImage(
+                image,
+                -drawWidth / 2,
+                -drawHeight / 2,
+                drawWidth,
+                drawHeight
+            );
+
+            ctx.restore();
+
+            const texture = new THREE.CanvasTexture(canvas);
+            texture.colorSpace = THREE.SRGBColorSpace;
+            texture.flipY = false;
+            texture.wrapS = THREE.ClampToEdgeWrapping;
+            texture.wrapT = THREE.ClampToEdgeWrapping;
+            texture.generateMipmaps = false;
+            texture.minFilter = THREE.LinearFilter;
+            texture.magFilter = THREE.LinearFilter;
+            texture.needsUpdate = true;
+
+            return texture;
+        }
+
+        function setSlot9Texture(texture) {
+            currentSlot9Texture = texture;
+
+            slot9Meshes.forEach((mesh) => {
+                disposeMaterial(mesh.material);
+                mesh.material = new THREE.MeshBasicMaterial({
+                    map: texture,
+                    color: 0xffffff,
+                    transparent: true,
+                    opacity: 1,
+                    side: THREE.DoubleSide,
+                    depthTest: true,
+                    depthWrite: false,
+                    polygonOffset: true,
+                    polygonOffsetFactor: -6,
+                    polygonOffsetUnits: -6
+                });
+
+                mesh.renderOrder = 999;
+                mesh.frustumCulled = false;
+                mesh.visible = true;
+                mesh.material.needsUpdate = true;
+            });
+        }
+
+        function redrawSlot9ImageTexture() {
+            if (!currentSlot9Image || !slot9Meshes.length) return;
+
+            if (currentSlot9Texture) {
+                currentSlot9Texture.dispose();
+                currentSlot9Texture = null;
+            }
+
+            setSlot9Texture(createSlot9TextureFromImage(currentSlot9Image));
+        }
+
+        function loadSlot9ImageFromUrl(imageUrl) {
+            pendingSlot9ImageUrl = imageUrl;
+
+            if (!imageUrl) return;
+
+            if (!slot9Meshes.length && bottleModel) {
+                prepareSlot9();
+            }
+
+            if (bottleModel && !slot9Meshes.length) {
+                alert("Não encontrei o slot_9 no GLB. No Blender, confira se o OBJETO PAI ou o MESH está com o nome slot_9. Depois exporte o garrafa.glb novamente.");
+                return;
+            }
+
             const image = new Image();
+            image.crossOrigin = "anonymous";
 
             image.onload = function () {
-                const canvas = document.createElement("canvas");
-                canvas.width = isMobile ? 768 : 1024;
-                canvas.height = isMobile ? 768 : 1024;
+                currentSlot9Image = image;
 
-                const ctx = canvas.getContext("2d", { alpha: true });
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-                const padding = canvas.width * 0.12;
-                const availableWidth = canvas.width - padding * 2;
-                const availableHeight = canvas.height - padding * 2;
-                const scale = Math.min(availableWidth / image.width, availableHeight / image.height);
-                const drawWidth = image.width * scale;
-                const drawHeight = image.height * scale;
-
-                /*
-                 * Correção feita só para a imagem enviada no slot_9.
-                 * O texto do print_area continua usando a configuração dele.
-                 *
-                 * Como a UV do slot_9 está vindo invertida do Blender,
-                 * a imagem é girada 180° no canvas antes de virar textura.
-                 */
-                ctx.save();
-                ctx.translate(canvas.width / 2, canvas.height / 2);
-
-                if (USER_IMAGE_ROTATION) {
-                    ctx.rotate(USER_IMAGE_ROTATION);
+                if (currentSlot9Texture) {
+                    currentSlot9Texture.dispose();
+                    currentSlot9Texture = null;
                 }
 
-                if (USER_IMAGE_MIRROR_X) {
-                    ctx.scale(-1, 1);
-                }
-
-                ctx.drawImage(
-                    image,
-                    -drawWidth / 2,
-                    -drawHeight / 2,
-                    drawWidth,
-                    drawHeight
-                );
-
-                ctx.restore();
-
-                URL.revokeObjectURL(imageUrl);
-
-                const texture = new THREE.CanvasTexture(canvas);
-                texture.colorSpace = THREE.SRGBColorSpace;
-                texture.flipY = false;
-                texture.wrapS = THREE.ClampToEdgeWrapping;
-                texture.wrapT = THREE.ClampToEdgeWrapping;
-                texture.generateMipmaps = false;
-                texture.minFilter = THREE.LinearFilter;
-                texture.magFilter = THREE.LinearFilter;
-                texture.needsUpdate = true;
-
-                onReady(texture);
+                setSlot9Texture(createSlot9TextureFromImage(image));
+                requestRender();
             };
 
             image.onerror = function () {
-                URL.revokeObjectURL(imageUrl);
-                alert("Não foi possível carregar essa imagem.");
+                alert("Não foi possível carregar essa gravação.");
             };
 
             image.src = imageUrl;
         }
 
-        function applyImageToSlot9(file) {
-            pendingSlot9File = file;
+        function selectEngraving(radio) {
+            if (!radio) return;
 
-            if (!slot9Meshes.length) {
-                prepareSlot9();
-            }
+            engravingCards.forEach(card => card.classList.remove("active"));
 
-            if (!slot9Meshes.length) {
-                alert("Não encontrei o slot_9 no GLB. No Blender, confira se o OBJETO PAI ou o MESH está com o nome slot_9. Depois exporte o garrafa.glb novamente.");
-                return;
-            }
+            const card = radio.closest(".vip-engraving-card");
+            if (card) card.classList.add("active");
 
-            if (currentSlot9Texture) {
-                currentSlot9Texture.dispose();
-                currentSlot9Texture = null;
-            }
-
-            createSlot9ImageTexture(file, function (texture) {
-                currentSlot9Texture = texture;
-
-                slot9Meshes.forEach((mesh) => {
-                    disposeMaterial(mesh.material);
-                    mesh.material = new THREE.MeshBasicMaterial({
-                        map: texture,
-                        color: 0xffffff,
-                        transparent: true,
-                        opacity: 1,
-                        side: THREE.DoubleSide,
-
-                        // IMPORTANTE:
-                        // depthTest precisa ficar TRUE para a imagem NÃO aparecer
-                        // através/do outro lado da garrafa.
-                        depthTest: true,
-                        depthWrite: false,
-
-                        // Mantém a imagem levemente acima da superfície, evitando
-                        // ficar "piscando" ou parecendo afundada na garrafa.
-                        polygonOffset: true,
-                        polygonOffsetFactor: -6,
-                        polygonOffsetUnits: -6
-                    });
-
-                    mesh.renderOrder = 999;
-                    mesh.frustumCulled = false;
-                    mesh.visible = true;
-                    mesh.material.needsUpdate = true;
-                });
-
-                requestRender();
-            });
-        }
-
-        function clearSlot9() {
-            if (currentSlot9Texture) {
-                currentSlot9Texture.dispose();
-                currentSlot9Texture = null;
-            }
-
-            slot9Meshes.forEach((mesh) => {
-                disposeMaterial(mesh.material);
-                mesh.material = makeTransparentMaterial();
-                mesh.material.needsUpdate = true;
-            });
-
-            imageUpload.value = "";
-            uploadThumb.innerHTML = '<i class="bi bi-image"></i>';
-            requestRender();
+            radio.checked = true;
+            loadSlot9ImageFromUrl(radio.dataset.imageUrl);
         }
 
         const loader = new GLTFLoader();
@@ -809,8 +967,10 @@
                 fitCameraToModel(bottleModel);
                 updatePrintText();
 
-                if (pendingSlot9File) {
-                    applyImageToSlot9(pendingSlot9File);
+                if (pendingSlot9ImageUrl) {
+                    loadSlot9ImageFromUrl(pendingSlot9ImageUrl);
+                } else if (engravingRadios.length) {
+                    selectEngraving(engravingRadios[0]);
                 }
 
                 loadingMessage.style.display = "none";
@@ -825,6 +985,70 @@
         );
 
         controls.addEventListener("change", requestRender);
+
+        renderer.domElement.addEventListener("pointerdown", function (event) {
+            if (!bottleModel || event.button !== 0) return;
+
+            const dragTarget = getDragTargetFromPointer(event);
+            if (!dragTarget) return;
+
+            const currentOffset = dragTarget === "name" ? nameOffset : engravingOffset;
+
+            event.preventDefault();
+            dragState.active = true;
+            dragState.target = dragTarget;
+            dragState.startX = event.clientX;
+            dragState.startY = event.clientY;
+            dragState.startOffsetX = currentOffset.x;
+            dragState.startOffsetY = currentOffset.y;
+
+            controls.enabled = false;
+            renderer.domElement.classList.add("is-dragging-engraving");
+            renderer.domElement.setPointerCapture(event.pointerId);
+        });
+
+        renderer.domElement.addEventListener("pointermove", function (event) {
+            if (!dragState.active) return;
+
+            const rect = renderer.domElement.getBoundingClientRect();
+            const deltaX = (event.clientX - dragState.startX) / Math.max(rect.width, 1);
+            const deltaY = (event.clientY - dragState.startY) / Math.max(rect.height, 1);
+
+            const currentOffset = dragState.target === "name" ? nameOffset : engravingOffset;
+
+            currentOffset.x = clamp(
+                dragState.startOffsetX + deltaX * DRAG_SENSITIVITY * DRAG_DIRECTION_X,
+                -0.38,
+                0.38
+            );
+
+            currentOffset.y = clamp(
+                dragState.startOffsetY + deltaY * DRAG_SENSITIVITY * DRAG_DIRECTION_Y,
+                -0.38,
+                0.38
+            );
+
+            redrawDraggedElement();
+        });
+
+        function stopEngravingDrag(event) {
+            if (!dragState.active) return;
+
+            dragState.active = false;
+            dragState.target = null;
+            controls.enabled = true;
+            renderer.domElement.classList.remove("is-dragging-engraving");
+
+            try {
+                renderer.domElement.releasePointerCapture(event.pointerId);
+            } catch (error) {
+                // Alguns navegadores soltam o ponteiro automaticamente.
+            }
+        }
+
+        renderer.domElement.addEventListener("pointerup", stopEngravingDrag);
+        renderer.domElement.addEventListener("pointercancel", stopEngravingDrag);
+        renderer.domElement.addEventListener("pointerleave", stopEngravingDrag);
 
         function animate(time) {
             requestAnimationFrame(animate);
@@ -926,19 +1150,15 @@
             });
         });
 
-        imageUpload.addEventListener("change", function (event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            pendingSlot9File = file;
-
-            const previewUrl = URL.createObjectURL(file);
-            uploadThumb.innerHTML = `<img src="${previewUrl}" alt="Prévia da imagem enviada">`;
-
-            applyImageToSlot9(file);
+        engravingRadios.forEach(radio => {
+            radio.addEventListener("change", function () {
+                selectEngraving(this);
+            });
         });
 
-        clearSlot9Image.addEventListener("click", clearSlot9);
+        if (engravingRadios.length) {
+            selectEngraving(engravingRadios[0]);
+        }
     });
 </script>
 
