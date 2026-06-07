@@ -5,6 +5,7 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/product-detail.css' %}">
+<link rel="stylesheet" href="{% static 'css/community.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -235,28 +236,57 @@
 
 </section>
 
-<section class="community-section">
-
-    <h2 class="community-title">COMUNIDADE</h2>
-
-    <div class="community-grid">
-
-        {% for item in community_images %}
-            <img src="{{ item.image.url }}" alt="{{ item.alt }}">
-        {% empty %}
-            <p class="community-empty">
-                Nenhuma imagem cadastrada ainda.
-            </p>
-        {% endfor %}
-
+<section class="community-section" id="comunidade">
+    <div class="community-header">
+        <span class="community-label">Vozes reais. Estilo que inspira.</span>
+        <h2 class="community-title">COMUNIDADE</h2>
+        <p class="community-subtitle">
+            Avaliações de pessoas que usam, falam e vivem o estilo RISK.
+        </p>
     </div>
 
-    <p class="community-text">
-        Você pode nos apoiar postando nas redes da forma
-        que se sentir confortável marcando @riskclube —
-        aproveite sua nova garrafa.
-    </p>
+    <div class="community-carousel">
+        <div class="community-track">
+            {% for item in community_images %}
+            <article class="community-card">
+                <div class="community-photo-box">
+                    {% if item.photo %}
+                        <img src="{{ item.photo.url }}" alt="{{ item.instagram }}">
+                    {% endif %}
 
+                    <span class="community-instagram">@{{ item.instagram }}</span>
+                </div>
+
+                <div class="community-content">
+                    <div class="community-stars">
+                        {% for i in "12345" %}
+                            {% if forloop.counter <= item.rating %}
+                                ★
+                            {% else %}
+                                ☆
+                            {% endif %}
+                        {% endfor %}
+                        <span>{{ item.rating }},0</span>
+                    </div>
+
+                    <h3>{{ item.title }}</h3>
+                    <p>{{ item.description }}</p>
+                </div>
+            </article>
+            {% empty %}
+            <div class="community-empty">
+                <h3>Seja o primeiro a avaliar!</h3>
+                <p>Ainda não existem avaliações cadastradas.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="community-pagination">
+        <button class="community-page-btn prev" type="button">&#10094;</button>
+        <div class="community-page-numbers"></div>
+        <button class="community-page-btn next" type="button">&#10095;</button>
+    </div>
 </section>
 
 <script>
@@ -633,6 +663,55 @@ document.addEventListener("DOMContentLoaded", function () {
 
     });
 
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const cards = [...document.querySelectorAll(".community-card")];
+    const numbersContainer = document.querySelector(".community-page-numbers");
+
+    if (!cards.length || !numbersContainer) return;
+
+    const perPage = 3;
+    const totalPages = Math.ceil(cards.length / perPage);
+    let currentPage = 1;
+
+    function renderPage(page) {
+        currentPage = page;
+
+        cards.forEach((card, index) => {
+            const start = (page - 1) * perPage;
+            const end = start + perPage;
+            card.style.display = index >= start && index < end ? "grid" : "none";
+        });
+
+        document
+            .querySelectorAll(".community-page-number")
+            .forEach(btn => btn.classList.remove("active"));
+
+        const activeBtn = document.querySelector(`[data-page="${page}"]`);
+        if (activeBtn) activeBtn.classList.add("active");
+    }
+
+    for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "community-page-number";
+        btn.dataset.page = i;
+        btn.textContent = i;
+        btn.addEventListener("click", () => renderPage(i));
+        numbersContainer.appendChild(btn);
+    }
+
+    document.querySelector(".prev").addEventListener("click", () => {
+        if (currentPage > 1) renderPage(currentPage - 1);
+    });
+
+    document.querySelector(".next").addEventListener("click", () => {
+        if (currentPage < totalPages) renderPage(currentPage + 1);
+    });
+
+    renderPage(1);
 });
 </script>
 

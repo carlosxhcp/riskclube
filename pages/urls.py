@@ -5,5 +5,7 @@ app_name = "pages"
 
 urlpatterns = [
     path("", views.home, name="home"),
-    path("mockup-3d/", views.mockup_3d, name="mockup_3d"),
+    path("trocas/", views.trocas, name="trocas"),
+    path("contato/", views.contato, name="contato"),
+    path("about/", views.about, name="about"),
 ]

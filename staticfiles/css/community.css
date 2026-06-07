@@ -1,11 +1,32 @@
-.community-track {
-    align-items: center;
+/* =========================
+   SEÇÃO COMUNIDADE
+========================= */
+
+.community-section {
+    width: 100%;
+    background: #fff;
+    padding: 80px 5%;
+    overflow: hidden;
+    position: relative;
 }
 
-.community-card {
-    width: 100%;
-    max-width: 1050px;
-    margin: 0 auto;
+.community-section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(0, 0, 0, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 0, 0, 0.035) 1px, transparent 1px);
+    background-size: 28px 28px;
+    pointer-events: none;
+}
+
+.community-header,
+.community-carousel,
+.community-pagination,
+.community-footer {
+    position: relative;
+    z-index: 2;
 }
 
 .community-header {
@@ -13,18 +34,250 @@
     margin: 0 auto 55px;
 }
 
+.community-label {
+    display: block;
+    font-family: cursive;
+    font-size: clamp(20px, 3vw, 34px);
+    color: #555;
+    margin-bottom: 8px;
+}
+
+.community-title {
+    font-size: clamp(42px, 7vw, 82px);
+    font-weight: 900;
+    color: #000;
+    letter-spacing: -3px;
+    line-height: 0.9;
+    text-transform: uppercase;
+}
+
+.community-subtitle {
+    max-width: 430px;
+    margin-top: 18px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #555;
+}
+
+.community-carousel {
+    width: 100%;
+}
+
+.community-track {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 80px;
+}
+
+.community-card {
+    width: 100%;
+    max-width: 1050px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 390px 1fr;
+    align-items: center;
+    gap: 60px;
+}
+
+.community-card:nth-child(even) {
+    grid-template-columns: 1fr 390px;
+}
+
+.community-card:nth-child(even) .community-photo-box {
+    grid-column: 2;
+    grid-row: 1;
+    transform: rotate(3deg);
+}
+
+.community-card:nth-child(even) .community-content {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.community-photo-box {
+    position: relative;
+    width: 390px;
+    height: 390px;
+    background: #fff;
+    border: 7px solid #fff;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.14);
+    transform: rotate(-3deg);
+}
+
+.community-photo-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.community-instagram {
+    position: absolute;
+    top: -18px;
+    left: -16px;
+    background: #000;
+    color: #fff;
+    padding: 8px 18px;
+    font-size: 14px;
+    font-weight: 700;
+    transform: rotate(-8deg);
+}
+
+.community-card:nth-child(even) .community-instagram {
+    left: auto;
+    right: -16px;
+    transform: rotate(8deg);
+}
+
+.community-content {
+    max-width: 460px;
+}
+
+.community-stars {
+    font-size: 22px;
+    color: #000;
+    letter-spacing: 5px;
+    margin-bottom: 18px;
+}
+
+.community-stars span {
+    margin-left: 10px;
+    font-size: 15px;
+    letter-spacing: 0;
+    font-weight: 700;
+}
+
+.community-content h3 {
+    font-size: clamp(28px, 3vw, 40px);
+    line-height: 1.1;
+    color: #000;
+    font-weight: 900;
+    margin-bottom: 18px;
+}
+
+.community-content p {
+    font-size: 16px;
+    line-height: 1.8;
+    color: #444;
+}
+
+.community-empty {
+    width: 100%;
+    max-width: 1050px;
+    padding: 40px;
+    background: #f7f7f7;
+    text-align: center;
+    color: #000;
+}
+
+.community-empty h3 {
+    font-weight: 900;
+    margin-bottom: 10px;
+}
+
 .community-footer {
     max-width: 1050px;
     margin: 100px auto 0;
 }
 
+.community-footer p {
+    max-width: 520px;
+    font-size: 16px;
+    line-height: 1.7;
+    color: #555;
+}
+
+/* =========================
+   PAGINAÇÃO
+========================= */
+
+.community-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    margin-top: 50px;
+}
+
+.community-page-btn {
+    width: 42px;
+    height: 42px;
+    border: none;
+    background: transparent;
+    font-size: 22px;
+    cursor: pointer;
+    color: #444;
+    transition: 0.25s;
+}
+
+.community-page-btn:hover {
+    color: #000;
+    transform: scale(1.08);
+}
+
+.community-page-numbers {
+    display: flex;
+    gap: 10px;
+}
+
+.community-page-number {
+    width: 36px;
+    height: 36px;
+    border: 1px solid #ddd;
+    background: #fff;
+    color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-weight: 700;
+    transition: 0.3s;
+}
+
+.community-page-number:hover,
+.community-page-number.active {
+    background: #000;
+    color: #fff;
+    border-color: #000;
+}
+
+/* =========================
+   RESPONSIVO TABLET
+========================= */
+
+@media (max-width: 991px) {
+    .community-card,
+    .community-card:nth-child(even) {
+        grid-template-columns: 330px 1fr;
+        gap: 40px;
+    }
+
+    .community-card:nth-child(even) .community-photo-box,
+    .community-card:nth-child(even) .community-content {
+        grid-column: auto;
+        grid-row: auto;
+    }
+
+    .community-photo-box {
+        width: 330px;
+        height: 330px;
+    }
+
+    .community-content h3 {
+        font-size: 30px;
+    }
+
+    .community-content p {
+        font-size: 15px;
+    }
+}
 
 /* =========================
    RESPONSIVO MOBILE
 ========================= */
 
 @media (max-width: 768px) {
-
     .community-section {
         padding: 60px 18px;
     }
@@ -37,7 +290,6 @@
         gap: 60px;
     }
 
-    /* AVALIAÇÕES ÍMPARES */
     .community-card:nth-child(odd) {
         display: grid;
         grid-template-columns: 180px 1fr;
@@ -46,7 +298,6 @@
         max-width: 100%;
     }
 
-    /* AVALIAÇÕES PARES */
     .community-card:nth-child(even) {
         display: grid;
         grid-template-columns: 1fr 180px;
@@ -109,6 +360,10 @@
         font-size: 11px;
         padding: 6px 12px;
     }
+
+    .community-footer {
+        margin-top: 70px;
+    }
 }
 
 /* =========================
@@ -116,7 +371,6 @@
 ========================= */
 
 @media (max-width: 480px) {
-
     .community-track {
         gap: 50px;
     }
@@ -161,47 +415,19 @@
         font-size: 10px;
         padding: 5px 10px;
     }
-}
 
-.community-pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 14px;
-    margin-top: 50px;
-}
+    .community-pagination {
+        gap: 8px;
+    }
 
-.community-page-btn {
-    border: none;
-    background: transparent;
-    font-size: 22px;
-    cursor: pointer;
-    color: #444;
-}
+    .community-page-btn {
+        width: 34px;
+        height: 34px;
+    }
 
-.community-page-numbers {
-    display: flex;
-    gap: 10px;
-}
-
-.community-page-number {
-    width: 36px;
-    height: 36px;
-
-    border: 1px solid #ddd;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    cursor: pointer;
-
-    font-weight: 700;
-    transition: .3s;
-}
-
-.community-page-number.active {
-    background: #000;
-    color: #fff;
-    border-color: #000;
+    .community-page-number {
+        width: 32px;
+        height: 32px;
+        font-size: 13px;
+    }
 }

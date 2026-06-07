@@ -7,6 +7,16 @@ class Product(models.Model):
     name = models.CharField(max_length=255)
     slug = models.SlugField(unique=True)
 
+    category = models.CharField(
+    max_length=30,
+    choices=[
+        ("termicas", "Térmicas"),
+        ("squeeze", "Squeeze"),
+        ("personalizadas", "Personalizadas"),
+    ],
+    default="termicas",
+)
+
     price = models.DecimalField(max_digits=10, decimal_places=2)
 
     image = models.ImageField(upload_to="products/")
@@ -22,13 +32,6 @@ class Product(models.Model):
     default_color_hex = models.CharField(
         max_length=20,
         default="#000000"
-    )
-
-    back_image = models.ImageField(
-        upload_to="products/",
-        blank=True,
-        null=True,
-        verbose_name="Imagem do verso"
     )
 
     available = models.BooleanField(default=True)

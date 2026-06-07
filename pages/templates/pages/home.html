@@ -10,7 +10,6 @@
 
 {% block content %}
 
-<!-- HERO PRINCIPAL -->
 <section class="hero-banner">
     <img src="{% static 'img/banners/home.jpg' %}" alt="Risk Clube" class="hero-image">
 
@@ -23,28 +22,52 @@
     </div>
 </section>
 
-<!-- LISTA DE PRODUTOS -->
+<section class="bottle-categories">
+
+    <div class="bottle-category-list">
+
+        {% for categoria in categorias %}
+            <a
+                href="?categoria={{ categoria.slug }}#products"
+                class="bottle-category-btn {% if categoria_atual == categoria.slug %}active{% endif %}"
+            >
+                {{ categoria.nome }}
+            </a>
+        {% endfor %}
+
+    </div>
+
+</section>
+
 <section class="home-products" id="products">
     <div class="home-product-grid">
 
         {% for product in products %}
 
-        <!-- CARD DO PRODUTO -->
-        <div class="product-card {% if product.is_vip %}product-card-vip{% endif %}">
-
-            <!-- LINK DA IMAGEM -->
             {% if product.is_vip %}
-            <a href="{% url 'products:vip_customization_choice' product.slug %}" class="home-product-image-link">
-                {% else %}
-                <a href="{{ product.get_absolute_url }}" class="home-product-image-link">
+                <a
+                    href="{% url 'customization:vip_choose_type' product.slug %}"
+                    class="product-card product-card-link product-card-vip"
+                >
+            {% else %}
+                <a
+                    href="{{ product.get_absolute_url }}"
+                    class="product-card product-card-link"
+                >
+            {% endif %}
+
+                <div class="home-product-image-link {% if product.is_vip %}vip-image-link{% endif %}">
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="home-product-image">
+                </div>
+
+                <div class="home-product-info">
+
+                    {% if product.is_vip %}
+                        <span class="vip-mini-label">
+                            Personalização exclusiva
+                        </span>
                     {% endif %}
 
-                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="home-product-image">
-
-                </a>
-
-                <!-- INFORMAÇÕES DO PRODUTO -->
-                <div class="home-product-info">
                     <h3 class="home-product-title">
                         {{ product.name }}
                     </h3>
@@ -59,23 +82,22 @@
                     </span>
                     {% endif %}
 
-                    <!-- BOTÃO DO PRODUTO -->
                     {% if product.is_vip %}
-                    <a href="{% url 'customization:vip_choose_type' product.slug %}" class="home-product-button">
-                        PERSONALIZAR
-                    </a>
+                        <span class="home-product-button">
+                            Personalizar
+                        </span>
                     {% else %}
-                    <a href="{{ product.get_absolute_url }}" class="home-product-button">
-                        COMPRAR
-                    </a>
+                        <span class="home-product-button">
+                            Comprar
+                        </span>
                     {% endif %}
+
                 </div>
 
-        </div>
+            </a>
 
         {% empty %}
 
-        <!-- MENSAGEM CASO NÃO TENHA PRODUTOS -->
         <p class="home-products-empty">
             Nenhum produto encontrado.
         </p>
@@ -85,10 +107,8 @@
     </div>
 </section>
 
-<!-- SEÇÃO COMUNIDADE -->
 <section class="community-section" id="comunidade">
 
-    <!-- CABEÇALHO -->
     <div class="community-header">
 
         <span class="community-label">
@@ -105,7 +125,6 @@
 
     </div>
 
-    <!-- AVALIAÇÕES -->
     <div class="community-carousel">
 
         <div class="community-track">
@@ -114,14 +133,10 @@
 
             <article class="community-card">
 
-                <!-- FOTO -->
                 <div class="community-photo-box">
 
                     {% if item.photo %}
-                        <img
-                            src="{{ item.photo.url }}"
-                            alt="{{ item.instagram }}"
-                        >
+                        <img src="{{ item.photo.url }}" alt="{{ item.instagram }}">
                     {% endif %}
 
                     <span class="community-instagram">
@@ -130,32 +145,26 @@
 
                 </div>
 
-                <!-- CONTEÚDO -->
                 <div class="community-content">
 
-                    <!-- ESTRELAS -->
                     <div class="community-stars">
 
                         {% for i in "12345" %}
-
                             {% if forloop.counter <= item.rating %}
                                 ★
                             {% else %}
                                 ☆
                             {% endif %}
-
                         {% endfor %}
 
                         <span>{{ item.rating }},0</span>
 
                     </div>
 
-                    <!-- TÍTULO -->
                     <h3>
                         {{ item.title }}
                     </h3>
 
-                    <!-- DESCRIÇÃO -->
                     <p>
                         {{ item.description }}
                     </p>
@@ -183,20 +192,21 @@
         </div>
 
     </div>
+
     <div class="community-pagination">
 
-    <button class="community-page-btn prev">
-        &#10094;
-    </button>
+        <button class="community-page-btn prev" type="button">
+            &#10094;
+        </button>
 
-    <div class="community-page-numbers"></div>
+        <div class="community-page-numbers"></div>
 
-    <button class="community-page-btn next">
-        &#10095;
-    </button>
+        <button class="community-page-btn next" type="button">
+            &#10095;
+        </button>
 
-</div>
-    <!-- TEXTO FINAL -->
+    </div>
+
     <div class="community-footer">
 
         <p>
@@ -211,72 +221,65 @@
 document.addEventListener("DOMContentLoaded", () => {
 
     const cards = [...document.querySelectorAll(".community-card")];
+    const numbersContainer = document.querySelector(".community-page-numbers");
+
+    if (!cards.length || !numbersContainer) {
+        return;
+    }
 
     const perPage = 3;
     const totalPages = Math.ceil(cards.length / perPage);
-
-    const numbersContainer =
-        document.querySelector(".community-page-numbers");
-
     let currentPage = 1;
 
-    function renderPage(page){
-
+    function renderPage(page) {
         currentPage = page;
 
-        cards.forEach((card,index)=>{
-
+        cards.forEach((card, index) => {
             const start = (page - 1) * perPage;
             const end = start + perPage;
 
-            card.style.display =
-                index >= start && index < end
-                ? "grid"
-                : "none";
+            card.style.display = index >= start && index < end ? "grid" : "none";
         });
 
         document
             .querySelectorAll(".community-page-number")
-            .forEach(btn=>btn.classList.remove("active"));
+            .forEach(btn => btn.classList.remove("active"));
 
-        document
-            .querySelector(`[data-page="${page}"]`)
-            .classList.add("active");
+        const activeBtn = document.querySelector(`[data-page="${page}"]`);
+
+        if (activeBtn) {
+            activeBtn.classList.add("active");
+        }
     }
 
-    for(let i=1;i<=totalPages;i++){
+    for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement("button");
 
-        const btn = document.createElement("div");
-
+        btn.type = "button";
         btn.className = "community-page-number";
         btn.dataset.page = i;
         btn.textContent = i;
 
-        btn.addEventListener("click",()=>renderPage(i));
+        btn.addEventListener("click", () => renderPage(i));
 
         numbersContainer.appendChild(btn);
     }
 
-    document
-        .querySelector(".prev")
-        .addEventListener("click",()=>{
+    document.querySelector(".prev").addEventListener("click", () => {
+        if (currentPage > 1) {
+            renderPage(currentPage - 1);
+        }
+    });
 
-            if(currentPage > 1){
-                renderPage(currentPage - 1);
-            }
-        });
-
-    document
-        .querySelector(".next")
-        .addEventListener("click",()=>{
-
-            if(currentPage < totalPages){
-                renderPage(currentPage + 1);
-            }
-        });
+    document.querySelector(".next").addEventListener("click", () => {
+        if (currentPage < totalPages) {
+            renderPage(currentPage + 1);
+        }
+    });
 
     renderPage(1);
 
 });
 </script>
+
 {% endblock %}

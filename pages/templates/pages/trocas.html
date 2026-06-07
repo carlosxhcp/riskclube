@@ -1,0 +1,162 @@
+{% extends 'pages/base.html' %}
+{% load static %}
+
+{% block title %}Trocas e Devoluções | Risk Clube{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/trocas.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<main class="exchange-page">
+
+    <section class="exchange-hero">
+        <span class="exchange-label">Atendimento Risk Clube</span>
+        <h1>Trocas e Devoluções</h1>
+        <p>
+            Queremos que sua experiência com a Risk Clube seja simples, segura e transparente.
+            Confira abaixo como funcionam nossas políticas de troca, devolução e reembolso.
+        </p>
+    </section>
+
+    <section class="exchange-container">
+
+        <div class="personalized-warning">
+            <div class="warning-icon">
+                <i class="bi bi-exclamation-triangle"></i>
+            </div>
+
+            <div>
+                <h2>Produtos personalizados não possuem troca</h2>
+                <p>
+                    Produtos feitos sob personalização, com nome, número, estampa exclusiva ou qualquer alteração
+                    solicitada pelo cliente, não poderão ser trocados ou devolvidos, exceto em caso de defeito de fabricação.
+                </p>
+            </div>
+        </div>
+
+        <div class="exchange-card highlight-card">
+            <h2>Prazo para solicitar</h2>
+            <p>
+                Você pode solicitar a troca ou devolução em até <strong>7 dias corridos</strong>
+                após o recebimento do pedido, conforme o Código de Defesa do Consumidor.
+            </p>
+        </div>
+
+        <div class="exchange-grid">
+
+            <div class="exchange-card">
+                <div class="exchange-icon">
+                    <i class="bi bi-arrow-repeat"></i>
+                </div>
+                <h3>Troca por tamanho ou produto</h3>
+                <p>
+                    Caso o tamanho não tenha ficado ideal ou você queira trocar por outro item,
+                    entre em contato com nossa equipe informando o número do pedido.
+                </p>
+            </div>
+
+            <div class="exchange-card">
+                <div class="exchange-icon">
+                    <i class="bi bi-box-seam"></i>
+                </div>
+                <h3>Condição do produto</h3>
+                <p>
+                    O produto deve estar sem sinais de uso, com etiqueta, embalagem original
+                    e acompanhado de todos os itens recebidos.
+                </p>
+            </div>
+
+            <div class="exchange-card">
+                <div class="exchange-icon">
+                    <i class="bi bi-credit-card"></i>
+                </div>
+                <h3>Reembolso</h3>
+                <p>
+                    Após recebermos e analisarmos o produto, o reembolso será processado conforme
+                    o método de pagamento utilizado na compra.
+                </p>
+            </div>
+
+            <div class="exchange-card">
+                <div class="exchange-icon">
+                    <i class="bi bi-truck"></i>
+                </div>
+                <h3>Envio do produto</h3>
+                <p>
+                    Nossa equipe enviará as orientações para postagem. O custo do frete pode variar
+                    conforme o motivo da solicitação.
+                </p>
+            </div>
+
+        </div>
+
+        <section class="exchange-steps">
+            <h2>Como solicitar uma troca ou devolução</h2>
+
+            <div class="steps-list">
+
+                <div class="step-item">
+                    <span>01</span>
+                    <div>
+                        <h4>Entre em contato</h4>
+                        <p>Envie uma mensagem para nossa equipe informando seu nome, e-mail e número do pedido.</p>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <span>02</span>
+                    <div>
+                        <h4>Aguarde as instruções</h4>
+                        <p>Nós iremos analisar sua solicitação e enviar o passo a passo para continuar o processo.</p>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <span>03</span>
+                    <div>
+                        <h4>Envie o produto</h4>
+                        <p>O item deverá ser enviado conforme as orientações recebidas pelo atendimento.</p>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <span>04</span>
+                    <div>
+                        <h4>Receba a solução</h4>
+                        <p>Após a análise, realizaremos a troca, crédito ou reembolso conforme o caso.</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="exchange-rules">
+            <h2>Importante</h2>
+
+            <ul>
+                <li>Produtos personalizados não possuem troca ou devolução, exceto em caso de defeito de fabricação.</li>
+                <li>Produtos com sinais de uso não poderão ser trocados ou devolvidos.</li>
+                <li>Não realizamos troca de produtos danificados por mau uso.</li>
+                <li>Itens promocionais podem seguir condições específicas de troca.</li>
+                <li>O prazo de análise começa após o recebimento do produto pela Risk Clube.</li>
+            </ul>
+        </section>
+
+        <section class="exchange-contact">
+            <h2>Precisa de ajuda?</h2>
+            <p>
+                Fale com nosso atendimento e envie os dados do seu pedido para iniciarmos sua solicitação.
+            </p>
+
+            <a href="/contato/" class="exchange-button">
+                Falar com atendimento
+            </a>
+        </section>
+
+    </section>
+
+</main>
+
+{% endblock %}
