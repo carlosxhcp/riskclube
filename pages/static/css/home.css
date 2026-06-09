@@ -47,7 +47,6 @@
     justify-content: center;
 
     background: rgba(0,0,0,.18);
-
     text-align: center;
 }
 
@@ -289,7 +288,6 @@
 
 .product-card-vip::after {
     content: "";
-
     position: absolute;
 
     width: 250px;
@@ -299,14 +297,11 @@
     right: -120px;
 
     border-radius: 50%;
-
     background: rgba(255,255,255,.05);
-
     filter: blur(40px);
 }
 
 @keyframes vipGradient {
-
     0% {
         background-position: 0% 50%;
     }
@@ -366,22 +361,6 @@
     background: #111;
     border-color: #111;
     color: #fff;
-}
-
-@media (max-width: 768px) {
-    .bottle-categories {
-        padding: 18px 12px;
-    }
-
-    .bottle-category-list {
-        gap: 8px;
-    }
-
-    .bottle-category-btn {
-        height: 34px;
-        padding: 0 14px;
-        font-size: 10px;
-    }
 }
 
 .product-card-link {
@@ -694,9 +673,4 @@
         width: 100%;
         max-width: 280px;
     }
-}
-
-
-#garrafas {
-    scroll-margin-top: 60px;
 }
