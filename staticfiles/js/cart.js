@@ -53,6 +53,20 @@ function getCookie(name) {
     return cookieValue;
 }
 
+function filterShippingOptions(options) {
+    if (!Array.isArray(options)) return [];
+
+    return options.filter(option => {
+        const text = `${option.company || ""} ${option.name || ""}`.toLowerCase();
+
+        const isJadlog = text.includes("jadlog");
+        const isLoggiExpress = text.includes("loggi") && text.includes("express");
+        const isCorreios = text.includes("correios") || text.includes("sedex") || text.includes("pac");
+
+        return !isJadlog && (isLoggiExpress || isCorreios);
+    });
+}
+
 // =============================
 // CONTADOR
 // =============================
@@ -293,8 +307,10 @@ async function calculateShipping() {
             return;
         }
 
+        data.options = filterShippingOptions(data.options);
+
         if (!data.options || data.options.length === 0) {
-            shippingOptionsBox.innerHTML = `<p>Nenhuma opção de frete encontrada.</p>`;
+            shippingOptionsBox.innerHTML = `<p>Nenhuma opção de frete disponível.</p>`;
             return;
         }
 

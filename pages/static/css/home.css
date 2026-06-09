@@ -5,22 +5,49 @@
     overflow: hidden;
 }
 
+.hero-slider {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
 .hero-image {
+    position: absolute;
+    inset: 0;
+
     width: 100%;
     height: 100%;
     object-fit: cover;
-    display: block;
+
+    transform: translateX(100%);
+    transition: transform 1.2s ease-in-out;
+
+    z-index: 1;
+}
+
+.hero-image.active {
+    transform: translateX(0);
+    z-index: 3;
+}
+
+.hero-image.prev {
+    transform: translateX(-100%);
+    z-index: 2;
 }
 
 .hero-overlay {
     position: absolute;
     inset: 0;
+    z-index: 10;
+
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: rgba(0, 0, 0, 0.18);
-    padding: 20px;
+
+    background: rgba(0,0,0,.18);
+
     text-align: center;
 }
 
@@ -367,4 +394,309 @@
 .product-card-link:hover {
     color: inherit;
     text-decoration: none;
+}
+
+.risk-choice-section {
+    width: 100%;
+    padding: 34px 22px;
+    background: #f4f1eb;
+}
+
+.risk-choice-grid {
+    max-width: 1320px;
+    margin: 0 auto;
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+}
+
+.risk-choice-card {
+    min-height: 330px;
+    position: relative;
+    overflow: hidden;
+
+    border-radius: 20px;
+    padding: 26px 24px;
+
+    display: block;
+    text-decoration: none;
+
+    transition: .35s ease;
+}
+
+.risk-choice-card:hover {
+    transform: translateY(-6px);
+}
+
+.risk-choice-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 48px;
+    height: 36px;
+
+    border-radius: 9px;
+
+    font-size: 16px;
+    font-weight: 900;
+    margin-bottom: 28px;
+}
+
+.risk-choice-content {
+    position: relative;
+    z-index: 3;
+    width: 68%;
+}
+
+.risk-choice-card h3 {
+    font-size: clamp(28px, 2.8vw, 42px);
+    line-height: .95;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -1.4px;
+    margin-bottom: 16px;
+}
+
+.risk-choice-card p {
+    max-width: 280px;
+    font-size: 14px;
+    line-height: 1.45;
+    font-weight: 700;
+    margin-bottom: 30px;
+}
+
+.risk-choice-features {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    max-width: 340px;
+    margin-bottom: 26px;
+}
+
+.card-ready .risk-choice-features {
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 280px;
+}
+
+.risk-choice-features div {
+    text-align: center;
+}
+
+.feature-icon {
+    display: block;
+    height: 32px;
+    margin-bottom: 8px;
+
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.risk-choice-features small {
+    display: block;
+    font-size: 11px;
+    line-height: 1.25;
+    font-weight: 800;
+}
+
+.risk-choice-button {
+    width: 245px;
+    height: 56px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 22px;
+
+    border-radius: 10px;
+
+    font-size: 13px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .2px;
+
+    transition: .3s ease;
+}
+
+.risk-choice-button b {
+    font-size: 25px;
+    line-height: 1;
+    font-weight: 400;
+}
+
+.risk-choice-card img {
+    position: absolute;
+    right: -2px;
+    bottom: 0;
+
+    height: 92%;
+    max-width: 42%;
+
+    object-fit: contain;
+    z-index: 2;
+
+    transition: .35s ease;
+}
+
+.risk-choice-card:hover img {
+    transform: scale(1.04) translateY(-4px);
+}
+
+.card-ready {
+    background: #fff;
+    color: #111;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,.04);
+}
+
+.card-ready .risk-choice-number {
+    background: #eeeeee;
+    color: #111;
+}
+
+.card-ready p,
+.card-ready .risk-choice-features small {
+    color: #555;
+}
+
+.card-ready .feature-icon {
+    color: #777;
+}
+
+.card-ready .risk-choice-button {
+    background: #eeeeee;
+    color: #111;
+}
+
+.card-ready .risk-choice-button:hover {
+    background: #111;
+    color: #fff;
+}
+
+.card-custom {
+    background: #080808;
+    color: #fff;
+}
+
+.card-custom .risk-choice-number {
+    background: #000;
+    color: #fff;
+    box-shadow: 0 0 0 1px rgba(255,255,255,.08);
+}
+
+.card-custom p,
+.card-custom .risk-choice-features small {
+    color: rgba(255,255,255,.7);
+}
+
+.card-custom .feature-icon {
+    color: rgba(255,255,255,.9);
+}
+
+.card-custom .risk-choice-button {
+    background: #fff;
+    color: #111;
+}
+
+.card-custom .risk-choice-button:hover {
+    background: #e9e9e9;
+}
+
+.card-exclusive {
+    background: #fff;
+    color: #7b27c9;
+    box-shadow: inset 0 0 0 1px rgba(123,39,201,.10);
+}
+
+.card-exclusive .risk-choice-number {
+    background: #7b27c9;
+    color: #fff;
+}
+
+.card-exclusive p,
+.card-exclusive .risk-choice-features small {
+    color: #4b4b4b;
+}
+
+.card-exclusive .feature-icon {
+    color: #8a33da;
+}
+
+.card-exclusive .risk-choice-button {
+    background: linear-gradient(135deg, #7b27c9, #922ee8);
+    color: #fff;
+}
+
+.card-exclusive .risk-choice-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(123,39,201,.25);
+}
+
+@media (max-width: 1100px) {
+    .risk-choice-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .risk-choice-card {
+        min-height: 330px;
+    }
+
+    .risk-choice-content {
+        width: 62%;
+    }
+
+    .risk-choice-card img {
+        max-width: 34%;
+        right: 24px;
+    }
+}
+
+@media (max-width: 620px) {
+    .risk-choice-section {
+        padding: 22px 12px;
+    }
+
+    .risk-choice-card {
+        min-height: 500px;
+        padding: 24px 18px;
+    }
+
+    .risk-choice-content {
+        width: 100%;
+    }
+
+    .risk-choice-card img {
+        height: 250px;
+        max-width: 58%;
+        right: 10px;
+        bottom: 10px;
+        opacity: .95;
+    }
+
+    .risk-choice-card h3 {
+        font-size: 31px;
+    }
+
+    .risk-choice-card p {
+        max-width: 100%;
+        font-size: 13px;
+        margin-bottom: 24px;
+    }
+
+    .risk-choice-features,
+    .card-ready .risk-choice-features {
+        grid-template-columns: repeat(2, 1fr);
+        max-width: 260px;
+    }
+
+    .risk-choice-button {
+        width: 100%;
+        max-width: 280px;
+    }
+}
+
+
+#garrafas {
+    scroll-margin-top: 60px;
 }

@@ -11,7 +11,11 @@
 {% block content %}
 
 <section class="hero-banner">
-    <img src="{% static 'img/banners/home.jpg' %}" alt="Risk Clube" class="hero-image">
+    <div class="hero-slider">
+        <img src="{% static 'img/banners/home.jpg' %}" alt="Risk Clube" class="hero-image active">
+        <img src="{% static 'img/banners/home.jpg' %}" alt="Risk Clube" class="hero-image">
+        <img src="{% static 'img/banners/home.jpg' %}" alt="Risk Clube" class="hero-image">
+    </div>
 
     <div class="hero-overlay">
         <h1 class="hero-title">RISK CLUBE</h1>
@@ -21,23 +25,104 @@
         </a>
     </div>
 </section>
+<div id="garrafas"></div>
+<section class="risk-choice-section">
+    <div class="risk-choice-grid" style="scroll-margin-top: 120px;">
 
-<!-- <section class="bottle-categories">
+        <a href="#products" class="risk-choice-card card-ready">
+            <span class="risk-choice-number">01</span>
 
-    <div class="bottle-category-list">
+            <div class="risk-choice-content">
+                <h3>Garrafas<br>Prontas</h3>
+                <p>Escolha um modelo já criado e personalize com seu nome.</p>
 
-        {% for categoria in categorias %}
-            <a
-                href="?categoria={{ categoria.slug }}#products"
-                class="bottle-category-btn {% if categoria_atual == categoria.slug %}active{% endif %}"
-            >
-                {{ categoria.nome }}
-            </a>
-        {% endfor %}
+                <div class="risk-choice-features">
+                    <div>
+                        <span class="feature-icon">▧</span>
+                        <small>Modelos<br>exclusivos</small>
+                    </div>
+                    <div>
+                        <span class="feature-icon">T</span>
+                        <small>Nome<br>opcional</small>
+                    </div>
+                    <div>
+                        <span class="feature-icon">▣</span>
+                        <small>Entrega<br>mais rápida</small>
+                    </div>
+                </div>
+
+                <span class="risk-choice-button">Ver modelos <b>→</b></span>
+            </div>
+
+            <img src="{% static 'img/cards/garrafa-pronta.png' %}" alt="Garrafas prontas">
+        </a>
+
+        <a href="#" class="risk-choice-card card-custom">
+            <span class="risk-choice-number">02</span>
+
+            <div class="risk-choice-content">
+                <h3>Monte sua<br>Garrafa</h3>
+                <p>Personalize do seu jeito escolhendo fontes, símbolos, categorias e mais.</p>
+
+                <div class="risk-choice-features">
+                    <div>
+                        <span class="feature-icon">Aa</span>
+                        <small>Escolha<br>fontes</small>
+                    </div>
+                    <div>
+                        <span class="feature-icon">◇</span>
+                        <small>Escolha<br>símbolos</small>
+                    </div>
+                    <div>
+                        <span class="feature-icon">▦</span>
+                        <small>Escolha<br>categorias</small>
+                    </div>
+                    <div>
+                        <span class="feature-icon">✦</span>
+                        <small>Posicione<br>como quiser</small>
+                    </div>
+                </div>
+
+                <span class="risk-choice-button">Personalizar agora <b>→</b></span>
+            </div>
+
+            <img src="{% static 'img/cards/monte-sua-garrafa.png' %}" alt="Monte sua garrafa">
+        </a>
+
+        <a href="#" class="risk-choice-card card-exclusive">
+            <span class="risk-choice-number">03</span>
+
+            <div class="risk-choice-content">
+                <h3>Criação<br>Exclusiva</h3>
+                <p>Envie suas ideias ou arte e criamos uma garrafa 100% exclusiva para você.</p>
+
+                <div class="risk-choice-features">
+                    <div>
+                        <span class="feature-icon">☁</span>
+                        <small>Envie sua<br>arte ou ideia</small>
+                    </div>
+                    <div>
+                        <span class="feature-icon">▧</span>
+                        <small>Arte criada<br>sob medida</small>
+                    </div>
+                    <div>
+                        <span class="feature-icon">◇</span>
+                        <small>100%<br>exclusivo</small>
+                    </div>
+                    <div>
+                        <span class="feature-icon">✧</span>
+                        <small>Aprovação<br>da arte</small>
+                    </div>
+                </div>
+
+                <span class="risk-choice-button">Criar do zero <b>→</b></span>
+            </div>
+
+            <img src="{% static 'img/cards/criacao-exclusiva.png' %}" alt="Criação exclusiva">
+        </a>
 
     </div>
-
-</section> -->
+</section>
 
 <section class="home-products" id="products">
     <div class="home-product-grid">
@@ -45,15 +130,9 @@
         {% for product in products %}
 
             {% if product.is_vip %}
-                <a
-                    href="{% url 'customization:vip_choose_type' product.slug %}"
-                    class="product-card product-card-link product-card-vip"
-                >
+                <a href="{% url 'customization:vip_choose_type' product.slug %}" class="product-card product-card-link product-card-vip">
             {% else %}
-                <a
-                    href="{{ product.get_absolute_url }}"
-                    class="product-card product-card-link"
-                >
+                <a href="{{ product.get_absolute_url }}" class="product-card product-card-link">
             {% endif %}
 
                 <div class="home-product-image-link {% if product.is_vip %}vip-image-link{% endif %}">
@@ -63,9 +142,9 @@
                 <div class="home-product-info">
 
                     {% if product.is_vip %}
-                        <span class="vip-mini-label">
-                            Personalização exclusiva
-                        </span>
+                    <span class="vip-mini-label">
+                        Personalização exclusiva
+                    </span>
                     {% endif %}
 
                     <h3 class="home-product-title">
@@ -82,15 +161,13 @@
                     </span>
                     {% endif %}
 
-                    {% if product.is_vip %}
-                        <span class="home-product-button">
+                    <span class="home-product-button">
+                        {% if product.is_vip %}
                             Personalizar
-                        </span>
-                    {% else %}
-                        <span class="home-product-button">
+                        {% else %}
                             Comprar
-                        </span>
-                    {% endif %}
+                        {% endif %}
+                    </span>
 
                 </div>
 
@@ -110,10 +187,7 @@
 <section class="community-section" id="comunidade">
 
     <div class="community-header">
-
-        <span class="community-label">
-            Vozes reais. Estilo que inspira.
-        </span>
+        <span class="community-label">Vozes reais. Estilo que inspira.</span>
 
         <h2 class="community-title">
             COMUNIDADE
@@ -122,11 +196,9 @@
         <p class="community-subtitle">
             Avaliações de pessoas que usam, falam e vivem o estilo RISK.
         </p>
-
     </div>
 
     <div class="community-carousel">
-
         <div class="community-track">
 
             {% for item in community_images %}
@@ -134,7 +206,6 @@
             <article class="community-card">
 
                 <div class="community-photo-box">
-
                     {% if item.photo %}
                         <img src="{{ item.photo.url }}" alt="{{ item.instagram }}">
                     {% endif %}
@@ -142,13 +213,11 @@
                     <span class="community-instagram">
                         @{{ item.instagram }}
                     </span>
-
                 </div>
 
                 <div class="community-content">
 
                     <div class="community-stars">
-
                         {% for i in "12345" %}
                             {% if forloop.counter <= item.rating %}
                                 ★
@@ -158,16 +227,11 @@
                         {% endfor %}
 
                         <span>{{ item.rating }},0</span>
-
                     </div>
 
-                    <h3>
-                        {{ item.title }}
-                    </h3>
+                    <h3>{{ item.title }}</h3>
 
-                    <p>
-                        {{ item.description }}
-                    </p>
+                    <p>{{ item.description }}</p>
 
                 </div>
 
@@ -176,43 +240,25 @@
             {% empty %}
 
             <div class="community-empty">
-
-                <h3>
-                    Seja o primeiro a avaliar!
-                </h3>
-
-                <p>
-                    Ainda não existem avaliações cadastradas.
-                </p>
-
+                <h3>Seja o primeiro a avaliar!</h3>
+                <p>Ainda não existem avaliações cadastradas.</p>
             </div>
 
             {% endfor %}
 
         </div>
-
     </div>
 
     <div class="community-pagination">
-
-        <button class="community-page-btn prev" type="button">
-            &#10094;
-        </button>
-
+        <button class="community-page-btn prev" type="button">&#10094;</button>
         <div class="community-page-numbers"></div>
-
-        <button class="community-page-btn next" type="button">
-            &#10095;
-        </button>
-
+        <button class="community-page-btn next" type="button">&#10095;</button>
     </div>
 
     <div class="community-footer">
-
         <p>
             Compartilhe sua experiência com a RISK e faça parte da nossa comunidade.
         </p>
-
     </div>
 
 </section>
@@ -220,66 +266,57 @@
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
-    const cards = [...document.querySelectorAll(".community-card")];
-    const numbersContainer = document.querySelector(".community-page-numbers");
+    const slides = [...document.querySelectorAll(".hero-image")];
 
-    if (!cards.length || !numbersContainer) {
-        return;
-    }
+    if (slides.length <= 1) return;
 
-    const perPage = 3;
-    const totalPages = Math.ceil(cards.length / perPage);
-    let currentPage = 1;
+    let current = 0;
+    let isAnimating = false;
 
-    function renderPage(page) {
-        currentPage = page;
-
-        cards.forEach((card, index) => {
-            const start = (page - 1) * perPage;
-            const end = start + perPage;
-
-            card.style.display = index >= start && index < end ? "grid" : "none";
-        });
-
-        document
-            .querySelectorAll(".community-page-number")
-            .forEach(btn => btn.classList.remove("active"));
-
-        const activeBtn = document.querySelector(`[data-page="${page}"]`);
-
-        if (activeBtn) {
-            activeBtn.classList.add("active");
-        }
-    }
-
-    for (let i = 1; i <= totalPages; i++) {
-        const btn = document.createElement("button");
-
-        btn.type = "button";
-        btn.className = "community-page-number";
-        btn.dataset.page = i;
-        btn.textContent = i;
-
-        btn.addEventListener("click", () => renderPage(i));
-
-        numbersContainer.appendChild(btn);
-    }
-
-    document.querySelector(".prev").addEventListener("click", () => {
-        if (currentPage > 1) {
-            renderPage(currentPage - 1);
-        }
+    slides.forEach((slide, index) => {
+        slide.classList.remove("active", "prev");
+        slide.style.transform = index === 0 ? "translateX(0)" : "translateX(100%)";
+        slide.style.zIndex = index === 0 ? "3" : "1";
     });
 
-    document.querySelector(".next").addEventListener("click", () => {
-        if (currentPage < totalPages) {
-            renderPage(currentPage + 1);
-        }
-    });
+    setInterval(() => {
 
-    renderPage(1);
+        if (isAnimating) return;
+
+        isAnimating = true;
+
+        const currentSlide = slides[current];
+        const nextIndex = (current + 1) % slides.length;
+        const nextSlide = slides[nextIndex];
+
+        nextSlide.style.transition = "none";
+        nextSlide.style.transform = "translateX(100%)";
+        nextSlide.style.zIndex = "3";
+
+        currentSlide.style.zIndex = "2";
+
+        nextSlide.offsetHeight;
+
+        currentSlide.style.transition = "transform 1.2s ease-in-out";
+        nextSlide.style.transition = "transform 1.2s ease-in-out";
+
+        currentSlide.style.transform = "translateX(-100%)";
+        nextSlide.style.transform = "translateX(0)";
+
+        setTimeout(() => {
+            currentSlide.style.transition = "none";
+            currentSlide.style.transform = "translateX(100%)";
+            currentSlide.style.zIndex = "1";
+
+            current = nextIndex;
+            isAnimating = false;
+        }, 1200);
+
+    }, 7000);
 
 });
 </script>
+
+
 
 {% endblock %}
