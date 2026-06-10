@@ -70,6 +70,7 @@ class ProductAdmin(admin.ModelAdmin):
         "preview",
         "name",
         "category",
+        "engraving_position",
         "price",
         "available",
         "created",
@@ -83,6 +84,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_filter = (
         "available",
         "category",
+        "engraving_position",
         "created",
     )
 
@@ -97,6 +99,7 @@ class ProductAdmin(admin.ModelAdmin):
 
     readonly_fields = (
         "preview",
+        "back_preview",
         "created",
     )
 
@@ -116,17 +119,25 @@ class ProductAdmin(admin.ModelAdmin):
             "fields": (
                 "image",
                 "image_hover",
+                "back_preview",
+                "back_image",
             )
         }),
 
-        ("3. Cor principal", {
+        ("3. Gravação", {
+            "fields": (
+                "engraving_position",
+            )
+        }),
+
+        ("4. Cor principal", {
             "fields": (
                 "default_color_name",
                 "default_color_hex",
             )
         }),
 
-        ("4. Status", {
+        ("5. Status", {
             "fields": (
                 "available",
                 "created",
@@ -147,4 +158,14 @@ class ProductAdmin(admin.ModelAdmin):
             )
         return "Sem imagem"
 
-    preview.short_description = "Prévia"
+    preview.short_description = "Frente"
+
+    def back_preview(self, obj):
+        if obj and obj.back_image:
+            return format_html(
+                '<img src="{}" style="width:80px;height:80px;object-fit:cover;border-radius:8px;border:1px solid #ddd;">',
+                obj.back_image.url
+            )
+        return "Sem imagem de costas"
+
+    back_preview.short_description = "Costas"

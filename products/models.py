@@ -10,6 +10,12 @@ class Product(models.Model):
         ("personalizadas", "Personalizadas"),
     ]
 
+    ENGRAVING_POSITION_CHOICES = [
+        ("front", "Frente"),
+        ("back", "Costas"),
+        ("front_back", "Frente e costas"),
+    ]
+
     name = models.CharField(max_length=255)
     slug = models.SlugField(unique=True, blank=True)
 
@@ -21,14 +27,33 @@ class Product(models.Model):
 
     price = models.DecimalField(max_digits=10, decimal_places=2)
 
-    image = models.ImageField(upload_to="products/")
+    image = models.ImageField(
+        upload_to="products/",
+        verbose_name="Imagem da frente"
+    )
+
+    back_image = models.ImageField(
+        upload_to="products/back/",
+        blank=True,
+        null=True,
+        verbose_name="Imagem das costas / verso"
+    )
+
     image_hover = models.ImageField(
         upload_to="products/",
         blank=True,
-        null=True
+        null=True,
+        verbose_name="Imagem hover"
     )
 
     description = models.TextField(blank=True)
+
+    engraving_position = models.CharField(
+        max_length=20,
+        choices=ENGRAVING_POSITION_CHOICES,
+        default="front",
+        verbose_name="Opções de gravação"
+    )
 
     default_color_name = models.CharField(
         max_length=50,

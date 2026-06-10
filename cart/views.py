@@ -59,8 +59,7 @@ def get_cart_payload(request):
             "name": item.get("name", "Produto"),
             "size": item.get("size", ""),
             "color": item.get("color", ""),
-            "engraving_name": item.get("engraving_name", ""),
-            "engraving_image": item.get("engraving_image", ""),
+            "custom_name": item.get("custom_name", ""),
             "quantity": quantity,
             "price": float(price),
             "subtotal": float(item_subtotal),
@@ -78,6 +77,7 @@ def get_cart_payload(request):
             "cep": shipping.get("cep", "") if shipping else "",
             "icon": "",
         }
+
         request.session["shipping"] = shipping
         request.session.modified = True
         shipping_price = Decimal("0.00")
@@ -90,6 +90,7 @@ def get_cart_payload(request):
         shipping_price = to_decimal(shipping.get("price", 0)) if shipping else Decimal("0.00")
 
     remaining = FREE_SHIPPING_LIMIT - subtotal
+
     if remaining < 0:
         remaining = Decimal("0.00")
 
@@ -133,19 +134,14 @@ def cart_add_ajax(request):
 
     size = data.get("size") or "Único"
     color = data.get("color") or ""
-    engraving_name = data.get("engraving_name") or ""
-    engraving_image = data.get("engraving_image") or ""
+    custom_name = str(data.get("custom_name") or "").strip()[:20]
 
     product = get_object_or_404(Product, id=product_id)
 
     cart = request.session.get("cart", {})
-    cart_key = f"{product.id}_{color}_{size}_{engraving_name}"
+    cart_key = f"{product.id}_{color}_{size}_{custom_name}"
 
-    final_image = (
-        data.get("image")
-        or engraving_image
-        or (product.image.url if product.image else "")
-    )
+    final_image = data.get("image") or (product.image.url if product.image else "")
 
     if cart_key in cart:
         cart[cart_key]["quantity"] = int(cart[cart_key].get("quantity", 1)) + quantity
@@ -157,8 +153,7 @@ def cart_add_ajax(request):
             "quantity": quantity,
             "size": size,
             "color": color,
-            "engraving_name": engraving_name,
-            "engraving_image": engraving_image,
+            "custom_name": custom_name,
             "image": final_image,
         }
 
@@ -495,7 +490,7 @@ def checkout_infinitepay_cart(request):
         name = item.get("name", "Produto")
         size = item.get("size", "")
         color = item.get("color", "")
-        engraving_name = item.get("engraving_name", "")
+        custom_name = item.get("custom_name", "")
 
         description_parts = [name]
 
@@ -505,8 +500,8 @@ def checkout_infinitepay_cart(request):
         if size:
             description_parts.append(f"Tamanho: {size}")
 
-        if engraving_name:
-            description_parts.append(f"Gravação: {engraving_name}")
+        if custom_name:
+            description_parts.append(f"Nome: {custom_name}")
 
         items.append({
             "quantity": int(item.get("quantity", 1)),
