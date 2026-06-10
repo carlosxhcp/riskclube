@@ -3,50 +3,99 @@
 ========================= */
 
 .vip-custom-page {
-    min-height: 100vh;
+    min-height: auto;
     padding: 55px 20px 80px;
     position: relative;
     overflow: hidden;
-    background: #f4f4f4;
+    background: #e5e4e0;
 }
+
+/* LUZ CLARA ANIMADA */
 
 .vip-custom-page::before {
     content: "";
     position: absolute;
-    inset: 0;
-    background: linear-gradient(120deg, #ffffff, #f1f1f1, #e7e7e7, #ffffff);
-    background-size: 300% 300%;
-    animation: vipFlowBackground 8s linear infinite;
+    width: 95vw;
+    height: 95vw;
+    left: -30vw;
+    top: -35vw;
+    border-radius: 50%;
+    background: radial-gradient(
+    circle,
+    rgba(255,255,255,1) 0%,
+    rgba(255,255,255,.95) 30%,
+    rgba(255,255,255,.55) 55%,
+    transparent 75%
+);
+    animation: vipGlowOne 10s ease-in-out infinite alternate;
     z-index: 0;
 }
+
+/* LUZ CINZA ANIMADA */
 
 .vip-custom-page::after {
     content: "";
     position: absolute;
-    inset: 0;
-    background: linear-gradient(120deg, transparent, rgba(255,255,255,.75), transparent);
-    transform: translateX(-100%);
-    animation: vipLightMove 5s linear infinite;
+    width: 90vw;
+    height: 90vw;
+    right: -28vw;
+    bottom: -35vw;
+    border-radius: 50%;
+    background: radial-gradient(
+    circle,
+    rgba(190,190,190,.9) 0%,
+    rgba(215,215,215,.6) 40%,
+    transparent 75%
+);
+    animation: vipGlowTwo 12s ease-in-out infinite alternate;
     z-index: 1;
     pointer-events: none;
 }
 
-@keyframes vipFlowBackground {
-    from { background-position: 0% 50%; }
-    to { background-position: 300% 50%; }
+/* MOVIMENTO MAIS VISÍVEL DA PRIMEIRA LUZ */
+
+@keyframes vipGlowOne {
+    0% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    100% {
+        transform: translate(70vw, 50vh) scale(1.4);
+    }
 }
 
-@keyframes vipLightMove {
-    from { transform: translateX(-100%); }
-    to { transform: translateX(100%); }
+/* MOVIMENTO DA SEGUNDA LUZ */
+
+@keyframes vipGlowTwo {
+    0% {
+        transform: translate(15%, 10%) scale(1);
+    }
+
+    50% {
+        transform: translate(-10%, -5%) scale(1.2);
+    }
+
+    100% {
+        transform: translate(-20%, -15%) scale(1);
+    }
 }
 
-/* TOPO */
+/* =========================
+   TOPO
+========================= */
+
+.vip-custom-header,
+.vip-options-grid,
+.vip-benefits-wrapper {
+    position: relative;
+    z-index: 5;
+}
+
 
 .vip-custom-header {
     text-align: center;
     position: relative;
-    z-index: 3;
+    z-index: 5;
     margin-bottom: 28px;
 }
 
@@ -63,7 +112,9 @@
     font-weight: 600;
 }
 
-/* CARDS */
+/* =========================
+   CARDS
+========================= */
 
 .vip-options-grid {
     width: min(760px, 100%);
@@ -92,7 +143,9 @@
     color: inherit;
 }
 
-/* IMAGEM */
+/* =========================
+   IMAGEM
+========================= */
 
 .vip-option-image-box {
     height: 330px;
@@ -113,7 +166,9 @@
     display: block;
 }
 
-/* GRUPO */
+/* =========================
+   GRUPO DE GARRAFAS
+========================= */
 
 .vip-group-preview .vip-bottle {
     position: absolute;
@@ -147,7 +202,9 @@
     z-index: 2;
 }
 
-/* TÍTULO */
+/* =========================
+   TÍTULO DO CARD
+========================= */
 
 .vip-option-title-row {
     display: flex;
@@ -175,7 +232,9 @@
     font-weight: 600;
 }
 
-/* INFOS */
+/* =========================
+   INFORMAÇÕES DO CARD
+========================= */
 
 .vip-option-info {
     padding: 16px 0 12px;
@@ -200,7 +259,9 @@
     color: #19c765;
 }
 
-/* BOTÃO */
+/* =========================
+   BOTÃO DO CARD
+========================= */
 
 .vip-option-button {
     width: 100%;
@@ -220,7 +281,9 @@
     background: #222;
 }
 
-/* BENEFÍCIOS NOVO ESTILO */
+/* =========================
+   BENEFÍCIOS
+========================= */
 
 .vip-benefits-wrapper {
     width: min(760px, 100%);
@@ -271,7 +334,9 @@
     color: #19c765;
 }
 
-/* ESCONDE AVISO ANTIGO */
+/* =========================
+   ESCONDE AVISOS ANTIGOS
+========================= */
 
 .vip-warning-box {
     display: none;
@@ -287,8 +352,9 @@
 
 @media (max-width: 768px) {
     .vip-custom-page {
-        padding: 24px 10px 55px;
-        background: #f4f4f4;
+         padding: 24px 10px 25px;
+         min-height: 80vh;
+
     }
 
     .vip-custom-header {
@@ -376,42 +442,42 @@
     }
 
     .vip-benefits-wrapper {
-        margin-top: 48px;
+        margin-top: 28px;
         width: 100%;
     }
 
     .vip-benefits-box {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 18px 10px;
+        gap: 10px;
     }
 
     .vip-benefit-item {
-        min-height: 48px;
+        min-height: 58px;
         padding: 10px 12px;
         gap: 10px;
+        display: flex;
+        align-items: center;
         box-shadow: 0 8px 22px rgba(0,0,0,.05);
     }
 
-    .vip-benefit-item:nth-child(1) {
-        grid-column: 1 / 2;
+    .vip-benefit-item:nth-child(1),
+    .vip-benefit-item:nth-child(2),
+    .vip-benefit-item:nth-child(3),
+    .vip-benefit-item:nth-child(4) {
+        grid-column: auto;
     }
-
     .vip-benefit-item:nth-child(2) {
-        grid-column: 2 / 3;
         background: #eafff1;
     }
 
-    .vip-benefit-item:nth-child(3) {
-        grid-column: 2 / 3;
-    }
-
     .vip-benefit-item:nth-child(4) {
-         display: flex;
+        display: flex;
     }
 
     .vip-benefit-item i {
         font-size: 17px;
+        flex-shrink: 0;
     }
 
     .vip-benefit-item strong {

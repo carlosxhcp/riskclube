@@ -24,6 +24,12 @@
             SHOP NOW
         </a>
     </div>
+
+    <div class="hero-dots">
+        <span class="hero-dot active"></span>
+        <span class="hero-dot"></span>
+        <span class="hero-dot"></span>
+    </div>
 </section>
 <div id="garrafas"></div>
 
@@ -179,11 +185,12 @@
 
         {% for product in products %}
 
-            {% if product.is_vip %}
-                <a href="{% url 'customization:vip_choose_type' product.slug %}" class="product-card product-card-link product-card-vip">
+        {% if product.is_vip %}
+        <a href="{% url 'customization:vip_choose_type' product.slug %}"
+            class="product-card product-card-link product-card-vip">
             {% else %}
-                <a href="{{ product.get_absolute_url }}" class="product-card product-card-link">
-            {% endif %}
+            <a href="{{ product.get_absolute_url }}" class="product-card product-card-link">
+                {% endif %}
 
                 <div class="home-product-image-link {% if product.is_vip %}vip-image-link{% endif %}">
                     <img src="{{ product.image.url }}" alt="{{ product.name }}" class="home-product-image">
@@ -213,9 +220,9 @@
 
                     <span class="home-product-button">
                         {% if product.is_vip %}
-                            Personalizar
+                        Personalizar
                         {% else %}
-                            Comprar
+                        Comprar
                         {% endif %}
                     </span>
 
@@ -223,26 +230,21 @@
 
             </a>
 
-        {% empty %}
+            {% empty %}
 
-        <p class="home-products-empty">
-            Nenhum produto encontrado.
-        </p>
+            <p class="home-products-empty">
+                Nenhum produto encontrado.
+            </p>
 
-        {% endfor %}
+            {% endfor %}
 
     </div>
 </section>
 
 <section class="community-section" id="comunidade">
-
     <div class="community-header">
         <span class="community-label">Vozes reais. Estilo que inspira.</span>
-
-        <h2 class="community-title">
-            COMUNIDADE
-        </h2>
-
+        <h2 class="community-title">COMUNIDADE</h2>
         <p class="community-subtitle">
             Avaliações de pessoas que usam, falam e vivem o estilo RISK.
         </p>
@@ -250,23 +252,17 @@
 
     <div class="community-carousel">
         <div class="community-track">
-
             {% for item in community_images %}
-
             <article class="community-card">
-
                 <div class="community-photo-box">
                     {% if item.photo %}
                         <img src="{{ item.photo.url }}" alt="{{ item.instagram }}">
                     {% endif %}
 
-                    <span class="community-instagram">
-                        @{{ item.instagram }}
-                    </span>
+                    <span class="community-instagram">@{{ item.instagram }}</span>
                 </div>
 
                 <div class="community-content">
-
                     <div class="community-stars">
                         {% for i in "12345" %}
                             {% if forloop.counter <= item.rating %}
@@ -275,27 +271,19 @@
                                 ☆
                             {% endif %}
                         {% endfor %}
-
                         <span>{{ item.rating }},0</span>
                     </div>
 
                     <h3>{{ item.title }}</h3>
-
                     <p>{{ item.description }}</p>
-
                 </div>
-
             </article>
-
             {% empty %}
-
             <div class="community-empty">
                 <h3>Seja o primeiro a avaliar!</h3>
                 <p>Ainda não existem avaliações cadastradas.</p>
             </div>
-
             {% endfor %}
-
         </div>
     </div>
 
@@ -304,69 +292,118 @@
         <div class="community-page-numbers"></div>
         <button class="community-page-btn next" type="button">&#10095;</button>
     </div>
-
-    <div class="community-footer">
-        <p>
-            Compartilhe sua experiência com a RISK e faça parte da nossa comunidade.
-        </p>
-    </div>
-
 </section>
 
 <script>
+    document.addEventListener("DOMContentLoaded", () => {
+
+        const slides = [...document.querySelectorAll(".hero-image")];
+        const dots = [...document.querySelectorAll(".hero-dot")];
+        function updateDots(index) {
+            dots.forEach(dot => dot.classList.remove("active"));
+
+            if (dots[index]) {
+                dots[index].classList.add("active");
+            }
+        }
+        if (slides.length <= 1) return;
+
+        let current = 0;
+        let isAnimating = false;
+
+        slides.forEach((slide, index) => {
+            slide.classList.remove("active", "prev");
+            slide.style.transform = index === 0 ? "translateX(0)" : "translateX(100%)";
+            slide.style.zIndex = index === 0 ? "3" : "1";
+        });
+
+        setInterval(() => {
+
+            if (isAnimating) return;
+
+            isAnimating = true;
+
+            const currentSlide = slides[current];
+            const nextIndex = (current + 1) % slides.length;
+            const nextSlide = slides[nextIndex];
+
+            nextSlide.style.transition = "none";
+            nextSlide.style.transform = "translateX(100%)";
+            nextSlide.style.zIndex = "3";
+
+            currentSlide.style.zIndex = "2";
+
+            nextSlide.offsetHeight;
+
+            currentSlide.style.transition = "transform 1.2s ease-in-out";
+            nextSlide.style.transition = "transform 1.2s ease-in-out";
+
+            currentSlide.style.transform = "translateX(-100%)";
+            nextSlide.style.transform = "translateX(0)";
+
+            setTimeout(() => {
+                currentSlide.style.transition = "none";
+                currentSlide.style.transform = "translateX(100%)";
+                currentSlide.style.zIndex = "1";
+
+                current = nextIndex;
+                updateDots(current);
+                isAnimating = false;
+            }, 1200);
+
+        }, 7000);
+
+    });
+</script>
+<script>
 document.addEventListener("DOMContentLoaded", () => {
+    const cards = [...document.querySelectorAll(".community-card")];
+    const numbersContainer = document.querySelector(".community-page-numbers");
 
-    const slides = [...document.querySelectorAll(".hero-image")];
+    if (!cards.length || !numbersContainer) return;
 
-    if (slides.length <= 1) return;
+    const perPage = 3;
+    const totalPages = Math.ceil(cards.length / perPage);
+    let currentPage = 1;
 
-    let current = 0;
-    let isAnimating = false;
+    function renderPage(page) {
+        currentPage = page;
 
-    slides.forEach((slide, index) => {
-        slide.classList.remove("active", "prev");
-        slide.style.transform = index === 0 ? "translateX(0)" : "translateX(100%)";
-        slide.style.zIndex = index === 0 ? "3" : "1";
+        cards.forEach((card, index) => {
+            const start = (page - 1) * perPage;
+            const end = start + perPage;
+            card.style.display = index >= start && index < end ? "grid" : "none";
+        });
+
+        document
+            .querySelectorAll(".community-page-number")
+            .forEach(btn => btn.classList.remove("active"));
+
+        const activeBtn = document.querySelector(`[data-page="${page}"]`);
+        if (activeBtn) activeBtn.classList.add("active");
+    }
+
+    for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "community-page-number";
+        btn.dataset.page = i;
+        btn.textContent = i;
+        btn.addEventListener("click", () => renderPage(i));
+        numbersContainer.appendChild(btn);
+    }
+
+    document.querySelector(".prev").addEventListener("click", () => {
+        if (currentPage > 1) renderPage(currentPage - 1);
     });
 
-    setInterval(() => {
+    document.querySelector(".next").addEventListener("click", () => {
+        if (currentPage < totalPages) renderPage(currentPage + 1);
+    });
 
-        if (isAnimating) return;
-
-        isAnimating = true;
-
-        const currentSlide = slides[current];
-        const nextIndex = (current + 1) % slides.length;
-        const nextSlide = slides[nextIndex];
-
-        nextSlide.style.transition = "none";
-        nextSlide.style.transform = "translateX(100%)";
-        nextSlide.style.zIndex = "3";
-
-        currentSlide.style.zIndex = "2";
-
-        nextSlide.offsetHeight;
-
-        currentSlide.style.transition = "transform 1.2s ease-in-out";
-        nextSlide.style.transition = "transform 1.2s ease-in-out";
-
-        currentSlide.style.transform = "translateX(-100%)";
-        nextSlide.style.transform = "translateX(0)";
-
-        setTimeout(() => {
-            currentSlide.style.transition = "none";
-            currentSlide.style.transform = "translateX(100%)";
-            currentSlide.style.zIndex = "1";
-
-            current = nextIndex;
-            isAnimating = false;
-        }, 1200);
-
-    }, 7000);
-
+    renderPage(1);
 });
 </script>
-
 
 
 {% endblock %}

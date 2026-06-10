@@ -93,6 +93,15 @@
     background: #ede8df;
 }
 
+.product-card:not(.product-card-vip):hover,
+.product-card:not(.product-card-vip):hover .home-product-image-link {
+    background: #ede8df;
+}
+
+.home-product-image-link {
+    transition: background .35s ease;
+}
+
 .home-product-image-link {
     width: 100%;
     height: 430px;
@@ -205,75 +214,81 @@
     background: linear-gradient(135deg, #050505, #181818, #2b2b2b, #101010);
     background-size: 300% 300%;
     animation: vipGradient 10s ease infinite;
-    color: #fff;
 }
 
 .product-card-vip .home-product-image-link {
     background: transparent;
-    height: 420px;
+    height: 430px;
 }
 
 .product-card-vip .home-product-info {
+    padding: 18px 22px 30px;
     background: transparent;
-    padding: 0 24px 28px;
 }
 
 .product-card-vip .home-product-title {
     color: #fff;
-    font-size: 24px;
+    font-size: clamp(16px, 2vw, 22px);
+    line-height: 1.25;
     font-weight: 800;
-    margin-bottom: 10px;
+    letter-spacing: -0.4px;
+    margin-bottom: 12px;
 }
 
 .product-card-vip .home-product-price {
     color: #fff;
+    font-size: clamp(21px, 3vw, 28px);
+    font-weight: 900;
+    letter-spacing: -0.5px;
     margin-bottom: 4px;
 }
 
 .product-card-vip .home-product-installments {
-    color: rgba(255,255,255,.7);
+    color: rgba(255,255,255,.75);
+    font-size: 13px;
     margin-bottom: 20px;
 }
 
 .product-card-vip .home-product-button {
-    width: fit-content;
-    padding: 0;
-    border: none;
-    background: transparent;
-    color: #fff;
-    font-size: 12px;
+    width: 160px;
+    min-height: 48px;
+    border: 1px solid #fff;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    color: #111;
+    font-size: 13px;
     font-weight: 800;
-    letter-spacing: 2px;
-    min-height: auto;
+    letter-spacing: 1px;
+    transition: 0.3s ease;
+    text-decoration: none;
+    text-transform: uppercase;
+    padding: 0;
 }
+
 
 .product-card-vip .home-product-button::after {
     content: " →";
+    margin-left: 6px;
 }
 
-.product-card-vip .home-product-button:hover {
+.product-card-vip:hover .home-product-button {
     background: transparent;
     color: #fff;
-    transform: translateX(4px);
+    transform: translateY(-2px);
 }
 
-.vip-mini-label,
-.product-card-vip::before {
+
+.vip-mini-label {
     display: none;
 }
 
+.product-card-vip::before,
 .product-card-vip::after {
-    content: "";
-    position: absolute;
-    width: 250px;
-    height: 250px;
-    top: -120px;
-    right: -120px;
-    border-radius: 50%;
-    background: rgba(255,255,255,.05);
-    filter: blur(40px);
+    display: none;
 }
-
 @keyframes vipGradient {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
@@ -645,3 +660,31 @@
         letter-spacing: .5px;
     }
 }
+
+/* =========================
+   DOTS DO BANNER
+========================= */
+
+.hero-dots {
+    position: absolute;
+    left: 50%;
+    bottom: 24px;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 20;
+}
+
+.hero-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.4);
+    transition: .3s ease;
+    cursor: pointer;
+}
+
+.hero-dot.active {
+    background: #fff;
+    transform: scale(1.25);
+} 
