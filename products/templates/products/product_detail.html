@@ -28,11 +28,8 @@
                 {% endif %}
             </div>
 
-            <div
-                class="product-main-image"
-                data-front-image="{{ product.image.url }}"
-                data-back-image="{% if product.back_image %}{{ product.back_image.url }}{% endif %}"
-            >
+            <div class="product-main-image" data-front-image="{{ product.image.url }}"
+                data-back-image="{% if product.back_image %}{{ product.back_image.url }}{% endif %}">
                 <button type="button" class="gallery-arrow left" id="prevImage">‹</button>
 
                 <img id="mainProductImage" src="{{ product.image.url }}" alt="{{ product.name }}">
@@ -47,7 +44,6 @@
     <div class="product-content">
 
         <div class="product-content-card">
-            <span class="product-label">Risk Clube</span>
 
             <h1 class="product-title">{{ product.name }}</h1>
 
@@ -55,118 +51,151 @@
                 <p class="product-price">R$ {{ product.price }}</p>
             </div>
 
-            <div class="product-size-box">
-                <p>
-                    Tamanho —
-                    <span id="selectedSizeName"></span>
-                </p>
+            <div class="product-options-row">
+                <div class="product-size-box">
+                    <p>
+                        Tamanho —
+                        <span id="selectedSizeName"></span>
+                    </p>
 
-                <div class="size-options"></div>
-            </div>
-
-            <div class="product-colors">
-                <p>
-                    Cor —
-                    <span id="selectedColorName"></span>
-                </p>
-
-                <div class="color-options">
-                    <button
-                        type="button"
-                        class="color-dot active"
-                        style="background-color: {{ product.default_color_hex }};"
-                        data-variant-id=""
-                        data-color-name="{{ product.default_color_name }}"
-                        data-image="{{ product.image.url }}"
-                        data-images='[
-                            "{{ product.image.url }}"
-                            {% for img in product.images.all %}
-                                ,"{{ img.image.url }}"
-                            {% endfor %}
-                        ]'
-                        data-sizes='[
-                            {
-                                "name": "900ML"
-                            }
-                        ]'
-                    ></button>
-
-                    {% for variant in product.variants.all %}
-                        {% if variant.active %}
-                        <button
-                            type="button"
-                            class="color-dot"
-                            style="background-color: {{ variant.color_hex }};"
-                            data-variant-id="{{ variant.id }}"
-                            data-color-name="{{ variant.color_name }}"
-                            data-image="{{ variant.image.url }}"
-                            data-images='[
-                                "{{ variant.image.url }}"
-                                {% for img in variant.images.all %}
-                                    ,"{{ img.image.url }}"
-                                {% endfor %}
-                            ]'
-                            data-sizes='[
-                                {% for size in variant.sizes.all %}
-                                    {% if size.active %}
-                                        {
-                                            "name": "{{ size.name }}"
-                                        }{% if not forloop.last %},{% endif %}
-                                    {% endif %}
-                                {% endfor %}
-                            ]'
-                        ></button>
-                        {% endif %}
-                    {% endfor %}
+                    <div class="size-options"></div>
                 </div>
-            </div>
 
-            <div class="product-custom-name">
-                <div class="custom-name-header">
-                    <label for="customName">Nome na garrafa</label>
+                <div class="product-option-divider"></div>
 
-                    <div class="engraving-side-buttons">
-                        {% if product.engraving_position == "front" or product.engraving_position == "front_back" %}
-                        <button type="button" class="engraving-side-btn active" data-engraving-side="front">
-                            Frente
-                        </button>
+                <div class="product-colors">
+                    <p>
+                        Cor —
+                        <span id="selectedColorName"></span>
+                    </p>
+
+                    <div class="color-options">
+                        <button type="button" class="color-dot active"
+                            style="background-color: {{ product.default_color_hex }};" data-variant-id=""
+                            data-color-name="{{ product.default_color_name }}" data-image="{{ product.image.url }}"
+                            data-images='[
+                    "{{ product.image.url }}"
+                    {% for img in product.images.all %}
+                        ,"{{ img.image.url }}"
+                    {% endfor %}
+                ]' data-sizes='[
+                    {
+                        "name": "900ML"
+                    }
+                ]'></button>
+
+                        {% for variant in product.variants.all %}
+                        {% if variant.active %}
+                        <button type="button" class="color-dot" style="background-color: {{ variant.color_hex }};"
+                            data-variant-id="{{ variant.id }}" data-color-name="{{ variant.color_name }}"
+                            data-image="{{ variant.image.url }}" data-images='[
+                        "{{ variant.image.url }}"
+                        {% for img in variant.images.all %}
+                            ,"{{ img.image.url }}"
+                        {% endfor %}
+                    ]' data-sizes='[
+                        {% for size in variant.sizes.all %}
+                            {% if size.active %}
+                                {
+                                    "name": "{{ size.name }}"
+                                }{% if not forloop.last %},{% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    ]'></button>
                         {% endif %}
-
-                        {% if product.engraving_position == "back" or product.engraving_position == "front_back" %}
-                        <button
-                            type="button"
-                            class="engraving-side-btn {% if product.engraving_position == 'back' %}active{% endif %}"
-                            data-engraving-side="back"
-                        >
-                            Verso
-                        </button>
-                        {% endif %}
+                        {% endfor %}
                     </div>
                 </div>
+            </div>
 
-                <div class="name-direction-box">
-                    <button type="button" class="name-direction-btn active" data-direction="vertical">
-                        <span class="direction-icon">↕</span>
-                        <span>
-                            <strong>VERTICAL</strong>
-                            <small>Máx. 15 caracteres</small>
-                        </span>
-                    </button>
+            <div class="product-custom-name" id="customNameBox">
+                <div class="custom-name-question" id="customNameQuestion">
+                    <div>
+                        <strong>Deseja personalizar com nome?</strong>
+                        <small>Adicione uma gravação personalizada na sua garrafa.</small>
+                    </div>
 
-                    <div class="direction-divider"></div>
-
-                    <button type="button" class="name-direction-btn" data-direction="horizontal">
-                        <span class="direction-icon">↔</span>
-                        <span>
-                            <strong>HORIZONTAL</strong>
-                            <small>Máx. 5 caracteres</small>
-                        </span>
+                    <button type="button" id="showCustomNameBtn">
+                        Adicionar nome
                     </button>
                 </div>
 
-                <input type="text" id="customName" maxlength="15" placeholder="Ex: Carlos">
+                <div class="custom-name-fields" id="customNameFields">
+                    <div class="custom-name-header">
+                        <label for="customName">Nome na garrafa</label>
 
-                <small id="customNameLimitText">Máximo de 15 caracteres</small>
+                        <div class="engraving-side-buttons">
+                            {% if product.engraving_position == "front" or product.engraving_position == "front_back" %}
+                            <button type="button" class="engraving-side-btn active" data-engraving-side="front">
+                                Frente
+                            </button>
+                            {% endif %}
+
+                            {% if product.engraving_position == "back" or product.engraving_position == "front_back" %}
+                            <button type="button"
+                                class="engraving-side-btn {% if product.engraving_position == 'back' %}active{% endif %}"
+                                data-engraving-side="back">
+                                Verso
+                            </button>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="name-direction-box">
+                        <button type="button" class="name-direction-btn active" data-direction="vertical">
+                            <span class="direction-icon">↕</span>
+                            <span>
+                                <strong>VERTICAL</strong>
+                                <small>Máx. 15 caracteres</small>
+                            </span>
+                        </button>
+
+                        <div class="direction-divider"></div>
+
+                        <button type="button" class="name-direction-btn" data-direction="horizontal">
+                            <span class="direction-icon">↔</span>
+                            <span>
+                                <strong>HORIZONTAL</strong>
+                                <small>Máx. 5 caracteres</small>
+                            </span>
+                        </button>
+                    </div>
+
+                    <input type="text" id="customName" maxlength="15" placeholder="SeuNomeAqui">
+
+                    <div class="name-font-box">
+                        <p>Fonte da gravação</p>
+
+                        <div class="name-font-options">
+                            <button type="button" class="name-font-btn active" data-font="'Arial', sans-serif"
+                                style="font-family: Arial, sans-serif;">
+                                Arial
+                            </button>
+
+                            <button type="button" class="name-font-btn" data-font="'Times New Roman', serif"
+                                style="font-family: 'Times New Roman', serif;">
+                                Times
+                            </button>
+
+                            <button type="button" class="name-font-btn" data-font="'Courier New', monospace"
+                                style="font-family: 'Courier New', monospace;">
+                                Courier
+                            </button>
+
+                            <button type="button" class="name-font-btn" data-font="'Georgia', serif"
+                                style="font-family: Georgia, serif;">
+                                Georgia
+                            </button>
+
+                            <button type="button" class="name-font-btn" data-font="'Trebuchet MS', sans-serif"
+                                style="font-family: 'Trebuchet MS', sans-serif;">
+                                Trebuchet
+                            </button>
+                        </div>
+                    </div>
+
+                    <small id="customNameLimitText">Máximo de 15 caracteres</small>
+                </div>
             </div>
 
             <div class="product-buttons">
@@ -263,13 +292,8 @@
                 <div class="community-content">
                     <div class="community-stars">
                         {% for i in "12345" %}
-                            {% if forloop.counter <= item.rating %}
-                                ★
-                            {% else %}
-                                ☆
-                            {% endif %}
-                        {% endfor %}
-                        <span>{{ item.rating }},0</span>
+                        {% if forloop.counter <= item.rating %} ★ {% else %} ☆ {% endif %} {% endfor %} <span>{{
+                            item.rating }},0</span>
                     </div>
 
                     <h3>{{ item.title }}</h3>
@@ -293,429 +317,488 @@
 </section>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-    const mainImage = document.getElementById("mainProductImage");
-    const thumbsContainer = document.querySelector(".product-thumbs");
-    const colorButtons = document.querySelectorAll(".color-dot");
+    document.addEventListener("DOMContentLoaded", function () {
+        const mainImage = document.getElementById("mainProductImage");
+        const thumbsContainer = document.querySelector(".product-thumbs");
+        const colorButtons = document.querySelectorAll(".color-dot");
 
-    const selectedColorName = document.getElementById("selectedColorName");
-    const selectedSizeName = document.getElementById("selectedSizeName");
-    const sizeOptions = document.querySelector(".size-options");
+        const selectedColorName = document.getElementById("selectedColorName");
+        const selectedSizeName = document.getElementById("selectedSizeName");
+        const sizeOptions = document.querySelector(".size-options");
 
-    const prevBtn = document.getElementById("prevImage");
-    const nextBtn = document.getElementById("nextImage");
+        const prevBtn = document.getElementById("prevImage");
+        const nextBtn = document.getElementById("nextImage");
 
-    const customNameInput = document.getElementById("customName");
-    const customNameLimitText = document.getElementById("customNameLimitText");
-    const bottleNamePreview = document.getElementById("bottleNamePreview");
+        const customNameInput = document.getElementById("customName");
+        const customNameLimitText = document.getElementById("customNameLimitText");
+        const bottleNamePreview = document.getElementById("bottleNamePreview");
 
-    const bottleViewButtons = document.querySelectorAll(".bottle-view-btn");
-    const productMainImageBox = document.querySelector(".product-main-image");
-    const engravingSideButtons = document.querySelectorAll(".engraving-side-btn");
-    const directionButtons = document.querySelectorAll(".name-direction-btn");
+        const bottleViewButtons = document.querySelectorAll(".bottle-view-btn");
+        const productMainImageBox = document.querySelector(".product-main-image");
+        const engravingSideButtons = document.querySelectorAll(".engraving-side-btn");
+        const directionButtons = document.querySelectorAll(".name-direction-btn");
 
-    let currentImages = [];
-    let currentIndex = 0;
-    let currentBottleView = "front";
+        const showCustomNameBtn = document.getElementById("showCustomNameBtn");
+        const customNameQuestion = document.getElementById("customNameQuestion");
+        const customNameFields = document.getElementById("customNameFields");
 
-    let selectedEngravingSide =
-        document.querySelector(".engraving-side-btn.active")?.dataset.engravingSide || "front";
+        const fontButtons = document.querySelectorAll(".name-font-btn");
 
-    let selectedNameDirection =
-        document.querySelector(".name-direction-btn.active")?.dataset.direction || "vertical";
+        let currentImages = [];
+        let currentIndex = 0;
+        let currentBottleView = "front";
 
-    function updateNamePreviewVisibility() {
-        if (!bottleNamePreview) return;
+        let selectedEngravingSide =
+            document.querySelector(".engraving-side-btn.active")?.dataset.engravingSide || "front";
 
-        bottleNamePreview.style.display =
-            currentBottleView === selectedEngravingSide ? "block" : "none";
-    }
+        let selectedNameDirection =
+            document.querySelector(".name-direction-btn.active")?.dataset.direction || "vertical";
 
-    function applyNameDirection() {
-        if (!customNameInput || !bottleNamePreview) return;
+        let selectedNameFont =
+            document.querySelector(".name-font-btn.active")?.dataset.font || "'Arial', sans-serif";
 
-        const isHorizontal = selectedNameDirection === "horizontal";
+        function applyNameFont() {
+            if (!bottleNamePreview) return;
 
-        customNameInput.maxLength = isHorizontal ? 5 : 15;
-
-        if (customNameLimitText) {
-            customNameLimitText.textContent = isHorizontal
-                ? "Máximo de 5 caracteres"
-                : "Máximo de 15 caracteres";
+            bottleNamePreview.style.fontFamily = selectedNameFont;
         }
 
-        bottleNamePreview.classList.toggle("horizontal", isHorizontal);
-        bottleNamePreview.classList.toggle("vertical", !isHorizontal);
-    }
+        if (showCustomNameBtn && customNameQuestion && customNameFields) {
+            showCustomNameBtn.addEventListener("click", function () {
 
-    function applyResponsiveFontSize(value) {
-        if (!bottleNamePreview) return;
+                customNameQuestion.classList.add("hide");
 
-        const length = value.length;
-        const isMobile = window.innerWidth <= 480;
-        const isTablet = window.innerWidth <= 768 && window.innerWidth > 480;
+                setTimeout(() => {
+                    customNameQuestion.style.display = "none";
+                    customNameFields.classList.add("show");
 
-        if (selectedNameDirection === "vertical") {
-            let size = isMobile ? 18 : isTablet ? 21 : 24;
+                    if (customNameInput) {
+                        customNameInput.focus();
+                    }
 
-            if (length >= 8) size -= 1;
-            if (length >= 10) size -= 1;
-            if (length >= 12) size -= 1;
-            if (length >= 14) size -= 1;
-            if (length >= 15) size -= 1;
+                    updateNamePreviewText();
 
-            bottleNamePreview.style.fontSize = Math.max(isMobile ? 13 : 18, size) + "px";
-            bottleNamePreview.style.letterSpacing = isMobile ? ".5px" : "1.5px";
-        } else {
-            let size = isMobile ? 17 : isTablet ? 20 : 24;
-
-            if (length >= 3) size -= 2;
-            if (length >= 4) size -= 2;
-            if (length >= 5) size -= 2;
-
-            bottleNamePreview.style.fontSize = Math.max(isMobile ? 12 : 16, size) + "px";
-            bottleNamePreview.style.letterSpacing = isMobile ? ".4px" : "1px";
-        }
-    }
-
-    function updateNamePreviewText() {
-        if (!customNameInput || !bottleNamePreview) return;
-
-        const maxLength = selectedNameDirection === "horizontal" ? 5 : 15;
-
-        let value = customNameInput.value.trim().toUpperCase();
-
-        if (value.length > maxLength) {
-            value = value.substring(0, maxLength);
-            customNameInput.value = value;
-        }
-
-        bottleNamePreview.textContent = value;
-
-        applyNameDirection();
-        applyResponsiveFontSize(value);
-        updateNamePreviewVisibility();
-    }
-
-    function setActiveThumb(index) {
-        document.querySelectorAll(".thumb").forEach(thumb => {
-            thumb.classList.remove("active");
-        });
-
-        const thumbs = document.querySelectorAll(".thumb");
-
-        if (thumbs[index]) {
-            thumbs[index].classList.add("active");
-        }
-    }
-
-    function setBottleView(view, resetToFirstThumb = false) {
-        currentBottleView = view;
-
-        bottleViewButtons.forEach(btn => {
-            btn.classList.toggle("active", btn.dataset.view === view);
-        });
-
-        if (resetToFirstThumb) {
-            currentIndex = 0;
-            setActiveThumb(0);
-        }
-
-        if (view === "front") {
-            mainImage.src =
-                currentImages[currentIndex] ||
-                productMainImageBox?.dataset.frontImage ||
-                mainImage.src;
-        }
-
-        if (view === "back" && productMainImageBox?.dataset.backImage) {
-            mainImage.src = productMainImageBox.dataset.backImage;
-        }
-
-        updateNamePreviewVisibility();
-    }
-
-    function updateMainImage(index) {
-        if (!mainImage || !currentImages.length) return;
-
-        if (index < 0) {
-            currentIndex = currentImages.length - 1;
-        } else if (index >= currentImages.length) {
-            currentIndex = 0;
-        } else {
-            currentIndex = index;
-        }
-
-        setBottleView("front", false);
-        setActiveThumb(currentIndex);
-    }
-
-    function renderGallery(images) {
-        if (!thumbsContainer || !images.length) return;
-
-        currentImages = images;
-        currentIndex = 0;
-        thumbsContainer.innerHTML = "";
-
-        images.forEach((imageUrl, index) => {
-            const button = document.createElement("button");
-
-            button.type = "button";
-            button.className = "thumb";
-
-            if (index === 0) {
-                button.classList.add("active");
-            }
-
-            button.innerHTML = `<img src="${imageUrl}" alt="{{ product.name }}">`;
-
-            button.addEventListener("click", function () {
-                updateMainImage(index);
+                }, 250);
             });
-
-            thumbsContainer.appendChild(button);
-        });
-
-        updateMainImage(0);
-    }
-
-    function renderSizes(sizes) {
-        if (!sizeOptions) return;
-
-        sizeOptions.innerHTML = "";
-
-        if (!sizes || !sizes.length) {
-            sizes = [{ name: "900ML" }];
         }
 
-        sizes.forEach((size, index) => {
-            const button = document.createElement("button");
-
-            button.type = "button";
-            button.className = "size-btn";
-            button.dataset.sizeName = size.name;
-            button.innerText = size.name;
-
-            if (index === 0) {
-                button.classList.add("active");
-            }
-
+        fontButtons.forEach(button => {
             button.addEventListener("click", function () {
-                document.querySelectorAll(".size-btn").forEach(btn => {
-                    btn.classList.remove("active");
-                });
-
+                fontButtons.forEach(btn => btn.classList.remove("active"));
                 this.classList.add("active");
 
-                if (selectedSizeName) {
-                    selectedSizeName.textContent = size.name;
-                }
-            });
+                selectedNameFont = this.dataset.font || "'Arial', sans-serif";
 
-            sizeOptions.appendChild(button);
+                applyNameFont();
+                updateNamePreviewText();
+            });
         });
 
-        if (selectedSizeName) {
-            selectedSizeName.textContent = sizes[0].name;
+        function updateNamePreviewVisibility() {
+            if (!bottleNamePreview) return;
+
+            bottleNamePreview.style.display =
+                currentBottleView === selectedEngravingSide ? "block" : "none";
         }
-    }
 
-    if (customNameInput && bottleNamePreview) {
-        customNameInput.addEventListener("input", updateNamePreviewText);
-        applyNameDirection();
-        updateNamePreviewText();
-    }
+        function applyNameDirection() {
+            if (!customNameInput || !bottleNamePreview) return;
 
-    directionButtons.forEach(button => {
-        button.addEventListener("click", function () {
-            directionButtons.forEach(btn => btn.classList.remove("active"));
-            this.classList.add("active");
+            const isHorizontal = selectedNameDirection === "horizontal";
 
-            selectedNameDirection = this.dataset.direction || "vertical";
+            customNameInput.maxLength = isHorizontal ? 5 : 15;
+
+            if (customNameLimitText) {
+                customNameLimitText.textContent = isHorizontal
+                    ? "Máximo de 5 caracteres"
+                    : "Máximo de 15 caracteres";
+            }
+
+            bottleNamePreview.classList.toggle("horizontal", isHorizontal);
+            bottleNamePreview.classList.toggle("vertical", !isHorizontal);
+        }
+
+        function applyResponsiveFontSize(value) {
+            if (!bottleNamePreview) return;
+
+            const length = value.length;
+            const isMobile = window.innerWidth <= 480;
+            const isTablet = window.innerWidth <= 768 && window.innerWidth > 480;
+
+            if (selectedNameDirection === "vertical") {
+                let size = isMobile ? 18 : isTablet ? 21 : 24;
+
+                if (length >= 8) size -= 1;
+                if (length >= 10) size -= 1;
+                if (length >= 12) size -= 1;
+                if (length >= 14) size -= 1;
+                if (length >= 15) size -= 1;
+
+                bottleNamePreview.style.fontSize = Math.max(isMobile ? 13 : 18, size) + "px";
+                bottleNamePreview.style.letterSpacing = isMobile ? ".5px" : "1.5px";
+            } else {
+                let size = isMobile ? 17 : isTablet ? 20 : 24;
+
+                if (length >= 3) size -= 2;
+                if (length >= 4) size -= 2;
+                if (length >= 5) size -= 2;
+
+                bottleNamePreview.style.fontSize = Math.max(isMobile ? 12 : 16, size) + "px";
+                bottleNamePreview.style.letterSpacing = isMobile ? ".4px" : "1px";
+            }
+        }
+
+        function updateNamePreviewText() {
+            if (!customNameInput || !bottleNamePreview) return;
+
+            const maxLength = selectedNameDirection === "horizontal" ? 5 : 15;
+
+            let value = customNameInput.value.trim().toUpperCase();
+
+            if (value.length > maxLength) {
+                value = value.substring(0, maxLength);
+                customNameInput.value = value;
+            }
+
+            bottleNamePreview.textContent = value;
 
             applyNameDirection();
-            updateNamePreviewText();
-        });
-    });
+            applyResponsiveFontSize(value);
+            applyNameFont();
+            updateNamePreviewVisibility();
+        }
 
-    bottleViewButtons.forEach(button => {
-        button.addEventListener("click", function () {
-            const view = this.dataset.view;
-            setBottleView(view, true);
-        });
-    });
+        function setActiveThumb(index) {
+            document.querySelectorAll(".thumb").forEach(thumb => {
+                thumb.classList.remove("active");
+            });
 
-    engravingSideButtons.forEach(button => {
-        button.addEventListener("click", function () {
-            engravingSideButtons.forEach(btn => btn.classList.remove("active"));
-            this.classList.add("active");
+            const thumbs = document.querySelectorAll(".thumb");
 
-            selectedEngravingSide = this.dataset.engravingSide || "front";
+            if (thumbs[index]) {
+                thumbs[index].classList.add("active");
+            }
+        }
+
+        function setBottleView(view, resetToFirstThumb = false) {
+            currentBottleView = view;
+
+            bottleViewButtons.forEach(btn => {
+                btn.classList.toggle("active", btn.dataset.view === view);
+            });
+
+            if (resetToFirstThumb) {
+                currentIndex = 0;
+                setActiveThumb(0);
+            }
+
+            if (view === "front") {
+                mainImage.src =
+                    currentImages[currentIndex] ||
+                    productMainImageBox?.dataset.frontImage ||
+                    mainImage.src;
+            }
+
+            if (view === "back" && productMainImageBox?.dataset.backImage) {
+                mainImage.src = productMainImageBox.dataset.backImage;
+            }
 
             updateNamePreviewVisibility();
+        }
+
+        function updateMainImage(index) {
+            if (!mainImage || !currentImages.length) return;
+
+            if (index < 0) {
+                currentIndex = currentImages.length - 1;
+            } else if (index >= currentImages.length) {
+                currentIndex = 0;
+            } else {
+                currentIndex = index;
+            }
+
+            setBottleView("front", false);
+            setActiveThumb(currentIndex);
+        }
+
+        function renderGallery(images) {
+            if (!thumbsContainer || !images.length) return;
+
+            currentImages = images;
+            currentIndex = 0;
+            thumbsContainer.innerHTML = "";
+
+            images.forEach((imageUrl, index) => {
+                const button = document.createElement("button");
+
+                button.type = "button";
+                button.className = "thumb";
+
+                if (index === 0) {
+                    button.classList.add("active");
+                }
+
+                button.innerHTML = `<img src="${imageUrl}" alt="{{ product.name }}">`;
+
+                button.addEventListener("click", function () {
+                    updateMainImage(index);
+                });
+
+                thumbsContainer.appendChild(button);
+            });
+
+            updateMainImage(0);
+        }
+
+        function renderSizes(sizes) {
+            if (!sizeOptions) return;
+
+            sizeOptions.innerHTML = "";
+
+            if (!sizes || !sizes.length) {
+                sizes = [{ name: "900ML" }];
+            }
+
+            sizes.forEach((size, index) => {
+                const button = document.createElement("button");
+
+                button.type = "button";
+                button.className = "size-btn";
+                button.dataset.sizeName = size.name;
+                button.innerText = size.name;
+
+                if (index === 0) {
+                    button.classList.add("active");
+                }
+
+                button.addEventListener("click", function () {
+                    document.querySelectorAll(".size-btn").forEach(btn => {
+                        btn.classList.remove("active");
+                    });
+
+                    this.classList.add("active");
+
+                    if (selectedSizeName) {
+                        selectedSizeName.textContent = size.name;
+                    }
+                });
+
+                sizeOptions.appendChild(button);
+            });
+
+            if (selectedSizeName) {
+                selectedSizeName.textContent = sizes[0].name;
+            }
+        }
+
+        if (customNameInput && bottleNamePreview) {
+            customNameInput.addEventListener("input", updateNamePreviewText);
+            applyNameDirection();
+            updateNamePreviewText();
+        }
+
+        directionButtons.forEach(button => {
+            button.addEventListener("click", function () {
+                directionButtons.forEach(btn => btn.classList.remove("active"));
+                this.classList.add("active");
+
+                selectedNameDirection = this.dataset.direction || "vertical";
+
+                applyNameDirection();
+                updateNamePreviewText();
+            });
         });
-    });
 
-    colorButtons.forEach(button => {
-        button.addEventListener("click", function () {
-            const colorName = this.dataset.colorName || "";
+        bottleViewButtons.forEach(button => {
+            button.addEventListener("click", function () {
+                const view = this.dataset.view;
+                setBottleView(view, true);
+            });
+        });
 
-            let images = [];
-            let sizes = [];
+        engravingSideButtons.forEach(button => {
+            button.addEventListener("click", function () {
+                engravingSideButtons.forEach(btn => btn.classList.remove("active"));
+                this.classList.add("active");
+
+                selectedEngravingSide = this.dataset.engravingSide || "front";
+
+                updateNamePreviewVisibility();
+            });
+        });
+
+        colorButtons.forEach(button => {
+            button.addEventListener("click", function () {
+                const colorName = this.dataset.colorName || "";
+
+                let images = [];
+                let sizes = [];
+
+                try {
+                    images = JSON.parse(this.dataset.images);
+                } catch (error) {
+                    images = [];
+                }
+
+                try {
+                    sizes = JSON.parse(this.dataset.sizes);
+                } catch (error) {
+                    sizes = [];
+                }
+
+                colorButtons.forEach(btn => btn.classList.remove("active"));
+                this.classList.add("active");
+
+                if (selectedColorName) {
+                    selectedColorName.textContent = colorName;
+                }
+
+                renderGallery(images);
+                renderSizes(sizes);
+            });
+        });
+
+        if (prevBtn) {
+            prevBtn.addEventListener("click", function () {
+                updateMainImage(currentIndex - 1);
+            });
+        }
+
+        if (nextBtn) {
+            nextBtn.addEventListener("click", function () {
+                updateMainImage(currentIndex + 1);
+            });
+        }
+
+        window.addEventListener("resize", updateNamePreviewText);
+
+        const firstColorButton = document.querySelector(".color-dot.active");
+
+        if (firstColorButton) {
+            let firstImages = [];
+            let firstSizes = [];
 
             try {
-                images = JSON.parse(this.dataset.images);
+                firstImages = JSON.parse(firstColorButton.dataset.images);
             } catch (error) {
-                images = [];
+                firstImages = [];
             }
 
             try {
-                sizes = JSON.parse(this.dataset.sizes);
+                firstSizes = JSON.parse(firstColorButton.dataset.sizes);
             } catch (error) {
-                sizes = [];
+                firstSizes = [];
             }
-
-            colorButtons.forEach(btn => btn.classList.remove("active"));
-            this.classList.add("active");
 
             if (selectedColorName) {
-                selectedColorName.textContent = colorName;
+                selectedColorName.textContent = firstColorButton.dataset.colorName || "";
             }
 
-            renderGallery(images);
-            renderSizes(sizes);
-        });
+            renderGallery(firstImages);
+            renderSizes(firstSizes);
+        }
+
+        applyNameDirection();
+        updateNamePreviewText();
+        updateNamePreviewVisibility();
     });
-
-    if (prevBtn) {
-        prevBtn.addEventListener("click", function () {
-            updateMainImage(currentIndex - 1);
-        });
-    }
-
-    if (nextBtn) {
-        nextBtn.addEventListener("click", function () {
-            updateMainImage(currentIndex + 1);
-        });
-    }
-
-    window.addEventListener("resize", updateNamePreviewText);
-
-    const firstColorButton = document.querySelector(".color-dot.active");
-
-    if (firstColorButton) {
-        let firstImages = [];
-        let firstSizes = [];
-
-        try {
-            firstImages = JSON.parse(firstColorButton.dataset.images);
-        } catch (error) {
-            firstImages = [];
-        }
-
-        try {
-            firstSizes = JSON.parse(firstColorButton.dataset.sizes);
-        } catch (error) {
-            firstSizes = [];
-        }
-
-        if (selectedColorName) {
-            selectedColorName.textContent = firstColorButton.dataset.colorName || "";
-        }
-
-        renderGallery(firstImages);
-        renderSizes(firstSizes);
-    }
-
-    applyNameDirection();
-    updateNamePreviewText();
-    updateNamePreviewVisibility();
-});
 </script>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-    const addCartBtn = document.getElementById("addCartBtn");
+    document.addEventListener("DOMContentLoaded", function () {
+        const addCartBtn = document.getElementById("addCartBtn");
 
-    if (!addCartBtn) return;
+        if (!addCartBtn) return;
 
-    let addingToCart = false;
+        let addingToCart = false;
 
-    addCartBtn.addEventListener("click", async function () {
-        if (addingToCart) return;
+        addCartBtn.addEventListener("click", async function () {
+            if (addingToCart) return;
 
-        addingToCart = true;
+            addingToCart = true;
 
-        const originalText = addCartBtn.innerText;
-        const productId = addCartBtn.dataset.productId;
+            const originalText = addCartBtn.innerText;
+            const productId = addCartBtn.dataset.productId;
 
-        const selectedSizeBtn = document.querySelector(".size-btn.active");
-        const selectedColorBtn = document.querySelector(".color-dot.active");
-        const selectedEngravingSideBtn = document.querySelector(".engraving-side-btn.active");
-        const selectedDirectionBtn = document.querySelector(".name-direction-btn.active");
+            const selectedSizeBtn = document.querySelector(".size-btn.active");
+            const selectedColorBtn = document.querySelector(".color-dot.active");
+            const selectedEngravingSideBtn = document.querySelector(".engraving-side-btn.active");
+            const selectedDirectionBtn = document.querySelector(".name-direction-btn.active");
 
-        const selectedSize = selectedSizeBtn
-            ? selectedSizeBtn.dataset.sizeName
-            : "900ML";
+            const selectedSize = selectedSizeBtn
+                ? selectedSizeBtn.dataset.sizeName
+                : "900ML";
 
-        const selectedColor = selectedColorBtn
-            ? selectedColorBtn.dataset.colorName
-            : "";
+            const selectedColor = selectedColorBtn
+                ? selectedColorBtn.dataset.colorName
+                : "";
 
-        const selectedImage = selectedColorBtn
-            ? selectedColorBtn.dataset.image
-            : "";
+            const selectedImage = selectedColorBtn
+                ? selectedColorBtn.dataset.image
+                : "";
 
-        const customName =
-            document.getElementById("customName")?.value.trim() || "";
+            const customName =
+                document.getElementById("customName")?.value.trim() || "";
 
-        const engravingSide = selectedEngravingSideBtn
-            ? selectedEngravingSideBtn.dataset.engravingSide
-            : "front";
+            const engravingSide = selectedEngravingSideBtn
+                ? selectedEngravingSideBtn.dataset.engravingSide
+                : "front";
 
-        const nameDirection = selectedDirectionBtn
-            ? selectedDirectionBtn.dataset.direction
-            : "vertical";
+            const nameDirection = selectedDirectionBtn
+                ? selectedDirectionBtn.dataset.direction
+                : "vertical";
 
-        addCartBtn.disabled = true;
-        addCartBtn.innerText = "Adicionando...";
+            addCartBtn.disabled = true;
+            addCartBtn.innerText = "Adicionando...";
 
-        try {
-            const response = await fetch("/cart/add/", {
-                method: "POST",
+            try {
+                const response = await fetch("/cart/add/", {
+                    method: "POST",
 
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": "{{ csrf_token }}"
-                },
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": "{{ csrf_token }}"
+                    },
 
-                body: JSON.stringify({
-                    product_id: productId,
-                    quantity: 1,
-                    size: selectedSize,
-                    color: selectedColor,
-                    image: selectedImage,
-                    custom_name: customName,
-                    engraving_side: engravingSide,
-                    name_direction: nameDirection
-                })
-            });
+                    body: JSON.stringify({
+                        product_id: productId,
+                        quantity: 1,
+                        size: selectedSize,
+                        color: selectedColor,
+                        image: selectedImage,
+                        custom_name: customName,
+                        engraving_side: engravingSide,
+                        name_direction: nameDirection
+                    })
+                });
 
-            const data = await response.json();
+                const data = await response.json();
 
-            if (data.success) {
-                addCartBtn.innerText = "Adicionado";
+                if (data.success) {
+                    addCartBtn.innerText = "Adicionado";
 
-                if (typeof openCart === "function") {
-                    openCart();
+                    if (typeof openCart === "function") {
+                        openCart();
+                    }
+
+                    setTimeout(() => {
+                        addCartBtn.innerText = originalText;
+                        addCartBtn.disabled = false;
+                        addingToCart = false;
+                    }, 700);
+                } else {
+                    addCartBtn.innerText = "Erro ao adicionar";
+
+                    setTimeout(() => {
+                        addCartBtn.innerText = originalText;
+                        addCartBtn.disabled = false;
+                        addingToCart = false;
+                    }, 1200);
                 }
 
-                setTimeout(() => {
-                    addCartBtn.innerText = originalText;
-                    addCartBtn.disabled = false;
-                    addingToCart = false;
-                }, 700);
-            } else {
+            } catch (error) {
+                console.error(error);
+
                 addCartBtn.innerText = "Erro ao adicionar";
 
                 setTimeout(() => {
@@ -724,70 +807,58 @@ document.addEventListener("DOMContentLoaded", function () {
                     addingToCart = false;
                 }, 1200);
             }
-
-        } catch (error) {
-            console.error(error);
-
-            addCartBtn.innerText = "Erro ao adicionar";
-
-            setTimeout(() => {
-                addCartBtn.innerText = originalText;
-                addCartBtn.disabled = false;
-                addingToCart = false;
-            }, 1200);
-        }
+        });
     });
-});
 </script>
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-    const cards = [...document.querySelectorAll(".community-card")];
-    const numbersContainer = document.querySelector(".community-page-numbers");
+    document.addEventListener("DOMContentLoaded", () => {
+        const cards = [...document.querySelectorAll(".community-card")];
+        const numbersContainer = document.querySelector(".community-page-numbers");
 
-    if (!cards.length || !numbersContainer) return;
+        if (!cards.length || !numbersContainer) return;
 
-    const perPage = 3;
-    const totalPages = Math.ceil(cards.length / perPage);
-    let currentPage = 1;
+        const perPage = 3;
+        const totalPages = Math.ceil(cards.length / perPage);
+        let currentPage = 1;
 
-    function renderPage(page) {
-        currentPage = page;
+        function renderPage(page) {
+            currentPage = page;
 
-        cards.forEach((card, index) => {
-            const start = (page - 1) * perPage;
-            const end = start + perPage;
-            card.style.display = index >= start && index < end ? "grid" : "none";
+            cards.forEach((card, index) => {
+                const start = (page - 1) * perPage;
+                const end = start + perPage;
+                card.style.display = index >= start && index < end ? "grid" : "none";
+            });
+
+            document
+                .querySelectorAll(".community-page-number")
+                .forEach(btn => btn.classList.remove("active"));
+
+            const activeBtn = document.querySelector(`[data-page="${page}"]`);
+            if (activeBtn) activeBtn.classList.add("active");
+        }
+
+        for (let i = 1; i <= totalPages; i++) {
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "community-page-number";
+            btn.dataset.page = i;
+            btn.textContent = i;
+            btn.addEventListener("click", () => renderPage(i));
+            numbersContainer.appendChild(btn);
+        }
+
+        document.querySelector(".prev").addEventListener("click", () => {
+            if (currentPage > 1) renderPage(currentPage - 1);
         });
 
-        document
-            .querySelectorAll(".community-page-number")
-            .forEach(btn => btn.classList.remove("active"));
+        document.querySelector(".next").addEventListener("click", () => {
+            if (currentPage < totalPages) renderPage(currentPage + 1);
+        });
 
-        const activeBtn = document.querySelector(`[data-page="${page}"]`);
-        if (activeBtn) activeBtn.classList.add("active");
-    }
-
-    for (let i = 1; i <= totalPages; i++) {
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "community-page-number";
-        btn.dataset.page = i;
-        btn.textContent = i;
-        btn.addEventListener("click", () => renderPage(i));
-        numbersContainer.appendChild(btn);
-    }
-
-    document.querySelector(".prev").addEventListener("click", () => {
-        if (currentPage > 1) renderPage(currentPage - 1);
+        renderPage(1);
     });
-
-    document.querySelector(".next").addEventListener("click", () => {
-        if (currentPage < totalPages) renderPage(currentPage + 1);
-    });
-
-    renderPage(1);
-});
 </script>
 
 {% endblock %}
