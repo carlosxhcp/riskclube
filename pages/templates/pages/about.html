@@ -9,99 +9,59 @@
 
 {% block content %}
 
-<main class="about-page">
+<section class="about-risk-page">
 
-    <section class="about-hero">
-        <div class="about-hero-content">
-            <span class="about-label">Risk Clube</span>
-            <h1>Mais que roupa, uma comunidade.</h1>
+    <div class="about-hero">
+        <div class="about-text about-left">
+            <span>A RISK</span>
+            <div class="about-line"></div>
             <p>
-                A Risk Clube nasceu para quem vive com atitude, autenticidade e vontade de se destacar.
-                Criamos peças com identidade, propósito e conexão com a cultura urbana.
-            </p>
-        </div>
-    </section>
-
-    <section class="about-intro">
-        <div class="about-intro-text">
-            <span class="section-label">Nossa essência</span>
-            <h2>Vestimos pessoas que não têm medo de assumir riscos.</h2>
-        </div>
-
-        <div class="about-intro-description">
-            <p>
-                Acreditamos que estilo é uma forma de expressão. Cada peça da Risk Clube carrega uma estética limpa,
-                forte e marcante, feita para acompanhar quem constrói sua própria história.
-            </p>
-            <p>
-                Nosso objetivo é criar produtos que conectem moda, comunidade e atitude — sem exageros,
-                sem regras, apenas identidade.
-            </p>
-        </div>
-    </section>
-
-    <section class="about-banner">
-        <img src="{% static 'img/about-banner.jpg' %}" alt="Risk Clube">
-    </section>
-
-    <section class="about-values">
-
-        <div class="value-card dark">
-            <span>01</span>
-            <h3>Autenticidade</h3>
-            <p>
-                Criamos para quem valoriza originalidade e entende que estilo começa na atitude.
+                A Risk é onde cada detalhe carrega um propósito.
+                Nossas peças são pensadas para acompanhar você em qualquer jornada,
+                unindo estilo, funcionalidade e histórias que merecem ser lembradas.
             </p>
         </div>
 
-        <div class="value-card">
-            <span>02</span>
-            <h3>Comunidade</h3>
-            <p>
-                A Risk Clube é feita por pessoas, para pessoas. Uma marca que cresce junto com quem acredita nela.
-            </p>
+        <div class="about-products">
+            <img src="{% static 'img/about/produtos.png' %}" alt="Produtos Risk">
         </div>
 
-        <div class="value-card">
-            <span>03</span>
-            <h3>Qualidade</h3>
-            <p>
-                Buscamos entregar peças bem construídas, confortáveis e pensadas para o uso real do dia a dia.
-            </p>
-        </div>
-
-    </section>
-
-    <section class="about-story">
-        <div class="story-image">
-            <img src="{% static 'img/about-story.jpg' %}" alt="Sobre a Risk Clube">
-        </div>
-
-        <div class="story-content">
-            <span class="section-label">Nossa história</span>
-            <h2>Uma marca criada para representar atitude.</h2>
+        <div class="about-text about-right">
+            <h1>NOSSA<br>HISTÓRIA</h1>
+            <div class="about-line"></div>
 
             <p>
-                A Risk Clube surgiu com a ideia de transformar estilo em pertencimento.
-                Mais do que vender produtos, queremos construir uma comunidade em torno de pessoas que se expressam
-                através do que vestem.
+                Criamos produtos personalizados que transformam histórias
+                em algo que você pode carregar todos os dias.
             </p>
 
+            <span>A RISK</span>
+            <div class="about-line"></div>
             <p>
-                Cada coleção nasce com atenção aos detalhes, referências urbanas e uma linguagem visual própria.
-                Nosso compromisso é evoluir sem perder a essência: ser simples, forte e verdadeiro.
+                Cada produto é criado com cuidado e intenção,
+                do início ao fim. Mais do que itens personalizados,
+                entregamos lembranças que fazem parte da sua jornada.
             </p>
         </div>
-    </section>
+    </div>
 
-    <section class="about-highlight">
-        <h2>Risk Clube é sobre escolha, presença e identidade.</h2>
-        <p>
-            Para quem entende que o básico também pode ser marcante.
-        </p>
-        <a href="/#products" class="about-button">Conhecer produtos</a>
-    </section>
+    <div class="about-video-section">
 
-</main>
+        <video class="about-video-bg" autoplay muted loop playsinline>
+            <source src="{% static 'videos/detail-video.mp4' %}" type="video/mp4">
+        </video>
 
+        <div class="about-video-overlay"></div>
+
+        <div class="about-video-content">
+            <span>NOSSA ESSÊNCIA</span>
+            <div class="about-line white"></div>
+
+
+        </div>
+
+    </div>
+
+</section>
+<br>
 {% endblock %}
