@@ -9,15 +9,10 @@ urlpatterns = [
         views.product_detail,
         name="product_detail"
     ),
-
     path(
-        "produto/<slug:slug>/checkout/",
-        views.checkout_stripe_product,
-        name="checkout_stripe_product"
-    ),
-    path(
-    "produto/<slug:slug>/personalizar/",
+    "personalizar/",
     views.customization_choice,
     name="customization_choice"
-    ),
+),
+    
 ]

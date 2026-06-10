@@ -27,41 +27,9 @@ def product_detail(request, slug):
     })
 
 
-def checkout_stripe_product(request, slug):
-    stripe.api_key = settings.STRIPE_SECRET_KEY
-
+def customization_choice(request):
     product = get_object_or_404(
         Product,
-        slug=slug,
-        available=True
-    )
-
-    session = stripe.checkout.Session.create(
-        payment_method_types=["card"],
-        mode="payment",
-        line_items=[
-            {
-                "price_data": {
-                    "currency": "brl",
-                    "product_data": {
-                        "name": product.name,
-                    },
-                    "unit_amount": int(product.price * 100),
-                },
-                "quantity": 1,
-            }
-        ],
-        success_url=f"{settings.SITE_URL}/produto/{product.slug}/?payment=success",
-        cancel_url=f"{settings.SITE_URL}/produto/{product.slug}/?payment=cancel",
-    )
-
-    return redirect(session.url)
-
-
-def customization_choice(request, slug):
-    product = get_object_or_404(
-        Product,
-        slug=slug,
         available=True
     )
 
