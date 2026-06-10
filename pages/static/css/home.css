@@ -69,6 +69,10 @@
     color: #000;
 }
 
+/* =========================
+   PRODUTOS
+========================= */
+
 .home-products {
     width: 100%;
     background: #f4f1eb;
@@ -89,17 +93,9 @@
     transition: 0.35s ease;
 }
 
-.product-card:not(.product-card-vip):hover {
-    background: #ede8df;
-}
-
 .product-card:not(.product-card-vip):hover,
 .product-card:not(.product-card-vip):hover .home-product-image-link {
     background: #ede8df;
-}
-
-.home-product-image-link {
-    transition: background .35s ease;
 }
 
 .home-product-image-link {
@@ -112,6 +108,7 @@
     text-decoration: none;
     overflow: hidden;
     position: relative;
+    transition: background .35s ease;
 }
 
 .product-card:not(.product-card-vip) .home-product-image-link::after {
@@ -208,6 +205,10 @@
     background: #fff;
 }
 
+/* =========================
+   PRODUTO VIP
+========================= */
+
 .product-card-vip {
     position: relative;
     overflow: hidden;
@@ -268,7 +269,6 @@
     padding: 0;
 }
 
-
 .product-card-vip .home-product-button::after {
     content: " →";
     margin-left: 6px;
@@ -280,7 +280,6 @@
     transform: translateY(-2px);
 }
 
-
 .vip-mini-label {
     display: none;
 }
@@ -289,13 +288,16 @@
 .product-card-vip::after {
     display: none;
 }
+
 @keyframes vipGradient {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
 }
 
-/* CARDS */
+/* =========================
+   CARDS
+========================= */
 
 .choice-cards {
     max-width: 1500px;
@@ -462,7 +464,9 @@
     color: #333;
 }
 
-/* HOVER */
+/* =========================
+   HOVER DOS CARDS
+========================= */
 
 .choice-card:hover {
     transform: translateY(-8px);
@@ -499,7 +503,9 @@
     background: #6822ca;
 }
 
-/* TABLET */
+/* =========================
+   TABLET
+========================= */
 
 @media (max-width: 1100px) {
     .choice-cards {
@@ -511,7 +517,9 @@
     }
 }
 
-/* MOBILE DOS CARDS SUPERIORES */
+/* =========================
+   MOBILE DOS CARDS SUPERIORES
+========================= */
 
 @media (max-width: 620px) {
     .choice-cards {
@@ -617,15 +625,18 @@
     }
 }
 
-/* PRODUTOS EM 2 COLUNAS NO MOBILE */
+/* =========================
+   PRODUTOS MOBILE - 2 POR LINHA
+========================= */
 
-@media (max-width: 620px) {
+@media (max-width: 768px) {
     .home-product-grid {
         grid-template-columns: repeat(2, 1fr);
     }
 
-    .home-product-image-link {
-        height: 220px;
+    .home-product-image-link,
+    .product-card-vip .home-product-image-link {
+        height: 180px;
     }
 
     .home-product-image {
@@ -633,27 +644,32 @@
         height: 82%;
     }
 
-    .home-product-info {
+    .home-product-info,
+    .product-card-vip .home-product-info {
         padding: 12px;
     }
 
-    .home-product-title {
+    .home-product-title,
+    .product-card-vip .home-product-title {
         font-size: 14px;
         line-height: 1.25;
         margin-bottom: 6px;
     }
 
-    .home-product-price {
+    .home-product-price,
+    .product-card-vip .home-product-price {
         font-size: 18px;
         margin-bottom: 4px;
     }
 
-    .home-product-installments {
+    .home-product-installments,
+    .product-card-vip .home-product-installments {
         font-size: 11px;
         margin-bottom: 10px;
     }
 
-    .home-product-button {
+    .home-product-button,
+    .product-card-vip .home-product-button {
         width: 100%;
         min-height: 38px;
         font-size: 10px;
@@ -687,4 +703,59 @@
 .hero-dot.active {
     background: #fff;
     transform: scale(1.25);
-} 
+}
+
+
+/* =========================
+   TÍTULO ACIMA DOS PRODUTOS
+========================= */
+
+.products-header {
+    width: 100%;
+    padding: 22px 28px 14px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.products-header h2 {
+    margin: 0;
+    color: #111;
+    font-size: 18px;
+    font-weight: 950;
+    letter-spacing: .5px;
+}
+
+.products-header a {
+    color: #7b2de2;
+    font-size: 12px;
+    font-weight: 900;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.products-header a i {
+    font-size: 11px;
+}
+
+@media (max-width: 768px) {
+    .products-header {
+        padding: 18px 10px 12px;
+    }
+
+    .products-header h2 {
+        font-size: 13px;
+    }
+
+    .products-header a {
+        font-size: 9px;
+        gap: 6px;
+    }
+
+    .products-header a i {
+        font-size: 9px;
+    }
+}
