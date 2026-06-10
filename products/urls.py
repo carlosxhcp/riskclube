@@ -17,7 +17,7 @@ urlpatterns = [
     ),
     path(
     "produto/<slug:slug>/personalizar/",
-    views.vip_customization_choice,
-    name="vip_customization_choice"
+    views.customization_choice,
+    name="customization_choice"
     ),
 ]
