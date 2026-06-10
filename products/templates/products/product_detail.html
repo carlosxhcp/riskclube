@@ -193,8 +193,6 @@
                             </button>
                         </div>
                     </div>
-
-                    <small id="customNameLimitText">Máximo de 15 caracteres</small>
                 </div>
             </div>
 
@@ -622,6 +620,14 @@
                 this.classList.add("active");
 
                 selectedEngravingSide = this.dataset.engravingSide || "front";
+
+                if (selectedEngravingSide === "front") {
+                    setBottleView("front", true);
+                }
+
+                if (selectedEngravingSide === "back") {
+                    setBottleView("back", true);
+                }
 
                 updateNamePreviewVisibility();
             });
