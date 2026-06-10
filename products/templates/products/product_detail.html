@@ -16,7 +16,7 @@
 
         <div class="product-thumbs"></div>
 
-        <div class="product-main-image mockup-area">
+        <div class="product-main-image">
 
             <button type="button" class="gallery-arrow left" id="prevImage">‹</button>
 
@@ -105,48 +105,6 @@
                 {% endfor %}
 
             </div>
-
-        </div>
-
-        <div class="engraving-box">
-
-            <label class="engraving-label">Selecione uma gravação</label>
-
-            <div class="engraving-options-wrapper">
-
-                {% for mockup in product.engraving_mockups.all %}
-                    {% if mockup.active %}
-                        <button
-                            type="button"
-                            class="engraving-option"
-                            data-variant-id="{% if mockup.variant %}{{ mockup.variant.id }}{% endif %}"
-                            data-engraving-id="{{ mockup.id }}"
-                            data-engraving-name="{{ mockup.name }}"
-                            data-engraving-image="{{ mockup.main_image.url }}"
-                            data-images='[
-                                "{{ mockup.main_image.url }}"
-                                {% for img in mockup.images.all %}
-                                    {% if img.active %}
-                                        ,"{{ img.image.url }}"
-                                    {% endif %}
-                                {% endfor %}
-                            ]'
-                        >
-                            <img src="{{ mockup.thumbnail.url }}" alt="{{ mockup.name }}">
-                            <span>{{ mockup.name }}</span>
-                        </button>
-                    {% endif %}
-                {% empty %}
-                    <p class="engraving-empty">
-                        Nenhuma gravação cadastrada ainda.
-                    </p>
-                {% endfor %}
-
-            </div>
-
-            <input type="hidden" id="selectedEngravingId">
-            <input type="hidden" id="selectedEngravingName">
-            <input type="hidden" id="selectedEngravingImage">
 
         </div>
 
@@ -295,7 +253,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const mainImage = document.getElementById("mainProductImage");
     const thumbsContainer = document.querySelector(".product-thumbs");
     const colorButtons = document.querySelectorAll(".color-dot");
-    const engravingButtons = document.querySelectorAll(".engraving-option");
 
     const selectedColorName = document.getElementById("selectedColorName");
     const selectedSizeName = document.getElementById("selectedSizeName");
@@ -304,48 +261,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const prevBtn = document.getElementById("prevImage");
     const nextBtn = document.getElementById("nextImage");
 
-    const hiddenEngravingId = document.getElementById("selectedEngravingId");
-    const hiddenEngravingName = document.getElementById("selectedEngravingName");
-    const hiddenEngravingImage = document.getElementById("selectedEngravingImage");
-
     let currentImages = [];
     let currentIndex = 0;
-    let currentVariantId = "";
-
-    function clearSelectedEngraving() {
-        if (hiddenEngravingId) hiddenEngravingId.value = "";
-        if (hiddenEngravingName) hiddenEngravingName.value = "";
-        if (hiddenEngravingImage) hiddenEngravingImage.value = "";
-
-        engravingButtons.forEach(btn => {
-            btn.classList.remove("selected");
-        });
-    }
-
-    function filterEngravingsByVariant(variantId) {
-        let hasVisible = false;
-
-        engravingButtons.forEach(button => {
-            const buttonVariantId = button.dataset.variantId || "";
-
-            if (!variantId && !buttonVariantId) {
-                button.style.display = "";
-                hasVisible = true;
-            } else if (variantId && buttonVariantId === variantId) {
-                button.style.display = "";
-                hasVisible = true;
-            } else {
-                button.style.display = "none";
-                button.classList.remove("selected");
-            }
-        });
-
-        const engravingBox = document.querySelector(".engraving-box");
-
-        if (engravingBox) {
-            engravingBox.style.display = hasVisible ? "" : "none";
-        }
-    }
 
     function updateMainImage(index) {
         if (!mainImage || !currentImages.length) return;
@@ -448,7 +365,6 @@ document.addEventListener("DOMContentLoaded", function () {
     colorButtons.forEach(button => {
         button.addEventListener("click", function () {
             const colorName = this.dataset.colorName || "";
-            currentVariantId = this.dataset.variantId || "";
 
             let images = [];
             let sizes = [];
@@ -477,44 +393,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
             renderGallery(images);
             renderSizes(sizes);
-            clearSelectedEngraving();
-            filterEngravingsByVariant(currentVariantId);
-        });
-    });
-
-    engravingButtons.forEach(button => {
-        button.addEventListener("click", function () {
-            const buttonVariantId = this.dataset.variantId || "";
-
-            if (buttonVariantId !== currentVariantId) return;
-
-            engravingButtons.forEach(btn => {
-                btn.classList.remove("selected");
-            });
-
-            this.classList.add("selected");
-
-            const engravingId = this.dataset.engravingId || "";
-            const engravingName = this.dataset.engravingName || "";
-            const engravingImage = this.dataset.engravingImage || "";
-
-            let engravingImages = [];
-
-            try {
-                engravingImages = JSON.parse(this.dataset.images);
-            } catch (error) {
-                engravingImages = [];
-            }
-
-            if (hiddenEngravingId) hiddenEngravingId.value = engravingId;
-            if (hiddenEngravingName) hiddenEngravingName.value = engravingName;
-            if (hiddenEngravingImage) hiddenEngravingImage.value = engravingImage;
-
-            if (engravingImages.length) {
-                renderGallery(engravingImages);
-            } else if (engravingImage) {
-                renderGallery([engravingImage]);
-            }
         });
     });
 
@@ -536,8 +414,6 @@ document.addEventListener("DOMContentLoaded", function () {
         let firstImages = [];
         let firstSizes = [];
 
-        currentVariantId = firstColorButton.dataset.variantId || "";
-
         try {
             firstImages = JSON.parse(firstColorButton.dataset.images);
         } catch (error) {
@@ -556,7 +432,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         renderGallery(firstImages);
         renderSizes(firstSizes);
-        filterEngravingsByVariant(currentVariantId);
     }
 
 });
@@ -595,12 +470,6 @@ document.addEventListener("DOMContentLoaded", function () {
             ? selectedColorBtn.dataset.image
             : "";
 
-        const engravingId = document.getElementById("selectedEngravingId")?.value || "";
-        const engravingName = document.getElementById("selectedEngravingName")?.value || "";
-        const engravingImage = document.getElementById("selectedEngravingImage")?.value || "";
-
-        const finalImage = engravingImage || selectedImage;
-
         addCartBtn.disabled = true;
         addCartBtn.innerText = "Adicionando...";
 
@@ -618,10 +487,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     quantity: 1,
                     size: selectedSize,
                     color: selectedColor,
-                    image: finalImage,
-                    engraving_id: engravingId,
-                    engraving_name: engravingName,
-                    engraving_image: engravingImage
+                    image: selectedImage
                 })
             });
 
@@ -665,6 +531,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 });
 </script>
+
 <script>
 document.addEventListener("DOMContentLoaded", () => {
     const cards = [...document.querySelectorAll(".community-card")];

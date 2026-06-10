@@ -4,23 +4,29 @@ from django.utils.text import slugify
 
 
 class Product(models.Model):
-    name = models.CharField(max_length=255)
-    slug = models.SlugField(unique=True)
-
-    category = models.CharField(
-    max_length=30,
-    choices=[
+    CATEGORY_CHOICES = [
         ("termicas", "Térmicas"),
         ("squeeze", "Squeeze"),
         ("personalizadas", "Personalizadas"),
-    ],
-    default="termicas",
-)
+    ]
+
+    name = models.CharField(max_length=255)
+    slug = models.SlugField(unique=True, blank=True)
+
+    category = models.CharField(
+        max_length=30,
+        choices=CATEGORY_CHOICES,
+        default="termicas",
+    )
 
     price = models.DecimalField(max_digits=10, decimal_places=2)
 
     image = models.ImageField(upload_to="products/")
-    image_hover = models.ImageField(upload_to="products/", blank=True, null=True)
+    image_hover = models.ImageField(
+        upload_to="products/",
+        blank=True,
+        null=True
+    )
 
     description = models.TextField(blank=True)
 
@@ -37,10 +43,10 @@ class Product(models.Model):
     available = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
 
-    is_vip = models.BooleanField(default=False, verbose_name="Produto VIP")
-
     class Meta:
         ordering = ["-created"]
+        verbose_name = "Produto"
+        verbose_name_plural = "Produtos"
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -73,8 +79,13 @@ class ProductImage(models.Model):
     image = models.ImageField(upload_to="products/gallery/")
     alt = models.CharField(max_length=120, blank=True)
 
+    class Meta:
+        verbose_name = "Imagem do produto"
+        verbose_name_plural = "Imagens do produto"
+
     def __str__(self):
         return f"Imagem de {self.product.name}"
+
 
 class ProductVariant(models.Model):
     product = models.ForeignKey(
@@ -90,6 +101,8 @@ class ProductVariant(models.Model):
 
     class Meta:
         ordering = ["id"]
+        verbose_name = "Variação de cor"
+        verbose_name_plural = "Variações de cor"
 
     def __str__(self):
         return f"{self.product.name} - {self.color_name}"
@@ -103,6 +116,12 @@ class VariantImage(models.Model):
     )
 
     image = models.ImageField(upload_to="products/variant_gallery/")
+    alt = models.CharField(max_length=120, blank=True)
+    active = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = "Imagem da variação"
+        verbose_name_plural = "Imagens da variação"
 
     def __str__(self):
         return f"Imagem de {self.variant}"
@@ -120,55 +139,8 @@ class ProductSize(models.Model):
 
     class Meta:
         ordering = ["id"]
+        verbose_name = "Tamanho"
+        verbose_name_plural = "Tamanhos"
 
     def __str__(self):
         return f"{self.variant.color_name} - {self.name}"
-
-class EngravingMockup(models.Model):
-    product = models.ForeignKey(
-        Product,
-        on_delete=models.CASCADE,
-        related_name="engraving_mockups"
-    )
-
-    variant = models.ForeignKey(
-        ProductVariant,
-        on_delete=models.CASCADE,
-        related_name="engraving_mockups",
-        blank=True,
-        null=True
-    )
-
-    name = models.CharField(max_length=100)
-    
-    thumbnail = models.ImageField(
-    upload_to="engraving_mockups/thumbs/"
-)
-
-    main_image = models.ImageField(
-        upload_to="engraving_mockups/main/"
-    )
-
-    active = models.BooleanField(default=True)
-
-    def __str__(self):
-        return self.name
-
-
-class EngravingMockupImage(models.Model):
-    mockup = models.ForeignKey(
-        EngravingMockup,
-        on_delete=models.CASCADE,
-        related_name="images"
-    )
-
-    image = models.ImageField(upload_to="engraving_mockups/gallery/")
-    alt = models.CharField(max_length=120, blank=True)
-    active = models.BooleanField(default=True)
-
-    class Meta:
-        verbose_name = "Imagem extra do mockup"
-        verbose_name_plural = "Imagens extras do mockup"
-
-    def __str__(self):
-        return f"Imagem de {self.mockup.name}"
