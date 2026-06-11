@@ -33,7 +33,7 @@ class Order(models.Model):
     shipping_company = models.CharField(max_length=100, blank=True)
     shipping_cep = models.CharField(max_length=20, blank=True)
 
-    infinitepay_link = models.URLField(blank=True)
+    infinitepay_link = models.URLField(max_length=1000, blank=True)
     infinitepay_reference = models.CharField(max_length=120, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
