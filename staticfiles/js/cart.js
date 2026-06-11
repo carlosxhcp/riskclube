@@ -53,6 +53,15 @@ function getCookie(name) {
     return cookieValue;
 }
 
+function escapeHtml(value) {
+    return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
 function filterShippingOptions(options) {
     if (!Array.isArray(options)) return [];
 
@@ -192,39 +201,57 @@ function renderCart(data) {
         return;
     }
 
-    sideCartContent.innerHTML = data.items.map(item => `
-        <div class="cart-item">
-            <img src="${item.image}" alt="${item.name}">
+    sideCartContent.innerHTML = data.items.map(item => {
+        const customNameHtml = item.custom_name
+            ? `<div class="cart-item-size">Nome: ${escapeHtml(item.custom_name)}</div>`
+            : "";
 
-            <div class="cart-item-info">
-                <div class="cart-item-name">
-                    ${item.name}
+        const engravingHtml = item.engraving_side
+            ? `<div class="cart-item-size">Gravação: ${escapeHtml(item.engraving_side)}</div>`
+            : "";
+
+        const directionHtml = item.name_direction
+            ? `<div class="cart-item-size">Direção: ${escapeHtml(item.name_direction)}</div>`
+            : "";
+
+        return `
+            <div class="cart-item">
+                <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)}">
+
+                <div class="cart-item-info">
+                    <div class="cart-item-name">
+                        ${escapeHtml(item.name)}
+                    </div>
+
+                    <div class="cart-item-size">
+                        Cor: ${escapeHtml(item.color || "-")}
+                    </div>
+
+                    <div class="cart-item-size">
+                        Tamanho: ${escapeHtml(item.size || "-")}
+                    </div>
+
+                    ${customNameHtml}
+                    ${engravingHtml}
+                    ${directionHtml}
+
+                    <div class="cart-item-installments">
+                        ${escapeHtml(item.installments || "")}
+                    </div>
+
+                    <div class="cart-qty-controls">
+                        <button type="button" class="cart-qty-btn" data-cart-key="${escapeHtml(item.cart_key)}" data-change="-1">−</button>
+                        <span>${item.quantity}</span>
+                        <button type="button" class="cart-qty-btn" data-cart-key="${escapeHtml(item.cart_key)}" data-change="1">+</button>
+                    </div>
                 </div>
 
-                <div class="cart-item-size">
-                    Cor: ${item.color || "-"}
-                </div>
-
-                <div class="cart-item-size">
-                    Tamanho: ${item.size || "-"}
-                </div>
-
-                <div class="cart-item-installments">
-                    ${item.installments || ""}
-                </div>
-
-                <div class="cart-qty-controls">
-                    <button type="button" onclick="updateCartQty('${item.cart_key}', -1)">−</button>
-                    <span>${item.quantity}</span>
-                    <button type="button" onclick="updateCartQty('${item.cart_key}', 1)">+</button>
+                <div class="cart-item-price">
+                    ${formatMoney(item.subtotal)}
                 </div>
             </div>
-
-            <div class="cart-item-price">
-                ${formatMoney(item.subtotal)}
-            </div>
-        </div>
-    `).join("");
+        `;
+    }).join("");
 }
 
 // =============================
@@ -267,7 +294,24 @@ async function updateCartQty(cartKey, change) {
 }
 
 // =============================
-// CALCULAR FRETE - MELHOR ENVIO
+// CLIQUE NOS BOTÕES + E -
+// =============================
+
+document.addEventListener("click", function (event) {
+    const button = event.target.closest(".cart-qty-btn");
+
+    if (!button) return;
+
+    const cartKey = button.dataset.cartKey;
+    const change = Number(button.dataset.change);
+
+    if (!cartKey || !change) return;
+
+    updateCartQty(cartKey, change);
+});
+
+// =============================
+// CALCULAR FRETE
 // =============================
 
 async function calculateShipping() {
@@ -302,7 +346,6 @@ async function calculateShipping() {
         const data = await response.json();
 
         if (!response.ok || !data.success) {
-            console.error("Erro Melhor Envio:", data);
             shippingOptionsBox.innerHTML = `<p>${data.error || "Erro ao calcular frete."}</p>`;
             return;
         }
@@ -319,27 +362,27 @@ async function calculateShipping() {
                 <input
                     type="radio"
                     name="shipping_option"
-                    value="${option.id}"
-                    data-id="${option.id}"
-                    data-name="${option.name}"
-                    data-company="${option.company || ""}"
-                    data-price="${option.price}"
-                    data-delivery-time="${option.delivery_time || ""}"
-                    data-cep="${option.cep || cep}"
-                    data-icon="${option.icon || ""}"
+                    value="${escapeHtml(option.id)}"
+                    data-id="${escapeHtml(option.id)}"
+                    data-name="${escapeHtml(option.name)}"
+                    data-company="${escapeHtml(option.company || "")}"
+                    data-price="${escapeHtml(option.price)}"
+                    data-delivery-time="${escapeHtml(option.delivery_time || "")}"
+                    data-cep="${escapeHtml(option.cep || cep)}"
+                    data-icon="${escapeHtml(option.icon || "")}"
                     ${index === 0 ? "checked" : ""}
                 >
 
                 <div class="shipping-option-info">
                     ${
                         option.icon
-                            ? `<img src="${option.icon}" class="shipping-company-icon" alt="${option.company || option.name}">`
+                            ? `<img src="${escapeHtml(option.icon)}" class="shipping-company-icon" alt="${escapeHtml(option.company || option.name)}">`
                             : `<span class="shipping-company-fallback">🚚</span>`
                     }
 
                     <span>
-                        ${option.company ? option.company + " - " : ""}${option.name}
-                        ${option.delivery_time ? `<small>${option.delivery_time} dias úteis</small>` : ""}
+                        ${option.company ? escapeHtml(option.company) + " - " : ""}${escapeHtml(option.name)}
+                        ${option.delivery_time ? `<small>${escapeHtml(option.delivery_time)} dias úteis</small>` : ""}
                     </span>
                 </div>
 
