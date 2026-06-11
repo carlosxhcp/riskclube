@@ -726,8 +726,10 @@ def checkout_infinitepay_cart(request):
     discount = to_decimal(payload_cart.get("discount", 0))
     total = subtotal + shipping_price - discount
 
-    if total < 0:
-        total = Decimal("0.00")
+    if total <= 0:
+        return HttpResponseBadRequest(
+            "O total do pedido precisa ser maior que zero."
+        )
 
     coupon_codes = ", ".join([
         coupon.get("code", "")
@@ -746,7 +748,7 @@ def checkout_infinitepay_cart(request):
         shipping_cep=shipping.get("cep", "") if shipping else "",
     )
 
-    items = []
+    description_summary = []
 
     for cart_key, item in cart.items():
         name = item.get("name", "Produto")
@@ -774,7 +776,7 @@ def checkout_infinitepay_cart(request):
             image=item.get("image", ""),
         )
 
-        description_parts = [name]
+        description_parts = [f"{quantity}x {name}"]
 
         if color:
             description_parts.append(f"Cor: {color}")
@@ -785,30 +787,20 @@ def checkout_infinitepay_cart(request):
         if custom_name:
             description_parts.append(f"Nome: {custom_name}")
 
-        items.append({
-            "quantity": quantity,
-            "price": money_to_cents(price),
-            "description": " | ".join(description_parts),
-        })
+        description_summary.append(" | ".join(description_parts))
 
-    if shipping_price > 0:
-        shipping_description = f"Frete - {shipping.get('name', 'Entrega')}"
+    checkout_description = f"Pedido Risk Clube #{order.id}"
 
-        if shipping.get("company"):
-            shipping_description += f" | {shipping.get('company')}"
+    if coupon_codes:
+        checkout_description += f" | Cupom: {coupon_codes}"
 
-        items.append({
+    items = [
+        {
             "quantity": 1,
-            "price": money_to_cents(shipping_price),
-            "description": shipping_description,
-        })
-
-    if discount > 0:
-        items.append({
-            "quantity": 1,
-            "price": -money_to_cents(discount),
-            "description": f"Desconto de cupom {coupon_codes}".strip(),
-        })
+            "price": money_to_cents(total),
+            "description": checkout_description,
+        }
+    ]
 
     payload = {
         "handle": settings.INFINITEPAY_HANDLE,
