@@ -1,55 +1,40 @@
-// =============================
-// ELEMENTOS NEWSLETTER
-// =============================
+document.addEventListener("DOMContentLoaded", function () {
+    const popup = document.getElementById("newsletterPopup");
+    const closeBtn = document.getElementById("closeNewsletterPopup");
+    const noBtn = document.getElementById("noNewsletterPopup");
 
-const newsletterPopup = document.getElementById("newsletterPopup");
-const closeNewsletterPopup = document.getElementById("closeNewsletterPopup");
-const noNewsletterPopup = document.getElementById("noNewsletterPopup");
+    if (!popup) return;
 
-// =============================
-// FECHAR NEWSLETTER
-// =============================
+    const today = new Date().toISOString().slice(0, 10);
+    const lastSeen = localStorage.getItem("riskNewsletterLastSeen");
 
-function closeNewsletter() {
-    if (!newsletterPopup) return;
-
-    newsletterPopup.classList.remove("active");
-
-    sessionStorage.setItem("newsletter_closed", "true");
-}
-
-// =============================
-// ABRIR NEWSLETTER
-// =============================
-
-window.addEventListener("load", () => {
-    if (!newsletterPopup) return;
-
-    const popupClosed = sessionStorage.getItem("newsletter_closed");
-
-    if (!popupClosed) {
-        setTimeout(() => {
-            newsletterPopup.classList.add("active");
-        }, 1200);
+    function openPopup() {
+        popup.classList.add("active");
+        document.body.style.overflow = "hidden";
     }
-});
 
-// =============================
-// EVENTOS
-// =============================
+    function closePopup() {
+        popup.classList.remove("active");
+        document.body.style.overflow = "";
+        localStorage.setItem("riskNewsletterLastSeen", today);
+    }
 
-if (closeNewsletterPopup) {
-    closeNewsletterPopup.addEventListener("click", closeNewsletter);
-}
+    if (lastSeen !== today) {
+        setTimeout(openPopup, 1200);
+    }
 
-if (noNewsletterPopup) {
-    noNewsletterPopup.addEventListener("click", closeNewsletter);
-}
+    closeBtn?.addEventListener("click", closePopup);
+    noBtn?.addEventListener("click", closePopup);
 
-if (newsletterPopup) {
-    newsletterPopup.addEventListener("click", (e) => {
-        if (e.target === newsletterPopup) {
-            closeNewsletter();
+    popup.addEventListener("click", function (e) {
+        if (e.target === popup) {
+            closePopup();
         }
     });
-}
+
+    document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && popup.classList.contains("active")) {
+            closePopup();
+        }
+    });
+});

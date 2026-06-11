@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<section style="padding:100px 20px;text-align:center;">
+    <h1>Pedido recebido!</h1>
+
+    {% if order %}
+        <p>Pedido #{{ order.id }}</p>
+
+        <p>
+            Assim que o pagamento for confirmado,
+            começaremos a produção.
+        </p>
+
+        <h3>
+            Total: R$ {{ order.total }}
+        </h3>
+    {% endif %}
+</section>
+
+{% endblock %}

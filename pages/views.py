@@ -3,6 +3,7 @@ from products.models import Product
 from .models import CommunityReview
 
 
+from orders.models import Order
 from .models import CommunityReview
 
 def home(request):
@@ -68,3 +69,21 @@ def contato(request):
 
 def about(request):
     return render(request, "pages/about.html")
+
+
+def checkout_success(request):
+    order_id = request.GET.get("order")
+
+    order = None
+
+    if order_id:
+        try:
+            order = Order.objects.get(id=order_id)
+        except Order.DoesNotExist:
+            pass
+
+    return render(
+        request,
+        "pages/success.html",
+        {"order": order}
+    )

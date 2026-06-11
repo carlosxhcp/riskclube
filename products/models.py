@@ -11,6 +11,7 @@ class Product(models.Model):
     ]
 
     ENGRAVING_POSITION_CHOICES = [
+        ("none", "Nenhuma gravação"),
         ("front", "Frente"),
         ("back", "Costas"),
         ("front_back", "Frente e costas"),

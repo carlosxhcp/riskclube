@@ -1,7 +1,3 @@
-/* ============================= */
-/* FUNDO DO POPUP */
-/* ============================= */
-
 .newsletter-popup-overlay {
     position: fixed;
     inset: 0;
@@ -11,9 +7,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 16px;
     opacity: 0;
     visibility: hidden;
-    transition: .3s ease;
+    transition: .25s ease;
 }
 
 .newsletter-popup-overlay.active {
@@ -21,56 +18,38 @@
     visibility: visible;
 }
 
-/* ============================= */
-/* CAIXA DO POPUP */
-/* ============================= */
-
 .newsletter-popup {
-    width: 920px;
-    max-width: calc(100vw - 20px);
-    min-height: 640px;
+    width: min(760px, 100%);
+    max-height: 88vh;
     background: #fff;
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: .95fr 1fr;
     position: relative;
     overflow: hidden;
-    border-radius: 28px;
-    box-shadow: 0 30px 80px rgba(0, 0, 0, .28);
+    border-radius: 22px;
+    box-shadow: 0 25px 70px rgba(0, 0, 0, .25);
 }
-
-/* ============================= */
-/* BOTÃO DE FECHAR */
-/* ============================= */
 
 .newsletter-close {
     position: absolute;
-    top: 18px;
-    right: 18px;
-    width: 38px;
-    height: 38px;
+    top: 12px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
     border: 0;
-    background: transparent;
-    font-size: 20px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.85);
+    font-size: 18px;
     color: #111;
     z-index: 5;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: .2s ease;
 }
-
-.newsletter-close:hover {
-    transform: scale(1.08);
-}
-
-/* ============================= */
-/* IMAGEM DO POPUP */
-/* ============================= */
 
 .newsletter-image {
-    width: 100%;
-    height: 100%;
+    min-height: 430px;
     overflow: hidden;
 }
 
@@ -80,168 +59,147 @@
     object-fit: cover;
 }
 
-/* ============================= */
-/* CONTEÚDO DO POPUP */
-/* ============================= */
-
 .newsletter-content {
-    padding: 70px 55px 55px;
+    padding: 46px 38px 38px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
-    background: #fff;
 }
 
 .newsletter-logo {
-    width: 145px;
-    margin-bottom: 38px;
+    width: 110px;
+    margin-bottom: 24px;
 }
 
 .newsletter-content h2 {
-    font-size: 62px;
-    line-height: 1;
+    font-size: clamp(36px, 4vw, 52px);
+    line-height: .95;
     font-weight: 900;
     color: #000;
-    margin-bottom: 34px;
+    margin-bottom: 20px;
     letter-spacing: -.05em;
 }
 
 .newsletter-content p {
-    font-size: 24px;
-    line-height: 1.55;
+    font-size: clamp(16px, 2vw, 20px);
+    line-height: 1.45;
     color: #333;
-    margin-bottom: 52px;
+    margin-bottom: 30px;
 }
-
-/* ============================= */
-/* FORMULÁRIO DO POPUP */
-/* ============================= */
 
 .newsletter-form {
     width: 100%;
-    max-width: 360px;
+    max-width: 310px;
 }
 
 .newsletter-form input {
     width: 100%;
-    height: 60px;
+    height: 48px;
     border: 0;
-    border-bottom: 1px solid #999;
+    border-bottom: 1px solid #aaa;
     outline: none;
-    font-size: 28px;
+    font-size: 18px;
     color: #111;
     background: transparent;
-    margin-bottom: 28px;
-    transition: .2s ease;
+    margin-bottom: 18px;
 }
 
 .newsletter-form input:focus {
     border-color: #111;
 }
 
-.newsletter-form input::placeholder {
-    color: #777;
-}
-
 .newsletter-form button {
     width: 100%;
-    height: 66px;
+    height: 52px;
     border: 0;
     border-radius: 999px;
     background: #000;
     color: #fff;
-    font-size: 30px;
+    font-size: 18px;
     font-weight: 900;
-    letter-spacing: -.02em;
-    transition: .2s ease;
     cursor: pointer;
+    transition: .2s ease;
 }
 
 .newsletter-form button:hover {
-    opacity: .93;
     transform: translateY(-1px);
+    opacity: .92;
 }
 
-/* ============================= */
-/* BOTÃO NÃO OBRIGADO */
-/* ============================= */
-
 .newsletter-no {
-    margin-top: 34px;
+    margin-top: 22px;
     border: 0;
     background: transparent;
-    font-size: 18px;
-    font-weight: 600;
+    font-size: 14px;
+    font-weight: 700;
     color: #111;
     cursor: pointer;
-    transition: .2s ease;
 }
 
 .newsletter-no:hover {
     opacity: .65;
 }
 
-/* ============================= */
-/* POPUP MOBILE */
-/* ============================= */
-
 @media (max-width: 768px) {
     .newsletter-popup {
+        width: min(420px, 100%);
         grid-template-columns: 1fr;
-        width: calc(100vw - 20px);
-        min-height: auto;
-        max-height: 92vh;
+        max-height: 90vh;
         overflow-y: auto;
-        border-radius: 22px;
+        border-radius: 18px;
     }
 
     .newsletter-image {
-        height: 300px;
+        min-height: 0;
+        height: 190px;
     }
 
     .newsletter-content {
-        padding: 42px 24px 34px;
+        padding: 30px 22px 28px;
     }
 
     .newsletter-logo {
-        width: 105px;
-        margin-bottom: 22px;
+        width: 90px;
+        margin-bottom: 18px;
     }
 
     .newsletter-content h2 {
-        font-size: 42px;
-        margin-bottom: 22px;
+        font-size: 36px;
+        margin-bottom: 16px;
     }
 
     .newsletter-content p {
-        font-size: 18px;
-        margin-bottom: 34px;
-    }
-
-    .newsletter-form {
-        max-width: 100%;
+        font-size: 16px;
+        margin-bottom: 24px;
     }
 
     .newsletter-form input {
-        height: 54px;
-        font-size: 22px;
-        margin-bottom: 20px;
+        height: 44px;
+        font-size: 16px;
     }
 
     .newsletter-form button {
-        height: 58px;
-        font-size: 22px;
+        height: 48px;
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 420px) {
+    .newsletter-popup-overlay {
+        padding: 10px;
     }
 
-    .newsletter-no {
-        margin-top: 22px;
-        font-size: 15px;
+    .newsletter-image {
+        height: 155px;
     }
 
-    .newsletter-close {
-        top: 12px;
-        right: 12px;
+    .newsletter-content {
+        padding: 26px 18px 24px;
+    }
+
+    .newsletter-content h2 {
+        font-size: 32px;
     }
 }

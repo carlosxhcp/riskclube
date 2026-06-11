@@ -9,7 +9,7 @@ from django.shortcuts import redirect, get_object_or_404
 from django.views.decorators.http import require_POST
 
 from products.models import Product
-
+from orders.models import Order, OrderItem
 
 FREE_SHIPPING_LIMIT = Decimal("250.00")
 
@@ -471,6 +471,126 @@ def checkout_infinitepay(request, product_id):
 
 
 def checkout_infinitepay_cart(request):
+    cart = request.session.get("cart", {})
+    shipping = request.session.get("shipping")
+
+    if not cart:
+        return HttpResponseBadRequest("Carrinho vazio.")
+
+    subtotal = get_cart_subtotal(cart)
+
+    if subtotal < FREE_SHIPPING_LIMIT and not shipping:
+        return HttpResponseBadRequest(
+            "Selecione uma opção de frete antes de finalizar a compra."
+        )
+
+    if subtotal >= FREE_SHIPPING_LIMIT:
+        shipping = {
+            "id": "free",
+            "name": "Frete grátis",
+            "company": "",
+            "price": 0,
+            "time": "",
+            "cep": shipping.get("cep", "") if shipping else "",
+            "icon": "",
+        }
+
+        request.session["shipping"] = shipping
+        request.session.modified = True
+
+    shipping_price = to_decimal(shipping.get("price", 0)) if shipping else Decimal("0.00")
+    discount = Decimal("0.00")
+    total = subtotal + shipping_price - discount
+
+    order = Order.objects.create(
+        user=request.user if request.user.is_authenticated else None,
+        email=request.user.email if request.user.is_authenticated else "",
+        subtotal=subtotal,
+        shipping_price=shipping_price,
+        discount=discount,
+        total=total,
+        shipping_name=shipping.get("name", "") if shipping else "",
+        shipping_company=shipping.get("company", "") if shipping else "",
+        shipping_cep=shipping.get("cep", "") if shipping else "",
+    )
+
+    items = []
+
+    for cart_key, item in cart.items():
+        name = item.get("name", "Produto")
+        size = item.get("size", "")
+        color = item.get("color", "")
+        custom_name = item.get("custom_name", "")
+
+        quantity = int(item.get("quantity", 1))
+        price = to_decimal(item.get("price", 0))
+        item_subtotal = price * quantity
+
+        OrderItem.objects.create(
+            order=order,
+            product_id=item.get("product_id"),
+            name=name,
+            size=size,
+            color=color,
+            custom_name=custom_name,
+            quantity=quantity,
+            price=price,
+            subtotal=item_subtotal,
+            image=item.get("image", ""),
+        )
+
+        description_parts = [name]
+
+        if color:
+            description_parts.append(f"Cor: {color}")
+
+        if size:
+            description_parts.append(f"Tamanho: {size}")
+
+        if custom_name:
+            description_parts.append(f"Nome: {custom_name}")
+
+        items.append({
+            "quantity": quantity,
+            "price": money_to_cents(price),
+            "description": " | ".join(description_parts),
+        })
+
+    if shipping_price > 0:
+        shipping_description = f"Frete - {shipping.get('name', 'Entrega')}"
+
+        if shipping.get("company"):
+            shipping_description += f" | {shipping.get('company')}"
+
+        items.append({
+            "quantity": 1,
+            "price": money_to_cents(shipping_price),
+            "description": shipping_description,
+        })
+
+    payload = {
+        "handle": settings.INFINITEPAY_HANDLE,
+        "redirect_url": f"{settings.SITE_URL}/sucesso/?order={order.id}",
+        "items": items,
+    }
+
+    response = requests.post(
+        "https://api.checkout.infinitepay.io/links",
+        json=payload,
+        timeout=15,
+    )
+
+    if response.status_code not in [200, 201]:
+        order.status = "cancelled"
+        order.save()
+        return HttpResponseBadRequest(response.text)
+
+    data = response.json()
+
+    order.infinitepay_link = data.get("url", "")
+    order.save()
+
+    return redirect(data["url"])
     cart = request.session.get("cart", {})
     shipping = request.session.get("shipping")
 
