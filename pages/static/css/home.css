@@ -955,3 +955,44 @@
         color: #7d2bc0;
     }
 }
+
+@media (max-width: 768px) {
+    .home-product-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .home-product-image-link {
+        height: 230px;
+    }
+
+    .home-product-image {
+        width: 82%;
+        height: 82%;
+    }
+
+    .home-product-info {
+        padding: 12px 10px 18px;
+    }
+
+    .home-product-title {
+        font-size: 13px;
+        line-height: 1.2;
+        min-height: 32px;
+    }
+
+    .home-product-price {
+        font-size: 18px;
+    }
+
+    .home-product-installments {
+        font-size: 11px;
+        margin-bottom: 12px;
+    }
+
+    .home-product-button {
+        width: 100%;
+        min-height: 40px;
+        font-size: 11px;
+        border-radius: 8px;
+    }
+}
