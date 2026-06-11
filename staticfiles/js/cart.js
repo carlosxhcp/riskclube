@@ -605,4 +605,58 @@ document.addEventListener("click", function (event) {
     }
 });
 
+const shippingAccordionBtn =
+    document.getElementById("shippingAccordionBtn");
+
+const couponAccordionBtn =
+    document.getElementById("couponAccordionBtn");
+
+const cartCouponBox =
+    document.getElementById("cartCouponBox");
+
+if (
+    shippingAccordionBtn &&
+    couponAccordionBtn &&
+    cartShippingBox &&
+    cartCouponBox
+) {
+
+    shippingAccordionBtn.addEventListener("click", () => {
+
+        const opening =
+            !cartShippingBox.classList.contains("open");
+
+        cartShippingBox.classList.remove("open");
+        cartCouponBox.classList.remove("open");
+
+        shippingAccordionBtn.classList.remove("active");
+        couponAccordionBtn.classList.remove("active");
+
+        if (opening) {
+            cartShippingBox.classList.add("open");
+            shippingAccordionBtn.classList.add("active");
+        }
+
+    });
+
+    couponAccordionBtn.addEventListener("click", () => {
+
+        const opening =
+            !cartCouponBox.classList.contains("open");
+
+        cartShippingBox.classList.remove("open");
+        cartCouponBox.classList.remove("open");
+
+        shippingAccordionBtn.classList.remove("active");
+        couponAccordionBtn.classList.remove("active");
+
+        if (opening) {
+            cartCouponBox.classList.add("open");
+            couponAccordionBtn.classList.add("active");
+        }
+
+    });
+
+}
+
 loadCart();

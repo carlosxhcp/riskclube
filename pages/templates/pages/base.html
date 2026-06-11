@@ -157,6 +157,7 @@
     <div class="cart-overlay" id="cartOverlay"></div>
 
     <aside class="side-cart" id="sideCart">
+
         <div class="side-cart-header">
             <div>
                 <span class="side-cart-kicker">Risk Clube</span>
@@ -168,18 +169,18 @@
             </button>
         </div>
 
-        <div class="side-cart-scroll">
-            <div class="free-shipping-box">
-                <div class="free-shipping-top">
-                    <i class="bi bi-truck"></i>
-                    <p id="freeShippingText">Adicione mais R$ 250 para Frete Grátis</p>
-                </div>
-
-                <div class="free-shipping-bar">
-                    <div class="free-shipping-progress" id="freeShippingProgress"></div>
-                </div>
+        <div class="free-shipping-box">
+            <div class="free-shipping-top">
+                <i class="bi bi-truck"></i>
+                <p id="freeShippingText">Adicione mais R$ 250 para Frete Grátis</p>
             </div>
 
+            <div class="free-shipping-bar">
+                <div class="free-shipping-progress" id="freeShippingProgress"></div>
+            </div>
+        </div>
+
+        <div class="side-cart-scroll">
             <div id="sideCartContent" class="side-cart-content">
                 <div class="empty-cart-box">
                     <i class="bi bi-bag"></i>
@@ -187,53 +188,68 @@
                     <small>Adicione uma garrafa para continuar.</small>
                 </div>
             </div>
-
-            <div class="cart-shipping-box" id="cartShippingBox">
-                <label for="shippingCepInput" class="cart-section-label">
-                    Calcular frete
-                </label>
-
-                <div class="cart-inline-form">
-                    <input
-                        type="text"
-                        id="shippingCepInput"
-                        placeholder="Digite seu CEP"
-                        maxlength="9"
-                        autocomplete="postal-code"
-                    >
-
-                    <button type="button" id="calculateShippingBtn">
-                        Calcular
-                    </button>
-                </div>
-
-                <div class="shipping-options" id="shippingOptions"></div>
-            </div>
-
-            <div class="cart-coupon-box">
-                <label for="couponCodeInput" class="cart-section-label">
-                    Cupom de desconto
-                </label>
-
-                <div class="cart-inline-form">
-                    <input
-                        type="text"
-                        id="couponCodeInput"
-                        placeholder="Digite seu cupom"
-                        autocomplete="off"
-                    >
-
-                    <button type="button" id="applyCouponBtn">
-                        Aplicar
-                    </button>
-                </div>
-
-                <div id="couponMessages"></div>
-                <div id="appliedCoupons"></div>
-            </div>
         </div>
 
         <div class="side-cart-footer" id="sideCartFooter">
+
+            <div class="cart-accordion">
+                <button type="button" class="cart-accordion-btn" id="shippingAccordionBtn">
+                    <span>Calcular frete</span>
+                    <i class="bi bi-chevron-down"></i>
+                </button>
+
+                <div class="cart-shipping-box" id="cartShippingBox">
+                    <label for="shippingCepInput" class="cart-section-label">
+                        Digite seu CEP
+                    </label>
+
+                    <div class="cart-inline-form">
+                        <input
+                            type="text"
+                            id="shippingCepInput"
+                            placeholder="Digite seu CEP"
+                            maxlength="9"
+                            autocomplete="postal-code"
+                        >
+
+                        <button type="button" id="calculateShippingBtn">
+                            Calcular
+                        </button>
+                    </div>
+
+                    <div class="shipping-options" id="shippingOptions"></div>
+                </div>
+            </div>
+
+            <div class="cart-accordion">
+                <button type="button" class="cart-accordion-btn" id="couponAccordionBtn">
+                    <span>Cupom de desconto</span>
+                    <i class="bi bi-chevron-down"></i>
+                </button>
+
+                <div class="cart-coupon-box" id="cartCouponBox">
+                    <label for="couponCodeInput" class="cart-section-label">
+                        Digite seu cupom
+                    </label>
+
+                    <div class="cart-inline-form">
+                        <input
+                            type="text"
+                            id="couponCodeInput"
+                            placeholder="Digite seu cupom"
+                            autocomplete="off"
+                        >
+
+                        <button type="button" id="applyCouponBtn">
+                            Aplicar
+                        </button>
+                    </div>
+
+                    <div id="couponMessages"></div>
+                    <div id="appliedCoupons"></div>
+                </div>
+            </div>
+
             <div class="cart-total-row">
                 <span>Subtotal</span>
                 <strong id="cartSubtotal">R$ 0,00</strong>
@@ -258,7 +274,9 @@
                 Finalizar compra
                 <i class="bi bi-arrow-right"></i>
             </a>
+
         </div>
+
     </aside>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
