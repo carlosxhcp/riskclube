@@ -218,10 +218,6 @@
                 <p>Confira as opções de tamanho disponíveis acima.</p>
             </details>
 
-            <details>
-                <summary>Avaliação</summary>
-                <p>Ainda sem avaliações.</p>
-            </details>
         </div>
 
         <div class="product-benefits">
@@ -485,24 +481,26 @@
                 btn.classList.toggle("active", btn.dataset.view === view);
             });
 
-            if (resetToFirstThumb) {
+            if (view === "front") {
                 currentIndex = 0;
+
+                mainImage.src =
+                    currentImages[0] ||
+                    productMainImageBox?.dataset.frontImage ||
+                    mainImage.src;
+
                 setActiveThumb(0);
             }
 
-            if (view === "front") {
-                mainImage.src =
-                    currentImages[currentIndex] ||
-                    productMainImageBox?.dataset.frontImage ||
-                    mainImage.src;
-            }
-
             if (view === "back" && productMainImageBox?.dataset.backImage) {
+                currentIndex = 1;
                 mainImage.src = productMainImageBox.dataset.backImage;
+                setActiveThumb(1);
             }
 
             updateNamePreviewVisibility();
         }
+
 
         function updateMainImage(index) {
             if (!mainImage || !currentImages.length) return;
@@ -522,11 +520,26 @@
         function renderGallery(images) {
             if (!thumbsContainer || !images.length) return;
 
-            currentImages = images;
+            const backImage = productMainImageBox?.dataset.backImage;
+
+            currentImages = [];
+
+            if (images[0]) {
+                currentImages.push(images[0]);
+            }
+
+            if (backImage) {
+                currentImages.push(backImage);
+            }
+
+            images.slice(1).forEach(imageUrl => {
+                currentImages.push(imageUrl);
+            });
+
             currentIndex = 0;
             thumbsContainer.innerHTML = "";
 
-            images.forEach((imageUrl, index) => {
+            currentImages.forEach((imageUrl, index) => {
                 const button = document.createElement("button");
 
                 button.type = "button";
@@ -539,13 +552,41 @@
                 button.innerHTML = `<img src="${imageUrl}" alt="{{ product.name }}">`;
 
                 button.addEventListener("click", function () {
-                    updateMainImage(index);
+                    currentIndex = index;
+                    mainImage.src = currentImages[currentIndex];
+
+                    if (index === 0) {
+                        currentBottleView = "front";
+
+                        bottleViewButtons.forEach(btn => {
+                            btn.classList.toggle("active", btn.dataset.view === "front");
+                        });
+                    }
+                    else if (index === 1 && backImage) {
+                        currentBottleView = "back";
+
+                        bottleViewButtons.forEach(btn => {
+                            btn.classList.toggle("active", btn.dataset.view === "back");
+                        });
+                    }
+                    else {
+                        currentBottleView = "gallery";
+
+                        bottleViewButtons.forEach(btn => {
+                            btn.classList.remove("active");
+                        });
+                    }
+
+                    setActiveThumb(currentIndex);
+                    updateNamePreviewVisibility();
                 });
 
                 thumbsContainer.appendChild(button);
             });
 
-            updateMainImage(0);
+            mainImage.src = currentImages[0];
+            setActiveThumb(0);
+            setBottleView("front", false);
         }
 
         function renderSizes(sizes) {
