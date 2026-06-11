@@ -21,3 +21,15 @@ class CommunityReview(models.Model):
 
     def __str__(self):
         return self.instagram
+
+class NewsletterLead(models.Model):
+    email = models.EmailField(unique=True)
+    coupon_code = models.CharField(max_length=50, default="RISK15")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Email da newsletter"
+        verbose_name_plural = "Emails da newsletter"
+
+    def __str__(self):
+        return self.email

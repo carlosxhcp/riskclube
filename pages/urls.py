@@ -13,4 +13,5 @@ urlpatterns = [
     views.checkout_success,
     name="checkout_success"
 ),
+path("newsletter/", views.newsletter_signup, name="newsletter_signup"),
 ]

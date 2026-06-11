@@ -125,3 +125,14 @@ MELHOR_ENVIO_TOKEN = config("MELHOR_ENVIO_TOKEN", default="")
 MELHOR_ENVIO_ORIGIN_CEP = config("MELHOR_ENVIO_ORIGIN_CEP", default="")
 MELHOR_ENVIO_ENV = config("MELHOR_ENVIO_ENV", default="sandbox")
 FREE_SHIPPING_LIMIT = config("FREE_SHIPPING_LIMIT", default=250, cast=int)
+
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+EMAIL_HOST_USER = "carlosxhcp@gmail.com"
+EMAIL_HOST_PASSWORD = "wseq yerx xzon dyrx"
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

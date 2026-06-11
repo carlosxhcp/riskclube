@@ -3,6 +3,13 @@ from products.models import Product
 from .models import CommunityReview
 
 
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from django.core.mail import send_mail
+from django.conf import settings
+
+from .models import NewsletterLead
+
 from cart.views import check_infinitepay_payment
 
 
@@ -111,3 +118,49 @@ def checkout_success(request):
         "pages/success.html",
         {"order": order}
     )
+
+
+@require_POST
+def newsletter_signup(request):
+    email = request.POST.get("email", "").strip().lower()
+    coupon_code = "RISK15"
+
+    if not email:
+        return JsonResponse({
+            "success": False,
+            "message": "Digite um e-mail válido."
+        }, status=400)
+
+    lead, created = NewsletterLead.objects.get_or_create(
+        email=email,
+        defaults={
+            "coupon_code": coupon_code
+        }
+    )
+
+    if not created:
+        return JsonResponse({
+            "success": False,
+            "message": "Este e-mail já recebeu um cupom."
+        }, status=400)
+
+    try:
+        send_mail(
+            subject="Seu cupom Risk Clube chegou!",
+            message=f"Use o cupom {coupon_code} e ganhe R$15 de desconto na sua compra.",
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[email],
+            fail_silently=False,
+        )
+    except Exception as error:
+        print("ERRO AO ENVIAR EMAIL:", error)
+
+        return JsonResponse({
+            "success": True,
+            "message": "E-mail salvo! Configure o envio de e-mails para entregar o cupom."
+        })
+
+    return JsonResponse({
+        "success": True,
+        "message": "Cupom enviado para seu e-mail!"
+    })
