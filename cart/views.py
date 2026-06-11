@@ -7,51 +7,14 @@ from django.conf import settings
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.shortcuts import redirect, get_object_or_404
 from django.views.decorators.http import require_POST
+from django.utils import timezone
 
 from products.models import Product
 from orders.models import Order, OrderItem
-from django.utils import timezone
+from cart.models import Coupon
+
 
 FREE_SHIPPING_LIMIT = Decimal("250.00")
-
-def check_infinitepay_payment(order):
-    payload = {
-        "handle": settings.INFINITEPAY_HANDLE,
-        "order_nsu": str(order.id),
-    }
-
-    response = requests.post(
-        "https://api.checkout.infinitepay.io/payment_check",
-        json=payload,
-        timeout=15,
-    )
-
-    if response.status_code not in [200, 201]:
-        return False, None
-
-    data = response.json()
-
-    paid = (
-        data.get("paid") is True
-        or data.get("status") == "paid"
-        or data.get("payment_status") == "paid"
-        or data.get("success") is True
-    )
-
-    if paid:
-        order.status = "paid"
-        order.paid_at = timezone.now()
-        order.infinitepay_reference = (
-            data.get("slug")
-            or data.get("payment_id")
-            or data.get("transaction_id")
-            or ""
-        )
-        order.save()
-
-        return True, data
-
-    return False, data
 
 
 def to_decimal(value, default="0.00"):
@@ -81,6 +44,22 @@ def get_cart_subtotal(cart):
     return subtotal
 
 
+def calculate_coupon_discount(coupon, subtotal):
+    if subtotal <= 0:
+        return Decimal("0.00")
+
+    if coupon.discount_type == "percent":
+        discount = subtotal * (coupon.discount_value / Decimal("100"))
+    else:
+        discount = coupon.discount_value
+
+    return min(discount, subtotal)
+
+
+def get_applied_coupons(request):
+    return request.session.get("coupons", [])
+
+
 def get_cart_payload(request):
     cart = request.session.get("cart", {})
     shipping = request.session.get("shipping")
@@ -100,6 +79,9 @@ def get_cart_payload(request):
             "size": item.get("size", ""),
             "color": item.get("color", ""),
             "custom_name": item.get("custom_name", ""),
+            "engraving_side": item.get("engraving_side", ""),
+            "name_direction": item.get("name_direction", ""),
+            "name_font": item.get("name_font", ""),
             "quantity": quantity,
             "price": float(price),
             "subtotal": float(item_subtotal),
@@ -134,14 +116,56 @@ def get_cart_payload(request):
     if remaining < 0:
         remaining = Decimal("0.00")
 
-    progress = min((subtotal / FREE_SHIPPING_LIMIT) * 100, 100)
-    total = subtotal + shipping_price
+    progress = min((subtotal / FREE_SHIPPING_LIMIT) * 100, 100) if FREE_SHIPPING_LIMIT > 0 else 0
+
+    applied_coupons = get_applied_coupons(request)
+    valid_session_coupons = []
+    coupon_data = []
+    discount = Decimal("0.00")
+
+    for coupon_code in applied_coupons:
+        try:
+            coupon = Coupon.objects.get(code__iexact=coupon_code, active=True)
+        except Coupon.DoesNotExist:
+            continue
+
+        if not coupon.is_valid_now():
+            continue
+
+        if subtotal < coupon.min_order_value:
+            continue
+
+        remaining_subtotal = subtotal - discount
+        coupon_discount = calculate_coupon_discount(coupon, remaining_subtotal)
+
+        if coupon_discount <= 0:
+            continue
+
+        discount += coupon_discount
+        valid_session_coupons.append(coupon.code.upper())
+
+        coupon_data.append({
+            "code": coupon.code,
+            "discount": float(coupon_discount),
+        })
+
+    request.session["coupons"] = valid_session_coupons
+    request.session.modified = True
+
+    if discount > subtotal:
+        discount = subtotal
+
+    total = subtotal + shipping_price - discount
+
+    if total < 0:
+        total = Decimal("0.00")
 
     return {
         "success": True,
         "items": items,
         "subtotal": float(subtotal),
-        "discount": 0,
+        "discount": float(discount),
+        "coupons": coupon_data,
         "shipping": shipping,
         "shipping_price": float(shipping_price),
         "total": float(total),
@@ -154,6 +178,45 @@ def get_cart_payload(request):
 def cart_data(request):
     return JsonResponse(get_cart_payload(request))
 
+
+def check_infinitepay_payment(order):
+    payload = {
+        "handle": settings.INFINITEPAY_HANDLE,
+        "order_nsu": str(order.id),
+    }
+
+    response = requests.post(
+        "https://api.checkout.infinitepay.io/payment_check",
+        json=payload,
+        timeout=15,
+    )
+
+    if response.status_code not in [200, 201]:
+        return False, None
+
+    data = response.json()
+
+    paid = (
+        data.get("paid") is True
+        or data.get("status") == "paid"
+        or data.get("payment_status") == "paid"
+        or data.get("success") is True
+    )
+
+    if paid and order.status != "paid":
+        order.status = "paid"
+        order.paid_at = timezone.now()
+        order.infinitepay_reference = (
+            data.get("slug")
+            or data.get("payment_id")
+            or data.get("transaction_id")
+            or ""
+        )
+        order.save()
+
+        return True, data
+
+    return False, data
 
 
 @require_POST
@@ -280,6 +343,101 @@ def cart_update(request):
     request.session.modified = True
 
     clear_shipping(request)
+
+    return JsonResponse(get_cart_payload(request))
+
+
+@require_POST
+def apply_coupon(request):
+    try:
+        data = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({
+            "success": False,
+            "error": "Dados inválidos."
+        }, status=400)
+
+    code = str(data.get("code") or "").strip().upper()
+
+    if not code:
+        return JsonResponse({
+            "success": False,
+            "error": "Digite um cupom."
+        }, status=400)
+
+    cart = request.session.get("cart", {})
+
+    if not cart:
+        return JsonResponse({
+            "success": False,
+            "error": "Carrinho vazio."
+        }, status=400)
+
+    subtotal = get_cart_subtotal(cart)
+
+    try:
+        coupon = Coupon.objects.get(code__iexact=code, active=True)
+    except Coupon.DoesNotExist:
+        return JsonResponse({
+            "success": False,
+            "error": "Cupom inválido."
+        }, status=404)
+
+    if not coupon.is_valid_now():
+        return JsonResponse({
+            "success": False,
+            "error": "Cupom expirado ou inativo."
+        }, status=400)
+
+    if subtotal < coupon.min_order_value:
+        return JsonResponse({
+            "success": False,
+            "error": f"Pedido mínimo de R$ {coupon.min_order_value}."
+        }, status=400)
+
+    coupons = request.session.get("coupons", [])
+
+    if len(coupons) >= 2:
+        return JsonResponse({
+            "success": False,
+            "error": "Você pode utilizar no máximo 2 cupons por compra."
+        }, status=400)
+
+    if coupon.code.upper() in [c.upper() for c in coupons]:
+        return JsonResponse({
+            "success": False,
+            "error": "Este cupom já foi aplicado."
+        }, status=400)
+
+    coupons.append(coupon.code.upper())
+
+    request.session["coupons"] = coupons
+    request.session.modified = True
+
+    return JsonResponse(get_cart_payload(request))
+
+
+@require_POST
+def remove_coupon(request):
+    try:
+        data = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({
+            "success": False,
+            "error": "Dados inválidos."
+        }, status=400)
+
+    code = str(data.get("code") or "").strip().upper()
+
+    coupons = request.session.get("coupons", [])
+
+    coupons = [
+        coupon_code for coupon_code in coupons
+        if coupon_code.upper() != code
+    ]
+
+    request.session["coupons"] = coupons
+    request.session.modified = True
 
     return JsonResponse(get_cart_payload(request))
 
@@ -562,9 +720,19 @@ def checkout_infinitepay_cart(request):
         request.session["shipping"] = shipping
         request.session.modified = True
 
-    shipping_price = to_decimal(shipping.get("price", 0)) if shipping else Decimal("0.00")
-    discount = Decimal("0.00")
+    payload_cart = get_cart_payload(request)
+
+    shipping_price = to_decimal(payload_cart.get("shipping_price", 0))
+    discount = to_decimal(payload_cart.get("discount", 0))
     total = subtotal + shipping_price - discount
+
+    if total < 0:
+        total = Decimal("0.00")
+
+    coupon_codes = ", ".join([
+        coupon.get("code", "")
+        for coupon in payload_cart.get("coupons", [])
+    ])
 
     order = Order.objects.create(
         user=request.user if request.user.is_authenticated else None,
@@ -635,12 +803,19 @@ def checkout_infinitepay_cart(request):
             "description": shipping_description,
         })
 
+    if discount > 0:
+        items.append({
+            "quantity": 1,
+            "price": -money_to_cents(discount),
+            "description": f"Desconto de cupom {coupon_codes}".strip(),
+        })
+
     payload = {
-    "handle": settings.INFINITEPAY_HANDLE,
-    "redirect_url": f"{settings.SITE_URL}/sucesso/?order={order.id}",
-    "order_nsu": str(order.id),
-    "items": items,
-}
+        "handle": settings.INFINITEPAY_HANDLE,
+        "redirect_url": f"{settings.SITE_URL}/sucesso/?order={order.id}",
+        "order_nsu": str(order.id),
+        "items": items,
+    }
 
     response = requests.post(
         "https://api.checkout.infinitepay.io/links",
@@ -657,90 +832,5 @@ def checkout_infinitepay_cart(request):
 
     order.infinitepay_link = data.get("url", "")
     order.save()
-
-    return redirect(data["url"])
-    cart = request.session.get("cart", {})
-    shipping = request.session.get("shipping")
-
-    if not cart:
-        return HttpResponseBadRequest("Carrinho vazio.")
-
-    subtotal = get_cart_subtotal(cart)
-
-    if subtotal < FREE_SHIPPING_LIMIT and not shipping:
-        return HttpResponseBadRequest(
-            "Selecione uma opção de frete antes de finalizar a compra."
-        )
-
-    items = []
-
-    for cart_key, item in cart.items():
-        name = item.get("name", "Produto")
-        size = item.get("size", "")
-        color = item.get("color", "")
-        custom_name = item.get("custom_name", "")
-
-        description_parts = [name]
-
-        if color:
-            description_parts.append(f"Cor: {color}")
-
-        if size:
-            description_parts.append(f"Tamanho: {size}")
-
-        if custom_name:
-            description_parts.append(f"Nome: {custom_name}")
-
-        items.append({
-            "quantity": int(item.get("quantity", 1)),
-            "price": money_to_cents(item.get("price", 0)),
-            "description": " | ".join(description_parts),
-        })
-
-    if subtotal >= FREE_SHIPPING_LIMIT:
-        shipping = {
-            "id": "free",
-            "name": "Frete grátis",
-            "company": "",
-            "price": 0,
-            "time": "",
-            "cep": shipping.get("cep", "") if shipping else "",
-            "icon": "",
-        }
-
-        request.session["shipping"] = shipping
-        request.session.modified = True
-
-    if shipping:
-        shipping_price = to_decimal(shipping.get("price", 0))
-
-        if shipping_price > 0:
-            shipping_description = f"Frete - {shipping.get('name', 'Entrega')}"
-
-            if shipping.get("company"):
-                shipping_description += f" | {shipping.get('company')}"
-
-            items.append({
-                "quantity": 1,
-                "price": money_to_cents(shipping_price),
-                "description": shipping_description,
-            })
-
-    payload = {
-        "handle": settings.INFINITEPAY_HANDLE,
-        "redirect_url": f"{settings.SITE_URL}/sucesso/",
-        "items": items,
-    }
-
-    response = requests.post(
-        "https://api.checkout.infinitepay.io/links",
-        json=payload,
-        timeout=15,
-    )
-
-    if response.status_code not in [200, 201]:
-        return HttpResponseBadRequest(response.text)
-
-    data = response.json()
 
     return redirect(data["url"])

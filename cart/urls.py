@@ -22,4 +22,6 @@ urlpatterns = [
         views.checkout_infinitepay_cart,
         name="checkout_infinitepay_cart"
     ),
+    path("apply-coupon/", views.apply_coupon, name="apply_coupon"),
+path("remove-coupon/", views.remove_coupon, name="remove_coupon"),
 ]
