@@ -475,13 +475,10 @@
         }
 
         function setBottleView(view, resetToFirstThumb = false) {
-            currentBottleView = view;
-
-            bottleViewButtons.forEach(btn => {
-                btn.classList.toggle("active", btn.dataset.view === view);
-            });
+            const backImage = productMainImageBox?.dataset.backImage;
 
             if (view === "front") {
+                currentBottleView = "front";
                 currentIndex = 0;
 
                 mainImage.src =
@@ -489,14 +486,22 @@
                     productMainImageBox?.dataset.frontImage ||
                     mainImage.src;
 
+                mainImage.classList.remove("gallery-fill");
                 setActiveThumb(0);
             }
 
-            if (view === "back" && productMainImageBox?.dataset.backImage) {
+            if (view === "back" && backImage) {
+                currentBottleView = "back";
                 currentIndex = 1;
-                mainImage.src = productMainImageBox.dataset.backImage;
+
+                mainImage.src = backImage;
+                mainImage.classList.remove("gallery-fill");
                 setActiveThumb(1);
             }
+
+            bottleViewButtons.forEach(btn => {
+                btn.classList.toggle("active", btn.dataset.view === currentBottleView);
+            });
 
             updateNamePreviewVisibility();
         }
@@ -513,8 +518,42 @@
                 currentIndex = index;
             }
 
-            setBottleView("front", false);
+            mainImage.src = currentImages[currentIndex];
+
+            const backImage = productMainImageBox?.dataset.backImage;
+
+            const isExtraGalleryImage = backImage
+                ? currentIndex >= 2
+                : currentIndex >= 1;
+
+            if (isExtraGalleryImage) {
+                mainImage.classList.add("gallery-fill");
+            } else {
+                mainImage.classList.remove("gallery-fill");
+            }
+
+            if (currentIndex === 0) {
+                currentBottleView = "front";
+
+                bottleViewButtons.forEach(btn => {
+                    btn.classList.toggle("active", btn.dataset.view === "front");
+                });
+            } else if (currentIndex === 1 && backImage) {
+                currentBottleView = "back";
+
+                bottleViewButtons.forEach(btn => {
+                    btn.classList.toggle("active", btn.dataset.view === "back");
+                });
+            } else {
+                currentBottleView = "gallery";
+
+                bottleViewButtons.forEach(btn => {
+                    btn.classList.remove("active");
+                });
+            }
+
             setActiveThumb(currentIndex);
+            updateNamePreviewVisibility();
         }
 
         function renderGallery(images) {
@@ -528,10 +567,12 @@
                 currentImages.push(images[0]);
             }
 
+            /* O verso sempre entra como segunda imagem */
             if (backImage) {
                 currentImages.push(backImage);
             }
 
+            /* As demais imagens vêm depois do verso */
             images.slice(1).forEach(imageUrl => {
                 currentImages.push(imageUrl);
             });
@@ -543,7 +584,9 @@
                 const button = document.createElement("button");
 
                 button.type = "button";
-                button.className = "thumb";
+                button.className = backImage
+                    ? (index <= 1 ? "thumb" : "thumb gallery-fill")
+                    : (index === 0 ? "thumb" : "thumb gallery-fill");
 
                 if (index === 0) {
                     button.classList.add("active");
@@ -552,41 +595,13 @@
                 button.innerHTML = `<img src="${imageUrl}" alt="{{ product.name }}">`;
 
                 button.addEventListener("click", function () {
-                    currentIndex = index;
-                    mainImage.src = currentImages[currentIndex];
-
-                    if (index === 0) {
-                        currentBottleView = "front";
-
-                        bottleViewButtons.forEach(btn => {
-                            btn.classList.toggle("active", btn.dataset.view === "front");
-                        });
-                    }
-                    else if (index === 1 && backImage) {
-                        currentBottleView = "back";
-
-                        bottleViewButtons.forEach(btn => {
-                            btn.classList.toggle("active", btn.dataset.view === "back");
-                        });
-                    }
-                    else {
-                        currentBottleView = "gallery";
-
-                        bottleViewButtons.forEach(btn => {
-                            btn.classList.remove("active");
-                        });
-                    }
-
-                    setActiveThumb(currentIndex);
-                    updateNamePreviewVisibility();
+                    updateMainImage(index);
                 });
 
                 thumbsContainer.appendChild(button);
             });
 
-            mainImage.src = currentImages[0];
-            setActiveThumb(0);
-            setBottleView("front", false);
+            updateMainImage(0);
         }
 
         function renderSizes(sizes) {
