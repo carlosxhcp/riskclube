@@ -917,3 +917,41 @@
 .coming-soon {
     pointer-events: none;
 }
+
+@media (max-width: 600px) {
+    .coming-soon {
+        opacity: .55;
+    }
+
+    .coming-soon-ribbon {
+        top: 7px;
+        right: 7px;
+        left: auto;
+
+        width: auto;
+        height: auto;
+
+        padding: 3px 6px;
+
+        transform: none;
+
+        border-radius: 999px;
+
+        font-size: 6.5px;
+        line-height: 1;
+        letter-spacing: .5px;
+
+        box-shadow: none;
+        z-index: 30;
+    }
+
+    .card-dark .coming-soon-ribbon {
+        background: rgba(255,255,255,.9);
+        color: #111;
+    }
+
+    .card-purple .coming-soon-ribbon {
+        background: rgba(255,255,255,.9);
+        color: #7d2bc0;
+    }
+}
