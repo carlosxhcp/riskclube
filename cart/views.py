@@ -155,12 +155,16 @@ def cart_data(request):
     return JsonResponse(get_cart_payload(request))
 
 
+
 @require_POST
 def cart_add_ajax(request):
     try:
         data = json.loads(request.body)
     except json.JSONDecodeError:
-        return JsonResponse({"success": False, "error": "Dados inválidos."}, status=400)
+        return JsonResponse({
+            "success": False,
+            "error": "Dados inválidos."
+        }, status=400)
 
     product_id = data.get("product_id")
 
@@ -172,8 +176,8 @@ def cart_add_ajax(request):
     if quantity < 1:
         quantity = 1
 
-    size = data.get("size") or "Único"
-    color = data.get("color") or ""
+    size = str(data.get("size") or "Único").strip()
+    color = str(data.get("color") or "").strip()
     custom_name = str(data.get("custom_name") or "").strip()[:20]
     engraving_side = str(data.get("engraving_side") or "").strip()[:20]
     name_direction = str(data.get("name_direction") or "").strip()[:20]
@@ -182,7 +186,21 @@ def cart_add_ajax(request):
     product = get_object_or_404(Product, id=product_id)
 
     cart = request.session.get("cart", {})
-    cart_key = f"{product.id}_{color}_{size}_{custom_name}_{engraving_side}_{name_direction}_{name_font}"
+
+    safe_color = color.replace(" ", "-")
+    safe_size = size.replace(" ", "-")
+    safe_custom_name = custom_name.replace(" ", "-")
+    safe_engraving_side = engraving_side.replace(" ", "-")
+    safe_name_direction = name_direction.replace(" ", "-")
+
+    cart_key = (
+        f"{product.id}_"
+        f"{safe_color}_"
+        f"{safe_size}_"
+        f"{safe_custom_name}_"
+        f"{safe_engraving_side}_"
+        f"{safe_name_direction}"
+    )
 
     final_image = data.get("image") or (product.image.url if product.image else "")
 
@@ -202,6 +220,7 @@ def cart_add_ajax(request):
             "name_font": name_font,
             "image": final_image,
         }
+
     request.session["cart"] = cart
     request.session.modified = True
 
