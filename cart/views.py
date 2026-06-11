@@ -135,11 +135,14 @@ def cart_add_ajax(request):
     size = data.get("size") or "Único"
     color = data.get("color") or ""
     custom_name = str(data.get("custom_name") or "").strip()[:20]
+    engraving_side = str(data.get("engraving_side") or "").strip()[:20]
+    name_direction = str(data.get("name_direction") or "").strip()[:20]
+    name_font = str(data.get("name_font") or "").strip()[:100]
 
     product = get_object_or_404(Product, id=product_id)
 
     cart = request.session.get("cart", {})
-    cart_key = f"{product.id}_{color}_{size}_{custom_name}"
+    cart_key = f"{product.id}_{color}_{size}_{custom_name}_{engraving_side}_{name_direction}_{name_font}"
 
     final_image = data.get("image") or (product.image.url if product.image else "")
 
@@ -154,9 +157,11 @@ def cart_add_ajax(request):
             "size": size,
             "color": color,
             "custom_name": custom_name,
+            "engraving_side": engraving_side,
+            "name_direction": name_direction,
+            "name_font": name_font,
             "image": final_image,
         }
-
     request.session["cart"] = cart
     request.session.modified = True
 
@@ -533,6 +538,9 @@ def checkout_infinitepay_cart(request):
             size=size,
             color=color,
             custom_name=custom_name,
+            engraving_side=item.get("engraving_side", ""),
+            name_direction=item.get("name_direction", ""),
+            name_font=item.get("name_font", ""),
             quantity=quantity,
             price=price,
             subtotal=item_subtotal,

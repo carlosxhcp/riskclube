@@ -811,6 +811,7 @@
             const selectedColorBtn = document.querySelector(".color-dot.active");
             const selectedEngravingSideBtn = document.querySelector(".engraving-side-btn.active");
             const selectedDirectionBtn = document.querySelector(".name-direction-btn.active");
+            const selectedFontBtn = document.querySelector(".name-font-btn.active");
 
             const selectedSize = selectedSizeBtn
                 ? selectedSizeBtn.dataset.sizeName
@@ -835,6 +836,10 @@
                 ? selectedDirectionBtn.dataset.direction
                 : "";
 
+            const nameFont = selectedFontBtn
+                ? selectedFontBtn.dataset.font
+                : "";
+
             addCartBtn.disabled = true;
             addCartBtn.innerText = "Adicionando...";
 
@@ -855,7 +860,8 @@
                         image: selectedImage,
                         custom_name: customName,
                         engraving_side: engravingSide,
-                        name_direction: nameDirection
+                        name_direction: nameDirection,
+                        name_font: nameFont
                     })
                 });
 

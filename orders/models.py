@@ -61,6 +61,10 @@ class OrderItem(models.Model):
     color = models.CharField(max_length=100, blank=True)
     custom_name = models.CharField(max_length=100, blank=True)
 
+    engraving_side = models.CharField(max_length=20, blank=True)
+    name_direction = models.CharField(max_length=20, blank=True)
+    name_font = models.CharField(max_length=100, blank=True)
+
     quantity = models.PositiveIntegerField(default=1)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     subtotal = models.DecimalField(max_digits=10, decimal_places=2)
