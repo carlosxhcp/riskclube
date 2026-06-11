@@ -2,6 +2,9 @@
     scroll-margin-top: 120px;
 }
 
+/* =========================
+   HERO
+========================= */
 
 .hero-banner {
     width: 100%;
@@ -65,7 +68,7 @@
     font-size: 12px;
     letter-spacing: 2px;
     text-transform: uppercase;
-    transition: 0.3s;
+    transition: .3s;
     text-decoration: none;
 }
 
@@ -74,9 +77,249 @@
     color: #000;
 }
 
+.hero-dots {
+    position: absolute;
+    left: 50%;
+    bottom: 24px;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 20;
+}
+
+.hero-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.4);
+    transition: .3s ease;
+    cursor: pointer;
+}
+
+.hero-dot.active {
+    background: #fff;
+    transform: scale(1.25);
+}
+
+/* =========================
+   CARDS RISK
+========================= */
+
+.risk-cards {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+    padding: 40px 5vw;
+}
+
+.risk-card {
+    position: relative;
+    overflow: hidden;
+    min-height: 460px;
+    padding: 34px 28px;
+    border-radius: 14px;
+    background: #f4f4f4;
+    color: #111;
+    transition:
+        transform .3s cubic-bezier(.22,1,.36,1),
+        box-shadow .3s ease;
+}
+
+.risk-card:hover {
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: 0 18px 45px rgba(0,0,0,.10);
+}
+
+.card-light {
+    background: #f4f4f4;
+    color: #111;
+}
+
+.card-dark {
+    background: #080808;
+    color: #fff;
+}
+
+.card-purple {
+    background: #fff;
+    color: #7d2bc0;
+    border: 1px solid #eadcf8;
+}
+
+.card-number {
+    position: absolute;
+    top: 0;
+    left: 28px;
+    padding: 8px 13px 10px;
+    border-radius: 0 0 10px 10px;
+    background: #e8e8e8;
+    color: #111;
+    font-size: 13px;
+    font-weight: 900;
+    z-index: 10;
+}
+
+.card-dark .card-number {
+    background: #151515;
+    color: #fff;
+}
+
+.card-purple .card-number {
+    background: #7d2bc0;
+    color: #fff;
+}
+
+.card-content {
+    width: 56%;
+    min-height: 392px;
+    position: relative;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-content h3 {
+    margin: 42px 0 22px;
+    font-size: clamp(30px, 2.5vw, 44px);
+    line-height: .92;
+    font-weight: 900;
+    letter-spacing: -1.4px;
+}
+
+.card-content p {
+    margin: 0 0 44px;
+    max-width: 230px;
+    font-size: 14px;
+    line-height: 1.45;
+    font-weight: 500;
+    opacity: .75;
+}
+
+.card-icons {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 44px;
+}
+
+.card-dark .card-icons,
+.card-purple .card-icons {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.card-icons div {
+    text-align: center;
+}
+
+.card-icons i,
+.card-icons span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 28px;
+    margin-bottom: 8px;
+    font-size: 24px;
+}
+
+.card-icons small {
+    display: block;
+    font-size: 9.5px;
+    line-height: 1.25;
+    font-weight: 800;
+}
+
+.card-btn {
+    width: 178px;
+    height: 48px;
+    margin-top: auto;
+    border-radius: 9px;
+    background: #e5e5e5;
+    color: #111;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    font-size: 11px;
+    font-weight: 900;
+    transition: .25s ease;
+}
+
+.card-btn:hover {
+    transform: translateY(-2px);
+}
+
+.card-dark .card-btn {
+    background: #fff;
+    color: #111;
+}
+
+.card-purple .card-btn {
+    background: #7d2bc0;
+    color: #fff;
+}
+
+.card-bottle {
+    position: absolute;
+    right: 35px;
+    bottom: 10px;
+    height: 88%;
+    width: 40%;
+    object-fit: contain;
+    object-position: bottom right;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.card-dark .card-bottle {
+    right: 35px;
+    bottom: 8px;
+    height: 90%;
+    width: 42%;
+}
+
+.card-purple .card-bottle {
+    right: 35px;
+    bottom: 8px;
+    height: 89%;
+    width: 41%;
+}
+
 /* =========================
    PRODUTOS
 ========================= */
+
+.products-header {
+    width: 100%;
+    padding: 22px 28px 14px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.products-header h2 {
+    margin: 0;
+    color: #111;
+    font-size: 18px;
+    font-weight: 950;
+    letter-spacing: .5px;
+}
+
+.products-header a {
+    color: #7b2de2;
+    font-size: 12px;
+    font-weight: 900;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.products-header a i {
+    font-size: 11px;
+}
 
 .home-products {
     width: 100%;
@@ -95,7 +338,7 @@
     border: none;
     background: #f4f1eb;
     overflow: hidden;
-    transition: 0.35s ease;
+    transition: .35s ease;
 }
 
 .product-card:not(.product-card-vip):hover,
@@ -136,7 +379,7 @@
     width: 70%;
     height: 70%;
     object-fit: contain;
-    transition: 0.45s ease;
+    transition: .45s ease;
     position: relative;
     z-index: 2;
 }
@@ -186,7 +429,7 @@
     font-size: 13px;
     font-weight: 800;
     letter-spacing: 1px;
-    transition: 0.3s ease;
+    transition: .3s ease;
     text-decoration: none;
     text-transform: uppercase;
 }
@@ -211,556 +454,466 @@
 }
 
 /* =========================
-   PRODUTO VIP
+   CARDS RISK
 ========================= */
 
-.product-card-vip {
-    position: relative;
-    overflow: hidden;
-    background: linear-gradient(135deg, #050505, #181818, #2b2b2b, #101010);
-    background-size: 300% 300%;
-    animation: vipGradient 10s ease infinite;
-}
-
-.product-card-vip .home-product-image-link {
-    background: transparent;
-    height: 430px;
-}
-
-.product-card-vip .home-product-info {
-    padding: 18px 22px 30px;
-    background: transparent;
-}
-
-.product-card-vip .home-product-title {
-    color: #fff;
-    font-size: clamp(16px, 2vw, 22px);
-    line-height: 1.25;
-    font-weight: 800;
-    letter-spacing: -0.4px;
-    margin-bottom: 12px;
-}
-
-.product-card-vip .home-product-price {
-    color: #fff;
-    font-size: clamp(21px, 3vw, 28px);
-    font-weight: 900;
-    letter-spacing: -0.5px;
-    margin-bottom: 4px;
-}
-
-.product-card-vip .home-product-installments {
-    color: rgba(255,255,255,.75);
-    font-size: 13px;
-    margin-bottom: 20px;
-}
-
-.product-card-vip .home-product-button {
-    width: 160px;
-    min-height: 48px;
-    border: 1px solid #fff;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #fff;
-    color: #111;
-    font-size: 13px;
-    font-weight: 800;
-    letter-spacing: 1px;
-    transition: 0.3s ease;
-    text-decoration: none;
-    text-transform: uppercase;
-    padding: 0;
-}
-
-.product-card-vip .home-product-button::after {
-    content: " →";
-    margin-left: 6px;
-}
-
-.product-card-vip:hover .home-product-button {
-    background: transparent;
-    color: #fff;
-    transform: translateY(-2px);
-}
-
-.vip-mini-label {
-    display: none;
-}
-
-.product-card-vip::before,
-.product-card-vip::after {
-    display: none;
-}
-
-@keyframes vipGradient {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
-/* =========================
-   CARDS
-========================= */
-
-.choice-cards {
-    max-width: 1500px;
-    margin: 0 auto;
-    padding: 24px 28px;
+.risk-cards {
+    width: 100%;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 22px;
-    align-items: stretch;
+    padding: 40px 5vw;
 }
 
-.choice-card {
+.risk-card {
     position: relative;
     overflow: hidden;
-    min-height: 650px;
-    border-radius: 24px;
-    padding: 36px 32px 34px;
-    display: flex;
-    flex-direction: column;
+
+    min-height: 460px;
+
+    padding: 34px 28px;
+
+    border-radius: 14px;
+
     text-decoration: none;
     color: inherit;
-    transition: transform .35s ease, box-shadow .35s ease;
+
+    transition:
+        transform .3s cubic-bezier(.22,1,.36,1),
+        box-shadow .3s ease;
 }
 
-.choice-number {
-    width: 54px;
-    height: 54px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    font-weight: 950;
-    margin-bottom: 42px;
+.risk-card:hover {
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: 0 18px 45px rgba(0,0,0,.10);
 }
 
-.choice-content {
-    width: 100%;
-    max-width: 360px;
+.card-light {
+    background: #f4f4f4;
+    color: #111;
+}
+
+.card-dark {
+    background: #080808;
+    color: #fff;
+}
+
+.card-purple {
+    background: #fff;
+    color: #7d2bc0;
+    border: 1px solid #eadcf8;
+}
+
+/* =========================
+   NUMERO
+========================= */
+
+.card-number {
+    position: absolute;
+    top: 0;
+    left: 28px;
+
+    padding: 8px 13px 10px;
+
+    border-radius: 0 0 10px 10px;
+
+    background: #e8e8e8;
+
+    color: #111;
+
+    font-size: 13px;
+    font-weight: 900;
+
+    z-index: 10;
+}
+
+.card-dark .card-number {
+    background: #151515;
+    color: #fff;
+}
+
+.card-purple .card-number {
+    background: #7d2bc0;
+    color: #fff;
+}
+
+/* =========================
+   CONTEUDO
+========================= */
+
+.card-content {
+    width: 56%;
+    height: 100%;
+
+    position: relative;
+    z-index: 5;
+
     display: flex;
     flex-direction: column;
-    flex: 1;
 }
 
-.choice-content h2 {
-    min-height: 165px;
-    margin: 0 0 24px;
-    font-size: clamp(46px, 4vw, 64px);
+.card-content h3 {
+    min-height: 118px;
+
+    margin: 42px 0 22px;
+
+    font-size: clamp(30px, 2.5vw, 44px);
     line-height: .92;
-    font-weight: 950;
-    letter-spacing: -2px;
+
+    font-weight: 900;
+
+    letter-spacing: -1.4px;
 }
 
-.choice-content p {
-    min-height: 100px;
-    max-width: 320px;
-    margin: 0 0 34px;
-    font-size: 20px;
+.card-content p {
+    min-height: 88px;
+
+    margin: 0 0 36px;
+
+    max-width: 230px;
+
+    font-size: 14px;
     line-height: 1.45;
+
     font-weight: 500;
+
+    opacity: .75;
 }
 
-.choice-icons {
-    min-height: 130px;
-    margin-bottom: 34px;
+/* =========================
+   CARD ESCURO
+========================= */
+
+.card-dark .card-content h3,
+.card-dark .card-content p,
+.card-dark .card-icons,
+.card-dark .card-icons i,
+.card-dark .card-icons small {
+    color: #fff;
+}
+
+/* =========================
+   ICONES
+========================= */
+
+.card-icons {
+    min-height: 80px;
+
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
     gap: 14px;
-    align-items: start;
+
+    margin-bottom: 38px;
 }
 
-.choice-icons div {
+.card-light .card-icons {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.card-dark .card-icons,
+.card-purple .card-icons {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.card-icons div {
     text-align: center;
 }
 
-.choice-icons i {
-    display: block;
-    height: 34px;
-    font-size: 28px;
-    line-height: 34px;
-    margin-bottom: 12px;
-}
-
-.choice-icons span {
-    display: block;
-    font-size: 14px;
-    line-height: 1.45;
-    font-weight: 900;
-}
-
-.choice-card button {
-    width: 260px;
-    min-height: 68px;
-    margin-top: auto;
-    border: none;
-    border-radius: 14px;
+.card-icons i {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 18px;
-    font-size: 16px;
-    line-height: 1.1;
-    font-weight: 950;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: all .25s ease;
+
+    height: 28px;
+
+    margin-bottom: 8px;
+
+    font-size: 24px;
 }
 
-.choice-card img {
-    position: absolute;
-    right: 10px;
-    bottom: 0;
-    height: 88%;
-    max-width: 42%;
-    object-fit: contain;
-    z-index: 1;
-    transition: transform .45s ease;
-}
+.card-icons small {
+    display: block;
 
-.choice-content,
-.choice-number {
-    position: relative;
-    z-index: 2;
-}
+    font-size: 9.5px;
+    line-height: 1.25;
 
-.choice-light {
-    background: #f4f4f4;
-    color: #080808;
-}
-
-.choice-light .choice-number,
-.choice-light button {
-    background: #e9e9e9;
-    color: #080808;
-}
-
-.choice-dark {
-    background: #050505;
-    color: #fff;
-}
-
-.choice-dark .choice-number {
-    background: #111;
-    color: #fff;
-}
-
-.choice-dark button {
-    background: #fff;
-    color: #080808;
-}
-
-.choice-purple {
-    background: #fff;
-    color: #7b2de2;
-}
-
-.choice-purple .choice-number,
-.choice-purple button {
-    background: #7b2de2;
-    color: #fff;
-}
-
-.choice-purple p {
-    color: #333;
+    font-weight: 800;
 }
 
 /* =========================
-   HOVER DOS CARDS
+   BOTAO
 ========================= */
 
-.choice-card:hover {
-    transform: translateY(-8px);
+.card-btn {
+    width: 178px;
+    height: 48px;
+
+    margin-top: auto;
+
+    border-radius: 9px;
+
+    background: #e5e5e5;
+    color: #111;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+
+    font-size: 11px;
+    font-weight: 900;
+
+    pointer-events: none;
+
+    transition: .25s ease;
 }
 
-.choice-light:hover {
-    box-shadow: 0 18px 45px rgba(0,0,0,.08);
+.card-btn i {
+    font-size: 12px;
 }
 
-.choice-light:hover img,
-.choice-dark:hover img,
-.choice-purple:hover img {
-    transform: scale(1.05) translateY(-6px);
+.card-dark .card-btn {
+    background: #fff;
+    color: #111 !important;
 }
 
-.choice-light button:hover {
-    background: #111;
-    color: #fff;
-}
-
-.choice-dark:hover {
-    box-shadow: 0 18px 50px rgba(0,0,0,.25);
-}
-
-.choice-dark button:hover {
-    background: #eaeaea;
-}
-
-.choice-purple:hover {
-    box-shadow: 0 18px 50px rgba(123,45,226,.18);
-}
-
-.choice-purple button:hover {
-    background: #6822ca;
+.card-purple .card-btn {
+    background: #7d2bc0;
+    color: #fff !important;
 }
 
 /* =========================
-   TABLET
+   GARRAFA
+========================= */
+
+.card-bottle {
+    position: absolute;
+
+    right: 35px;
+    bottom: 10px;
+
+    height: 88%;
+    width: 40%;
+
+    object-fit: contain;
+    object-position: bottom right;
+
+    z-index: 2;
+
+    pointer-events: none;
+}
+
+.card-dark .card-bottle {
+    right: 35px;
+    bottom: 8px;
+
+    height: 90%;
+    width: 42%;
+}
+
+.card-purple .card-bottle {
+    right: 35px;
+    bottom: 8px;
+
+    height: 89%;
+    width: 41%;
+}
+
+/* =========================
+   RESPONSIVO
 ========================= */
 
 @media (max-width: 1100px) {
-    .choice-cards {
+
+    .risk-cards {
         grid-template-columns: 1fr;
     }
 
-    .choice-card {
-        min-height: 620px;
+    .card-content {
+        width: 55%;
     }
 }
 
-/* =========================
-   MOBILE DOS CARDS SUPERIORES
-========================= */
+@media (max-width: 600px) {
 
-@media (max-width: 620px) {
-    .choice-cards {
-        padding: 14px 8px;
+    .risk-cards {
+        padding: 14px 10px;
+        gap: 10px;
         grid-template-columns: repeat(3, 1fr);
-        gap: 7px;
     }
 
-    .choice-card {
-        height: 76px;
-        min-height: 76px;
+    .risk-card {
+        min-height: 86px;
+        height: 86px;
+        padding: 12px 10px;
         border-radius: 14px;
-        padding: 9px 8px;
+
         display: grid;
         grid-template-columns: 36px 1fr;
-        column-gap: 7px;
         align-items: center;
+        gap: 8px;
     }
 
-    .choice-number,
-    .choice-icons,
-    .choice-card button,
-    .choice-card img {
+    .card-number,
+    .card-bottle,
+    .card-icons,
+    .card-btn {
         display: none !important;
     }
 
-    .choice-content {
+    .card-content {
         width: 100%;
-        max-width: none;
+        height: auto;
+        min-height: 0;
         display: block;
-        flex: unset;
+        z-index: 5;
     }
 
-    .choice-card::before {
-        width: 36px;
-        height: 36px;
+    .card-content h3 {
+        min-height: 0;
+        margin: 0 0 4px;
+        font-size: 10px;
+        line-height: 1.1;
+        letter-spacing: 0;
+    }
+
+    .card-content h3 br {
+        display: none;
+    }
+
+    .card-content p {
+        min-height: 0;
+        margin: 0;
+        max-width: none;
+        font-size: 8px;
+        line-height: 1.25;
+        font-weight: 700;
+        opacity: .9;
+    }
+
+    .risk-card::before {
         display: flex;
         align-items: center;
         justify-content: center;
-        font-family: "Font Awesome 6 Free";
-        font-weight: 900;
-        font-size: 21px;
-        line-height: 1;
         grid-column: 1;
         grid-row: 1;
+
+        width: 34px;
+        height: 34px;
+
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        font-size: 22px;
+        line-height: 1;
     }
 
-    .choice-light::before {
+    .card-light::before {
         content: "\f1b2";
         color: #111;
     }
 
-    .choice-dark::before {
+    .card-dark::before {
         content: "\f044";
         color: #fff;
     }
 
-    .choice-purple::before {
-        content: "\f5b7";
+    .card-purple::before {
+        content: "\f72b";
         color: #fff;
     }
 
-    .choice-content h2 {
-        min-height: 0;
-        margin: 0 0 4px;
-        font-size: 9.5px;
-        line-height: 1.05;
-        letter-spacing: 0;
-        font-weight: 950;
-    }
-
-    .choice-content p {
-        min-height: 0;
-        margin: 0;
-        max-width: none;
-        font-size: 7.8px;
-        line-height: 1.2;
-        font-weight: 700;
-    }
-
-    .choice-light {
+    .card-light {
         background: #e9e9e9;
         color: #111;
     }
 
-    .choice-dark {
+    .card-dark {
         background: #050505;
         color: #fff;
     }
 
-    .choice-purple {
+    .card-purple {
         background: linear-gradient(135deg, #6d28d9, #8b2be2);
         color: #fff;
+        border: none;
     }
 
-    .choice-purple p {
+    .card-purple .card-content p {
         color: rgba(255,255,255,.9);
     }
 
-    .choice-card:hover {
+    .risk-card:hover {
         transform: none;
         box-shadow: none;
     }
 }
 
-/* =========================
-   PRODUTOS MOBILE - 2 POR LINHA
-========================= */
+.mobile-text {
+    display: none;
+}
 
-@media (max-width: 768px) {
-    .home-product-grid {
-        grid-template-columns: repeat(2, 1fr);
+@media (max-width: 600px) {
+    .desktop-text {
+        display: none;
     }
 
-    .home-product-image-link,
-    .product-card-vip .home-product-image-link {
-        height: 180px;
-    }
-
-    .home-product-image {
-        width: 82%;
-        height: 82%;
-    }
-
-    .home-product-info,
-    .product-card-vip .home-product-info {
-        padding: 12px;
-    }
-
-    .home-product-title,
-    .product-card-vip .home-product-title {
-        font-size: 14px;
-        line-height: 1.25;
-        margin-bottom: 6px;
-    }
-
-    .home-product-price,
-    .product-card-vip .home-product-price {
-        font-size: 18px;
-        margin-bottom: 4px;
-    }
-
-    .home-product-installments,
-    .product-card-vip .home-product-installments {
-        font-size: 11px;
-        margin-bottom: 10px;
-    }
-
-    .home-product-button,
-    .product-card-vip .home-product-button {
-        width: 100%;
-        min-height: 38px;
-        font-size: 10px;
-        letter-spacing: .5px;
+    .mobile-text {
+        display: inline;
     }
 }
 
 /* =========================
-   DOTS DO BANNER
+   COMING SOON
 ========================= */
 
-.hero-dots {
+.coming-soon {
+    opacity: .65;
+}
+
+.coming-soon .card-content,
+.coming-soon .card-bottle {
+    filter: grayscale(.2);
+}
+
+.coming-soon-ribbon {
     position: absolute;
+
+    top: 50%;
     left: 50%;
-    bottom: 24px;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 10px;
-    z-index: 20;
-}
 
-.hero-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: rgba(255,255,255,.4);
-    transition: .3s ease;
-    cursor: pointer;
-}
+    width: 180%;
+    height: 64px;
 
-.hero-dot.active {
-    background: #fff;
-    transform: scale(1.25);
-}
+    transform: translate(-50%, -50%) rotate(-35deg);
 
+    background: rgba(255,255,255,.95);
 
-/* =========================
-   TÍTULO ACIMA DOS PRODUTOS
-========================= */
-
-.products-header {
-    width: 100%;
-    padding: 22px 28px 14px;
-    background: #fff;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-}
+    justify-content: center;
 
-.products-header h2 {
-    margin: 0;
+    font-size: 22px;
+    font-weight: 1000;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+
     color: #111;
-    font-size: 18px;
-    font-weight: 950;
-    letter-spacing: .5px;
+
+    z-index: 999;
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,.12),
+        0 0 0 3px rgba(255,255,255,.35);
 }
 
-.products-header a {
-    color: #7b2de2;
-    font-size: 12px;
-    font-weight: 900;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+.card-purple .coming-soon-ribbon {
+    background: rgba(125,43,192,.95);
+    color: #fff;
 }
 
-.products-header a i {
-    font-size: 11px;
+.card-dark .coming-soon-ribbon {
+    background: rgba(255,255,255,.95);
+    color: #111;
 }
-
-@media (max-width: 768px) {
-    .products-header {
-        padding: 18px 10px 12px;
-    }
-
-    .products-header h2 {
-        font-size: 13px;
-    }
-
-    .products-header a {
-        font-size: 9px;
-        gap: 6px;
-    }
-
-    .products-header a i {
-        font-size: 9px;
-    }
+.coming-soon {
+    pointer-events: none;
 }

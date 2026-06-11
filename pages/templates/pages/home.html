@@ -35,130 +35,185 @@
 
 <div id="garrafas"></div>
 
-<div class="choice-cards">
+{% load static %}
 
-    <a href="#prontas" class="choice-card choice-light">
-        <span class="choice-number">01</span>
+<section class="risk-cards">
 
-        <div class="choice-content">
-            <h2>GARRAFAS<br>PRONTAS</h2>
+    <!-- CARD 1 -->
+    <a href="#products" class="risk-card card-light">
+
+        <span class="card-number">01</span>
+        
+
+        <div class="card-content">
+
+            <h3>
+                <span class="desktop-text">GARRAFAS<br>PRONTAS</span>
+                <span class="mobile-text">PRONTAS</span>
+            </h3>
 
             <p>
-                Escolha um modelo já criado
-                e personalize com seu nome.
+                <span class="desktop-text">
+                    Escolha um modelo já criado e personalize com seu nome.
+                </span>
+                <span class="mobile-text">
+                    Modelos exclusivos
+                </span>
             </p>
 
-            <div class="choice-icons">
+            <div class="card-icons">
                 <div>
                     <i class="fa-solid fa-cube"></i>
-                    <span>Modelos<br>exclusivos</span>
+                    <small>Modelos<br>exclusivos</small>
                 </div>
 
                 <div>
-                    <i class="fa-solid fa-font"></i>
-                    <span>Nome<br>opcional</span>
+                    <i class="fa-solid fa-signature"></i>
+                    <small>Nome<br>opcional</small>
                 </div>
 
                 <div>
                     <i class="fa-solid fa-truck-fast"></i>
-                    <span>Entrega<br>mais rápida</span>
+                    <small>Entrega<br>rápida</small>
                 </div>
             </div>
 
-            <button type="button">
+            <span class="card-btn">
                 VER MODELOS
                 <i class="fa-solid fa-arrow-right"></i>
-            </button>
+            </span>
+
         </div>
 
-        <img src="{% static 'img/garrafa1.png' %}" alt="">
+        <img
+            src="{% static 'img/cards/garrafa-pronta.png' %}"
+            alt="Garrafa pronta"
+            class="card-bottle"
+        >
+
     </a>
 
-    <a href="{% url 'products:customization_choice' %}" class="choice-card choice-dark">
-        <span class="choice-number">02</span>
+    <!-- CARD 2 -->
+    <a href="#" class="risk-card card-dark coming-soon">
 
-        <div class="choice-content">
-            <h2>MONTE SUA<br>GARRAFA</h2>
+        <span class="card-number">02</span>
+        <div class="coming-soon-ribbon">
+        EM BREVE
+    </div>
+        <div class="card-content">
+
+            <h3>
+                <span class="desktop-text">MONTE SUA<br>GARRAFA</span>
+                <span class="mobile-text">MONTE</span>
+            </h3>
 
             <p>
-                Personalize do seu jeito escolhendo
-                fontes, símbolos e categorias.
+                <span class="desktop-text">
+                    Personalize fontes, símbolos, categorias e posição dos elementos.
+                </span>
+                <span class="mobile-text">
+                    Personalize do seu jeito
+                </span>
             </p>
 
-            <div class="choice-icons">
+            <div class="card-icons">
                 <div>
                     <i class="fa-solid fa-font"></i>
-                    <span>Escolha<br>fontes</span>
+                    <small>Escolha<br>fontes</small>
                 </div>
 
                 <div>
                     <i class="fa-regular fa-gem"></i>
-                    <span>Escolha<br>símbolos</span>
+                    <small>Escolha<br>símbolos</small>
                 </div>
 
                 <div>
-                    <i class="fa-solid fa-table-cells"></i>
-                    <span>Escolha<br>categorias</span>
+                    <i class="fa-solid fa-layer-group"></i>
+                    <small>Escolha<br>categorias</small>
                 </div>
 
                 <div>
-                    <i class="fa-solid fa-crosshairs"></i>
-                    <span>Posicione<br>como quiser</span>
+                    <i class="fa-solid fa-up-down-left-right"></i>
+                    <small>Posicione<br>livremente</small>
                 </div>
             </div>
 
-            <button type="button">
-                PERSONALIZAR AGORA
+            <span class="card-btn">
+                PERSONALIZAR
                 <i class="fa-solid fa-arrow-right"></i>
-            </button>
+            </span>
+
         </div>
 
-        <img src="{% static 'img/garrafa2.png' %}" alt="">
+        <img
+            src="{% static 'img/cards/garrafa-pronta.png' %}"
+            alt="Personalização"
+            class="card-bottle"
+        >
+
     </a>
 
-    <a href="#comunidade" class="choice-card choice-purple">
-        <span class="choice-number">03</span>
+    <!-- CARD 3 -->
+    <a href="#" class="risk-card card-purple coming-soon">
 
-        <div class="choice-content">
-            <h2>CRIAÇÃO<br>EXCLUSIVA</h2>
+        <span class="card-number">03</span>
+        <div class="coming-soon-ribbon">
+        EM BREVE
+    </div>
+        <div class="card-content">
+
+            <h3>
+                <span class="desktop-text">CRIAÇÃO<br>EXCLUSIVA</span>
+                <span class="mobile-text">EXCLUSIVA</span>
+            </h3>
 
             <p>
-                Envie sua ideia ou arte e criamos
-                uma garrafa 100% exclusiva.
+                <span class="desktop-text">
+                    Envie sua ideia e criamos uma garrafa única para você.
+                </span>
+                <span class="mobile-text">
+                    Criamos algo único para você.
+                </span>
             </p>
 
-            <div class="choice-icons">
+            <div class="card-icons">
                 <div>
                     <i class="fa-solid fa-cloud-arrow-up"></i>
-                    <span>Envie sua<br>arte ou ideia</span>
-                </div>
-
-                <div>
-                    <i class="fa-regular fa-image"></i>
-                    <span>Arte criada<br>sob medida</span>
-                </div>
-
-                <div>
-                    <i class="fa-regular fa-gem"></i>
-                    <span>100%<br>exclusivo</span>
+                    <small>Envie sua<br>ideia</small>
                 </div>
 
                 <div>
                     <i class="fa-solid fa-wand-magic-sparkles"></i>
-                    <span>Aprovação<br>da arte</span>
+                    <small>Arte sob<br>medida</small>
+                </div>
+
+                <div>
+                    <i class="fa-solid fa-crown"></i>
+                    <small>100%<br>exclusivo</small>
+                </div>
+
+                <div>
+                    <i class="fa-solid fa-circle-check"></i>
+                    <small>Aprovação<br>final</small>
                 </div>
             </div>
 
-            <button type="button">
-                CRIAR DO ZERO
+            <span class="card-btn">
+                SOLICITAR
                 <i class="fa-solid fa-arrow-right"></i>
-            </button>
+            </span>
+
         </div>
 
-        <img src="{% static 'img/garrafa3.png' %}" alt="">
+        <img
+            src="{% static 'img/cards/garrafa-pronta.png' %}"
+            alt="Criação exclusiva"
+            class="card-bottle"
+        >
+
     </a>
 
-</div>
+</section>
 
 <section class="products-header" id="prontas">
     <h2>MAIS VENDIDOS</h2>
