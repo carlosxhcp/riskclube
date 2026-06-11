@@ -10,8 +10,48 @@ from django.views.decorators.http import require_POST
 
 from products.models import Product
 from orders.models import Order, OrderItem
+from django.utils import timezone
 
 FREE_SHIPPING_LIMIT = Decimal("250.00")
+
+def check_infinitepay_payment(order):
+    payload = {
+        "handle": settings.INFINITEPAY_HANDLE,
+        "order_nsu": str(order.id),
+    }
+
+    response = requests.post(
+        "https://api.checkout.infinitepay.io/payment_check",
+        json=payload,
+        timeout=15,
+    )
+
+    if response.status_code not in [200, 201]:
+        return False, None
+
+    data = response.json()
+
+    paid = (
+        data.get("paid") is True
+        or data.get("status") == "paid"
+        or data.get("payment_status") == "paid"
+        or data.get("success") is True
+    )
+
+    if paid:
+        order.status = "paid"
+        order.paid_at = timezone.now()
+        order.infinitepay_reference = (
+            data.get("slug")
+            or data.get("payment_id")
+            or data.get("transaction_id")
+            or ""
+        )
+        order.save()
+
+        return True, data
+
+    return False, data
 
 
 def to_decimal(value, default="0.00"):
@@ -577,10 +617,11 @@ def checkout_infinitepay_cart(request):
         })
 
     payload = {
-        "handle": settings.INFINITEPAY_HANDLE,
-        "redirect_url": f"{settings.SITE_URL}/sucesso/?order={order.id}",
-        "items": items,
-    }
+    "handle": settings.INFINITEPAY_HANDLE,
+    "redirect_url": f"{settings.SITE_URL}/sucesso/?order={order.id}",
+    "order_nsu": str(order.id),
+    "items": items,
+}
 
     response = requests.post(
         "https://api.checkout.infinitepay.io/links",

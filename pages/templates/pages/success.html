@@ -1,21 +1,22 @@
-{% extends "base.html" %}
+{% extends "pages/base.html" %}
 
 {% block content %}
 
 <section style="padding:100px 20px;text-align:center;">
-    <h1>Pedido recebido!</h1>
-
     {% if order %}
-        <p>Pedido #{{ order.id }}</p>
+        {% if order.status == "paid" %}
+            <h1>Pagamento aprovado!</h1>
+            <p>Pedido #{{ order.id }}</p>
+            <p>Já recebemos seu pagamento e vamos começar a produção.</p>
+        {% else %}
+            <h1>Pedido recebido!</h1>
+            <p>Pedido #{{ order.id }}</p>
+            <p>Seu pagamento ainda está sendo confirmado.</p>
+        {% endif %}
 
-        <p>
-            Assim que o pagamento for confirmado,
-            começaremos a produção.
-        </p>
-
-        <h3>
-            Total: R$ {{ order.total }}
-        </h3>
+        <h3>Total: R$ {{ order.total }}</h3>
+    {% else %}
+        <h1>Pedido não encontrado</h1>
     {% endif %}
 </section>
 
