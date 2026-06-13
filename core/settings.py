@@ -5,8 +5,8 @@ from decouple import config
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config("SECRET_KEY")
-DEBUG = config("DEBUG", default=True, cast=bool)
-
+#DEBUG = config("DEBUG", default=True, cast=bool)
+DEBUG = False
 ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
@@ -28,6 +28,11 @@ INSTALLED_APPS = [
     "cloudinary_storage",
     "cloudinary",
 
+    # allauth
+    "allauth",
+    "allauth.account",
+    "accounts",
+
     "pages",
     "products",
     "cart",
@@ -42,6 +47,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
@@ -136,3 +142,20 @@ EMAIL_HOST_USER = "carlosxhcp@gmail.com"
 EMAIL_HOST_PASSWORD = "wseq yerx xzon dyrx"
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+]
+
+SITE_ID = 1
+
+LOGIN_REDIRECT_URL = "/minha-conta/"
+ACCOUNT_LOGOUT_REDIRECT_URL = "/"
+
+ACCOUNT_LOGIN_METHODS = {"email"}
+ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
+
+ACCOUNT_EMAIL_VERIFICATION = "none"
+ACCOUNT_UNIQUE_EMAIL = True

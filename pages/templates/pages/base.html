@@ -38,6 +38,7 @@
             <a href="/#inicio" class="nav-link-custom">INICIO</a>
             <a href="/#garrafas" class="nav-link-custom">GARRAFAS</a>
             <a href="/#comunidade" class="nav-link-custom">CLUBE</a>
+            
         </div>
 
         <div class="nav-center">
@@ -47,9 +48,13 @@
         </div>
 
         <div class="nav-right">
-            <a href="#" class="icon-link account-icon">
-                <i class="bi bi-person"></i>
-            </a>
+            {% if user.is_authenticated %}
+    <a href="{% url 'accounts:minha_conta' %}">Minha conta</a>
+    <a href="{% url 'account_logout' %}">Sair</a>
+{% else %}
+    <a href="{% url 'account_login' %}">Entrar</a>
+    <a href="{% url 'account_signup' %}">Cadastrar</a>
+{% endif %}
 
             <a href="#" class="icon-link favorite-icon">
                 <i class="bi bi-heart"></i>

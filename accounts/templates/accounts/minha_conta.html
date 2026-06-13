@@ -1,0 +1,140 @@
+{% extends "pages/base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/accounts.css' %}">
+{% endblock %}      
+
+{% block title %}Minha Conta | Risk Clube{% endblock %}
+
+{% block content %}
+<section class="risk-account-page">
+
+    <div class="risk-account-container">
+
+        <div class="risk-account-hero">
+            <div>
+                <span class="risk-account-label">Área do cliente</span>
+                <h1>Minha conta</h1>
+                <p>Gerencie seus dados, acompanhe seus pedidos e veja suas compras na Risk Clube.</p>
+            </div>
+
+            <div class="risk-account-user">
+                <div class="risk-account-avatar">
+                    {{ request.user.email|first|upper }}
+                </div>
+                <div>
+                    <strong>{{ request.user.get_full_name|default:"Cliente Risk" }}</strong>
+                    <span>{{ request.user.email }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="risk-account-grid">
+
+            <aside class="risk-account-menu">
+                <a href="#" class="active">Minha conta</a>
+                <a href="#">Meus pedidos</a>
+                <a href="#">Endereços</a>
+                <a href="#">Dados pessoais</a>
+<form method="post" action="{% url 'account_logout' %}">
+    {% csrf_token %}
+    <button type="submit" class="logout">Sair</button>
+</form>            </aside>
+
+            <main class="risk-account-content">
+
+                <div class="risk-account-card">
+                    <div class="risk-card-header">
+                        <div>
+                            <span>Resumo</span>
+                            <h2>Bem-vindo à sua conta</h2>
+                        </div>
+                    </div>
+
+                    <div class="risk-info-grid">
+                        <div class="risk-info-box">
+                            <small>Email</small>
+                            <strong>{{ request.user.email }}</strong>
+                        </div>
+
+                        <div class="risk-info-box">
+                            <small>Status</small>
+                            <strong>Cliente ativo</strong>
+                        </div>
+
+                        <div class="risk-info-box">
+                            <small>Pedidos</small>
+                            <strong>0 pedidos</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="risk-account-card">
+                    <div class="risk-card-header">
+                        <div>
+                            <span>Compras</span>
+                            <h2>Meus pedidos</h2>
+                        </div>
+                    </div>
+
+                    <div class="risk-orders-list">
+    {% for order in orders %}
+        <div class="risk-order-card">
+            <div class="risk-order-top">
+                <div>
+                    <strong>Pedido #{{ order.id }}</strong>
+                    <span>{{ order.created_at|date:"d/m/Y H:i" }}</span>
+                </div>
+
+                <span class="risk-order-status status-{{ order.status }}">
+                    {{ order.get_status_display }}
+                </span>
+            </div>
+
+            <div class="risk-order-items">
+                {% for item in order.items.all %}
+                    <div class="risk-order-item">
+                        {% if item.image %}
+                            <img src="{{ item.image }}" alt="{{ item.name }}">
+                        {% endif %}
+
+                        <div>
+                            <strong>{{ item.quantity }}x {{ item.name }}</strong>
+                            <span>
+                                {% if item.size %}Tamanho: {{ item.size }}{% endif %}
+                                {% if item.color %} | Cor: {{ item.color }}{% endif %}
+                            </span>
+
+                            {% if item.custom_name %}
+                                <small>Nome: {{ item.custom_name }}</small>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="risk-order-footer">
+                <span>Total</span>
+                <strong>R$ {{ order.total }}</strong>
+            </div>
+        </div>
+    {% empty %}
+        <div class="risk-empty-orders">
+            <div class="risk-empty-icon">🛍️</div>
+            <h3>Nenhum pedido ainda</h3>
+            <p>Quando você fizer uma compra, seus pedidos aparecerão aqui.</p>
+            <a href="/" class="risk-shop-btn">Ver produtos</a>
+        </div>
+    {% endfor %}
+</div>
+                </div>
+
+            </main>
+
+        </div>
+
+    </div>
+
+</section>
+{% endblock %}

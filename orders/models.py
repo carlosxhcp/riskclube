@@ -13,7 +13,8 @@ class Order(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
-        blank=True
+        blank=True,
+        related_name="orders"
     )
 
     email = models.EmailField(blank=True)
