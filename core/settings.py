@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     "allauth",
     "allauth.account",
     "accounts",
+    "accounts.apps.AccountsConfig",
 
     "pages",
     "products",

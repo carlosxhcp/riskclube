@@ -736,16 +736,18 @@ def checkout_infinitepay_cart(request):
         for coupon in payload_cart.get("coupons", [])
     ])
 
+    
+
+    email = request.POST.get("email", "").strip().lower()
+
     order = Order.objects.create(
         user=request.user if request.user.is_authenticated else None,
-        email=request.user.email if request.user.is_authenticated else "",
+        email=email,
+        status="pending",
         subtotal=subtotal,
         shipping_price=shipping_price,
         discount=discount,
         total=total,
-        shipping_name=shipping.get("name", "") if shipping else "",
-        shipping_company=shipping.get("company", "") if shipping else "",
-        shipping_cep=shipping.get("cep", "") if shipping else "",
     )
 
     description_summary = []
