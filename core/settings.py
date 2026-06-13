@@ -31,7 +31,6 @@ INSTALLED_APPS = [
     # allauth
     "allauth",
     "allauth.account",
-    "accounts",
     "accounts.apps.AccountsConfig",
 
     "pages",
