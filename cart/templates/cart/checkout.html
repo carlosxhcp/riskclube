@@ -11,56 +11,63 @@
 <main class="checkout-page">
     <section class="checkout-container">
 
-        <div class="checkout-left">
-            <div class="checkout-heading">
-                <span>Compra segura</span>
-                <h1>Finalizar compra</h1>
-                <p>Revise seus produtos, informe o frete e finalize o pagamento.</p>
+        <div class="checkout-main">
+
+            <div class="checkout-top">
+                <span>Risk Clube</span>
+                <h1>Checkout</h1>
+                <p>Finalize sua compra com segurança.</p>
             </div>
 
-            <div class="checkout-card">
-                <div class="card-title">
+            <div class="checkout-section">
+                <div class="section-header">
                     <span>01</span>
-                    <h2>Seus produtos</h2>
+                    <div>
+                        <h2>Produtos</h2>
+                        <p>Confira os itens do seu pedido.</p>
+                    </div>
                 </div>
 
-                <div class="checkout-products-list">
-                    {% for item in cart.items %}
-                    <div class="checkout-product">
+                {% for item in cart.items %}
+                <div class="checkout-product">
+                    <div class="product-image">
                         <img src="{{ item.image }}" alt="{{ item.name }}">
+                    </div>
 
-                        <div class="checkout-product-info">
-                            <strong>{{ item.name }}</strong>
+                    <div class="product-info">
+                        <strong>{{ item.name }}</strong>
 
-                            <div class="product-meta">
-                                <p>Cor: {{ item.color|default:"-" }}</p>
-                                <p>Tamanho: {{ item.size|default:"-" }}</p>
+                        <div class="product-tags">
+                            <span>Cor: {{ item.color|default:"-" }}</span>
+                            <span>Tamanho: {{ item.size|default:"-" }}</span>
 
-                                {% if item.custom_name %}
-                                <p>Nome: {{ item.custom_name }}</p>
-                                {% endif %}
+                            {% if item.custom_name %}
+                            <span>Nome: {{ item.custom_name }}</span>
+                            {% endif %}
 
-                                {% if item.engraving_side %}
-                                <p>Gravação: {{ item.engraving_side }}</p>
-                                {% endif %}
-                            </div>
-
-                            <small>Quantidade: {{ item.quantity }}</small>
+                            {% if item.engraving_side %}
+                            <span>Gravação: {{ item.engraving_side }}</span>
+                            {% endif %}
                         </div>
 
-                        <span class="checkout-product-price">
-                            R$ {{ item.subtotal|floatformat:2 }}
-                        </span>
+                        <small>Quantidade: {{ item.quantity }}</small>
                     </div>
-                    {% endfor %}
+
+                    <div class="product-price">
+                        R$ {{ item.subtotal|floatformat:2 }}
+                    </div>
                 </div>
+                {% endfor %}
             </div>
 
-            <div class="checkout-grid">
-                <div class="checkout-card">
-                    <div class="card-title">
+            <div class="checkout-row">
+                <div class="checkout-section">
+                    <div class="section-header">
                         <span>02</span>
-                        <h2>Entrega</h2>
+                        <div>
+                            <h2>Entrega</h2>
+                            <p>Calcule o frete pelo CEP.</p>
+                        </div>
                     </div>
 
                     <label for="checkoutCepInput">CEP</label>
@@ -73,11 +80,16 @@
                     <div id="checkoutShippingOptions"></div>
                 </div>
 
-                <div class="checkout-card">
-                    <div class="card-title">
+                <div class="checkout-section">
+                    <div class="section-header">
                         <span>03</span>
-                        <h2>Cupom</h2>
+                        <div>
+                            <h2>Cupom</h2>
+                            <p>Use seu desconto aqui.</p>
+                        </div>
                     </div>
+
+                    <label for="checkoutCouponInput">Cupom</label>
 
                     <div class="checkout-inline">
                         <input type="text" id="checkoutCouponInput" placeholder="Digite seu cupom">
@@ -89,10 +101,13 @@
                 </div>
             </div>
 
-            <div class="checkout-card">
-                <div class="card-title">
+            <div class="checkout-section">
+                <div class="section-header">
                     <span>04</span>
-                    <h2>Dados do comprador</h2>
+                    <div>
+                        <h2>Comprador</h2>
+                        <p>Informe o email para receber o pedido.</p>
+                    </div>
                 </div>
 
                 <label for="checkoutEmail">Email</label>
@@ -106,22 +121,26 @@
                 >
             </div>
 
-            <div class="checkout-card">
-                <div class="card-title">
+            <div class="checkout-section">
+                <div class="section-header">
                     <span>05</span>
-                    <h2>Pagamento</h2>
+                    <div>
+                        <h2>Pagamento</h2>
+                        <p>Escolha a melhor forma de pagamento.</p>
+                    </div>
                 </div>
 
                 <div id="paymentBrick_container"></div>
                 <div id="paymentResult" class="pix-result"></div>
             </div>
+
         </div>
 
-        <aside class="checkout-right">
+        <aside class="checkout-sidebar">
             <div class="checkout-summary">
-                <div class="summary-header">
-                    <span>Resumo do pedido</span>
-                    <h2>Total da compra</h2>
+                <div class="summary-title">
+                    <span>Resumo</span>
+                    <h2>Seu pedido</h2>
                 </div>
 
                 <div class="summary-row">
@@ -139,16 +158,14 @@
                     <strong id="checkoutShippingPrice">R$ {{ cart.shipping_price|floatformat:2 }}</strong>
                 </div>
 
-                <div class="summary-row total">
+                <div class="summary-total">
                     <span>Total</span>
                     <strong id="checkoutTotal">R$ {{ cart.total|floatformat:2 }}</strong>
                 </div>
 
-                <div class="summary-security">
-                    <div>
-                        <strong>Pagamento protegido</strong>
-                        <p>Seus dados são processados com segurança.</p>
-                    </div>
+                <div class="summary-safe">
+                    <strong>Compra segura</strong>
+                    <p>Pagamento criptografado e processado com segurança.</p>
                 </div>
             </div>
         </aside>
