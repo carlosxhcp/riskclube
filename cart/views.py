@@ -752,13 +752,24 @@ def checkout_mercadopago_cart(request):
             "error": error
         }, status=400)
 
+    identification_type = str(data.get("identification_type") or "CPF").strip()
+    identification_number = str(data.get("identification_number") or "").replace(".", "").replace("-", "").replace("/", "").strip()
+
+    payer = {
+        "email": email
+    }
+
+    if identification_number:
+        payer["identification"] = {
+            "type": identification_type,
+            "number": identification_number
+        }
+
     payment_data = {
         "transaction_amount": float(order.total),
         "description": f"Pedido Risk Clube #{order.id}",
         "external_reference": str(order.id),
-        "payer": {
-            "email": email
-        },
+        "payer": payer,
     }
 
     if payment_type == "pix":
@@ -783,19 +794,7 @@ def checkout_mercadopago_cart(request):
             }, status=400)
 
         payer_email = data.get("payer_email") or email
-
-        payer = {
-            "email": payer_email
-        }
-
-        identification_type = data.get("identification_type")
-        identification_number = data.get("identification_number")
-
-        if identification_type and identification_number:
-            payer["identification"] = {
-                "type": identification_type,
-                "number": identification_number
-            }
+        payer["email"] = payer_email
 
         payment_data.update({
             "token": token,
@@ -852,6 +851,7 @@ def checkout_mercadopago_cart(request):
             "error": "Erro ao criar pagamento.",
             "mercadopago_status": mp_response.status_code,
             "details": response,
+            "sent_payload": payment_data,
         }, status=400)
 
     update_order_payment_status(order, response)

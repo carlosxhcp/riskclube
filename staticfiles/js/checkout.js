@@ -347,7 +347,9 @@ async function payWithPix() {
             },
             body: JSON.stringify({
                 payment_type: "pix",
-                email: getCheckoutEmail()
+                email: getCheckoutEmail(),
+                identification_type: "CPF",
+                identification_number: document.getElementById("checkoutCpf").value
             })
         });
 
@@ -479,12 +481,17 @@ async function initCardBrick() {
                         body: JSON.stringify({
                             payment_type: "card",
                             email: getCheckoutEmail(),
+
                             token: cardFormData.token,
                             payment_method_id: cardFormData.payment_method_id,
                             issuer_id: cardFormData.issuer_id,
                             installments: cardFormData.installments,
-                            identification_type: cardFormData.payer?.identification?.type,
-                            identification_number: cardFormData.payer?.identification?.number
+
+                            identification_type: cardFormData.payer?.identification?.type || "CPF",
+                            identification_number: cardFormData.payer?.identification?.number || document.getElementById("checkoutCpf").value,
+
+                            payer_email: cardFormData.payer?.email,
+                            cardholder_name: cardFormData.cardholderName
                         })
                     });
 
