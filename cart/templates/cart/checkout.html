@@ -89,6 +89,19 @@
     </div>
 </div>
         </div>
+        <div class="checkout-card">
+    <h2>Dados do comprador</h2>
+
+    <label>Email</label>
+
+    <input
+        type="email"
+        id="checkoutEmail"
+        placeholder="seuemail@email.com"
+        value="{% if user.is_authenticated %}{{ user.email }}{% endif %}"
+        required
+    >
+</div>
 
         <aside class="checkout-right">
             <div class="checkout-summary">
