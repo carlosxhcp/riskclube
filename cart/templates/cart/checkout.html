@@ -12,63 +12,88 @@
     <section class="checkout-container">
 
         <div class="checkout-left">
-            <h1>Finalizar compra</h1>
+            <div class="checkout-heading">
+                <span>Compra segura</span>
+                <h1>Finalizar compra</h1>
+                <p>Revise seus produtos, informe o frete e finalize o pagamento.</p>
+            </div>
 
             <div class="checkout-card">
-                <h2>Seus produtos</h2>
+                <div class="card-title">
+                    <span>01</span>
+                    <h2>Seus produtos</h2>
+                </div>
 
-                {% for item in cart.items %}
-                <div class="checkout-product">
-                    <img src="{{ item.image }}" alt="{{ item.name }}">
+                <div class="checkout-products-list">
+                    {% for item in cart.items %}
+                    <div class="checkout-product">
+                        <img src="{{ item.image }}" alt="{{ item.name }}">
 
-                    <div>
-                        <strong>{{ item.name }}</strong>
-                        <p>Cor: {{ item.color|default:"-" }}</p>
-                        <p>Tamanho: {{ item.size|default:"-" }}</p>
+                        <div class="checkout-product-info">
+                            <strong>{{ item.name }}</strong>
 
-                        {% if item.custom_name %}
-                        <p>Nome: {{ item.custom_name }}</p>
-                        {% endif %}
+                            <div class="product-meta">
+                                <p>Cor: {{ item.color|default:"-" }}</p>
+                                <p>Tamanho: {{ item.size|default:"-" }}</p>
 
-                        {% if item.engraving_side %}
-                        <p>Gravação: {{ item.engraving_side }}</p>
-                        {% endif %}
+                                {% if item.custom_name %}
+                                <p>Nome: {{ item.custom_name }}</p>
+                                {% endif %}
 
-                        <small>Qtd: {{ item.quantity }}</small>
+                                {% if item.engraving_side %}
+                                <p>Gravação: {{ item.engraving_side }}</p>
+                                {% endif %}
+                            </div>
+
+                            <small>Quantidade: {{ item.quantity }}</small>
+                        </div>
+
+                        <span class="checkout-product-price">
+                            R$ {{ item.subtotal|floatformat:2 }}
+                        </span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="checkout-grid">
+                <div class="checkout-card">
+                    <div class="card-title">
+                        <span>02</span>
+                        <h2>Entrega</h2>
                     </div>
 
-                    <span>R$ {{ item.subtotal|floatformat:2 }}</span>
+                    <label for="checkoutCepInput">CEP</label>
+
+                    <div class="checkout-inline">
+                        <input type="text" id="checkoutCepInput" placeholder="00000-000" maxlength="9">
+                        <button type="button" id="checkoutShippingBtn">Calcular</button>
+                    </div>
+
+                    <div id="checkoutShippingOptions"></div>
                 </div>
-                {% endfor %}
+
+                <div class="checkout-card">
+                    <div class="card-title">
+                        <span>03</span>
+                        <h2>Cupom</h2>
+                    </div>
+
+                    <div class="checkout-inline">
+                        <input type="text" id="checkoutCouponInput" placeholder="Digite seu cupom">
+                        <button type="button" id="checkoutCouponBtn">Aplicar</button>
+                    </div>
+
+                    <div id="checkoutCouponMessage"></div>
+                    <div id="checkoutAppliedCoupons"></div>
+                </div>
             </div>
 
             <div class="checkout-card">
-                <h2>Entrega</h2>
-
-                <label for="checkoutCepInput">CEP</label>
-
-                <div class="checkout-inline">
-                    <input type="text" id="checkoutCepInput" placeholder="00000-000" maxlength="9">
-                    <button type="button" id="checkoutShippingBtn">Calcular</button>
+                <div class="card-title">
+                    <span>04</span>
+                    <h2>Dados do comprador</h2>
                 </div>
-
-                <div id="checkoutShippingOptions"></div>
-            </div>
-
-            <div class="checkout-card">
-                <h2>Cupom</h2>
-
-                <div class="checkout-inline">
-                    <input type="text" id="checkoutCouponInput" placeholder="Digite seu cupom">
-                    <button type="button" id="checkoutCouponBtn">Aplicar</button>
-                </div>
-
-                <div id="checkoutCouponMessage"></div>
-                <div id="checkoutAppliedCoupons"></div>
-            </div>
-
-            <div class="checkout-card">
-                <h2>Dados do comprador</h2>
 
                 <label for="checkoutEmail">Email</label>
 
@@ -82,7 +107,10 @@
             </div>
 
             <div class="checkout-card">
-                <h2>Pagamento</h2>
+                <div class="card-title">
+                    <span>05</span>
+                    <h2>Pagamento</h2>
+                </div>
 
                 <div id="paymentBrick_container"></div>
                 <div id="paymentResult" class="pix-result"></div>
@@ -91,14 +119,17 @@
 
         <aside class="checkout-right">
             <div class="checkout-summary">
-                <h2>Resumo</h2>
+                <div class="summary-header">
+                    <span>Resumo do pedido</span>
+                    <h2>Total da compra</h2>
+                </div>
 
                 <div class="summary-row">
                     <span>Subtotal</span>
                     <strong id="checkoutSubtotal">R$ {{ cart.subtotal|floatformat:2 }}</strong>
                 </div>
 
-                <div class="summary-row" id="checkoutDiscountRow" style="display:none;">
+                <div class="summary-row discount" id="checkoutDiscountRow" style="display:none;">
                     <span>Desconto</span>
                     <strong id="checkoutDiscount">- R$ 0,00</strong>
                 </div>
@@ -111,6 +142,13 @@
                 <div class="summary-row total">
                     <span>Total</span>
                     <strong id="checkoutTotal">R$ {{ cart.total|floatformat:2 }}</strong>
+                </div>
+
+                <div class="summary-security">
+                    <div>
+                        <strong>Pagamento protegido</strong>
+                        <p>Seus dados são processados com segurança.</p>
+                    </div>
                 </div>
             </div>
         </aside>
