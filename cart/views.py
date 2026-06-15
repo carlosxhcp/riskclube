@@ -722,12 +722,6 @@ def checkout_mercadopago_cart(request):
             "error": "MP_ACCESS_TOKEN não configurado."
         }, status=500)
 
-    if not getattr(settings, "SITE_URL", None):
-        return JsonResponse({
-            "success": False,
-            "error": "SITE_URL não configurado."
-        }, status=500)
-
     try:
         data = json.loads(request.body)
     except json.JSONDecodeError:
@@ -771,7 +765,11 @@ def checkout_mercadopago_cart(request):
     elif payment_type == "card":
         token = data.get("token")
         payment_method_id = data.get("payment_method_id")
-        installments = int(data.get("installments", 1))
+
+        try:
+            installments = int(data.get("installments", 1))
+        except (TypeError, ValueError):
+            installments = 1
 
         if not token or not payment_method_id:
             order.status = "cancelled"
@@ -782,19 +780,31 @@ def checkout_mercadopago_cart(request):
                 "error": "Dados do cartão inválidos."
             }, status=400)
 
+        payer_email = data.get("payer_email") or email
+
+        payer = {
+            "email": payer_email
+        }
+
+        identification_type = data.get("identification_type")
+        identification_number = data.get("identification_number")
+
+        if identification_type and identification_number:
+            payer["identification"] = {
+                "type": identification_type,
+                "number": identification_number
+            }
+
         payment_data.update({
             "token": token,
             "payment_method_id": payment_method_id,
             "installments": installments,
-            "issuer_id": data.get("issuer_id"),
-            "payer": {
-                "email": email,
-                "identification": {
-                    "type": data.get("identification_type", "CPF"),
-                    "number": data.get("identification_number", "")
-                }
-            }
+            "payer": payer,
         })
+
+        issuer_id = data.get("issuer_id")
+        if issuer_id:
+            payment_data["issuer_id"] = issuer_id
 
     else:
         order.status = "cancelled"
@@ -894,7 +904,6 @@ def mercadopago_webhook(request):
             pass
 
     return JsonResponse({"success": True})
-
 
 
 def checkout_page(request):

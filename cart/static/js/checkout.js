@@ -479,12 +479,17 @@ async function initCardBrick() {
                         body: JSON.stringify({
                             payment_type: "card",
                             email: getCheckoutEmail(),
+
                             token: cardFormData.token,
                             payment_method_id: cardFormData.payment_method_id,
                             issuer_id: cardFormData.issuer_id,
                             installments: cardFormData.installments,
+
                             identification_type: cardFormData.payer?.identification?.type,
-                            identification_number: cardFormData.payer?.identification?.number
+                            identification_number: cardFormData.payer?.identification?.number,
+
+                            payer_email: cardFormData.payer?.email,
+                            cardholder_name: cardFormData.cardholderName
                         })
                     });
 
