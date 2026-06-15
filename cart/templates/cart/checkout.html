@@ -1,0 +1,129 @@
+{% extends "pages/base.html" %}
+{% load static %}
+
+{% block title %}Checkout | Risk Clube{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/checkout.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="checkout-page">
+    <section class="checkout-container">
+
+        <div class="checkout-left">
+            <h1>Finalizar compra</h1>
+
+            <div class="checkout-card">
+                <h2>Seus produtos</h2>
+
+                {% for item in cart.items %}
+                <div class="checkout-product">
+                    <img src="{{ item.image }}" alt="{{ item.name }}">
+
+                    <div>
+                        <strong>{{ item.name }}</strong>
+                        <p>Cor: {{ item.color|default:"-" }}</p>
+                        <p>Tamanho: {{ item.size|default:"-" }}</p>
+
+                        {% if item.custom_name %}
+                        <p>Nome: {{ item.custom_name }}</p>
+                        {% endif %}
+
+                        <small>Qtd: {{ item.quantity }}</small>
+                    </div>
+
+                    <span>R$ {{ item.subtotal|floatformat:2 }}</span>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="checkout-card">
+                <h2>Entrega</h2>
+
+                <label>CEP</label>
+
+                <div class="checkout-inline">
+                    <input type="text" id="checkoutCepInput" placeholder="00000-000" maxlength="9">
+                    <button type="button" id="checkoutShippingBtn">Calcular</button>
+                </div>
+
+                <div id="checkoutShippingOptions"></div>
+            </div>
+
+            <div class="checkout-card">
+                <h2>Cupom</h2>
+
+                <div class="checkout-inline">
+                    <input type="text" id="checkoutCouponInput" placeholder="Digite seu cupom">
+                    <button type="button" id="checkoutCouponBtn">Aplicar</button>
+                </div>
+
+                <div id="checkoutCouponMessage"></div>
+                <div id="checkoutAppliedCoupons"></div>
+            </div>
+
+            <div class="checkout-card">
+    <h2>Pagamento</h2>
+
+    <div class="payment-tabs">
+        <button type="button" class="payment-tab active" data-payment-tab="pix">
+            Pix
+        </button>
+
+        <button type="button" class="payment-tab" data-payment-tab="card">
+            Cartão
+        </button>
+    </div>
+
+    <div class="payment-panel active" id="pixPanel">
+        <button type="button" class="pay-btn" id="payPixBtn">
+            Gerar Pix
+        </button>
+
+        <div id="pixResult" class="pix-result"></div>
+    </div>
+
+    <div class="payment-panel" id="cardPanel">
+        <div id="cardPaymentBrick_container"></div>
+    </div>
+</div>
+        </div>
+
+        <aside class="checkout-right">
+            <div class="checkout-summary">
+                <h2>Resumo</h2>
+
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <strong id="checkoutSubtotal">R$ {{ cart.subtotal|floatformat:2 }}</strong>
+                </div>
+
+                <div class="summary-row" id="checkoutDiscountRow" style="display:none;">
+                    <span>Desconto</span>
+                    <strong id="checkoutDiscount">- R$ 0,00</strong>
+                </div>
+
+                <div class="summary-row">
+                    <span>Frete</span>
+                    <strong id="checkoutShippingPrice">R$ {{ cart.shipping_price|floatformat:2 }}</strong>
+                </div>
+
+                <div class="summary-row total">
+                    <span>Total</span>
+                    <strong id="checkoutTotal">R$ {{ cart.total|floatformat:2 }}</strong>
+                </div>
+            </div>
+        </aside>
+
+    </section>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://sdk.mercadopago.com/js/v2"></script>
+<script>
+    window.MP_PUBLIC_KEY = "{{ mp_public_key }}";
+</script>
+<script src="{% static 'js/checkout.js' %}"></script>
+{% endblock %}

@@ -196,120 +196,31 @@
         </div>
     </div>
 
-    <form method="post" action="{% url 'cart:checkout_infinitepay_cart' %}" class="side-cart-footer" id="sideCartFooter">
-        {% csrf_token %}
-
-        <div class="cart-accordion">
-            <button type="button" class="cart-accordion-btn" id="shippingAccordionBtn">
-                <span>Calcular frete</span>
-                <i class="bi bi-chevron-down"></i>
-            </button>
-
-            <div class="cart-shipping-box" id="cartShippingBox">
-                <label for="shippingCepInput" class="cart-section-label">
-                    CEP de entrega
-                </label>
-
-                <div class="cart-inline-form">
-                    <input
-                        type="text"
-                        id="shippingCepInput"
-                        placeholder="00000-000"
-                        maxlength="9"
-                        autocomplete="postal-code"
-                    >
-
-                    <button type="button" id="calculateShippingBtn">
-                        Calcular
-                    </button>
-                </div>
-
-                <div class="shipping-options" id="shippingOptions"></div>
-            </div>
+    <div class="side-cart-footer" id="sideCartFooter">
+    <div class="cart-summary-box">
+        <div class="cart-total-row">
+            <span>Subtotal</span>
+            <strong id="cartSubtotal">R$ 0,00</strong>
         </div>
 
-        <div class="cart-accordion">
-            <button type="button" class="cart-accordion-btn" id="couponAccordionBtn">
-                <span>Cupom</span>
-                <i class="bi bi-chevron-down"></i>
-            </button>
-
-            <div class="cart-coupon-box" id="cartCouponBox">
-                <label for="couponCodeInput" class="cart-section-label">
-                    Cupom de desconto
-                </label>
-
-                <div class="cart-inline-form">
-                    <input
-                        type="text"
-                        id="couponCodeInput"
-                        placeholder="Digite seu cupom"
-                        autocomplete="off"
-                    >
-
-                    <button type="button" id="applyCouponBtn">
-                        Aplicar
-                    </button>
-                </div>
-
-                <div id="couponMessages"></div>
-                <div id="appliedCoupons"></div>
-            </div>
+        <div class="cart-total-row cart-total-final">
+            <span>Total</span>
+            <strong id="cartTotal">R$ 0,00</strong>
         </div>
+    </div>
 
-        <div class="checkout-email-box">
-            <label for="checkoutEmailInput">
-                Email para acompanhar o pedido
-            </label>
-
-            <input
-                type="email"
-                id="checkoutEmailInput"
-                name="email"
-                placeholder="seuemail@email.com"
-                required
-                value="{% if user.is_authenticated %}{{ user.email }}{% endif %}"
-            >
-
-            <small>Depois, se criar uma conta com esse email, seus pedidos aparecerão nela.</small>
-        </div>
-
-        <div class="cart-summary-box">
-            <div class="cart-total-row">
-                <span>Subtotal</span>
-                <strong id="cartSubtotal">R$ 0,00</strong>
-            </div>
-
-            <div class="cart-total-row" id="cartDiscountRow" style="display:none;">
-                <span>Desconto</span>
-                <strong id="cartDiscount">- R$ 0,00</strong>
-            </div>
-
-            <div class="cart-total-row">
-                <span>Frete</span>
-                <strong id="cartShippingPrice">R$ 0,00</strong>
-            </div>
-
-            <div class="cart-total-row cart-total-final">
-                <span>Total</span>
-                <strong id="cartTotal">R$ 0,00</strong>
-            </div>
-        </div>
-
-        <button type="submit" class="checkout-btn" id="checkoutCartBtn">
-            Finalizar compra
-            <i class="bi bi-arrow-right"></i>
-        </button>
-
-    </form>
-
-</aside>
+    <a href="{% url 'cart:checkout_page' %}" class="cart-checkout-btn">
+        Finalizar compra
+    </a>
+</div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script src="{% static 'js/cart.js' %}"></script>
     <script src="{% static 'js/newsletter.js' %}"></script>
     <script src="{% static 'js/main.js' %}"></script>
+
+{% block extra_js %}{% endblock %}
 
 </body>
 

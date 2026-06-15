@@ -1,12 +1,14 @@
 import json
 import requests
+import mercadopago
 
 from decimal import Decimal, InvalidOperation
 
 from django.conf import settings
-from django.http import JsonResponse, HttpResponseBadRequest
-from django.shortcuts import redirect, get_object_or_404
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, render, redirect
 from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 
 from products.models import Product
@@ -22,10 +24,6 @@ def to_decimal(value, default="0.00"):
         return Decimal(str(value))
     except (InvalidOperation, TypeError, ValueError):
         return Decimal(default)
-
-
-def money_to_cents(value):
-    return int((to_decimal(value) * 100).quantize(Decimal("1")))
 
 
 def clear_shipping(request):
@@ -177,46 +175,6 @@ def get_cart_payload(request):
 
 def cart_data(request):
     return JsonResponse(get_cart_payload(request))
-
-
-def check_infinitepay_payment(order):
-    payload = {
-        "handle": settings.INFINITEPAY_HANDLE,
-        "order_nsu": str(order.id),
-    }
-
-    response = requests.post(
-        "https://api.checkout.infinitepay.io/payment_check",
-        json=payload,
-        timeout=15,
-    )
-
-    if response.status_code not in [200, 201]:
-        return False, None
-
-    data = response.json()
-
-    paid = (
-        data.get("paid") is True
-        or data.get("status") == "paid"
-        or data.get("payment_status") == "paid"
-        or data.get("success") is True
-    )
-
-    if paid and order.status != "paid":
-        order.status = "paid"
-        order.paid_at = timezone.now()
-        order.infinitepay_reference = (
-            data.get("slug")
-            or data.get("payment_id")
-            or data.get("transaction_id")
-            or ""
-        )
-        order.save()
-
-        return True, data
-
-    return False, data
 
 
 @require_POST
@@ -665,46 +623,39 @@ def select_shipping(request):
     return JsonResponse(get_cart_payload(request))
 
 
-def checkout_infinitepay(request, product_id):
-    product = get_object_or_404(Product, id=product_id)
-
-    payload = {
-        "handle": settings.INFINITEPAY_HANDLE,
-        "redirect_url": f"{settings.SITE_URL}/sucesso/",
-        "items": [{
-            "quantity": 1,
-            "price": money_to_cents(product.price),
-            "description": product.name,
-        }],
-    }
-
-    response = requests.post(
-        "https://api.checkout.infinitepay.io/links",
-        json=payload,
-        timeout=15,
-    )
-
-    if response.status_code not in [200, 201]:
-        return HttpResponseBadRequest(response.text)
-
-    data = response.json()
-
-    return redirect(data["url"])
+def get_mercadopago_sdk():
+    return mercadopago.SDK(settings.MP_ACCESS_TOKEN)
 
 
-def checkout_infinitepay_cart(request):
+def update_order_payment_status(order, payment_data):
+    status = payment_data.get("status", "")
+    payment_id = str(payment_data.get("id", ""))
+
+    if status == "approved":
+        order.status = "paid"
+        order.paid_at = timezone.now()
+    elif status in ["rejected", "cancelled"]:
+        order.status = "cancelled"
+    else:
+        order.status = "pending"
+
+    if hasattr(order, "mercadopago_payment_id"):
+        order.mercadopago_payment_id = payment_id
+
+    order.save()
+
+
+def create_order_from_cart(request, email):
     cart = request.session.get("cart", {})
     shipping = request.session.get("shipping")
 
     if not cart:
-        return HttpResponseBadRequest("Carrinho vazio.")
+        return None, "Carrinho vazio."
 
     subtotal = get_cart_subtotal(cart)
 
     if subtotal < FREE_SHIPPING_LIMIT and not shipping:
-        return HttpResponseBadRequest(
-            "Selecione uma opção de frete antes de finalizar a compra."
-        )
+        return None, "Selecione uma opção de frete antes de finalizar a compra."
 
     if subtotal >= FREE_SHIPPING_LIMIT:
         shipping = {
@@ -727,18 +678,7 @@ def checkout_infinitepay_cart(request):
     total = subtotal + shipping_price - discount
 
     if total <= 0:
-        return HttpResponseBadRequest(
-            "O total do pedido precisa ser maior que zero."
-        )
-
-    coupon_codes = ", ".join([
-        coupon.get("code", "")
-        for coupon in payload_cart.get("coupons", [])
-    ])
-
-    
-
-    email = request.POST.get("email", "").strip().lower()
+        return None, "O total do pedido precisa ser maior que zero."
 
     order = Order.objects.create(
         user=request.user if request.user.is_authenticated else None,
@@ -750,14 +690,7 @@ def checkout_infinitepay_cart(request):
         total=total,
     )
 
-    description_summary = []
-
     for cart_key, item in cart.items():
-        name = item.get("name", "Produto")
-        size = item.get("size", "")
-        color = item.get("color", "")
-        custom_name = item.get("custom_name", "")
-
         quantity = int(item.get("quantity", 1))
         price = to_decimal(item.get("price", 0))
         item_subtotal = price * quantity
@@ -765,10 +698,10 @@ def checkout_infinitepay_cart(request):
         OrderItem.objects.create(
             order=order,
             product_id=item.get("product_id"),
-            name=name,
-            size=size,
-            color=color,
-            custom_name=custom_name,
+            name=item.get("name", "Produto"),
+            size=item.get("size", ""),
+            color=item.get("color", ""),
+            custom_name=item.get("custom_name", ""),
             engraving_side=item.get("engraving_side", ""),
             name_direction=item.get("name_direction", ""),
             name_font=item.get("name_font", ""),
@@ -778,53 +711,200 @@ def checkout_infinitepay_cart(request):
             image=item.get("image", ""),
         )
 
-        description_parts = [f"{quantity}x {name}"]
+    return order, None
 
-        if color:
-            description_parts.append(f"Cor: {color}")
 
-        if size:
-            description_parts.append(f"Tamanho: {size}")
+@require_POST
+def checkout_mercadopago_cart(request):
+    if not getattr(settings, "MP_ACCESS_TOKEN", None):
+        return JsonResponse({
+            "success": False,
+            "error": "MP_ACCESS_TOKEN não configurado."
+        }, status=500)
 
-        if custom_name:
-            description_parts.append(f"Nome: {custom_name}")
+    if not getattr(settings, "SITE_URL", None):
+        return JsonResponse({
+            "success": False,
+            "error": "SITE_URL não configurado."
+        }, status=500)
 
-        description_summary.append(" | ".join(description_parts))
+    try:
+        data = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({
+            "success": False,
+            "error": "Dados inválidos."
+        }, status=400)
 
-    checkout_description = f"Pedido Risk Clube #{order.id}"
+    email = str(data.get("email") or "").strip().lower()
 
-    if coupon_codes:
-        checkout_description += f" | Cupom: {coupon_codes}"
+    if not email:
+        return JsonResponse({
+            "success": False,
+            "error": "Informe seu e-mail."
+        }, status=400)
 
-    items = [
-        {
-            "quantity": 1,
-            "price": money_to_cents(total),
-            "description": checkout_description,
-        }
-    ]
+    payment_type = str(data.get("payment_type") or "pix").strip().lower()
 
-    payload = {
-        "handle": settings.INFINITEPAY_HANDLE,
-        "redirect_url": f"{settings.SITE_URL}/sucesso/?order={order.id}",
-        "order_nsu": str(order.id),
-        "items": items,
+    order, error = create_order_from_cart(request, email)
+
+    if error:
+        return JsonResponse({
+            "success": False,
+            "error": error
+        }, status=400)
+
+    sdk = get_mercadopago_sdk()
+
+    payment_data = {
+        "transaction_amount": float(order.total),
+        "description": f"Pedido Risk Clube #{order.id}",
+        "external_reference": str(order.id),
+        "notification_url": f"{settings.SITE_URL}/cart/mercadopago/webhook/",
+        "payer": {
+            "email": email
+        },
     }
 
-    response = requests.post(
-        "https://api.checkout.infinitepay.io/links",
-        json=payload,
-        timeout=15,
-    )
+    if payment_type == "pix":
+        payment_data["payment_method_id"] = "pix"
 
-    if response.status_code not in [200, 201]:
+    elif payment_type == "card":
+        token = data.get("token")
+        payment_method_id = data.get("payment_method_id")
+        installments = int(data.get("installments", 1))
+
+        if not token or not payment_method_id:
+            order.status = "cancelled"
+            order.save()
+
+            return JsonResponse({
+                "success": False,
+                "error": "Dados do cartão inválidos."
+            }, status=400)
+
+        payment_data.update({
+            "token": token,
+            "payment_method_id": payment_method_id,
+            "installments": installments,
+            "issuer_id": data.get("issuer_id"),
+            "payer": {
+                "email": email,
+                "identification": {
+                    "type": data.get("identification_type", "CPF"),
+                    "number": data.get("identification_number", "")
+                }
+            }
+        })
+
+    else:
         order.status = "cancelled"
         order.save()
-        return HttpResponseBadRequest(response.text)
 
-    data = response.json()
+        return JsonResponse({
+            "success": False,
+            "error": "Forma de pagamento inválida."
+        }, status=400)
 
-    order.infinitepay_link = data.get("url", "")
-    order.save()
+    try:
+        payment_response = sdk.payment().create(payment_data)
+    except Exception as error:
+        order.status = "cancelled"
+        order.save()
 
-    return redirect(data["url"])
+        return JsonResponse({
+            "success": False,
+            "error": "Erro ao conectar com o Mercado Pago.",
+            "details": str(error),
+        }, status=500)
+
+    response = payment_response.get("response", {})
+
+    if payment_response.get("status") not in [200, 201]:
+        order.status = "cancelled"
+        order.save()
+
+        return JsonResponse({
+            "success": False,
+            "error": "Erro ao criar pagamento.",
+            "details": response,
+        }, status=400)
+
+    update_order_payment_status(order, response)
+
+    if response.get("status") == "approved":
+        request.session.pop("cart", None)
+        request.session.pop("shipping", None)
+        request.session.pop("coupons", None)
+        request.session.modified = True
+
+    pix_data = response.get("point_of_interaction", {}).get("transaction_data", {})
+
+    return JsonResponse({
+        "success": True,
+        "order_id": order.id,
+        "status": response.get("status"),
+        "payment_id": response.get("id"),
+        "payment_type": payment_type,
+        "pix_qr_code": pix_data.get("qr_code"),
+        "pix_qr_code_base64": pix_data.get("qr_code_base64"),
+        "ticket_url": pix_data.get("ticket_url"),
+    })
+
+
+@csrf_exempt
+def mercadopago_webhook(request):
+    if request.method not in ["POST", "GET"]:
+        return JsonResponse({"success": False}, status=405)
+
+    payment_id = (
+        request.GET.get("data.id")
+        or request.GET.get("id")
+        or request.GET.get("payment_id")
+    )
+
+    if not payment_id:
+        try:
+            data = json.loads(request.body or "{}")
+            payment_id = (
+                data.get("data", {}).get("id")
+                or data.get("id")
+                or data.get("payment_id")
+            )
+        except json.JSONDecodeError:
+            payment_id = None
+
+    if not payment_id:
+        return JsonResponse({"success": True})
+
+    sdk = get_mercadopago_sdk()
+
+    try:
+        payment = sdk.payment().get(payment_id)
+    except Exception:
+        return JsonResponse({"success": True})
+
+    payment_data = payment.get("response", {})
+    order_id = payment_data.get("external_reference")
+
+    if order_id:
+        try:
+            order = Order.objects.get(id=order_id)
+            update_order_payment_status(order, payment_data)
+        except Order.DoesNotExist:
+            pass
+
+    return JsonResponse({"success": True})
+
+
+
+def checkout_page(request):
+    payload = get_cart_payload(request)
+
+    if not payload["items"]:
+        return redirect("/")
+
+    return render(request, "cart/checkout.html", {
+        "cart": payload,
+        "mp_public_key": settings.MP_PUBLIC_KEY,
+    })

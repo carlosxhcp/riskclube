@@ -10,9 +10,6 @@ from django.conf import settings
 
 from .models import NewsletterLead
 
-from cart.views import check_infinitepay_payment
-
-
 from orders.models import Order
 
 def home(request):
@@ -78,47 +75,6 @@ def contato(request):
 
 def about(request):
     return render(request, "pages/about.html")
-
-
-
-
-
-def checkout_success(request):
-    order_id = request.GET.get("order")
-
-    order = None
-    payment_checked = False
-    payment_paid = False
-
-    if order_id:
-        try:
-            order = Order.objects.get(id=order_id)
-            payment_paid, payment_data = check_infinitepay_payment(order)
-            payment_checked = True
-        except Order.DoesNotExist:
-            pass
-
-    return render(request, "pages/success.html", {
-        "order": order,
-        "payment_checked": payment_checked,
-        "payment_paid": payment_paid,
-    })
-    order_id = request.GET.get("order")
-
-    order = None
-
-    if order_id:
-        try:
-            order = Order.objects.get(id=order_id)
-        except Order.DoesNotExist:
-            pass
-
-    return render(
-        request,
-        "pages/success.html",
-        {"order": order}
-    )
-
 
 @require_POST
 def newsletter_signup(request):

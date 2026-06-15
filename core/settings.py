@@ -1,6 +1,7 @@
 from pathlib import Path
 import dj_database_url
 from decouple import config
+import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -159,3 +160,8 @@ ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
 
 ACCOUNT_EMAIL_VERIFICATION = "none"
 ACCOUNT_UNIQUE_EMAIL = True
+
+
+#MercadoPago
+MP_PUBLIC_KEY = os.getenv("MP_PUBLIC_KEY")
+MP_ACCESS_TOKEN = os.getenv("MP_ACCESS_TOKEN")
