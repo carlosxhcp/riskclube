@@ -1,6 +1,6 @@
 import json
+import uuid
 import requests
-import mercadopago
 
 from decimal import Decimal, InvalidOperation
 
@@ -623,8 +623,12 @@ def select_shipping(request):
     return JsonResponse(get_cart_payload(request))
 
 
-def get_mercadopago_sdk():
-    return mercadopago.SDK(settings.MP_ACCESS_TOKEN)
+def get_mercadopago_headers():
+    return {
+        "Authorization": f"Bearer {settings.MP_ACCESS_TOKEN}",
+        "Content-Type": "application/json",
+        "X-Idempotency-Key": str(uuid.uuid4()),
+    }
 
 
 def update_order_payment_status(order, payment_data):
@@ -748,8 +752,6 @@ def checkout_mercadopago_cart(request):
             "error": error
         }, status=400)
 
-    sdk = get_mercadopago_sdk()
-
     payment_data = {
         "transaction_amount": float(order.total),
         "description": f"Pedido Risk Clube #{order.id}",
@@ -761,7 +763,6 @@ def checkout_mercadopago_cart(request):
 
     if payment_type == "pix":
         payment_data["payment_method_id"] = "pix"
-        payment_data["payment_type_id"] = "bank_transfer"
 
     elif payment_type == "card":
         token = data.get("token")
@@ -804,6 +805,7 @@ def checkout_mercadopago_cart(request):
         })
 
         issuer_id = data.get("issuer_id")
+
         if issuer_id:
             payment_data["issuer_id"] = issuer_id
 
@@ -817,8 +819,21 @@ def checkout_mercadopago_cart(request):
         }, status=400)
 
     try:
-        payment_response = sdk.payment().create(payment_data)
-    except Exception as error:
+        mp_response = requests.post(
+            "https://api.mercadopago.com/v1/payments",
+            json=payment_data,
+            headers=get_mercadopago_headers(),
+            timeout=30,
+        )
+
+        try:
+            response = mp_response.json()
+        except ValueError:
+            response = {
+                "message": mp_response.text
+            }
+
+    except requests.RequestException as error:
         order.status = "cancelled"
         order.save()
 
@@ -828,15 +843,14 @@ def checkout_mercadopago_cart(request):
             "details": str(error),
         }, status=500)
 
-    response = payment_response.get("response", {})
-
-    if payment_response.get("status") not in [200, 201]:
+    if mp_response.status_code not in [200, 201]:
         order.status = "cancelled"
         order.save()
 
         return JsonResponse({
             "success": False,
             "error": "Erro ao criar pagamento.",
+            "mercadopago_status": mp_response.status_code,
             "details": response,
         }, status=400)
 
@@ -860,7 +874,6 @@ def checkout_mercadopago_cart(request):
         "pix_qr_code_base64": pix_data.get("qr_code_base64"),
         "ticket_url": pix_data.get("ticket_url"),
     })
-
 
 @csrf_exempt
 def mercadopago_webhook(request):
@@ -887,14 +900,21 @@ def mercadopago_webhook(request):
     if not payment_id:
         return JsonResponse({"success": True})
 
-    sdk = get_mercadopago_sdk()
-
     try:
-        payment = sdk.payment().get(payment_id)
-    except Exception:
+        mp_response = requests.get(
+            f"https://api.mercadopago.com/v1/payments/{payment_id}",
+            headers=get_mercadopago_headers(),
+            timeout=30,
+        )
+
+        try:
+            payment_data = mp_response.json()
+        except ValueError:
+            payment_data = {}
+
+    except requests.RequestException:
         return JsonResponse({"success": True})
 
-    payment_data = payment.get("response", {})
     order_id = payment_data.get("external_reference")
 
     if order_id:
