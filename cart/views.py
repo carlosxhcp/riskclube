@@ -761,6 +761,7 @@ def checkout_mercadopago_cart(request):
 
     if payment_type == "pix":
         payment_data["payment_method_id"] = "pix"
+        payment_data["payment_type_id"] = "bank_transfer"
 
     elif payment_type == "card":
         token = data.get("token")
