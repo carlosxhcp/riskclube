@@ -461,6 +461,10 @@ async function initCardBrick() {
                 amount: Number(currentCart.total || 0)
             },
             callbacks: {
+                onReady: () => {
+                    console.log("Brick do cartão carregado.");
+                },
+
                 onSubmit: async (cardFormData) => {
                     if (!validateBeforePayment()) {
                         return Promise.reject();
@@ -504,6 +508,7 @@ async function initCardBrick() {
 
                     alert("Pagamento enviado. Status: " + data.status);
                 },
+
                 onError: (error) => {
                     console.error("Erro no Brick do Mercado Pago:", error);
                 }
