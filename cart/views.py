@@ -760,7 +760,6 @@ def checkout_mercadopago_cart(request):
         "transaction_amount": float(order.total),
         "description": f"Pedido Risk Clube #{order.id}",
         "external_reference": str(order.id),
-        "notification_url": f"{settings.SITE_URL}/cart/mercadopago/webhook/",
         "payer": {
             "email": email
         },
