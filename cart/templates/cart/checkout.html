@@ -30,6 +30,10 @@
                         <p>Nome: {{ item.custom_name }}</p>
                         {% endif %}
 
+                        {% if item.engraving_side %}
+                        <p>Gravação: {{ item.engraving_side }}</p>
+                        {% endif %}
+
                         <small>Qtd: {{ item.quantity }}</small>
                     </div>
 
@@ -41,7 +45,7 @@
             <div class="checkout-card">
                 <h2>Entrega</h2>
 
-                <label>CEP</label>
+                <label for="checkoutCepInput">CEP</label>
 
                 <div class="checkout-inline">
                     <input type="text" id="checkoutCepInput" placeholder="00000-000" maxlength="9">
@@ -64,52 +68,26 @@
             </div>
 
             <div class="checkout-card">
-    <h2>Pagamento</h2>
+                <h2>Dados do comprador</h2>
 
-    <div class="payment-tabs">
-        <button type="button" class="payment-tab active" data-payment-tab="pix">
-            Pix
-        </button>
+                <label for="checkoutEmail">Email</label>
 
-        <button type="button" class="payment-tab" data-payment-tab="card">
-            Cartão
-        </button>
-    </div>
+                <input
+                    type="email"
+                    id="checkoutEmail"
+                    placeholder="seuemail@email.com"
+                    value="{% if user.is_authenticated %}{{ user.email }}{% endif %}"
+                    required
+                >
+            </div>
 
-    <div class="payment-panel active" id="pixPanel">
-        <button type="button" class="pay-btn" id="payPixBtn">
-            Gerar Pix
-        </button>
+            <div class="checkout-card">
+                <h2>Pagamento</h2>
 
-        <div id="pixResult" class="pix-result"></div>
-    </div>
-
-    <div class="payment-panel" id="cardPanel">
-        <div id="cardPaymentBrick_container"></div>
-    </div>
-</div>
+                <div id="paymentBrick_container"></div>
+                <div id="paymentResult" class="pix-result"></div>
+            </div>
         </div>
-        <div class="checkout-card">
-    <h2>Dados do comprador</h2>
-
-    <label>Email</label>
-
-    <input
-        type="email"
-        id="checkoutEmail"
-        placeholder="seuemail@email.com"
-        value="{% if user.is_authenticated %}{{ user.email }}{% endif %}"
-        required
-    >
-</div>
-
-<label>CPF</label>
-<input
-    type="text"
-    id="checkoutCpf"
-    placeholder="000.000.000-00"
-    maxlength="14"
->
 
         <aside class="checkout-right">
             <div class="checkout-summary">

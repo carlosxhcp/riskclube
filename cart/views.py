@@ -734,15 +734,18 @@ def checkout_mercadopago_cart(request):
             "error": "Dados inválidos."
         }, status=400)
 
-    email = str(data.get("email") or "").strip().lower()
+    form_data = data.get("form_data") or {}
+    email = str(
+        data.get("email")
+        or form_data.get("payer", {}).get("email")
+        or ""
+    ).strip().lower()
 
     if not email:
         return JsonResponse({
             "success": False,
             "error": "Informe seu e-mail."
         }, status=400)
-
-    payment_type = str(data.get("payment_type") or "pix").strip().lower()
 
     order, error = create_order_from_cart(request, email)
 
@@ -752,69 +755,23 @@ def checkout_mercadopago_cart(request):
             "error": error
         }, status=400)
 
-    identification_type = str(data.get("identification_type") or "CPF").strip()
-    identification_number = str(data.get("identification_number") or "").replace(".", "").replace("-", "").replace("/", "").strip()
+    payment_data = dict(form_data)
+    payment_data["transaction_amount"] = float(order.total)
+    payment_data["description"] = f"Pedido Risk Clube #{order.id}"
+    payment_data["external_reference"] = str(order.id)
 
-    payer = {
-        "email": email
-    }
+    payer = payment_data.get("payer") or {}
+    payer["email"] = email
+    payment_data["payer"] = payer
 
-    if identification_number:
-        payer["identification"] = {
-            "type": identification_type,
-            "number": identification_number
-        }
-
-    payment_data = {
-        "transaction_amount": float(order.total),
-        "description": f"Pedido Risk Clube #{order.id}",
-        "external_reference": str(order.id),
-        "payer": payer,
-    }
-
-    if payment_type == "pix":
-        payment_data["payment_method_id"] = "pix"
-
-    elif payment_type == "card":
-        token = data.get("token")
-        payment_method_id = data.get("payment_method_id")
-
-        try:
-            installments = int(data.get("installments", 1))
-        except (TypeError, ValueError):
-            installments = 1
-
-        if not token or not payment_method_id:
-            order.status = "cancelled"
-            order.save()
-
-            return JsonResponse({
-                "success": False,
-                "error": "Dados do cartão inválidos."
-            }, status=400)
-
-        payer_email = data.get("payer_email") or email
-        payer["email"] = payer_email
-
-        payment_data.update({
-            "token": token,
-            "payment_method_id": payment_method_id,
-            "installments": installments,
-            "payer": payer,
-        })
-
-        issuer_id = data.get("issuer_id")
-
-        if issuer_id:
-            payment_data["issuer_id"] = issuer_id
-
-    else:
+    if not payment_data.get("payment_method_id"):
         order.status = "cancelled"
         order.save()
 
         return JsonResponse({
             "success": False,
-            "error": "Forma de pagamento inválida."
+            "error": "Forma de pagamento inválida.",
+            "details": payment_data,
         }, status=400)
 
     try:
@@ -869,11 +826,13 @@ def checkout_mercadopago_cart(request):
         "order_id": order.id,
         "status": response.get("status"),
         "payment_id": response.get("id"),
-        "payment_type": payment_type,
+        "payment_type": response.get("payment_type_id"),
+        "payment_method_id": response.get("payment_method_id"),
         "pix_qr_code": pix_data.get("qr_code"),
         "pix_qr_code_base64": pix_data.get("qr_code_base64"),
         "ticket_url": pix_data.get("ticket_url"),
     })
+
 
 @csrf_exempt
 def mercadopago_webhook(request):
