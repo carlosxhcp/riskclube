@@ -18,6 +18,7 @@ const checkoutShippingPrice = document.getElementById("checkoutShippingPrice");
 const checkoutTotal = document.getElementById("checkoutTotal");
 
 let currentCart = null;
+let cardBrickStarted = false;
 
 function formatMoney(value) {
     return "R$ " + Number(value || 0).toFixed(2).replace(".", ",");
@@ -81,9 +82,13 @@ function updateSummary(data) {
 }
 
 async function loadCheckoutCart() {
-    const response = await fetch("/cart/data/");
-    const data = await response.json();
-    updateSummary(data);
+    try {
+        const response = await fetch("/cart/data/");
+        const data = await response.json();
+        updateSummary(data);
+    } catch (error) {
+        console.error("Erro ao carregar carrinho:", error);
+    }
 }
 
 function renderAppliedCoupons(data) {
@@ -99,7 +104,12 @@ function renderAppliedCoupons(data) {
     checkoutAppliedCoupons.innerHTML = coupons.map(coupon => `
         <div class="applied-coupon-item">
             <span><strong>${escapeHtml(coupon.code)}</strong> • -${formatMoney(coupon.discount)}</span>
-            <button type="button" class="remove-coupon-btn" data-coupon-code="${escapeHtml(coupon.code)}">
+
+            <button
+                type="button"
+                class="remove-coupon-btn"
+                data-coupon-code="${escapeHtml(coupon.code)}"
+            >
                 remover
             </button>
         </div>
@@ -107,6 +117,8 @@ function renderAppliedCoupons(data) {
 }
 
 async function calculateShipping() {
+    if (!checkoutCepInput || !checkoutShippingBtn || !checkoutShippingOptions) return;
+
     const cep = normalizeCep(checkoutCepInput.value);
 
     if (cep.length !== 8) {
@@ -132,6 +144,11 @@ async function calculateShipping() {
 
         if (!response.ok || !data.success) {
             setMessage(checkoutShippingOptions, data.error || "Erro ao calcular frete.");
+            return;
+        }
+
+        if (!data.options || !data.options.length) {
+            setMessage(checkoutShippingOptions, "Nenhuma opção de frete disponível.");
             return;
         }
 
@@ -161,15 +178,18 @@ async function calculateShipping() {
             </label>
         `).join("");
 
-        const first = document.querySelector('input[name="shipping_option"]:checked');
+        const firstOption = document.querySelector('input[name="shipping_option"]:checked');
 
-        if (first) {
-            await selectShipping(first);
+        if (firstOption) {
+            await selectShipping(firstOption);
         }
 
         document.querySelectorAll('input[name="shipping_option"]').forEach(input => {
             input.addEventListener("change", () => selectShipping(input));
         });
+    } catch (error) {
+        console.error("Erro ao calcular frete:", error);
+        setMessage(checkoutShippingOptions, "Erro ao calcular frete.");
     } finally {
         checkoutShippingBtn.disabled = false;
         checkoutShippingBtn.innerText = "Calcular";
@@ -177,6 +197,8 @@ async function calculateShipping() {
 }
 
 async function selectShipping(input) {
+    if (!input) return;
+
     const payload = {
         id: input.dataset.id,
         name: input.dataset.name,
@@ -187,26 +209,33 @@ async function selectShipping(input) {
         icon: input.dataset.icon
     };
 
-    const response = await fetch("/cart/select-shipping/", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "X-CSRFToken": getCookie("csrftoken")
-        },
-        body: JSON.stringify(payload)
-    });
+    try {
+        const response = await fetch("/cart/select-shipping/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCookie("csrftoken")
+            },
+            body: JSON.stringify(payload)
+        });
 
-    const data = await response.json();
+        const data = await response.json();
 
-    if (!response.ok || !data.success) {
-        alert(data.error || "Erro ao selecionar frete.");
-        return;
+        if (!response.ok || !data.success) {
+            alert(data.error || "Erro ao selecionar frete.");
+            return;
+        }
+
+        updateSummary(data);
+    } catch (error) {
+        console.error("Erro ao selecionar frete:", error);
+        alert("Erro ao selecionar frete.");
     }
-
-    updateSummary(data);
 }
 
 async function applyCoupon() {
+    if (!checkoutCouponInput || !checkoutCouponBtn) return;
+
     const code = checkoutCouponInput.value.trim();
 
     if (!code) {
@@ -237,6 +266,9 @@ async function applyCoupon() {
         checkoutCouponInput.value = "";
         setMessage(checkoutCouponMessage, "Cupom aplicado!");
         updateSummary(data);
+    } catch (error) {
+        console.error("Erro ao aplicar cupom:", error);
+        setMessage(checkoutCouponMessage, "Erro ao aplicar cupom.");
     } finally {
         checkoutCouponBtn.disabled = false;
         checkoutCouponBtn.innerText = "Aplicar";
@@ -244,37 +276,67 @@ async function applyCoupon() {
 }
 
 async function removeCoupon(code) {
-    const response = await fetch("/cart/remove-coupon/", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "X-CSRFToken": getCookie("csrftoken")
-        },
-        body: JSON.stringify({ code })
-    });
+    try {
+        const response = await fetch("/cart/remove-coupon/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCookie("csrftoken")
+            },
+            body: JSON.stringify({ code })
+        });
 
-    const data = await response.json();
+        const data = await response.json();
 
-    if (!response.ok || !data.success) {
-        alert(data.error || "Erro ao remover cupom.");
-        return;
+        if (!response.ok || !data.success) {
+            alert(data.error || "Erro ao remover cupom.");
+            return;
+        }
+
+        setMessage(checkoutCouponMessage, "Cupom removido.");
+        updateSummary(data);
+    } catch (error) {
+        console.error("Erro ao remover cupom:", error);
+        alert("Erro ao remover cupom.");
     }
-
-    setMessage(checkoutCouponMessage, "Cupom removido.");
-    updateSummary(data);
 }
 
-async function payWithPix() {
-    const email = checkoutEmail.value.trim();
+function getCheckoutEmail() {
+    if (!checkoutEmail) return "";
+
+    return checkoutEmail.value.trim().toLowerCase();
+}
+
+function validateBeforePayment() {
+    const email = getCheckoutEmail();
 
     if (!email) {
         alert("Informe seu e-mail.");
-        checkoutEmail.focus();
-        return;
+        if (checkoutEmail) checkoutEmail.focus();
+        return false;
     }
+
+    if (!currentCart || !currentCart.items || !currentCart.items.length) {
+        alert("Seu carrinho está vazio.");
+        return false;
+    }
+
+    if (Number(currentCart.total || 0) <= 0) {
+        alert("O total do pedido precisa ser maior que zero.");
+        return false;
+    }
+
+    return true;
+}
+
+async function payWithPix() {
+    if (!payPixBtn || !pixResult) return;
+
+    if (!validateBeforePayment()) return;
 
     payPixBtn.disabled = true;
     payPixBtn.innerText = "Gerando Pix...";
+    pixResult.innerHTML = "";
 
     try {
         const response = await fetch("/cart/checkout/mercadopago/", {
@@ -285,14 +347,20 @@ async function payWithPix() {
             },
             body: JSON.stringify({
                 payment_type: "pix",
-                email
+                email: getCheckoutEmail()
             })
         });
 
         const data = await response.json();
 
         if (!response.ok || !data.success) {
-            alert(data.error || "Erro ao gerar Pix.");
+            console.log("ERRO PIX:", data);
+
+            const details = data.details
+                ? JSON.stringify(data.details)
+                : "";
+
+            alert(data.error || details || "Erro ao gerar Pix.");
             return;
         }
 
@@ -305,7 +373,7 @@ async function payWithPix() {
 
             ${data.pix_qr_code ? `
                 <label>Código Pix copia e cola</label>
-                <textarea readonly>${data.pix_qr_code}</textarea>
+                <textarea readonly>${escapeHtml(data.pix_qr_code)}</textarea>
                 <button type="button" class="pay-btn" id="copyPixBtn">Copiar código Pix</button>
             ` : ""}
 
@@ -320,6 +388,9 @@ async function payWithPix() {
                 copyPixBtn.innerText = "Código copiado!";
             });
         }
+    } catch (error) {
+        console.error("Erro ao gerar Pix:", error);
+        alert("Erro ao gerar Pix.");
     } finally {
         payPixBtn.disabled = false;
         payPixBtn.innerText = "Gerar Pix";
@@ -328,83 +399,120 @@ async function payWithPix() {
 
 function initPaymentTabs() {
     document.querySelectorAll(".payment-tab").forEach(button => {
-        button.addEventListener("click", () => {
+        button.addEventListener("click", async () => {
             const tab = button.dataset.paymentTab;
 
-            document.querySelectorAll(".payment-tab").forEach(btn => btn.classList.remove("active"));
-            document.querySelectorAll(".payment-panel").forEach(panel => panel.classList.remove("active"));
+            document.querySelectorAll(".payment-tab").forEach(btn => {
+                btn.classList.remove("active");
+            });
+
+            document.querySelectorAll(".payment-panel").forEach(panel => {
+                panel.classList.remove("active");
+            });
 
             button.classList.add("active");
 
             if (tab === "pix") {
-                document.getElementById("pixPanel").classList.add("active");
+                const pixPanel = document.getElementById("pixPanel");
+                if (pixPanel) pixPanel.classList.add("active");
             }
 
             if (tab === "card") {
-                document.getElementById("cardPanel").classList.add("active");
+                const cardPanel = document.getElementById("cardPanel");
+                if (cardPanel) cardPanel.classList.add("active");
+
+                if (!cardBrickStarted) {
+                    cardBrickStarted = true;
+                    await initCardBrick();
+                }
             }
         });
     });
 }
 
 async function initCardBrick() {
-    if (!window.MP_PUBLIC_KEY || !document.getElementById("cardPaymentBrick_container")) return;
+    const cardContainer = document.getElementById("cardPaymentBrick_container");
+
+    if (!cardContainer) return;
+
+    if (!window.MercadoPago) {
+        alert("SDK do Mercado Pago não carregou.");
+        return;
+    }
+
+    if (!window.MP_PUBLIC_KEY) {
+        alert("MP_PUBLIC_KEY não configurada.");
+        return;
+    }
+
+    if (!currentCart || Number(currentCart.total || 0) <= 0) {
+        alert("Total inválido para pagamento.");
+        return;
+    }
+
+    cardContainer.innerHTML = "";
 
     const mp = new MercadoPago(window.MP_PUBLIC_KEY);
     const bricksBuilder = mp.bricks();
 
-    await bricksBuilder.create("cardPayment", "cardPaymentBrick_container", {
-        initialization: {
-            amount: Number(currentCart?.total || 0)
-        },
-        callbacks: {
-            onSubmit: async (cardFormData) => {
-                const email = checkoutEmail.value.trim();
-
-                if (!email) {
-                    alert("Informe seu e-mail.");
-                    checkoutEmail.focus();
-                    return;
-                }
-
-                const response = await fetch("/cart/checkout/mercadopago/", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRFToken": getCookie("csrftoken")
-                    },
-                    body: JSON.stringify({
-                        payment_type: "card",
-                        email,
-                        token: cardFormData.token,
-                        payment_method_id: cardFormData.payment_method_id,
-                        issuer_id: cardFormData.issuer_id,
-                        installments: cardFormData.installments,
-                        identification_type: cardFormData.payer?.identification?.type,
-                        identification_number: cardFormData.payer?.identification?.number
-                    })
-                });
-
-                const data = await response.json();
-
-                if (!response.ok || !data.success) {
-                    alert(data.error || "Pagamento recusado.");
-                    return;
-                }
-
-                if (data.status === "approved") {
-                    window.location.href = `/sucesso/?order=${data.order_id}`;
-                    return;
-                }
-
-                alert("Pagamento enviado. Status: " + data.status);
+    try {
+        await bricksBuilder.create("cardPayment", "cardPaymentBrick_container", {
+            initialization: {
+                amount: Number(currentCart.total || 0)
             },
-            onError: (error) => {
-                console.error(error);
-                alert("Erro no formulário do cartão.");
+            callbacks: {
+                onSubmit: async (cardFormData) => {
+                    if (!validateBeforePayment()) {
+                        return Promise.reject();
+                    }
+
+                    const response = await fetch("/cart/checkout/mercadopago/", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRFToken": getCookie("csrftoken")
+                        },
+                        body: JSON.stringify({
+                            payment_type: "card",
+                            email: getCheckoutEmail(),
+                            token: cardFormData.token,
+                            payment_method_id: cardFormData.payment_method_id,
+                            issuer_id: cardFormData.issuer_id,
+                            installments: cardFormData.installments,
+                            identification_type: cardFormData.payer?.identification?.type,
+                            identification_number: cardFormData.payer?.identification?.number
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (!response.ok || !data.success) {
+                        console.log("ERRO CARTÃO:", data);
+
+                        const details = data.details
+                            ? JSON.stringify(data.details)
+                            : "";
+
+                        alert(data.error || details || "Pagamento recusado.");
+                        return Promise.reject();
+                    }
+
+                    if (data.status === "approved") {
+                        window.location.href = `/sucesso/?order=${data.order_id}`;
+                        return;
+                    }
+
+                    alert("Pagamento enviado. Status: " + data.status);
+                },
+                onError: (error) => {
+                    console.error("Erro no Brick do Mercado Pago:", error);
+                }
             }
-        }
-    });
+        });
+    } catch (error) {
+        console.error("Erro ao iniciar cartão:", error);
+        alert("Erro ao carregar os campos do cartão.");
+    }
 }
 
 if (checkoutShippingBtn) {
@@ -421,10 +529,26 @@ if (checkoutCepInput) {
             checkoutCepInput.value = cep;
         }
     });
+
+    checkoutCepInput.addEventListener("keydown", event => {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            calculateShipping();
+        }
+    });
 }
 
 if (checkoutCouponBtn) {
     checkoutCouponBtn.addEventListener("click", applyCoupon);
+}
+
+if (checkoutCouponInput) {
+    checkoutCouponInput.addEventListener("keydown", event => {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            applyCoupon();
+        }
+    });
 }
 
 if (payPixBtn) {
@@ -442,5 +566,4 @@ document.addEventListener("click", event => {
 (async function initCheckout() {
     await loadCheckoutCart();
     initPaymentTabs();
-    await initCardBrick();
 })();
