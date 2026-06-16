@@ -279,17 +279,24 @@ async function loadCheckoutCart() {
         const data = await response.json();
 
         updateSummary(data);
+
         if (Number(data.subtotal || 0) >= 249) {
+            const freeCart = {
+                ...data,
+                shipping_price: 0,
+                total: Number(data.subtotal || 0) - Number(data.discount || 0)
+            };
+
+            updateSummary(freeCart);
             renderAutomaticFreeShipping();
+        } else {
+            setShippingPlaceholder();
         }
 
         await renderPaymentBrick();
 
     } catch (error) {
         console.error("Erro ao carregar carrinho:", error);
-    }
-        if (Number(data.subtotal || 0) >= 249) {
-        renderAutomaticFreeShipping();
     }
 }
 
@@ -828,8 +835,12 @@ if (checkoutCepInput) {
         }
 
         if (cep.length < 8) {
-            setShippingPlaceholder();
-            renderShippingPlaceholders();
+            if (currentCart && Number(currentCart.subtotal || 0) >= 249) {
+                renderAutomaticFreeShipping();
+            } else {
+                setShippingPlaceholder();
+                clearShippingOptions();
+            }
         }
     });
 
