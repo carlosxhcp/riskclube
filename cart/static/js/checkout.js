@@ -30,6 +30,64 @@ let bricksBuilder = null;
 let paymentBrickController = null;
 let brickRendering = false;
 
+function renderAutomaticFreeShipping() {
+    if (!checkoutShippingOptions) return;
+
+    setShippingTitle("Opções de frete");
+
+    checkoutShippingOptions.innerHTML = `
+        <label class="shipping-option">
+            <input
+                type="radio"
+                name="shipping_option"
+                data-id="free_shipping"
+                data-name="Frete grátis"
+                data-company="Risk Clube"
+                data-price="0"
+                data-delivery-time=""
+                data-cep=""
+                data-icon=""
+                checked
+            >
+
+            <div class="shipping-company">
+                <img
+                    src="/static/img/shipping/truck.png"
+                    class="shipping-logo"
+                    alt=""
+                >
+
+                <span>Frete grátis</span>
+            </div>
+
+            <strong>R$ 0,00</strong>
+        </label>
+
+        ${renderDisabledShippingOptions()}
+    `;
+}
+
+function getShippingLogo(companyName) {
+    const name = (companyName || "").toLowerCase();
+
+    if (name.includes("loggi")) {
+        return "/static/img/shipping/loggi.png";
+    }
+
+    if (
+        name.includes("correios") ||
+        name.includes("sedex") ||
+        name.includes("pac")
+    ) {
+        return "/static/img/shipping/correios.png";
+    }
+
+    if (name.includes("jadlog")) {
+        return "/static/img/shipping/jadlog.png";
+    }
+
+    return "/static/img/shipping/truck.png";
+}
 
 function renderDisabledShippingOptions() {
     return `
@@ -221,11 +279,17 @@ async function loadCheckoutCart() {
         const data = await response.json();
 
         updateSummary(data);
+        if (Number(data.subtotal || 0) >= 249) {
+            renderAutomaticFreeShipping();
+        }
 
         await renderPaymentBrick();
 
     } catch (error) {
         console.error("Erro ao carregar carrinho:", error);
+    }
+        if (Number(data.subtotal || 0) >= 249) {
+        renderAutomaticFreeShipping();
     }
 }
 
@@ -345,10 +409,18 @@ async function calculateShipping() {
                         ${index === 0 ? "checked" : ""}
                     >
 
-                    <span>
-                        ${escapeHtml(option.company || "")}
-                        ${escapeHtml(option.name)}
-                    </span>
+                    <div class="shipping-company">
+                        <img
+                            src="${getShippingLogo(option.company)}"
+                            class="shipping-logo"
+                            alt=""
+                        >
+
+                        <span>
+                            ${escapeHtml(option.company || "")}
+                            ${escapeHtml(option.name)}
+                        </span>
+                    </div>
 
                     <strong>
                         ${formatMoney(option.price)}
@@ -796,6 +868,5 @@ document.addEventListener("click", event => {
 
 (async function initCheckout() {
     setShippingPlaceholder();
-    renderShippingPlaceholders();
     await loadCheckoutCart();
 })();

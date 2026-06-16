@@ -78,7 +78,7 @@
                             <button type="button" id="checkoutShippingBtn">Calcular</button>
                         </div>
 
-                        <div class="checkout-address" id="checkoutAddressBox" style="display:none;">
+                        <div class="checkout-address" id="checkoutAddressBox">
                             <label>Endereço</label>
 
                             <input type="text" id="checkoutStreet" placeholder="Rua / Avenida">
@@ -98,14 +98,17 @@
                         <div id="checkoutShippingOptions">
                             <div class="shipping-placeholder-options">
                                 <div class="shipping-placeholder-card">
-                                    <span>Loggi testeExpress</span>
+                                    <img src="{% static 'img/shipping/loggi.png' %}">
+                                    <span>Loggi Express</span>
                                 </div>
 
                                 <div class="shipping-placeholder-card">
+                                    <img src="{% static 'img/shipping/correios.png' %}">
                                     <span>Correios Sedex</span>
                                 </div>
 
                                 <div class="shipping-placeholder-card">
+                                    <img src="{% static 'img/shipping/jadlog.png' %}">
                                     <span>Jadlog Package</span>
                                 </div>
                             </div>
