@@ -573,3 +573,45 @@
         font-size: 24px;
     }
 }
+
+#paymentBrick_container {
+    margin-top: 22px;
+}
+
+#paymentBrick_container iframe,
+#paymentBrick_container > div {
+    border-radius: 18px !important;
+}
+
+#paymentBrick_container button {
+    min-height: 52px !important;
+    border-radius: 14px !important;
+    font-size: 15px !important;
+    font-weight: 800 !important;
+}
+
+#paymentBrick_container [role="button"],
+#paymentBrick_container label {
+    min-height: 64px !important;
+    border-radius: 14px !important;
+}
+
+#paymentBrick_container input[type="radio"] {
+    transform: scale(1.15);
+}
+
+#paymentBrick_container .mercadopago-button,
+#paymentBrick_container button[type="submit"] {
+    width: 100% !important;
+    max-width: 320px !important;
+    height: 54px !important;
+    border-radius: 999px !important;
+    background: #111 !important;
+    color: #fff !important;
+    box-shadow: 0 14px 28px rgba(0,0,0,.18) !important;
+}
+
+#paymentBrick_container .mercadopago-button:hover,
+#paymentBrick_container button[type="submit"]:hover {
+    transform: translateY(-1px);
+}
