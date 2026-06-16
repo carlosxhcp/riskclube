@@ -479,7 +479,7 @@ async function renderPaymentBrick() {
                 customization: {
                     visual: {
                         style: {
-                            theme: "default"
+                            theme: "bootstrap"
                         }
                     },
                     paymentMethods: {
