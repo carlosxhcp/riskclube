@@ -1,4 +1,3 @@
-```js
 const checkoutCepInput = document.getElementById("checkoutCepInput");
 const checkoutShippingBtn = document.getElementById("checkoutShippingBtn");
 const checkoutShippingOptions = document.getElementById("checkoutShippingOptions");
@@ -65,12 +64,12 @@ function setMessage(element, message) {
     element.innerHTML = `<p>${escapeHtml(message)}</p>`;
 }
 
-function getMercadoPagoEmail(formData) {
+function getCheckoutEmail(formData) {
     return String(formData?.payer?.email || "").trim().toLowerCase();
 }
 
 function validateBeforePayment(formData) {
-    const email = getMercadoPagoEmail(formData);
+    const email = getCheckoutEmail(formData);
 
     if (!email) {
         alert("Informe seu e-mail no campo do Mercado Pago.");
@@ -492,22 +491,20 @@ async function renderPaymentBrick() {
 
                     onSubmit: ({ selectedPaymentMethod, formData }) => {
                         return new Promise(async (resolve, reject) => {
-                            if (!validateBeforePayment(formData)) {
+                           if (!validateBeforePayment(formData)) {
                                 reject();
                                 return;
                             }
 
                             try {
-                                const mpEmail = getMercadoPagoEmail(formData);
-
                                 const payload = {
-                                    email: mpEmail,
+                                    email: getCheckoutEmail(formData),
                                     selected_payment_method: selectedPaymentMethod,
                                     form_data: {
                                         ...formData,
                                         payer: {
                                             ...(formData.payer || {}),
-                                            email: mpEmail
+                                            email: getCheckoutEmail(formData)
                                         }
                                     }
                                 };
@@ -686,6 +683,13 @@ if (checkoutCouponInput) {
     });
 }
 
+if (checkoutEmail) {
+    checkoutEmail.addEventListener(
+        "change",
+        renderPaymentBrick
+    );
+}
+
 document.addEventListener("click", event => {
     const removeCouponBtn =
         event.target.closest(".remove-coupon-btn");
@@ -698,4 +702,3 @@ document.addEventListener("click", event => {
 (async function initCheckout() {
     await loadCheckoutCart();
 })();
-```
