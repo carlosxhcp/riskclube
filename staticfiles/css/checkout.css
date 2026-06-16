@@ -12,10 +12,11 @@
 
 .checkout-container {
     width: 100%;
-    max-width: 1240px;
+    max-width: 1320px;
     margin: 0 auto;
+
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 360px;
+    grid-template-columns: minmax(0, 1fr) 460px;
     gap: 26px;
     align-items: start;
 }
@@ -339,6 +340,8 @@
 .checkout-sidebar {
     position: sticky;
     top: 22px;
+    margin-top: 150px;
+
 }
 
 .checkout-summary {
@@ -407,7 +410,7 @@
 
 .summary-total strong {
     color: #111;
-    font-size: 28px;
+    font-size: 34px;
     font-weight: 950;
     line-height: 1;
     letter-spacing: -1px;
@@ -432,8 +435,8 @@
 
 .summary-coupon-row {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 110px;
-    gap: 10px;
+    grid-template-columns: 1fr 130px;
+    gap: 12px;
 }
 
 .summary-coupon-row input {
