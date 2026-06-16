@@ -8,6 +8,11 @@ const cartCountBadge = document.getElementById("cartCountBadge");
 const cartSubtotal = document.getElementById("cartSubtotal");
 const cartTotal = document.getElementById("cartTotal");
 
+const freeShippingText = document.getElementById("freeShippingText");
+const freeShippingProgress = document.getElementById("freeShippingProgress");
+
+const FREE_SHIPPING_LIMIT = 249;
+
 let cartBusy = false;
 
 function formatMoney(value) {
@@ -60,12 +65,35 @@ function updateCartCount(data) {
 function updateTotals(data) {
     if (!data) return;
 
+    const subtotal = Number(data.subtotal || 0);
+
     if (cartSubtotal) {
-        cartSubtotal.innerText = formatMoney(data.subtotal || 0);
+        cartSubtotal.innerText = formatMoney(subtotal);
     }
 
     if (cartTotal) {
-        cartTotal.innerText = formatMoney(data.subtotal || 0);
+        cartTotal.innerText = formatMoney(subtotal);
+    }
+}
+
+function updateFreeShipping(data) {
+    if (!freeShippingText || !freeShippingProgress) return;
+
+    const subtotal = Number(data?.subtotal || 0);
+    const missing = Math.max(FREE_SHIPPING_LIMIT - subtotal, 0);
+    const percent = Math.min((subtotal / FREE_SHIPPING_LIMIT) * 100, 100);
+
+    freeShippingProgress.style.width = `${percent}%`;
+
+    if (subtotal <= 0) {
+        freeShippingText.innerText = "Adicione R$ 249,00 para ganhar frete grátis";
+        return;
+    }
+
+    if (missing > 0) {
+        freeShippingText.innerText = `Adicione mais ${formatMoney(missing)} para ganhar frete grátis`;
+    } else {
+        freeShippingText.innerText = "Você ganhou frete grátis!";
     }
 }
 
@@ -103,6 +131,7 @@ function renderCart(data) {
 
     updateCartCount(data);
     updateTotals(data);
+    updateFreeShipping(data);
 
     if (!sideCartContent) return;
 
@@ -114,6 +143,7 @@ function renderCart(data) {
                 <small>Adicione uma garrafa para continuar.</small>
             </div>
         `;
+
         return;
     }
 
@@ -152,9 +182,25 @@ function renderCart(data) {
                     ${directionHtml}
 
                     <div class="cart-qty-controls">
-                        <button type="button" class="cart-qty-btn" data-cart-key="${escapeHtml(item.cart_key)}" data-change="-1">−</button>
+                        <button 
+                            type="button" 
+                            class="cart-qty-btn" 
+                            data-cart-key="${escapeHtml(item.cart_key)}" 
+                            data-change="-1"
+                        >
+                            −
+                        </button>
+
                         <span>${Number(item.quantity || 0)}</span>
-                        <button type="button" class="cart-qty-btn" data-cart-key="${escapeHtml(item.cart_key)}" data-change="1">+</button>
+
+                        <button 
+                            type="button" 
+                            class="cart-qty-btn" 
+                            data-cart-key="${escapeHtml(item.cart_key)}" 
+                            data-change="1"
+                        >
+                            +
+                        </button>
                     </div>
                 </div>
 
