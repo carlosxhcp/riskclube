@@ -30,6 +30,28 @@ let bricksBuilder = null;
 let paymentBrickController = null;
 let brickRendering = false;
 
+
+function renderDisabledShippingOptions() {
+    return `
+        <div class="shipping-placeholder-options shipping-disabled-options">
+            <div class="shipping-placeholder-card">
+                <span>Loggi Express</span>
+                <small>Indisponível para este pedido</small>
+            </div>
+
+            <div class="shipping-placeholder-card">
+                <span>Correios Sedex</span>
+                <small>Indisponível para este pedido</small>
+            </div>
+
+            <div class="shipping-placeholder-card">
+                <span>Jadlog Package</span>
+                <small>Indisponível para este pedido</small>
+            </div>
+        </div>
+    `;
+}
+
 function formatMoney(value) {
     return "R$ " + Number(value || 0).toFixed(2).replace(".", ",");
 }
@@ -304,6 +326,9 @@ async function calculateShipping() {
 
         setShippingTitle();
 
+        const onlyFreeShipping =
+            data.options.length === 1 &&
+            Number(data.options[0].price || 0) === 0;
         checkoutShippingOptions.innerHTML =
             data.options.map((option, index) => `
                 <label class="shipping-option">
@@ -329,7 +354,7 @@ async function calculateShipping() {
                         ${formatMoney(option.price)}
                     </strong>
                 </label>
-            `).join("");
+            `).join("") + (onlyFreeShipping ? renderDisabledShippingOptions() : "");
 
         const firstOption =
             document.querySelector(
@@ -732,7 +757,7 @@ if (checkoutCepInput) {
 
         if (cep.length < 8) {
             setShippingPlaceholder();
-            clearShippingOptions();
+            renderShippingPlaceholders();
         }
     });
 
@@ -771,5 +796,6 @@ document.addEventListener("click", event => {
 
 (async function initCheckout() {
     setShippingPlaceholder();
+    renderShippingPlaceholders();
     await loadCheckoutCart();
 })();

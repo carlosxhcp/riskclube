@@ -728,3 +728,43 @@
     font-size: 13px !important;
     letter-spacing: .2px;
 }
+
+.shipping-placeholder-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.shipping-placeholder-card {
+    padding: 14px 16px;
+
+    border: 1px dashed #d8d8d8;
+    border-radius: 16px;
+
+    opacity: .45;
+
+    pointer-events: none;
+
+    background: #fafafa;
+}
+
+.shipping-placeholder-card span {
+    display: block;
+
+    font-size: 14px;
+    font-weight: 800;
+
+    color: #444;
+}
+
+.shipping-placeholder-card small {
+    color: #888;
+}
+
+.shipping-disabled-options {
+    margin-top: 12px;
+}
+
+.shipping-disabled-options .shipping-placeholder-card {
+    opacity: .38;
+}
