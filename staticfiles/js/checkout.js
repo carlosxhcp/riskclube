@@ -1,3 +1,4 @@
+```js
 const checkoutCepInput = document.getElementById("checkoutCepInput");
 const checkoutShippingBtn = document.getElementById("checkoutShippingBtn");
 const checkoutShippingOptions = document.getElementById("checkoutShippingOptions");
@@ -7,7 +8,6 @@ const checkoutCouponBtn = document.getElementById("checkoutCouponBtn");
 const checkoutCouponMessage = document.getElementById("checkoutCouponMessage");
 const checkoutAppliedCoupons = document.getElementById("checkoutAppliedCoupons");
 
-const checkoutEmail = document.getElementById("checkoutEmail");
 const paymentResult = document.getElementById("paymentResult");
 
 const checkoutSubtotal = document.getElementById("checkoutSubtotal");
@@ -21,6 +21,7 @@ let mpInstance = null;
 let bricksBuilder = null;
 let paymentBrickController = null;
 let brickRendering = false;
+let paymentBrickRendered = false;
 
 function formatMoney(value) {
     return "R$ " + Number(value || 0).toFixed(2).replace(".", ",");
@@ -36,9 +37,7 @@ function getCookie(name) {
             cookie = cookie.trim();
 
             if (cookie.startsWith(name + "=")) {
-                cookieValue = decodeURIComponent(
-                    cookie.substring(name.length + 1)
-                );
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                 break;
             }
         }
@@ -65,21 +64,15 @@ function setMessage(element, message) {
     element.innerHTML = `<p>${escapeHtml(message)}</p>`;
 }
 
-function getCheckoutEmail() {
-    if (!checkoutEmail) return "";
-    return checkoutEmail.value.trim().toLowerCase();
+function getMercadoPagoEmail(formData) {
+    return String(formData?.payer?.email || "").trim().toLowerCase();
 }
 
-function validateBeforePayment() {
-    const email = getCheckoutEmail();
+function validateBeforePayment(formData) {
+    const email = getMercadoPagoEmail(formData);
 
     if (!email) {
-        alert("Informe seu e-mail.");
-
-        if (checkoutEmail) {
-            checkoutEmail.focus();
-        }
-
+        alert("Informe seu e-mail no campo do Mercado Pago.");
         return false;
     }
 
@@ -114,8 +107,7 @@ function updateSummary(data) {
     if (checkoutDiscountRow && checkoutDiscount) {
         if (Number(data.discount || 0) > 0) {
             checkoutDiscountRow.style.display = "flex";
-            checkoutDiscount.innerText =
-                "- " + formatMoney(data.discount);
+            checkoutDiscount.innerText = "- " + formatMoney(data.discount);
         } else {
             checkoutDiscountRow.style.display = "none";
             checkoutDiscount.innerText = "- R$ 0,00";
@@ -131,23 +123,17 @@ async function loadCheckoutCart() {
         const data = await response.json();
 
         updateSummary(data);
-
         await renderPaymentBrick();
 
     } catch (error) {
-        console.error(
-            "Erro ao carregar carrinho:",
-            error
-        );
+        console.error("Erro ao carregar carrinho:", error);
     }
 }
 
 function renderAppliedCoupons(data) {
     if (!checkoutAppliedCoupons) return;
 
-    const coupons = Array.isArray(data.coupons)
-        ? data.coupons
-        : [];
+    const coupons = Array.isArray(data.coupons) ? data.coupons : [];
 
     if (!coupons.length) {
         checkoutAppliedCoupons.innerHTML = "";
@@ -174,112 +160,78 @@ function renderAppliedCoupons(data) {
 }
 
 async function calculateShipping() {
-    if (
-        !checkoutCepInput ||
-        !checkoutShippingBtn ||
-        !checkoutShippingOptions
-    ) {
+    if (!checkoutCepInput || !checkoutShippingBtn || !checkoutShippingOptions) {
         return;
     }
 
     const cep = normalizeCep(checkoutCepInput.value);
 
     if (cep.length !== 8) {
-        setMessage(
-            checkoutShippingOptions,
-            "Digite um CEP válido."
-        );
+        setMessage(checkoutShippingOptions, "Digite um CEP válido.");
         return;
     }
 
     checkoutShippingBtn.disabled = true;
     checkoutShippingBtn.innerText = "Calculando...";
 
-    setMessage(
-        checkoutShippingOptions,
-        "Calculando frete..."
-    );
+    setMessage(checkoutShippingOptions, "Calculando frete...");
 
     try {
-        const response = await fetch(
-            "/cart/calculate-shipping/",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": getCookie("csrftoken")
-                },
-                body: JSON.stringify({ cep })
-            }
-        );
+        const response = await fetch("/cart/calculate-shipping/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCookie("csrftoken")
+            },
+            body: JSON.stringify({ cep })
+        });
 
         const data = await response.json();
 
         if (!response.ok || !data.success) {
-            setMessage(
-                checkoutShippingOptions,
-                data.error || "Erro ao calcular frete."
-            );
+            setMessage(checkoutShippingOptions, data.error || "Erro ao calcular frete.");
             return;
         }
 
-        checkoutShippingOptions.innerHTML =
-            data.options.map((option, index) => `
-                <label class="shipping-option">
-                    <input
-                        type="radio"
-                        name="shipping_option"
-                        data-id="${option.id}"
-                        data-name="${option.name}"
-                        data-company="${option.company || ""}"
-                        data-price="${option.price}"
-                        data-delivery-time="${option.delivery_time || ""}"
-                        data-cep="${option.cep || cep}"
-                        data-icon="${option.icon || ""}"
-                        ${index === 0 ? "checked" : ""}
-                    >
+        checkoutShippingOptions.innerHTML = data.options.map((option, index) => `
+            <label class="shipping-option">
+                <input
+                    type="radio"
+                    name="shipping_option"
+                    data-id="${option.id}"
+                    data-name="${option.name}"
+                    data-company="${option.company || ""}"
+                    data-price="${option.price}"
+                    data-delivery-time="${option.delivery_time || ""}"
+                    data-cep="${option.cep || cep}"
+                    data-icon="${option.icon || ""}"
+                    ${index === 0 ? "checked" : ""}
+                >
 
-                    <span>
-                        ${option.company || ""}
-                        ${option.name}
-                    </span>
+                <span>
+                    ${escapeHtml(option.company || "")}
+                    ${escapeHtml(option.name || "")}
+                </span>
 
-                    <strong>
-                        ${formatMoney(option.price)}
-                    </strong>
-                </label>
-            `).join("");
+                <strong>
+                    ${formatMoney(option.price)}
+                </strong>
+            </label>
+        `).join("");
 
-        const firstOption =
-            document.querySelector(
-                'input[name="shipping_option"]:checked'
-            );
+        const firstOption = document.querySelector('input[name="shipping_option"]:checked');
 
         if (firstOption) {
             await selectShipping(firstOption);
         }
 
-        document
-            .querySelectorAll(
-                'input[name="shipping_option"]'
-            )
-            .forEach(input => {
-                input.addEventListener(
-                    "change",
-                    () => selectShipping(input)
-                );
-            });
+        document.querySelectorAll('input[name="shipping_option"]').forEach(input => {
+            input.addEventListener("change", () => selectShipping(input));
+        });
 
     } catch (error) {
-        console.error(
-            "Erro ao calcular frete:",
-            error
-        );
-
-        setMessage(
-            checkoutShippingOptions,
-            "Erro ao calcular frete."
-        );
+        console.error("Erro ao calcular frete:", error);
+        setMessage(checkoutShippingOptions, "Erro ao calcular frete.");
 
     } finally {
         checkoutShippingBtn.disabled = false;
@@ -301,51 +253,35 @@ async function selectShipping(input) {
     };
 
     try {
-        const response = await fetch(
-            "/cart/select-shipping/",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": getCookie("csrftoken")
-                },
-                body: JSON.stringify(payload)
-            }
-        );
+        const response = await fetch("/cart/select-shipping/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCookie("csrftoken")
+            },
+            body: JSON.stringify(payload)
+        });
 
         const data = await response.json();
 
         if (!response.ok || !data.success) {
-            alert(
-                data.error ||
-                "Erro ao selecionar frete."
-            );
+            alert(data.error || "Erro ao selecionar frete.");
             return;
         }
 
         updateSummary(data);
 
-        await renderPaymentBrick();
-
     } catch (error) {
-        console.error(
-            "Erro ao selecionar frete:",
-            error
-        );
-
+        console.error("Erro ao selecionar frete:", error);
         alert("Erro ao selecionar frete.");
     }
 }
 
 async function applyCoupon() {
-    const code =
-        checkoutCouponInput.value.trim();
+    const code = checkoutCouponInput.value.trim();
 
     if (!code) {
-        setMessage(
-            checkoutCouponMessage,
-            "Digite um cupom."
-        );
+        setMessage(checkoutCouponMessage, "Digite um cupom.");
         return;
     }
 
@@ -353,49 +289,30 @@ async function applyCoupon() {
     checkoutCouponBtn.innerText = "Aplicando...";
 
     try {
-        const response = await fetch(
-            "/cart/apply-coupon/",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": getCookie("csrftoken")
-                },
-                body: JSON.stringify({ code })
-            }
-        );
+        const response = await fetch("/cart/apply-coupon/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCookie("csrftoken")
+            },
+            body: JSON.stringify({ code })
+        });
 
         const data = await response.json();
 
         if (!response.ok || !data.success) {
-            setMessage(
-                checkoutCouponMessage,
-                data.error || "Cupom inválido."
-            );
+            setMessage(checkoutCouponMessage, data.error || "Cupom inválido.");
             return;
         }
 
         checkoutCouponInput.value = "";
 
-        setMessage(
-            checkoutCouponMessage,
-            "Cupom aplicado!"
-        );
-
+        setMessage(checkoutCouponMessage, "Cupom aplicado!");
         updateSummary(data);
 
-        await renderPaymentBrick();
-
     } catch (error) {
-        console.error(
-            "Erro ao aplicar cupom:",
-            error
-        );
-
-        setMessage(
-            checkoutCouponMessage,
-            "Erro ao aplicar cupom."
-        );
+        console.error("Erro ao aplicar cupom:", error);
+        setMessage(checkoutCouponMessage, "Erro ao aplicar cupom.");
 
     } finally {
         checkoutCouponBtn.disabled = false;
@@ -405,36 +322,28 @@ async function applyCoupon() {
 
 async function removeCoupon(code) {
     try {
-        const response = await fetch(
-            "/cart/remove-coupon/",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": getCookie("csrftoken")
-                },
-                body: JSON.stringify({ code })
-            }
-        );
+        const response = await fetch("/cart/remove-coupon/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCookie("csrftoken")
+            },
+            body: JSON.stringify({ code })
+        });
 
         const data = await response.json();
 
         updateSummary(data);
 
-        await renderPaymentBrick();
-
     } catch (error) {
-        console.error(
-            "Erro ao remover cupom:",
-            error
-        );
+        console.error("Erro ao remover cupom:", error);
     }
 }
 
 async function renderPaymentBrick() {
     const container = document.getElementById("paymentBrick_container");
 
-    if (!container || brickRendering) return;
+    if (!container || brickRendering || paymentBrickRendered) return;
 
     if (!window.MercadoPago || !window.MP_PUBLIC_KEY) {
         console.error("SDK do Mercado Pago ou MP_PUBLIC_KEY ausente.");
@@ -453,16 +362,6 @@ async function renderPaymentBrick() {
 
             bricksBuilder = mpInstance.bricks();
         }
-
-        if (
-            paymentBrickController &&
-            typeof paymentBrickController.unmount === "function"
-        ) {
-            await paymentBrickController.unmount();
-            paymentBrickController = null;
-        }
-
-        container.innerHTML = "";
 
         if (paymentResult) {
             paymentResult.innerHTML = "";
@@ -493,40 +392,40 @@ async function renderPaymentBrick() {
 
                 callbacks: {
                     onReady: () => {
+                        paymentBrickRendered = true;
                         console.log("Payment Brick carregado.");
                     },
 
                     onSubmit: ({ selectedPaymentMethod, formData }) => {
                         return new Promise(async (resolve, reject) => {
-                            if (!validateBeforePayment()) {
+                            if (!validateBeforePayment(formData)) {
                                 reject();
                                 return;
                             }
 
                             try {
+                                const mpEmail = getMercadoPagoEmail(formData);
+
                                 const payload = {
-                                    email: getCheckoutEmail(),
+                                    email: mpEmail,
                                     selected_payment_method: selectedPaymentMethod,
                                     form_data: {
                                         ...formData,
                                         payer: {
                                             ...(formData.payer || {}),
-                                            email: getCheckoutEmail()
+                                            email: mpEmail
                                         }
                                     }
                                 };
 
-                                const response = await fetch(
-                                    "/cart/checkout/mercadopago/",
-                                    {
-                                        method: "POST",
-                                        headers: {
-                                            "Content-Type": "application/json",
-                                            "X-CSRFToken": getCookie("csrftoken")
-                                        },
-                                        body: JSON.stringify(payload)
-                                    }
-                                );
+                                const response = await fetch("/cart/checkout/mercadopago/", {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                        "X-CSRFToken": getCookie("csrftoken")
+                                    },
+                                    body: JSON.stringify(payload)
+                                });
 
                                 const data = await response.json();
 
@@ -537,28 +436,20 @@ async function renderPaymentBrick() {
                                         ? JSON.stringify(data.details)
                                         : "";
 
-                                    alert(
-                                        data.error ||
-                                        details ||
-                                        "Erro ao criar pagamento."
-                                    );
+                                    alert(data.error || details || "Erro ao criar pagamento.");
 
                                     reject();
                                     return;
                                 }
 
                                 if (data.status === "approved") {
-                                    window.location.href =
-                                        `/sucesso/?order=${data.order_id}`;
+                                    window.location.href = `/sucesso/?order=${data.order_id}`;
 
                                     resolve();
                                     return;
                                 }
 
-                                if (
-                                    data.pix_qr_code ||
-                                    data.pix_qr_code_base64
-                                ) {
+                                if (data.pix_qr_code || data.pix_qr_code_base64) {
                                     paymentResult.innerHTML = `
                                         <h3>Pix gerado com sucesso</h3>
 
@@ -584,39 +475,25 @@ async function renderPaymentBrick() {
                                         <p>Depois do pagamento, seu pedido será confirmado automaticamente.</p>
                                     `;
 
-                                    const copyPixBtn =
-                                        document.getElementById("copyPixBtn");
+                                    const copyPixBtn = document.getElementById("copyPixBtn");
 
                                     if (copyPixBtn && data.pix_qr_code) {
-                                        copyPixBtn.addEventListener(
-                                            "click",
-                                            async () => {
-                                                await navigator.clipboard.writeText(
-                                                    data.pix_qr_code
-                                                );
-
-                                                copyPixBtn.innerText =
-                                                    "Código copiado!";
-                                            }
-                                        );
+                                        copyPixBtn.addEventListener("click", async () => {
+                                            await navigator.clipboard.writeText(data.pix_qr_code);
+                                            copyPixBtn.innerText = "Código copiado!";
+                                        });
                                     }
 
                                     resolve();
                                     return;
                                 }
 
-                                alert(
-                                    "Pagamento enviado. Status: " +
-                                    (data.status || "pendente")
-                                );
+                                alert("Pagamento enviado. Status: " + (data.status || "pendente"));
 
                                 resolve();
 
                             } catch (error) {
-                                console.error(
-                                    "Erro ao enviar pagamento:",
-                                    error
-                                );
+                                console.error("Erro ao enviar pagamento:", error);
 
                                 alert("Erro ao enviar pagamento.");
                                 reject();
@@ -625,21 +502,14 @@ async function renderPaymentBrick() {
                     },
 
                     onError: (error) => {
-                        console.error(
-                            "Erro no Payment Brick:",
-                            error
-                        );
+                        console.error("Erro no Payment Brick:", error);
                     }
                 }
             }
         );
 
     } catch (error) {
-        console.error(
-            "Erro ao carregar Payment Brick:",
-            error
-        );
-
+        console.error("Erro ao carregar Payment Brick:", error);
         alert("Erro ao carregar pagamento.");
 
     } finally {
@@ -648,10 +518,7 @@ async function renderPaymentBrick() {
 }
 
 if (checkoutShippingBtn) {
-    checkoutShippingBtn.addEventListener(
-        "click",
-        calculateShipping
-    );
+    checkoutShippingBtn.addEventListener("click", calculateShipping);
 }
 
 if (checkoutCepInput) {
@@ -659,8 +526,7 @@ if (checkoutCepInput) {
         const cep = normalizeCep(checkoutCepInput.value);
 
         if (cep.length > 5) {
-            checkoutCepInput.value =
-                cep.replace(/^(\d{5})(\d{0,3}).*/, "$1-$2");
+            checkoutCepInput.value = cep.replace(/^(\d{5})(\d{0,3}).*/, "$1-$2");
         } else {
             checkoutCepInput.value = cep;
         }
@@ -675,10 +541,7 @@ if (checkoutCepInput) {
 }
 
 if (checkoutCouponBtn) {
-    checkoutCouponBtn.addEventListener(
-        "click",
-        applyCoupon
-    );
+    checkoutCouponBtn.addEventListener("click", applyCoupon);
 }
 
 if (checkoutCouponInput) {
@@ -690,16 +553,8 @@ if (checkoutCouponInput) {
     });
 }
 
-if (checkoutEmail) {
-    checkoutEmail.addEventListener(
-        "change",
-        renderPaymentBrick
-    );
-}
-
 document.addEventListener("click", event => {
-    const removeCouponBtn =
-        event.target.closest(".remove-coupon-btn");
+    const removeCouponBtn = event.target.closest(".remove-coupon-btn");
 
     if (!removeCouponBtn) return;
 
@@ -709,3 +564,4 @@ document.addEventListener("click", event => {
 (async function initCheckout() {
     await loadCheckoutCart();
 })();
+```
