@@ -482,37 +482,29 @@ async function selectShipping(input) {
     };
 
     try {
-        const response = await fetch("/cart/select-shipping/", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": getCookie("csrftoken")
-            },
-            body: JSON.stringify(payload)
-        });
+        const response = await fetch(
+            "/cart/select-shipping/",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": getCookie("csrftoken")
+                },
+                body: JSON.stringify(payload)
+            }
+        );
 
         const data = await response.json();
 
         if (!response.ok || !data.success) {
-            alert(data.error || "Erro ao selecionar frete.");
+            alert(
+                data.error ||
+                "Erro ao selecionar frete."
+            );
             return;
         }
 
-        currentCart = {
-            ...currentCart,
-            ...data,
-            shipping_price: Number(data.shipping_price || payload.price || 0),
-            total: Number(
-                data.total ??
-                (
-                    Number(data.subtotal ?? currentCart?.subtotal ?? 0) -
-                    Number(data.discount ?? currentCart?.discount ?? 0) +
-                    Number(data.shipping_price ?? payload.price ?? 0)
-                )
-            )
-        };
-
-        updateSummary(currentCart);
+        updateSummary(data);
 
         await renderPaymentBrick();
 
