@@ -14,7 +14,6 @@
     width: 100%;
     max-width: 1240px;
     margin: 0 auto;
-
     display: grid;
     grid-template-columns: minmax(0, 1fr) 360px;
     gap: 26px;
@@ -79,15 +78,12 @@
 .section-header > span {
     min-width: 38px;
     height: 38px;
-
     display: inline-flex;
     align-items: center;
     justify-content: center;
-
     border-radius: 50%;
     background: #111;
     color: #fff;
-
     font-size: 13px;
     font-weight: 900;
 }
@@ -105,18 +101,11 @@
     font-size: 13px;
 }
 
-.checkout-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 18px;
-}
-
 .checkout-product {
     display: grid;
     grid-template-columns: 92px minmax(0, 1fr) auto;
     align-items: center;
     gap: 16px;
-
     padding: 16px 0;
     border-bottom: 1px solid #efefef;
 }
@@ -198,13 +187,10 @@
     width: 100%;
     height: 50px;
     padding: 0 15px;
-
     border: 1px solid #dedede;
     border-radius: 16px;
-
     background: #fafafa;
     color: #111;
-
     outline: none;
     font-size: 14px;
     transition: .2s ease;
@@ -228,17 +214,13 @@
 .checkout-inline button {
     min-width: 108px;
     height: 50px;
-
     border: none;
     border-radius: 16px;
-
     background: #111;
     color: #fff;
-
     font-size: 13px;
     font-weight: 900;
     cursor: pointer;
-
     transition: .2s ease;
 }
 
@@ -246,6 +228,113 @@
     transform: translateY(-1px);
     box-shadow: 0 14px 28px rgba(0, 0, 0, .16);
 }
+
+/* ENTREGA */
+
+/* ENTREGA */
+
+.checkout-delivery-section {
+    width: 100%;
+}
+
+.delivery-grid {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 28px;
+    align-items: stretch;
+}
+
+.delivery-address-side {
+    min-width: 0;
+}
+
+.delivery-shipping-side {
+    min-width: 0;
+    padding-left: 28px;
+    border-left: 1px solid #e5e5e5;
+
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+}
+
+.checkout-delivery-section .checkout-inline {
+    display: grid;
+    grid-template-columns: 1fr 130px;
+    gap: 12px;
+}
+
+.checkout-delivery-section #checkoutCepInput,
+.checkout-delivery-section #checkoutShippingBtn {
+    height: 56px;
+}
+
+.checkout-address {
+    margin-top: 18px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.checkout-address label,
+#checkoutStreet,
+#checkoutNeighborhood {
+    grid-column: 1 / -1;
+}
+
+
+
+.shipping-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    margin: 0 0 12px;
+    padding: 14px;
+
+    border: 1px solid #dedede;
+    border-radius: 16px;
+
+    background: #fff;
+    cursor: pointer;
+}
+
+.shipping-option:has(input:checked) {
+    border-color: #111;
+    box-shadow: inset 0 0 0 1px #111;
+}
+
+.shipping-option input {
+    width: auto;
+    height: auto;
+    accent-color: #111;
+}
+
+@media (max-width: 900px) {
+    .delivery-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .delivery-shipping-side {
+        padding-left: 0;
+        border-left: none;
+        padding-top: 18px;
+        border-top: 1px solid #e5e5e5;
+    }
+}
+
+@media (max-width: 760px) {
+    .checkout-delivery-section .checkout-inline,
+    .checkout-address {
+        grid-template-columns: 1fr;
+    }
+
+    #checkoutState {
+        max-width: 100%;
+    }
+}
+
+/* RESUMO */
 
 .checkout-sidebar {
     position: sticky;
@@ -284,12 +373,9 @@
     justify-content: space-between;
     align-items: center;
     gap: 16px;
-
     margin: 0 24px;
     padding: 17px 0;
-
     border-bottom: 1px solid #eee;
-
     color: #666;
     font-size: 14px;
 }
@@ -307,7 +393,6 @@
 .summary-total {
     margin: 0 24px;
     padding: 24px 0;
-
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
@@ -329,10 +414,94 @@
     white-space: nowrap;
 }
 
+.summary-coupon {
+    margin: 0 24px 20px;
+    padding: 20px;
+    border: 1px solid #ececec;
+    border-radius: 22px;
+    background: #fff;
+}
+
+.summary-coupon label {
+    display: block;
+    margin-bottom: 10px;
+    color: #111;
+    font-size: 12px;
+    font-weight: 900;
+}
+
+.summary-coupon-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 110px;
+    gap: 10px;
+}
+
+.summary-coupon-row input {
+    width: 100%;
+    height: 50px;
+    min-width: 0;
+    padding: 0 14px;
+    border: 1px solid #ddd;
+    border-radius: 16px;
+    background: #fafafa;
+    outline: none;
+}
+
+.summary-coupon-row input:focus {
+    border-color: #111;
+    background: #fff;
+}
+
+.summary-coupon-row button {
+    height: 50px;
+    border: none;
+    border-radius: 16px;
+    background: #111;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.summary-coupon-row button:hover {
+    opacity: .9;
+}
+
+#checkoutCouponMessage {
+    margin-top: 10px;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+#checkoutAppliedCoupons {
+    margin-top: 10px;
+}
+
+.applied-coupon-item {
+    margin-top: 12px;
+    padding: 12px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    border-radius: 16px;
+    background: #f5f5f5;
+    color: #111;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.remove-coupon-btn {
+    border: none;
+    background: transparent;
+    color: #c62828;
+    cursor: pointer;
+    font-weight: 900;
+}
+
 .summary-safe {
     margin: 0 24px 24px;
     padding: 16px;
-
     border-radius: 20px;
     background: #f6f6f6;
 }
@@ -352,88 +521,7 @@
     line-height: 1.4;
 }
 
-.shipping-option {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-
-    margin-top: 12px;
-    padding: 14px;
-
-    border: 1px solid #e5e5e5;
-    border-radius: 18px;
-
-    background: #fafafa;
-    cursor: pointer;
-    transition: .2s ease;
-}
-
-.shipping-option:hover {
-    border-color: #111;
-    background: #fff;
-}
-
-.shipping-option input {
-    width: auto;
-    height: auto;
-    accent-color: #111;
-}
-
-.shipping-option-info {
-    flex: 1;
-}
-
-.shipping-option-info span {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-
-    color: #111;
-    font-size: 13px;
-    font-weight: 900;
-}
-
-.shipping-option-info small {
-    color: #777;
-    font-size: 12px;
-}
-
-.shipping-company-icon {
-    width: 34px;
-    height: 34px;
-    object-fit: contain;
-}
-
-.applied-coupon-item {
-    margin-top: 12px;
-    padding: 12px 14px;
-
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-
-    border-radius: 16px;
-    background: #f5f5f5;
-
-    color: #111;
-    font-size: 13px;
-    font-weight: 800;
-}
-
-.remove-coupon-btn {
-    border: none;
-    background: transparent;
-    color: #c62828;
-    cursor: pointer;
-    font-weight: 900;
-}
-
-#checkoutCouponMessage {
-    margin-top: 12px;
-    font-size: 13px;
-    font-weight: 800;
-}
+/* PIX / PAGAMENTO */
 
 .pix-result {
     margin-top: 18px;
@@ -449,12 +537,9 @@
 .pix-result textarea {
     width: 100%;
     min-height: 100px;
-
     padding: 13px;
-
     border: 1px solid #ddd;
     border-radius: 16px;
-
     background: #fafafa;
     resize: none;
     outline: none;
@@ -469,13 +554,10 @@
 
 .payment-tab {
     height: 50px;
-
     border: 1px solid #ddd;
     border-radius: 16px;
-
     background: #fff;
     color: #111;
-
     font-weight: 900;
     cursor: pointer;
     transition: .2s ease;
@@ -498,13 +580,10 @@
 .pay-btn {
     width: 100%;
     height: 56px;
-
     border: none;
     border-radius: 18px;
-
     background: #111;
     color: #fff;
-
     font-size: 15px;
     font-weight: 900;
     cursor: pointer;
@@ -514,64 +593,6 @@
 .pay-btn:hover {
     transform: translateY(-1px);
     box-shadow: 0 14px 28px rgba(0, 0, 0, .16);
-}
-
-@media (max-width: 1050px) {
-    .checkout-container {
-        grid-template-columns: 1fr;
-    }
-
-    .checkout-sidebar {
-        position: static;
-        order: -1;
-    }
-}
-
-@media (max-width: 760px) {
-    .checkout-page {
-        padding: 24px 12px 50px;
-    }
-
-    .checkout-row {
-        grid-template-columns: 1fr;
-    }
-
-    .checkout-section {
-        padding: 18px;
-        border-radius: 22px;
-    }
-
-    .checkout-top h1 {
-        font-size: 38px;
-    }
-
-    .checkout-product {
-        grid-template-columns: 78px 1fr;
-        gap: 13px;
-    }
-
-    .product-image {
-        width: 78px;
-        height: 78px;
-        border-radius: 18px;
-    }
-
-    .product-price {
-        grid-column: 1 / -1;
-        justify-self: start;
-    }
-
-    .checkout-inline {
-        flex-direction: column;
-    }
-
-    .checkout-inline button {
-        width: 100%;
-    }
-
-    .summary-total strong {
-        font-size: 24px;
-    }
 }
 
 #paymentBrick_container {
@@ -614,4 +635,96 @@
 #paymentBrick_container .mercadopago-button:hover,
 #paymentBrick_container button[type="submit"]:hover {
     transform: translateY(-1px);
+}
+
+/* RESPONSIVO */
+
+@media (max-width: 1050px) {
+    .checkout-container {
+        grid-template-columns: 1fr;
+    }
+
+    .checkout-sidebar {
+        position: static;
+        order: -1;
+    }
+}
+
+@media (max-width: 900px) {
+    .delivery-grid {
+        grid-template-columns: 1fr;
+        gap: 22px;
+    }
+
+    .delivery-grid::after {
+        display: none;
+    }
+
+    .delivery-address-side {
+        padding-right: 0;
+    }
+}
+
+@media (max-width: 760px) {
+    .checkout-page {
+        padding: 24px 12px 50px;
+    }
+
+    .checkout-section {
+        padding: 18px;
+        border-radius: 22px;
+    }
+
+    .checkout-top h1 {
+        font-size: 38px;
+    }
+
+    .checkout-product {
+        grid-template-columns: 78px 1fr;
+        gap: 13px;
+    }
+
+    .product-image {
+        width: 78px;
+        height: 78px;
+        border-radius: 18px;
+    }
+
+    .product-price {
+        grid-column: 1 / -1;
+        justify-self: start;
+    }
+
+    .checkout-delivery-section .checkout-inline,
+    .checkout-address,
+    .summary-coupon-row {
+        grid-template-columns: 1fr;
+    }
+
+    #checkoutState {
+        max-width: 100%;
+    }
+
+    .checkout-inline {
+        flex-direction: column;
+    }
+
+    .checkout-inline button {
+        width: 100%;
+    }
+
+    .summary-coupon {
+        margin: 0 18px 18px;
+    }
+
+    .summary-total strong {
+        font-size: 24px;
+    }
+}
+
+.shipping-placeholder {
+    color: #9a9a9a !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+    letter-spacing: .2px;
 }

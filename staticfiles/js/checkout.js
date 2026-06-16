@@ -1,6 +1,7 @@
 const checkoutCepInput = document.getElementById("checkoutCepInput");
 const checkoutShippingBtn = document.getElementById("checkoutShippingBtn");
 const checkoutShippingOptions = document.getElementById("checkoutShippingOptions");
+const shippingTitle = document.getElementById("shippingTitle");
 
 const checkoutCouponInput = document.getElementById("checkoutCouponInput");
 const checkoutCouponBtn = document.getElementById("checkoutCouponBtn");
@@ -14,6 +15,14 @@ const checkoutDiscountRow = document.getElementById("checkoutDiscountRow");
 const checkoutDiscount = document.getElementById("checkoutDiscount");
 const checkoutShippingPrice = document.getElementById("checkoutShippingPrice");
 const checkoutTotal = document.getElementById("checkoutTotal");
+
+const checkoutAddressBox = document.getElementById("checkoutAddressBox");
+const checkoutStreet = document.getElementById("checkoutStreet");
+const checkoutNumber = document.getElementById("checkoutNumber");
+const checkoutComplement = document.getElementById("checkoutComplement");
+const checkoutNeighborhood = document.getElementById("checkoutNeighborhood");
+const checkoutCity = document.getElementById("checkoutCity");
+const checkoutState = document.getElementById("checkoutState");
 
 let currentCart = null;
 let mpInstance = null;
@@ -64,6 +73,73 @@ function setMessage(element, message) {
     element.innerHTML = `<p>${escapeHtml(message)}</p>`;
 }
 
+function clearShippingOptions() {
+    if (checkoutShippingOptions) {
+        checkoutShippingOptions.innerHTML = "";
+    }
+}
+
+function setShippingPlaceholder(message = "Informe seu CEP para calcular o frete") {
+    if (!shippingTitle) return;
+
+    shippingTitle.innerText = message;
+    shippingTitle.classList.add("shipping-placeholder");
+}
+
+function setShippingTitle(message = "Opções de frete") {
+    if (!shippingTitle) return;
+
+    shippingTitle.innerText = message;
+    shippingTitle.classList.remove("shipping-placeholder");
+}
+
+function clearAddressFields() {
+    if (checkoutStreet) checkoutStreet.value = "";
+    if (checkoutNumber) checkoutNumber.value = "";
+    if (checkoutComplement) checkoutComplement.value = "";
+    if (checkoutNeighborhood) checkoutNeighborhood.value = "";
+    if (checkoutCity) checkoutCity.value = "";
+    if (checkoutState) checkoutState.value = "";
+}
+
+async function fillAddressByCep(cep) {
+    if (cep.length !== 8) return false;
+
+    try {
+        const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+        const data = await response.json();
+
+        if (data.erro) {
+            clearAddressFields();
+
+            if (checkoutAddressBox) {
+                checkoutAddressBox.style.display = "none";
+            }
+
+            alert("CEP não encontrado.");
+            return false;
+        }
+
+        if (checkoutAddressBox) {
+            checkoutAddressBox.style.display = "grid";
+        }
+
+        if (checkoutStreet) checkoutStreet.value = data.logradouro || "";
+        if (checkoutNeighborhood) checkoutNeighborhood.value = data.bairro || "";
+        if (checkoutCity) checkoutCity.value = data.localidade || "";
+        if (checkoutState) checkoutState.value = data.uf || "";
+
+        if (checkoutNumber) checkoutNumber.focus();
+
+        return true;
+
+    } catch (error) {
+        console.error("Erro ao buscar endereço:", error);
+        alert("Não foi possível buscar o endereço pelo CEP.");
+        return false;
+    }
+}
+
 function getCheckoutEmail(formData) {
     return String(formData?.payer?.email || "").trim().toLowerCase();
 }
@@ -107,8 +183,7 @@ function updateSummary(data) {
     if (checkoutDiscountRow && checkoutDiscount) {
         if (Number(data.discount || 0) > 0) {
             checkoutDiscountRow.style.display = "flex";
-            checkoutDiscount.innerText =
-                "- " + formatMoney(data.discount);
+            checkoutDiscount.innerText = "- " + formatMoney(data.discount);
         } else {
             checkoutDiscountRow.style.display = "none";
             checkoutDiscount.innerText = "- R$ 0,00";
@@ -128,10 +203,7 @@ async function loadCheckoutCart() {
         await renderPaymentBrick();
 
     } catch (error) {
-        console.error(
-            "Erro ao carregar carrinho:",
-            error
-        );
+        console.error("Erro ao carregar carrinho:", error);
     }
 }
 
@@ -178,6 +250,7 @@ async function calculateShipping() {
     const cep = normalizeCep(checkoutCepInput.value);
 
     if (cep.length !== 8) {
+        setShippingPlaceholder();
         setMessage(
             checkoutShippingOptions,
             "Digite um CEP válido."
@@ -188,12 +261,18 @@ async function calculateShipping() {
     checkoutShippingBtn.disabled = true;
     checkoutShippingBtn.innerText = "Calculando...";
 
-    setMessage(
-        checkoutShippingOptions,
-        "Calculando frete..."
-    );
+    setShippingPlaceholder("Calculando frete...");
+    clearShippingOptions();
 
     try {
+        const addressFound = await fillAddressByCep(cep);
+
+        if (!addressFound) {
+            setShippingPlaceholder();
+            clearShippingOptions();
+            return;
+        }
+
         const response = await fetch(
             "/cart/calculate-shipping/",
             {
@@ -209,6 +288,7 @@ async function calculateShipping() {
         const data = await response.json();
 
         if (!response.ok || !data.success) {
+            setShippingPlaceholder();
             setMessage(
                 checkoutShippingOptions,
                 data.error || "Erro ao calcular frete."
@@ -216,25 +296,33 @@ async function calculateShipping() {
             return;
         }
 
+        if (!Array.isArray(data.options) || !data.options.length) {
+            setShippingPlaceholder("Nenhuma opção de frete encontrada.");
+            clearShippingOptions();
+            return;
+        }
+
+        setShippingTitle();
+
         checkoutShippingOptions.innerHTML =
             data.options.map((option, index) => `
                 <label class="shipping-option">
                     <input
                         type="radio"
                         name="shipping_option"
-                        data-id="${option.id}"
-                        data-name="${option.name}"
-                        data-company="${option.company || ""}"
-                        data-price="${option.price}"
-                        data-delivery-time="${option.delivery_time || ""}"
-                        data-cep="${option.cep || cep}"
-                        data-icon="${option.icon || ""}"
+                        data-id="${escapeHtml(option.id)}"
+                        data-name="${escapeHtml(option.name)}"
+                        data-company="${escapeHtml(option.company || "")}"
+                        data-price="${escapeHtml(option.price)}"
+                        data-delivery-time="${escapeHtml(option.delivery_time || "")}"
+                        data-cep="${escapeHtml(option.cep || cep)}"
+                        data-icon="${escapeHtml(option.icon || "")}"
                         ${index === 0 ? "checked" : ""}
                     >
 
                     <span>
-                        ${option.company || ""}
-                        ${option.name}
+                        ${escapeHtml(option.company || "")}
+                        ${escapeHtml(option.name)}
                     </span>
 
                     <strong>
@@ -253,9 +341,7 @@ async function calculateShipping() {
         }
 
         document
-            .querySelectorAll(
-                'input[name="shipping_option"]'
-            )
+            .querySelectorAll('input[name="shipping_option"]')
             .forEach(input => {
                 input.addEventListener(
                     "change",
@@ -264,11 +350,9 @@ async function calculateShipping() {
             });
 
     } catch (error) {
-        console.error(
-            "Erro ao calcular frete:",
-            error
-        );
+        console.error("Erro ao calcular frete:", error);
 
+        setShippingPlaceholder();
         setMessage(
             checkoutShippingOptions,
             "Erro ao calcular frete."
@@ -321,18 +405,13 @@ async function selectShipping(input) {
         await renderPaymentBrick();
 
     } catch (error) {
-        console.error(
-            "Erro ao selecionar frete:",
-            error
-        );
-
+        console.error("Erro ao selecionar frete:", error);
         alert("Erro ao selecionar frete.");
     }
 }
 
 async function applyCoupon() {
-    const code =
-        checkoutCouponInput.value.trim();
+    const code = checkoutCouponInput.value.trim();
 
     if (!code) {
         setMessage(
@@ -380,10 +459,7 @@ async function applyCoupon() {
         await renderPaymentBrick();
 
     } catch (error) {
-        console.error(
-            "Erro ao aplicar cupom:",
-            error
-        );
+        console.error("Erro ao aplicar cupom:", error);
 
         setMessage(
             checkoutCouponMessage,
@@ -417,10 +493,7 @@ async function removeCoupon(code) {
         await renderPaymentBrick();
 
     } catch (error) {
-        console.error(
-            "Erro ao remover cupom:",
-            error
-        );
+        console.error("Erro ao remover cupom:", error);
     }
 }
 
@@ -491,7 +564,7 @@ async function renderPaymentBrick() {
 
                     onSubmit: ({ selectedPaymentMethod, formData }) => {
                         return new Promise(async (resolve, reject) => {
-                           if (!validateBeforePayment(formData)) {
+                            if (!validateBeforePayment(formData)) {
                                 reject();
                                 return;
                             }
@@ -500,6 +573,15 @@ async function renderPaymentBrick() {
                                 const payload = {
                                     email: getCheckoutEmail(formData),
                                     selected_payment_method: selectedPaymentMethod,
+                                    address: {
+                                        cep: normalizeCep(checkoutCepInput.value),
+                                        street: checkoutStreet?.value || "",
+                                        number: checkoutNumber?.value || "",
+                                        complement: checkoutComplement?.value || "",
+                                        neighborhood: checkoutNeighborhood?.value || "",
+                                        city: checkoutCity?.value || "",
+                                        state: checkoutState?.value || ""
+                                    },
                                     form_data: {
                                         ...formData,
                                         payer: {
@@ -606,10 +688,7 @@ async function renderPaymentBrick() {
                                 resolve();
 
                             } catch (error) {
-                                console.error(
-                                    "Erro ao enviar pagamento:",
-                                    error
-                                );
+                                console.error("Erro ao enviar pagamento:", error);
 
                                 alert("Erro ao enviar pagamento.");
                                 reject();
@@ -618,21 +697,14 @@ async function renderPaymentBrick() {
                     },
 
                     onError: (error) => {
-                        console.error(
-                            "Erro no Payment Brick:",
-                            error
-                        );
+                        console.error("Erro no Payment Brick:", error);
                     }
                 }
             }
         );
 
     } catch (error) {
-        console.error(
-            "Erro ao carregar Payment Brick:",
-            error
-        );
-
+        console.error("Erro ao carregar Payment Brick:", error);
         alert("Erro ao carregar pagamento.");
 
     } finally {
@@ -656,6 +728,11 @@ if (checkoutCepInput) {
                 cep.replace(/^(\d{5})(\d{0,3}).*/, "$1-$2");
         } else {
             checkoutCepInput.value = cep;
+        }
+
+        if (cep.length < 8) {
+            setShippingPlaceholder();
+            clearShippingOptions();
         }
     });
 
@@ -683,13 +760,6 @@ if (checkoutCouponInput) {
     });
 }
 
-if (checkoutEmail) {
-    checkoutEmail.addEventListener(
-        "change",
-        renderPaymentBrick
-    );
-}
-
 document.addEventListener("click", event => {
     const removeCouponBtn =
         event.target.closest(".remove-coupon-btn");
@@ -700,5 +770,6 @@ document.addEventListener("click", event => {
 });
 
 (async function initCheckout() {
+    setShippingPlaceholder();
     await loadCheckoutCart();
 })();

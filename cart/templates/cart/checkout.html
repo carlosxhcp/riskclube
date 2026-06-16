@@ -60,50 +60,49 @@
                 {% endfor %}
             </div>
 
-            <div class="checkout-row">
-                <div class="checkout-section">
-                    <div class="section-header">
-                        <span>02</span>
-                        <div>
-                            <h2>Entrega</h2>
-                            <p>Calcule o frete pelo CEP.</p>
-                        </div>
+            <div class="checkout-section checkout-delivery-section">
+                <div class="section-header">
+                    <span>02</span>
+                    <div>
+                        <h2>Entrega</h2>
+                        <p>Calcule o frete pelo CEP.</p>
                     </div>
-
-                    <label for="checkoutCepInput">CEP</label>
-
-                    <div class="checkout-inline">
-                        <input type="text" id="checkoutCepInput" placeholder="00000-000" maxlength="9">
-                        <button type="button" id="checkoutShippingBtn">Calcular</button>
-                    </div>
-
-                    <div id="checkoutShippingOptions"></div>
                 </div>
 
-                <div class="checkout-section">
-                    <div class="section-header">
-                        <span>03</span>
-                        <div>
-                            <h2>Cupom</h2>
-                            <p>Use seu desconto aqui.</p>
+                <div class="delivery-grid">
+                    <div class="delivery-address-side">
+                        <label for="checkoutCepInput">CEP</label>
+
+                        <div class="checkout-inline">
+                            <input type="text" id="checkoutCepInput" placeholder="00000-000" maxlength="9">
+                            <button type="button" id="checkoutShippingBtn">Calcular</button>
+                        </div>
+
+                        <div class="checkout-address" id="checkoutAddressBox" style="display:none;">
+                            <label>Endereço</label>
+
+                            <input type="text" id="checkoutStreet" placeholder="Rua / Avenida">
+                            <input type="text" id="checkoutNumber" placeholder="Número">
+                            <input type="text" id="checkoutComplement" placeholder="Complemento, se tiver">
+                            <input type="text" id="checkoutNeighborhood" placeholder="Bairro">
+                            <input type="text" id="checkoutCity" placeholder="Cidade">
+                            <input type="text" id="checkoutState" placeholder="UF" maxlength="2">
                         </div>
                     </div>
 
-                    <label for="checkoutCouponInput">Cupom</label>
+                    <div class="delivery-shipping-side">
+                        <label id="shippingTitle" class="shipping-placeholder">
+                            Informe seu CEP para calcular o frete
+                        </label>
 
-                    <div class="checkout-inline">
-                        <input type="text" id="checkoutCouponInput" placeholder="Digite seu cupom">
-                        <button type="button" id="checkoutCouponBtn">Aplicar</button>
+                        <div id="checkoutShippingOptions"></div>
                     </div>
-
-                    <div id="checkoutCouponMessage"></div>
-                    <div id="checkoutAppliedCoupons"></div>
                 </div>
             </div>
 
             <div class="checkout-section">
                 <div class="section-header">
-                    <span>05</span>
+                    <span>03</span>
                     <div>
                         <h2>Pagamento</h2>
                         <p>Escolha a melhor forma de pagamento.</p>
@@ -141,6 +140,18 @@
                 <div class="summary-total">
                     <span>Total</span>
                     <strong id="checkoutTotal">R$ {{ cart.total|floatformat:2 }}</strong>
+                </div>
+
+                <div class="summary-coupon">
+                    <label for="checkoutCouponInput">Cupom</label>
+
+                    <div class="summary-coupon-row">
+                        <input type="text" id="checkoutCouponInput" placeholder="Digite seu cupom">
+                        <button type="button" id="checkoutCouponBtn">Aplicar</button>
+                    </div>
+
+                    <div id="checkoutCouponMessage"></div>
+                    <div id="checkoutAppliedCoupons"></div>
                 </div>
 
                 <div class="summary-safe">
