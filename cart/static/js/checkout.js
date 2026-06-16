@@ -1,3 +1,4 @@
+```js
 const checkoutCepInput = document.getElementById("checkoutCepInput");
 const checkoutShippingBtn = document.getElementById("checkoutShippingBtn");
 const checkoutShippingOptions = document.getElementById("checkoutShippingOptions");
@@ -7,7 +8,6 @@ const checkoutCouponBtn = document.getElementById("checkoutCouponBtn");
 const checkoutCouponMessage = document.getElementById("checkoutCouponMessage");
 const checkoutAppliedCoupons = document.getElementById("checkoutAppliedCoupons");
 
-const checkoutEmail = document.getElementById("checkoutEmail");
 const paymentResult = document.getElementById("paymentResult");
 
 const checkoutSubtotal = document.getElementById("checkoutSubtotal");
@@ -65,21 +65,15 @@ function setMessage(element, message) {
     element.innerHTML = `<p>${escapeHtml(message)}</p>`;
 }
 
-function getCheckoutEmail() {
-    if (!checkoutEmail) return "";
-    return checkoutEmail.value.trim().toLowerCase();
+function getMercadoPagoEmail(formData) {
+    return String(formData?.payer?.email || "").trim().toLowerCase();
 }
 
-function validateBeforePayment() {
-    const email = getCheckoutEmail();
+function validateBeforePayment(formData) {
+    const email = getMercadoPagoEmail(formData);
 
     if (!email) {
-        alert("Informe seu e-mail.");
-
-        if (checkoutEmail) {
-            checkoutEmail.focus();
-        }
-
+        alert("Informe seu e-mail no campo do Mercado Pago.");
         return false;
     }
 
@@ -498,20 +492,22 @@ async function renderPaymentBrick() {
 
                     onSubmit: ({ selectedPaymentMethod, formData }) => {
                         return new Promise(async (resolve, reject) => {
-                            if (!validateBeforePayment()) {
+                            if (!validateBeforePayment(formData)) {
                                 reject();
                                 return;
                             }
 
                             try {
+                                const mpEmail = getMercadoPagoEmail(formData);
+
                                 const payload = {
-                                    email: getCheckoutEmail(),
+                                    email: mpEmail,
                                     selected_payment_method: selectedPaymentMethod,
                                     form_data: {
                                         ...formData,
                                         payer: {
                                             ...(formData.payer || {}),
-                                            email: getCheckoutEmail()
+                                            email: mpEmail
                                         }
                                     }
                                 };
@@ -690,13 +686,6 @@ if (checkoutCouponInput) {
     });
 }
 
-if (checkoutEmail) {
-    checkoutEmail.addEventListener(
-        "change",
-        renderPaymentBrick
-    );
-}
-
 document.addEventListener("click", event => {
     const removeCouponBtn =
         event.target.closest(".remove-coupon-btn");
@@ -709,3 +698,4 @@ document.addEventListener("click", event => {
 (async function initCheckout() {
     await loadCheckoutCart();
 })();
+```
