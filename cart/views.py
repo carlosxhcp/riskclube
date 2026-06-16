@@ -530,6 +530,8 @@ def calculate_shipping(request):
         company_name_lower = company_name.lower()
 
         search_text = f"{company_name_lower} {option_name_lower}"
+        if "centralizado" in search_text:
+            continue
 
         is_loggi_express = (
             "loggi" in search_text
