@@ -3,6 +3,7 @@ const checkoutShippingBtn = document.getElementById("checkoutShippingBtn");
 const checkoutShippingOptions = document.getElementById("checkoutShippingOptions");
 const shippingTitle = document.getElementById("shippingTitle");
 
+
 const checkoutCouponInput = document.getElementById("checkoutCouponInput");
 const checkoutCouponBtn = document.getElementById("checkoutCouponBtn");
 const checkoutCouponMessage = document.getElementById("checkoutCouponMessage");
@@ -16,6 +17,8 @@ const checkoutDiscount = document.getElementById("checkoutDiscount");
 const checkoutShippingPrice = document.getElementById("checkoutShippingPrice");
 const checkoutTotal = document.getElementById("checkoutTotal");
 
+const checkoutCustomerName = document.getElementById("checkoutCustomerName");
+const checkoutPhone = document.getElementById("checkoutPhone");
 const checkoutAddressBox = document.getElementById("checkoutAddressBox");
 const checkoutStreet = document.getElementById("checkoutStreet");
 const checkoutNumber = document.getElementById("checkoutNumber");
@@ -239,6 +242,45 @@ function validateBeforePayment(formData) {
 
     if (Number(currentCart.total || 0) <= 0) {
         alert("O total do pedido precisa ser maior que zero.");
+        return false;
+    }
+    if (!checkoutCustomerName?.value.trim()) {
+        alert("Informe seu nome completo.");
+        return false;
+    }
+
+    if (!checkoutPhone?.value.trim()) {
+        alert("Informe seu telefone.");
+        return false;
+    }
+
+    if (!normalizeCep(checkoutCepInput?.value).length) {
+        alert("Informe seu CEP.");
+        return false;
+    }
+
+    if (!checkoutStreet?.value.trim()) {
+        alert("Informe sua rua.");
+        return false;
+    }
+
+    if (!checkoutNumber?.value.trim()) {
+        alert("Informe o número do endereço.");
+        return false;
+    }
+
+    if (!checkoutNeighborhood?.value.trim()) {
+        alert("Informe seu bairro.");
+        return false;
+    }
+
+    if (!checkoutCity?.value.trim()) {
+        alert("Informe sua cidade.");
+        return false;
+    }
+
+    if (!checkoutState?.value.trim()) {
+        alert("Informe seu estado.");
         return false;
     }
 
@@ -678,6 +720,8 @@ async function renderPaymentBrick() {
                                     email: getCheckoutEmail(formData),
                                     selected_payment_method: selectedPaymentMethod,
                                     address: {
+                                        customer_name: checkoutCustomerName?.value || "",
+                                        phone: checkoutPhone?.value || "",
                                         cep: normalizeCep(checkoutCepInput.value),
                                         street: checkoutStreet?.value || "",
                                         number: checkoutNumber?.value || "",

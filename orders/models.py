@@ -31,11 +31,21 @@ class Order(models.Model):
     total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     shipping_name = models.CharField(max_length=100, blank=True)
-    shipping_company = models.CharField(max_length=100, blank=True)
     shipping_cep = models.CharField(max_length=20, blank=True)
 
-    infinitepay_link = models.URLField(max_length=1000, blank=True)
-    infinitepay_reference = models.CharField(max_length=120, blank=True)
+    customer_name = models.CharField(max_length=120, blank=True)
+    phone = models.CharField(max_length=30, blank=True)
+
+    cep = models.CharField(max_length=20, blank=True)
+    street = models.CharField(max_length=150, blank=True)
+    number = models.CharField(max_length=30, blank=True)
+    complement = models.CharField(max_length=100, blank=True)
+    neighborhood = models.CharField(max_length=100, blank=True)
+    city = models.CharField(max_length=100, blank=True)
+    state = models.CharField(max_length=50, blank=True)
+
+    shipping_company = models.CharField(max_length=100, blank=True)
+    shipping_delivery_time = models.CharField(max_length=50, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     paid_at = models.DateTimeField(null=True, blank=True)

@@ -651,9 +651,10 @@ def update_order_payment_status(order, payment_data):
     order.save()
 
 
-def create_order_from_cart(request, email):
+def create_order_from_cart(request, email, address_data=None):
     cart = request.session.get("cart", {})
     shipping = request.session.get("shipping")
+    address_data = address_data or {}
 
     if not cart:
         return None, "Carrinho vazio."
@@ -687,14 +688,30 @@ def create_order_from_cart(request, email):
         return None, "O total do pedido precisa ser maior que zero."
 
     order = Order.objects.create(
-        user=request.user if request.user.is_authenticated else None,
-        email=email,
-        status="pending",
-        subtotal=subtotal,
-        shipping_price=shipping_price,
-        discount=discount,
-        total=total,
-    )
+    user=request.user if request.user.is_authenticated else None,
+    email=email,
+
+    customer_name=address_data.get("customer_name", ""),
+    phone=address_data.get("phone", ""),
+    cep=address_data.get("cep", ""),
+    street=address_data.get("street", ""),
+    number=address_data.get("number", ""),
+    complement=address_data.get("complement", ""),
+    neighborhood=address_data.get("neighborhood", ""),
+    city=address_data.get("city", ""),
+    state=address_data.get("state", ""),
+
+    shipping_name=shipping.get("name", "") if shipping else "",
+    shipping_company=shipping.get("company", "") if shipping else "",
+    shipping_cep=shipping.get("cep", "") if shipping else "",
+    shipping_delivery_time=str(shipping.get("time", "")) if shipping else "",
+
+    status="pending",
+    subtotal=subtotal,
+    shipping_price=shipping_price,
+    discount=discount,
+    total=total,
+)
 
     for cart_key, item in cart.items():
         quantity = int(item.get("quantity", 1))
@@ -737,11 +754,13 @@ def checkout_mercadopago_cart(request):
         }, status=400)
 
     form_data = data.get("form_data") or {}
+    
     email = str(
         data.get("email")
         or form_data.get("payer", {}).get("email")
         or ""
     ).strip().lower()
+    address_data = data.get("address") or {}
 
     if not email:
         return JsonResponse({
@@ -749,8 +768,7 @@ def checkout_mercadopago_cart(request):
             "error": "Informe seu e-mail."
         }, status=400)
 
-    order, error = create_order_from_cart(request, email)
-
+    order, error = create_order_from_cart(request, email, address_data)
     if error:
         return JsonResponse({
             "success": False,
