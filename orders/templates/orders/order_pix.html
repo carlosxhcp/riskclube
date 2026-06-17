@@ -1,0 +1,82 @@
+{% extends "pages/base.html" %}
+{% load static %}
+
+{% block title %}Pagamento Pix | Risk Clube{% endblock %}
+
+{% block content %}
+<main class="post-payment-page">
+    <section class="post-payment-card pix">
+        <span class="eyebrow">Aguardando pagamento</span>
+        <h1>Pague com Pix</h1>
+
+        <p>
+            Escaneie o QR Code ou copie o código Pix.
+            Após o pagamento, seu pedido será confirmado automaticamente.
+        </p>
+
+        <div id="pixQrBox"></div>
+
+        <label class="pix-label">Código Pix copia e cola</label>
+        <textarea id="pixCode" readonly></textarea>
+
+        <button type="button" id="copyPixBtn" class="post-payment-btn">
+            Copiar código Pix
+        </button>
+
+        <div class="pix-status">
+            Status do pedido:
+            <strong id="orderStatus">Aguardando pagamento...</strong>
+        </div>
+    </section>
+</main>
+
+<script>
+    const orderId = "{{ order.id }}";
+    const pixData = JSON.parse(
+        sessionStorage.getItem(`pix_order_${orderId}`) || "{}"
+    );
+
+    const pixQrBox = document.getElementById("pixQrBox");
+    const pixCode = document.getElementById("pixCode");
+    const copyPixBtn = document.getElementById("copyPixBtn");
+    const orderStatus = document.getElementById("orderStatus");
+
+    if (pixData.qr_code_base64) {
+        pixQrBox.innerHTML = `
+            <img
+                src="data:image/png;base64,${pixData.qr_code_base64}"
+                alt="QR Code Pix"
+                class="pix-qr"
+            >
+        `;
+    }
+
+    if (pixData.qr_code) {
+        pixCode.value = pixData.qr_code;
+    }
+
+    copyPixBtn.addEventListener("click", async () => {
+        await navigator.clipboard.writeText(pixCode.value);
+        copyPixBtn.innerText = "Código copiado!";
+    });
+
+    async function checkOrderStatus() {
+        const response = await fetch(`/pedido/${orderId}/status/`);
+        const data = await response.json();
+
+        if (data.status === "paid") {
+            window.location.href = `/pedido/${orderId}/sucesso/`;
+            return;
+        }
+
+        if (data.status === "cancelled") {
+            orderStatus.innerText = "Pagamento cancelado";
+            return;
+        }
+
+        orderStatus.innerText = "Aguardando pagamento...";
+    }
+
+    setInterval(checkOrderStatus, 5000);
+</script>
+{% endblock %}

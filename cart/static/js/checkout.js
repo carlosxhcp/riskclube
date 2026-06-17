@@ -772,7 +772,7 @@ async function renderPaymentBrick() {
 
                                 if (data.status === "approved") {
                                     window.location.href =
-                                        `/sucesso/?order=${data.order_id}`;
+                                        `/pedido/${data.order_id}/sucesso/`;
 
                                     resolve();
                                     return;
@@ -782,30 +782,21 @@ async function renderPaymentBrick() {
                                     data.pix_qr_code ||
                                     data.pix_qr_code_base64
                                 ) {
-                                    paymentResult.innerHTML = `
-                                        <h3>Pix gerado com sucesso</h3>
+                                    sessionStorage.setItem(
+                                        `pix_order_${data.order_id}`,
+                                        JSON.stringify({
+                                            qr_code: data.pix_qr_code,
+                                            qr_code_base64: data.pix_qr_code_base64
+                                        })
+                                    );
 
-                                        ${data.pix_qr_code_base64 ? `
-                                            <img
-                                                src="data:image/png;base64,${data.pix_qr_code_base64}"
-                                                alt="QR Code Pix"
-                                            >
-                                        ` : ""}
+                                    window.location.href =
+                                        `/pedido/${data.order_id}/pix/`;
 
-                                        ${data.pix_qr_code ? `
-                                            <label>Código Pix copia e cola</label>
-                                            <textarea readonly>${escapeHtml(data.pix_qr_code)}</textarea>
-                                            <button
-                                                type="button"
-                                                class="pay-btn"
-                                                id="copyPixBtn"
-                                            >
-                                                Copiar código Pix
-                                            </button>
-                                        ` : ""}
-
-                                        <p>Depois do pagamento, seu pedido será confirmado automaticamente.</p>
-                                    `;
+                                    resolve();
+                                    return;
+                                } <p>Depois do pagamento, seu pedido será confirmado automaticamente.</p>
+                                `;
 
                                     const copyPixBtn =
                                         document.getElementById("copyPixBtn");

@@ -1,0 +1,41 @@
+{% extends "pages/base.html" %}
+{% load static %}
+
+{% block title %}Pedido confirmado | Risk Clube{% endblock %}
+
+{% block content %}
+<main class="post-payment-page">
+    <section class="post-payment-card success">
+        <div class="status-icon">✓</div>
+
+        <span class="eyebrow">Pagamento aprovado</span>
+        <h1>Pedido confirmado</h1>
+
+        <p>
+            Recebemos seu pagamento com sucesso.
+            Em breve você receberá atualizações sobre o envio.
+        </p>
+
+        <div class="order-info-box">
+            <div>
+                <span>Pedido</span>
+                <strong>#{{ order.id }}</strong>
+            </div>
+
+            <div>
+                <span>Total</span>
+                <strong>R$ {{ order.total|floatformat:2 }}</strong>
+            </div>
+
+            <div>
+                <span>E-mail</span>
+                <strong>{{ order.email }}</strong>
+            </div>
+        </div>
+
+        <a href="/" class="post-payment-btn">
+            Voltar para a loja
+        </a>
+    </section>
+</main>
+{% endblock %}
