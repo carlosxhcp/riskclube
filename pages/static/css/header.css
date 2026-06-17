@@ -7,6 +7,60 @@
 }
 
 /* ============================= */
+/* CONTA */
+/* ============================= */
+
+.account-link {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+
+    color: #000;
+    text-decoration: none;
+
+    line-height: 1.05;
+    white-space: nowrap;
+
+    position: relative;
+    top: 5px;
+}
+
+.account-link span {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+}
+
+.account-link small {
+    margin-top: 3px;
+    max-width: 120px;
+
+    font-size: 9px;
+    font-weight: 500;
+    color: #777;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.account-link:hover {
+    opacity: .65;
+    color: #000;
+}
+
+.account-mobile-icon {
+    display: none;
+
+    color: #000;
+    text-decoration: none;
+
+    font-size: 20px;
+    line-height: 1;
+}
+
+/* ============================= */
 /* CONTADOR DA SACOLA */
 /* ============================= */
 
@@ -16,20 +70,26 @@
 
 .cart-count-badge {
     position: absolute;
+
     top: -5px;
     right: -8px;
+
     min-width: 17px;
     height: 17px;
     padding: 0 5px;
+
     border-radius: 999px;
+
     background: #000;
     color: #fff;
+
     font-size: 10px;
     font-weight: 700;
+    line-height: 1;
+
     display: none;
     align-items: center;
     justify-content: center;
-    line-height: 1;
 }
 
 /* ============================= */
@@ -40,20 +100,29 @@
     .main-navbar {
         height: 64px !important;
         min-height: 64px !important;
+
         padding: 0 10px !important;
+
         display: grid !important;
         grid-template-columns: 40px minmax(0, 1fr) 86px !important;
+
         align-items: center !important;
+
         overflow: visible !important;
     }
 
     .mobile-menu-btn {
-        display: flex !important;
         grid-column: 1 !important;
-        width: 40px !important;
-        height: 40px !important;
+
+        display: flex !important;
         align-items: center !important;
         justify-content: flex-start !important;
+
+        width: 40px !important;
+        height: 40px !important;
+
+        padding: 0 !important;
+
         font-size: 26px !important;
     }
 
@@ -63,46 +132,63 @@
 
     .nav-center {
         grid-column: 2 !important;
+
         width: 100% !important;
         min-width: 0 !important;
+
         display: flex !important;
         justify-content: center !important;
+
         overflow: hidden !important;
     }
 
     .logo img {
+        width: auto !important;
         max-width: 105px !important;
         max-height: 62px !important;
-        width: auto !important;
     }
 
     .nav-right {
         grid-column: 3 !important;
+
         width: 86px !important;
         min-width: 86px !important;
+
         display: flex !important;
-        justify-content: flex-end !important;
         align-items: center !important;
+        justify-content: flex-end !important;
+
         gap: 12px !important;
+
         overflow: visible !important;
     }
 
     .search-form,
-    .favorite-icon {
+    .favorite-icon,
+    .account-link {
         display: none !important;
     }
 
-    .account-icon,
+    .account-mobile-icon,
     .cart-open-btn {
         display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
         width: 28px !important;
         min-width: 28px !important;
         height: 28px !important;
-        align-items: center !important;
-        justify-content: center !important;
-        font-size: 20px !important;
+
         padding: 0 !important;
         margin: 0 !important;
+
         color: #000 !important;
+        font-size: 20px !important;
+        line-height: 1 !important;
+    }
+
+    .account-mobile-icon:hover {
+        color: #000;
+        opacity: .65;
     }
 }

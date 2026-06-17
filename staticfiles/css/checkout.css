@@ -993,3 +993,28 @@ body.checkout-is-loading #paymentBrick_container .mercadopago-button {
     pointer-events: none !important;
     position: relative !important;
 }
+
+.order-account-notice {
+    margin: 24px 0;
+    padding: 18px;
+    border-radius: 18px;
+    background: #f7f7f7;
+    border: 1px solid #ececec;
+    text-align: left;
+}
+
+.order-account-notice strong {
+    display: block;
+    margin-bottom: 8px;
+    color: #111;
+    font-size: 14px;
+    font-weight: 900;
+}
+
+.order-account-notice p {
+    margin: 0;
+    max-width: none;
+    color: #666;
+    font-size: 14px;
+    line-height: 1.6;
+}

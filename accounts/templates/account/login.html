@@ -1,0 +1,72 @@
+{% extends "pages/base.html" %}
+{% load static %}
+
+{% block title %}Entrar | Risk Clube{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/accounts.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="auth-page">
+    <div class="auth-card">
+
+        <div class="auth-header">
+            <span>Área do cliente</span>
+            <h1>Entrar</h1>
+            <p>Acesse sua conta para acompanhar pedidos e compras.</p>
+        </div>
+
+        <form method="post" action="{% url 'account_login' %}" class="auth-form">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="auth-error">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <div class="auth-field">
+                <label for="id_login">Email</label>
+                {{ form.login }}
+                {% if form.login.errors %}
+                    <small>{{ form.login.errors }}</small>
+                {% endif %}
+            </div>
+
+            <div class="auth-field">
+                <label for="id_password">Senha</label>
+                {{ form.password }}
+                {% if form.password.errors %}
+                    <small>{{ form.password.errors }}</small>
+                {% endif %}
+            </div>
+
+            <div class="auth-row">
+                <label class="auth-check">
+                    {{ form.remember }}
+                    <span>Lembrar de mim</span>
+                </label>
+
+                <a href="{% url 'account_reset_password' %}">
+                    Esqueci minha senha
+                </a>
+            </div>
+
+            {% if redirect_field_value %}
+                <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}">
+            {% endif %}
+
+            <button type="submit" class="auth-btn">
+                Entrar
+            </button>
+        </form>
+
+        <div class="auth-footer">
+            <p>Ainda não tem conta?</p>
+            <a href="{% url 'account_signup' %}">Criar conta</a>
+        </div>
+
+    </div>
+</section>
+{% endblock %}
