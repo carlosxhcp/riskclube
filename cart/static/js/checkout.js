@@ -795,28 +795,6 @@ async function renderPaymentBrick() {
 
                                     resolve();
                                     return;
-                                } <p>Depois do pagamento, seu pedido será confirmado automaticamente.</p>
-                                `;
-
-                                    const copyPixBtn =
-                                        document.getElementById("copyPixBtn");
-
-                                    if (copyPixBtn && data.pix_qr_code) {
-                                        copyPixBtn.addEventListener(
-                                            "click",
-                                            async () => {
-                                                await navigator.clipboard.writeText(
-                                                    data.pix_qr_code
-                                                );
-
-                                                copyPixBtn.innerText =
-                                                    "Código copiado!";
-                                            }
-                                        );
-                                    }
-
-                                    resolve();
-                                    return;
                                 }
 
                                 alert(

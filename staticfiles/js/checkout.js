@@ -3,6 +3,7 @@ const checkoutShippingBtn = document.getElementById("checkoutShippingBtn");
 const checkoutShippingOptions = document.getElementById("checkoutShippingOptions");
 const shippingTitle = document.getElementById("shippingTitle");
 
+
 const checkoutCouponInput = document.getElementById("checkoutCouponInput");
 const checkoutCouponBtn = document.getElementById("checkoutCouponBtn");
 const checkoutCouponMessage = document.getElementById("checkoutCouponMessage");
@@ -16,6 +17,8 @@ const checkoutDiscount = document.getElementById("checkoutDiscount");
 const checkoutShippingPrice = document.getElementById("checkoutShippingPrice");
 const checkoutTotal = document.getElementById("checkoutTotal");
 
+const checkoutCustomerName = document.getElementById("checkoutCustomerName");
+const checkoutPhone = document.getElementById("checkoutPhone");
 const checkoutAddressBox = document.getElementById("checkoutAddressBox");
 const checkoutStreet = document.getElementById("checkoutStreet");
 const checkoutNumber = document.getElementById("checkoutNumber");
@@ -239,6 +242,45 @@ function validateBeforePayment(formData) {
 
     if (Number(currentCart.total || 0) <= 0) {
         alert("O total do pedido precisa ser maior que zero.");
+        return false;
+    }
+    if (!checkoutCustomerName?.value.trim()) {
+        alert("Informe seu nome completo.");
+        return false;
+    }
+
+    if (!checkoutPhone?.value.trim()) {
+        alert("Informe seu telefone.");
+        return false;
+    }
+
+    if (!normalizeCep(checkoutCepInput?.value).length) {
+        alert("Informe seu CEP.");
+        return false;
+    }
+
+    if (!checkoutStreet?.value.trim()) {
+        alert("Informe sua rua.");
+        return false;
+    }
+
+    if (!checkoutNumber?.value.trim()) {
+        alert("Informe o número do endereço.");
+        return false;
+    }
+
+    if (!checkoutNeighborhood?.value.trim()) {
+        alert("Informe seu bairro.");
+        return false;
+    }
+
+    if (!checkoutCity?.value.trim()) {
+        alert("Informe sua cidade.");
+        return false;
+    }
+
+    if (!checkoutState?.value.trim()) {
+        alert("Informe seu estado.");
         return false;
     }
 
@@ -678,6 +720,8 @@ async function renderPaymentBrick() {
                                     email: getCheckoutEmail(formData),
                                     selected_payment_method: selectedPaymentMethod,
                                     address: {
+                                        customer_name: checkoutCustomerName?.value || "",
+                                        phone: checkoutPhone?.value || "",
                                         cep: normalizeCep(checkoutCepInput.value),
                                         street: checkoutStreet?.value || "",
                                         number: checkoutNumber?.value || "",
@@ -728,7 +772,7 @@ async function renderPaymentBrick() {
 
                                 if (data.status === "approved") {
                                     window.location.href =
-                                        `/sucesso/?order=${data.order_id}`;
+                                        `/pedido/${data.order_id}/sucesso/`;
 
                                     resolve();
                                     return;
@@ -738,47 +782,16 @@ async function renderPaymentBrick() {
                                     data.pix_qr_code ||
                                     data.pix_qr_code_base64
                                 ) {
-                                    paymentResult.innerHTML = `
-                                        <h3>Pix gerado com sucesso</h3>
+                                    sessionStorage.setItem(
+                                        `pix_order_${data.order_id}`,
+                                        JSON.stringify({
+                                            qr_code: data.pix_qr_code,
+                                            qr_code_base64: data.pix_qr_code_base64
+                                        })
+                                    );
 
-                                        ${data.pix_qr_code_base64 ? `
-                                            <img
-                                                src="data:image/png;base64,${data.pix_qr_code_base64}"
-                                                alt="QR Code Pix"
-                                            >
-                                        ` : ""}
-
-                                        ${data.pix_qr_code ? `
-                                            <label>Código Pix copia e cola</label>
-                                            <textarea readonly>${escapeHtml(data.pix_qr_code)}</textarea>
-                                            <button
-                                                type="button"
-                                                class="pay-btn"
-                                                id="copyPixBtn"
-                                            >
-                                                Copiar código Pix
-                                            </button>
-                                        ` : ""}
-
-                                        <p>Depois do pagamento, seu pedido será confirmado automaticamente.</p>
-                                    `;
-
-                                    const copyPixBtn =
-                                        document.getElementById("copyPixBtn");
-
-                                    if (copyPixBtn && data.pix_qr_code) {
-                                        copyPixBtn.addEventListener(
-                                            "click",
-                                            async () => {
-                                                await navigator.clipboard.writeText(
-                                                    data.pix_qr_code
-                                                );
-
-                                                copyPixBtn.innerText =
-                                                    "Código copiado!";
-                                            }
-                                        );
-                                    }
+                                    window.location.href =
+                                        `/pedido/${data.order_id}/pix/`;
 
                                     resolve();
                                     return;
