@@ -26,12 +26,29 @@ const checkoutComplement = document.getElementById("checkoutComplement");
 const checkoutNeighborhood = document.getElementById("checkoutNeighborhood");
 const checkoutCity = document.getElementById("checkoutCity");
 const checkoutState = document.getElementById("checkoutState");
+const checkoutLoadingOverlay = document.getElementById("checkoutLoadingOverlay");
 
 let currentCart = null;
 let mpInstance = null;
 let bricksBuilder = null;
 let paymentBrickController = null;
 let brickRendering = false;
+
+function showCheckoutLoading() {
+    if (checkoutLoadingOverlay) {
+        checkoutLoadingOverlay.classList.add("active");
+    }
+
+    document.body.classList.add("checkout-is-loading");
+}
+
+function hideCheckoutLoading() {
+    if (checkoutLoadingOverlay) {
+        checkoutLoadingOverlay.classList.remove("active");
+    }
+
+    document.body.classList.remove("checkout-is-loading");
+}
 
 function renderAutomaticFreeShipping() {
     if (!checkoutShippingOptions) return;
@@ -715,6 +732,7 @@ async function renderPaymentBrick() {
                                 return;
                             }
 
+                            showCheckoutLoading();
                             try {
                                 const payload = {
                                     email: getCheckoutEmail(formData),
@@ -766,6 +784,7 @@ async function renderPaymentBrick() {
                                         "Erro ao criar pagamento."
                                     );
 
+                                    hideCheckoutLoading();
                                     reject();
                                     return;
                                 }
@@ -807,6 +826,7 @@ async function renderPaymentBrick() {
                             } catch (error) {
                                 console.error("Erro ao enviar pagamento:", error);
 
+                                hideCheckoutLoading();
                                 alert("Erro ao enviar pagamento.");
                                 reject();
                             }

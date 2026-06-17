@@ -928,3 +928,68 @@
         gap: 4px;
     }
 }
+
+.checkout-loading-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, .78);
+    backdrop-filter: blur(10px);
+}
+
+.checkout-loading-overlay.active {
+    display: flex;
+}
+
+.checkout-loading-box {
+    width: calc(100% - 32px);
+    max-width: 360px;
+    padding: 30px;
+    border-radius: 28px;
+    background: #fff;
+    text-align: center;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, .14);
+}
+
+.checkout-spinner {
+    width: 52px;
+    height: 52px;
+    margin: 0 auto 18px;
+    border-radius: 50%;
+    border: 4px solid #e8e8e8;
+    border-top-color: #111;
+    animation: checkoutSpin .75s linear infinite;
+}
+
+.checkout-loading-box strong {
+    display: block;
+    color: #111;
+    font-size: 18px;
+    font-weight: 900;
+}
+
+.checkout-loading-box p {
+    margin: 8px 0 0;
+    color: #666;
+    font-size: 13px;
+}
+
+@keyframes checkoutSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+body.checkout-is-loading {
+    overflow: hidden;
+}
+
+body.checkout-is-loading #paymentBrick_container button[type="submit"],
+body.checkout-is-loading #paymentBrick_container .mercadopago-button {
+    opacity: .75 !important;
+    pointer-events: none !important;
+    position: relative !important;
+}
