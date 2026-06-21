@@ -130,9 +130,6 @@ MEDIA_URL = "/media/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-#INFINITEPAY
-INFINITEPAY_HANDLE = config("INFINITEPAY_HANDLE", default="")
-SITE_URL = config("SITE_URL", default="https://riskclube.vercel.app")
 
 #MELHORENVIO
 MELHOR_ENVIO_TOKEN = config("MELHOR_ENVIO_TOKEN", default="")
@@ -150,6 +147,7 @@ EMAIL_HOST_USER = "carlosxhcp@gmail.com"
 EMAIL_HOST_PASSWORD = "wseq yerx xzon dyrx"
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+ACCOUNT_EMAIL_SUBJECT_PREFIX = "[Risk Clube] "
 
 
 AUTHENTICATION_BACKENDS = [
