@@ -13,28 +13,9 @@ from .models import NewsletterLead
 from orders.models import Order
 
 def home(request):
-    categorias = [
-        {
-            "slug": "termicas",
-            "nome": "Térmicas",
-        },
-        {
-            "slug": "squeeze",
-            "nome": "Squeeze",
-        },
-        {
-            "slug": "personalizadas",
-            "nome": "Personalizadas",
-        },
-    ]
-
-    categoria_atual = request.GET.get("categoria", "termicas")
     query = request.GET.get("q")
 
     products = Product.objects.filter(available=True)
-
-    if categoria_atual:
-        products = products.filter(category=categoria_atual)
 
     if query:
         products = products.filter(name__icontains=query)
@@ -44,11 +25,8 @@ def home(request):
     return render(request, "pages/home.html", {
         "products": products,
         "query": query,
-        "categorias": categorias,
-        "categoria_atual": categoria_atual,
         "community_images": community_images,
     })
-
 
 def shop(request):
     products = Product.objects.filter(available=True)

@@ -30,7 +30,7 @@
 
             <div class="product-main-image" data-front-image="{{ product.image.url }}"
                 data-back-image="{% if product.back_image %}{{ product.back_image.url }}{% endif %}">
-                <button type="button" class="gallery-arrow left" id="prevImage">‹</button>
+                <button type="button" class="galler y-arrow left" id="prevImage">‹</button>
 
                 <img id="mainProductImage" src="{{ product.image.url }}" alt="{{ product.name }}">
 
@@ -74,15 +74,20 @@
                             style="background-color: {{ product.default_color_hex }};" data-variant-id=""
                             data-color-name="{{ product.default_color_name }}" data-image="{{ product.image.url }}"
                             data-images='[
-                    "{{ product.image.url }}"
-                    {% for img in product.images.all %}
-                        ,"{{ img.image.url }}"
-                    {% endfor %}
-                ]' data-sizes='[
-                    {
-                        "name": "900ML"
-                    }
-                ]'></button>
+        "{{ product.image.url }}"
+        {% for img in product.images.all %}
+            ,"{{ img.image.url }}"
+        {% endfor %}
+    ]' data-sizes='[
+        {% for size in product.sizes.all %}
+            {% if size.active %}
+            {
+                "name": "{{ size.name }}"
+            }{% if not forloop.last %},{% endif %}
+            {% endif %}
+        {% endfor %}
+    ]'>
+                        </button>
 
                         {% for variant in product.variants.all %}
                         {% if variant.active %}
@@ -298,7 +303,7 @@
             <article class="community-card">
                 <div class="community-photo-box">
                     {% if item.photo %}
-                        <img src="{{ item.photo.url }}" alt="{{ item.instagram }}">
+                    <img src="{{ item.photo.url }}" alt="{{ item.instagram }}">
                     {% endif %}
 
                     <span class="community-instagram">@{{ item.instagram }}</span>
@@ -307,13 +312,8 @@
                 <div class="community-content">
                     <div class="community-stars">
                         {% for i in "12345" %}
-                            {% if forloop.counter <= item.rating %}
-                                ★
-                            {% else %}
-                                ☆
-                            {% endif %}
-                        {% endfor %}
-                        <span>{{ item.rating }},0</span>
+                        {% if forloop.counter <= item.rating %} ★ {% else %} ☆ {% endif %} {% endfor %} <span>{{
+                            item.rating }},0</span>
                     </div>
 
                     <h3>{{ item.title }}</h3>
@@ -596,7 +596,7 @@
             sizeOptions.innerHTML = "";
 
             if (!sizes || !sizes.length) {
-                sizes = [{ name: "900ML" }];
+                sizes = [{ name: "Único" }];
             }
 
             sizes.forEach((size, index) => {
@@ -798,7 +798,7 @@
             return {
                 product_id: addCartBtn.dataset.productId,
                 quantity: 1,
-                size: selectedSizeBtn?.dataset.sizeName || "900ML",
+                size: selectedSizeBtn?.dataset.sizeName || "Único",
                 color: selectedColorBtn?.dataset.colorName || "",
                 image: selectedColorBtn?.dataset.image || "",
                 custom_name: document.getElementById("customName")?.value.trim() || "",
@@ -906,76 +906,76 @@
 </script>
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-    const cards = [...document.querySelectorAll(".community-card")];
-    const numbersContainer = document.querySelector(".community-page-numbers");
-    const prevBtn = document.querySelector(".community-page-btn.prev");
-    const nextBtn = document.querySelector(".community-page-btn.next");
+    document.addEventListener("DOMContentLoaded", () => {
+        const cards = [...document.querySelectorAll(".community-card")];
+        const numbersContainer = document.querySelector(".community-page-numbers");
+        const prevBtn = document.querySelector(".community-page-btn.prev");
+        const nextBtn = document.querySelector(".community-page-btn.next");
 
-    if (cards.length && numbersContainer) {
-        const perPage = 3;
-        const totalPages = Math.ceil(cards.length / perPage);
-        let currentPage = 1;
+        if (cards.length && numbersContainer) {
+            const perPage = 3;
+            const totalPages = Math.ceil(cards.length / perPage);
+            let currentPage = 1;
 
-        function renderPage(page) {
-            currentPage = page;
+            function renderPage(page) {
+                currentPage = page;
 
-            cards.forEach((card, index) => {
-                const start = (page - 1) * perPage;
-                const end = start + perPage;
-                card.style.display = index >= start && index < end ? "grid" : "none";
-            });
+                cards.forEach((card, index) => {
+                    const start = (page - 1) * perPage;
+                    const end = start + perPage;
+                    card.style.display = index >= start && index < end ? "grid" : "none";
+                });
 
-            document
-                .querySelectorAll(".community-page-number")
-                .forEach(btn => btn.classList.remove("active"));
+                document
+                    .querySelectorAll(".community-page-number")
+                    .forEach(btn => btn.classList.remove("active"));
 
-            const activeBtn = document.querySelector(`.community-page-number[data-page="${page}"]`);
+                const activeBtn = document.querySelector(`.community-page-number[data-page="${page}"]`);
 
-            if (activeBtn) {
-                activeBtn.classList.add("active");
+                if (activeBtn) {
+                    activeBtn.classList.add("active");
+                }
+
+                if (prevBtn) {
+                    prevBtn.disabled = currentPage === 1;
+                }
+
+                if (nextBtn) {
+                    nextBtn.disabled = currentPage === totalPages;
+                }
+            }
+
+            numbersContainer.innerHTML = "";
+
+            for (let i = 1; i <= totalPages; i++) {
+                const btn = document.createElement("button");
+                btn.type = "button";
+                btn.className = "community-page-number";
+                btn.dataset.page = i;
+                btn.textContent = i;
+                btn.addEventListener("click", () => renderPage(i));
+                numbersContainer.appendChild(btn);
             }
 
             if (prevBtn) {
-                prevBtn.disabled = currentPage === 1;
+                prevBtn.addEventListener("click", () => {
+                    if (currentPage > 1) {
+                        renderPage(currentPage - 1);
+                    }
+                });
             }
 
             if (nextBtn) {
-                nextBtn.disabled = currentPage === totalPages;
+                nextBtn.addEventListener("click", () => {
+                    if (currentPage < totalPages) {
+                        renderPage(currentPage + 1);
+                    }
+                });
             }
+
+            renderPage(1);
         }
-
-        numbersContainer.innerHTML = "";
-
-        for (let i = 1; i <= totalPages; i++) {
-            const btn = document.createElement("button");
-            btn.type = "button";
-            btn.className = "community-page-number";
-            btn.dataset.page = i;
-            btn.textContent = i;
-            btn.addEventListener("click", () => renderPage(i));
-            numbersContainer.appendChild(btn);
-        }
-
-        if (prevBtn) {
-            prevBtn.addEventListener("click", () => {
-                if (currentPage > 1) {
-                    renderPage(currentPage - 1);
-                }
-            });
-        }
-
-        if (nextBtn) {
-            nextBtn.addEventListener("click", () => {
-                if (currentPage < totalPages) {
-                    renderPage(currentPage + 1);
-                }
-            });
-        }
-
-        renderPage(1);
-    }
-});
+    });
 </script>
 
 {% endblock %}

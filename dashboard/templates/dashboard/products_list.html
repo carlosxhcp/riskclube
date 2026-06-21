@@ -1,0 +1,78 @@
+{% extends "dashboard/base_dashboard.html" %}
+
+{% block title %}Produtos | Risk Clube{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-header dashboard-header-row">
+    <div>
+        <span>Catálogo</span>
+        <h1>Produtos</h1>
+    </div>
+
+    <a href="/admin/products/product/add/" class="dashboard-primary-btn">
+        Novo produto
+    </a>
+</div>
+
+<div class="dashboard-toolbar">
+    <form method="get" class="dashboard-search">
+        <input type="text" name="q" placeholder="Buscar produto..." value="{{ search|default:'' }}">
+        <button type="submit">Buscar</button>
+    </form>
+</div>
+
+<div class="products-panel">
+
+    {% for product in products %}
+    <div class="product-admin-card">
+
+        <div class="product-admin-image">
+            {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+            {% else %}
+            <span>Sem imagem</span>
+            {% endif %}
+        </div>
+
+        <div class="product-admin-info">
+            <strong>{{ product.name }}</strong>
+
+            <div class="product-admin-meta">
+                <span>{{ product.get_engraving_position_display }}</span>
+            </div>
+        </div>
+
+        <div class="product-admin-price">
+            R$ {{ product.price|floatformat:2 }}
+        </div>
+
+        <div class="product-admin-status">
+            {% if product.available %}
+            <span class="status-pill active">Ativo</span>
+            {% else %}
+            <span class="status-pill inactive">Inativo</span>
+            {% endif %}
+        </div>
+
+        <div class="product-admin-actions">
+            <a href="{% url 'dashboard:product_edit' product.id %}">
+                Editar
+            </a>
+
+            <a href="{{ product.get_absolute_url }}" target="_blank">
+                Ver
+            </a>
+        </div>
+
+    </div>
+    {% empty %}
+    <div class="empty-panel">
+        <h2>Nenhum produto encontrado</h2>
+        <p>Cadastre seu primeiro produto para começar.</p>
+    </div>
+    {% endfor %}
+
+</div>
+
+{% endblock %}

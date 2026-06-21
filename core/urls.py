@@ -14,6 +14,7 @@ urlpatterns = [
     path("", include("accounts.urls")),
     path("accounts/", include("allauth.urls")),
     path("", include("orders.urls")),
+    path("painel/", include("dashboard.urls")),
 ]
 
 if settings.DEBUG:

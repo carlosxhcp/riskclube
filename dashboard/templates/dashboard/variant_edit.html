@@ -1,0 +1,119 @@
+{% extends "dashboard/base_dashboard.html" %}
+
+{% block title %}Editar variação | Risk Clube{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-header dashboard-header-row">
+    <div>
+        <span>{{ product.name }}</span>
+        <h1>{% if is_create %}Nova variação{% else %}Editar variação{% endif %}</h1>
+    </div>
+
+    <a href="{% url 'dashboard:product_edit' product.id %}" class="dashboard-secondary-btn">
+        Voltar ao produto
+    </a>
+</div>
+
+<form method="post" enctype="multipart/form-data" class="dashboard-form">
+    {% csrf_token %}
+
+    <div class="form-card">
+
+        <div class="form-preview">
+            {% if variant.image %}
+                <img src="{{ variant.image.url }}" alt="{{ variant.color_name }}">
+            {% else %}
+                <span>Sem imagem</span>
+            {% endif %}
+        </div>
+
+        <div class="form-grid">
+
+            <div class="form-field">
+                <label>Nome da cor</label>
+                {{ form.color_name }}
+                {{ form.color_name.errors }}
+            </div>
+
+            <div class="form-field">
+                <label>Hex da cor</label>
+                {{ form.color_hex }}
+                {{ form.color_hex.errors }}
+            </div>
+
+            <div class="form-field image-field full">
+                <label>Imagem da variação</label>
+
+                {% if variant.image %}
+                <div class="current-image-box">
+                    <img src="{{ variant.image.url }}" alt="{{ variant.color_name }}">
+                </div>
+                {% endif %}
+
+                {{ form.image }}
+                {{ form.image.errors }}
+            </div>
+
+            <div class="form-field checkbox-field">
+                <label>
+                    {{ form.active }}
+                    Variação ativa
+                </label>
+                {{ form.active.errors }}
+            </div>
+
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="dashboard-primary-btn">
+            Salvar variação
+        </button>
+
+        <a href="{% url 'dashboard:product_edit' product.id %}" class="dashboard-secondary-btn">
+            Cancelar
+        </a>
+    </div>
+</form>
+
+<div class="dashboard-subsection">
+    <div class="dashboard-subsection-header">
+        <div>
+            <span>Capacidade / tamanho</span>
+            <h2>Tamanhos</h2>
+        </div>
+
+        <a href="{% url 'dashboard:size_create' variant.id %}" class="dashboard-primary-btn">
+            Novo tamanho
+        </a>
+    </div>
+
+    <div class="dashboard-mini-list">
+        {% for size in variant.sizes.all %}
+        <div class="dashboard-mini-item">
+            <div>
+                <strong>{{ size.name }}</strong>
+
+                {% if size.active %}
+                    <small class="status-pill active">Ativo</small>
+                {% else %}
+                    <small class="status-pill inactive">Inativo</small>
+                {% endif %}
+            </div>
+
+            <div class="dashboard-mini-actions">
+                <a href="{% url 'dashboard:size_edit' size.id %}">Editar</a>
+                <a href="{% url 'dashboard:size_delete' size.id %}" onclick="return confirm('Excluir este tamanho?')">Excluir</a>
+            </div>
+        </div>
+        {% empty %}
+        <div class="empty-panel">
+            <h2>Nenhum tamanho cadastrado</h2>
+            <p>Adicione tamanhos como 500ml, 750ml ou 1L.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

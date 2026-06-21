@@ -1,0 +1,65 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Painel Risk{% endblock %}</title>
+
+    <link rel="stylesheet" href="{% static 'dashboard/dashboard.css' %}">
+</head>
+
+<body>
+
+    <div class="dashboard-layout">
+
+        <aside class="dashboard-sidebar">
+
+            <div class="dashboard-brand">
+                <span>Risk Clube</span>
+                <strong>Painel</strong>
+            </div>
+
+            <nav class="dashboard-nav">
+
+                <a href="{% url 'dashboard:home' %}">
+                    Dashboard
+                </a>
+
+                <a href="{% url 'dashboard:products_list' %}">
+                    Produtos
+                </a>
+
+                <a href="#">
+                    Pedidos
+                </a>
+
+                <a href="#">
+                    Clientes
+                </a>
+
+                <a href="#">
+                    Cupons
+                </a>
+
+                <a href="/admin/">
+                    Admin Django
+                </a>
+
+            </nav>
+
+        </aside>
+
+        <main class="dashboard-content">
+
+            {% block content %}
+            {% endblock %}
+
+        </main>
+
+    </div>
+
+</body>
+
+</html>

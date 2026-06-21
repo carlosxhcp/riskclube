@@ -1,0 +1,242 @@
+{% extends "dashboard/base_dashboard.html" %}
+
+{% block title %}Editar produto | Risk Clube{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-header dashboard-header-row">
+    <div>
+        <span>Catálogo</span>
+        <h1>Editar produto</h1>
+    </div>
+
+    <a href="{% url 'dashboard:products_list' %}" class="dashboard-secondary-btn">
+        Voltar
+    </a>
+</div>
+
+<form method="post" enctype="multipart/form-data" class="dashboard-form">
+    {% csrf_token %}
+
+    <div class="form-card">
+
+        <div class="form-preview">
+            {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+            {% else %}
+            <span>Sem imagem</span>
+            {% endif %}
+        </div>
+
+        <div class="form-grid">
+
+            <div class="form-field full">
+                <label>Nome do produto</label>
+                {{ form.name }}
+                {{ form.name.errors }}
+            </div>
+
+            <div class="form-field">
+                <label>Slug</label>
+                {{ form.slug }}
+                {{ form.slug.errors }}
+            </div>
+
+            <div class="form-field">
+                <label>Preço</label>
+                {{ form.price }}
+                {{ form.price.errors }}
+            </div>
+
+            <div class="form-field">
+                <label>Gravação</label>
+                {{ form.engraving_position }}
+                {{ form.engraving_position.errors }}
+            </div>
+
+            <div class="form-field">
+                <label>Cor principal</label>
+                {{ form.default_color_name }}
+                {{ form.default_color_name.errors }}
+            </div>
+
+            <div class="form-field">
+                <label>Hex da cor</label>
+                {{ form.default_color_hex }}
+                {{ form.default_color_hex.errors }}
+            </div>
+
+            <div class="form-field full">
+                <label>Descrição</label>
+                {{ form.description }}
+                {{ form.description.errors }}
+            </div>
+
+            <div class="form-field image-field">
+                <label>Imagem principal</label>
+
+                {% if product.image %}
+                <div class="current-image-box">
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                </div>
+                {% endif %}
+
+                {{ form.image.errors }}
+                {{ form.image }}
+            </div>
+
+            <div class="form-field image-field">
+                <label>Imagem hover</label>
+
+                {% if product.image_hover %}
+                <div class="current-image-box">
+                    <img src="{{ product.image_hover.url }}" alt="{{ product.name }}">
+                </div>
+                {% endif %}
+
+                {{ form.image_hover.errors }}
+                {{ form.image_hover }}
+            </div>
+
+            <div class="form-field image-field">
+                <label>Imagem das costas</label>
+
+                {% if product.back_image %}
+                <div class="current-image-box">
+                    <img src="{{ product.back_image.url }}" alt="{{ product.name }}">
+                </div>
+                {% endif %}
+
+                {{ form.back_image.errors }}
+                {{ form.back_image }}
+            </div>
+
+            <div class="form-field checkbox-field">
+                <label>
+                    {{ form.available }}
+                    Produto ativo
+                </label>
+                {{ form.available.errors }}
+            </div>
+
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="dashboard-primary-btn">
+            Salvar alterações
+        </button>
+
+        <a href="{{ product.get_absolute_url }}" target="_blank" class="dashboard-secondary-btn">
+            Ver produto
+        </a>
+    </div>
+</form>
+
+<div class="dashboard-subsection">
+    <div class="dashboard-subsection-header">
+        <div>
+            <span>Capacidade / tamanho</span>
+            <h2>Tamanhos padrão</h2>
+        </div>
+    </div>
+
+    <form method="post" class="inline-create-form">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="add_product_size">
+
+        <input type="text" name="size_name" placeholder="Ex: 500ml, 750ml, 1L" required>
+
+        <label>
+            <input type="checkbox" name="size_active" checked>
+            Ativo
+        </label>
+
+        <button type="submit">Adicionar</button>
+    </form>
+
+    <div class="dashboard-mini-list">
+        {% for size in product.sizes.all %}
+        <div class="dashboard-mini-item">
+            <div>
+                <strong>{{ size.name }}</strong>
+
+                {% if size.active %}
+                <small class="status-pill active">Ativo</small>
+                {% else %}
+                <small class="status-pill inactive">Inativo</small>
+                {% endif %}
+            </div>
+
+            <div class="dashboard-mini-actions">
+                <a href="{% url 'dashboard:product_size_edit' size.id %}">
+                    Editar
+                </a>
+
+                <a href="{% url 'dashboard:product_size_delete' size.id %}"
+                   onclick="return confirm('Excluir este tamanho?')">
+                    Excluir
+                </a>
+            </div>
+        </div>
+        {% empty %}
+        <div class="empty-panel">
+            <h2>Nenhum tamanho padrão</h2>
+            <p>Adicione tamanhos como 500ml, 750ml ou 1L.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="dashboard-subsection">
+    <div class="dashboard-subsection-header">
+        <div>
+            <span>Cores, tamanhos e imagens</span>
+            <h2>Variações do produto</h2>
+        </div>
+
+        <a href="{% url 'dashboard:variant_create' product.id %}" class="dashboard-primary-btn">
+            Nova variação
+        </a>
+    </div>
+
+    <div class="variation-preview-grid">
+        {% for variant in product.variants.all %}
+        <div class="variation-preview-card">
+            <div class="variation-preview-image">
+                {% if variant.image %}
+                <img src="{{ variant.image.url }}" alt="{{ variant.color_name }}">
+                {% else %}
+                <span>Sem imagem</span>
+                {% endif %}
+            </div>
+
+            <div>
+                <strong>{{ variant.color_name }}</strong>
+
+                <span class="variation-color">
+                    <i style="background: {{ variant.color_hex }};"></i>
+                    {{ variant.color_hex }}
+                </span>
+
+                {% if variant.active %}
+                <small class="status-pill active">Ativa</small>
+                {% else %}
+                <small class="status-pill inactive">Inativa</small>
+                {% endif %}
+            </div>
+
+            <a href="{% url 'dashboard:variant_edit' variant.id %}" class="variation-edit-btn">
+                Editar
+            </a>
+        </div>
+        {% empty %}
+        <div class="empty-panel">
+            <h2>Nenhuma variação cadastrada</h2>
+            <p>Adicione cores para esse produto.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

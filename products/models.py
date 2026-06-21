@@ -4,12 +4,6 @@ from django.utils.text import slugify
 
 
 class Product(models.Model):
-    CATEGORY_CHOICES = [
-        ("termicas", "Térmicas"),
-        ("squeeze", "Squeeze"),
-        ("personalizadas", "Personalizadas"),
-    ]
-
     ENGRAVING_POSITION_CHOICES = [
         ("none", "Nenhuma gravação"),
         ("front", "Frente"),
@@ -18,13 +12,8 @@ class Product(models.Model):
     ]
 
     name = models.CharField(max_length=255)
-    slug = models.SlugField(unique=True, blank=True)
 
-    category = models.CharField(
-        max_length=30,
-        choices=CATEGORY_CHOICES,
-        default="termicas",
-    )
+    slug = models.SlugField(unique=True, blank=True)
 
     price = models.DecimalField(max_digits=10, decimal_places=2)
 
@@ -112,7 +101,6 @@ class ProductImage(models.Model):
     def __str__(self):
         return f"Imagem de {self.product.name}"
 
-
 class ProductVariant(models.Model):
     product = models.ForeignKey(
         Product,
@@ -122,7 +110,19 @@ class ProductVariant(models.Model):
 
     color_name = models.CharField(max_length=50)
     color_hex = models.CharField(max_length=20, default="#000000")
-    image = models.ImageField(upload_to="products/variants/")
+
+    image = models.ImageField(
+        upload_to="products/variants/",
+        verbose_name="Imagem da frente"
+    )
+
+    back_image = models.ImageField(
+        upload_to="products/variants/back/",
+        blank=True,
+        null=True,
+        verbose_name="Imagem das costas"
+    )
+
     active = models.BooleanField(default=True)
 
     class Meta:
@@ -170,3 +170,21 @@ class ProductSize(models.Model):
 
     def __str__(self):
         return f"{self.variant.color_name} - {self.name}"
+
+class ProductDefaultSize(models.Model):
+    product = models.ForeignKey(
+        Product,
+        related_name="sizes",
+        on_delete=models.CASCADE
+    )
+
+    name = models.CharField(max_length=50)
+    active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ["id"]
+        verbose_name = "Tamanho padrão"
+        verbose_name_plural = "Tamanhos padrão"
+
+    def __str__(self):
+        return f"{self.product.name} - {self.name}"

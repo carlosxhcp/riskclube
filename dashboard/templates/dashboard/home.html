@@ -1,0 +1,59 @@
+{% extends "dashboard/base_dashboard.html" %}
+
+{% block title %}Dashboard | Risk Clube{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-header">
+
+    <div>
+        <span>Painel administrativo</span>
+        <h1>Dashboard Risk Clube</h1>
+    </div>
+
+</div>
+
+<div class="stats-grid">
+
+    <div class="stat-card">
+        <span>Produtos</span>
+        <strong>{{ total_products }}</strong>
+    </div>
+
+    <div class="stat-card">
+        <span>Pedidos</span>
+        <strong>{{ total_orders }}</strong>
+    </div>
+
+    <div class="stat-card">
+        <span>Clientes</span>
+        <strong>{{ total_customers }}</strong>
+    </div>
+
+    <div class="stat-card">
+        <span>Faturamento</span>
+        <strong>R$ 12.540</strong>
+    </div>
+
+</div>
+
+<div class="dashboard-section">
+
+    <div class="section-card">
+        <h2>Últimos pedidos</h2>
+
+        <table>
+            {% for order in latest_orders %}
+<tr>
+    <td>#{{ order.id }}</td>
+    <td>{{ order.customer_name }}</td>
+    <td>R$ {{ order.total }}</td>
+</tr>
+{% endfor %}
+
+        </table>
+    </div>
+
+</div>
+
+{% endblock %}

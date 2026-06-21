@@ -1,0 +1,46 @@
+{% extends "dashboard/base_dashboard.html" %}
+
+{% block title %}Tamanho padrão | Risk Clube{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-header dashboard-header-row">
+    <div>
+        <span>{{ product.name }}</span>
+        <h1>{% if is_create %}Novo tamanho{% else %}Editar tamanho{% endif %}</h1>
+    </div>
+
+    <a href="{% url 'dashboard:product_edit' product.id %}" class="dashboard-secondary-btn">
+        Voltar
+    </a>
+</div>
+
+<form method="post" class="dashboard-form">
+    {% csrf_token %}
+
+    <div class="form-card single-card">
+        <div class="form-grid">
+            <div class="form-field">
+                <label>Nome do tamanho</label>
+                {{ form.name }}
+                {{ form.name.errors }}
+            </div>
+
+            <div class="form-field checkbox-field">
+                <label>
+                    {{ form.active }}
+                    Tamanho ativo
+                </label>
+                {{ form.active.errors }}
+            </div>
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="dashboard-primary-btn">
+            Salvar
+        </button>
+    </div>
+</form>
+
+{% endblock %}
