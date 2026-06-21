@@ -218,7 +218,7 @@
             {% endif %}
 
             <div class="product-buttons">
-                <a href="#" class="buy-now-btn">
+                <a href="#" class="buy-now-btn" id="buyNowBtn">
                     Comprar agora
                 </a>
 
@@ -378,40 +378,8 @@
 
         function applyNameFont() {
             if (!bottleNamePreview) return;
-
             bottleNamePreview.style.fontFamily = selectedNameFont;
         }
-
-        if (showCustomNameBtn && customNameQuestion && customNameFields) {
-            showCustomNameBtn.addEventListener("click", function () {
-
-                customNameQuestion.classList.add("hide");
-
-                setTimeout(() => {
-                    customNameQuestion.style.display = "none";
-                    customNameFields.classList.add("show");
-
-                    if (customNameInput) {
-                        customNameInput.focus();
-                    }
-
-                    updateNamePreviewText();
-
-                }, 250);
-            });
-        }
-
-        fontButtons.forEach(button => {
-            button.addEventListener("click", function () {
-                fontButtons.forEach(btn => btn.classList.remove("active"));
-                this.classList.add("active");
-
-                selectedNameFont = this.dataset.font || "'Arial', sans-serif";
-
-                applyNameFont();
-                updateNamePreviewText();
-            });
-        });
 
         function updateNamePreviewVisibility() {
             if (!bottleNamePreview) return;
@@ -499,7 +467,7 @@
             }
         }
 
-        function setBottleView(view, resetToFirstThumb = false) {
+        function setBottleView(view) {
             const backImage = productMainImageBox?.dataset.backImage;
 
             if (view === "front") {
@@ -531,7 +499,6 @@
             updateNamePreviewVisibility();
         }
 
-
         function updateMainImage(index) {
             if (!mainImage || !currentImages.length) return;
 
@@ -551,11 +518,7 @@
                 ? currentIndex >= 2
                 : currentIndex >= 1;
 
-            if (isExtraGalleryImage) {
-                mainImage.classList.add("gallery-fill");
-            } else {
-                mainImage.classList.remove("gallery-fill");
-            }
+            mainImage.classList.toggle("gallery-fill", isExtraGalleryImage);
 
             if (currentIndex === 0) {
                 currentBottleView = "front";
@@ -592,12 +555,10 @@
                 currentImages.push(images[0]);
             }
 
-            /* O verso sempre entra como segunda imagem */
             if (backImage) {
                 currentImages.push(backImage);
             }
 
-            /* As demais imagens vêm depois do verso */
             images.slice(1).forEach(imageUrl => {
                 currentImages.push(imageUrl);
             });
@@ -670,10 +631,37 @@
             }
         }
 
+        if (showCustomNameBtn && customNameQuestion && customNameFields) {
+            showCustomNameBtn.addEventListener("click", function () {
+                customNameQuestion.classList.add("hide");
+
+                setTimeout(() => {
+                    customNameQuestion.style.display = "none";
+                    customNameFields.classList.add("show");
+
+                    if (customNameInput) {
+                        customNameInput.focus();
+                    }
+
+                    updateNamePreviewText();
+                }, 250);
+            });
+        }
+
+        fontButtons.forEach(button => {
+            button.addEventListener("click", function () {
+                fontButtons.forEach(btn => btn.classList.remove("active"));
+                this.classList.add("active");
+
+                selectedNameFont = this.dataset.font || "'Arial', sans-serif";
+
+                applyNameFont();
+                updateNamePreviewText();
+            });
+        });
+
         if (customNameInput && bottleNamePreview) {
             customNameInput.addEventListener("input", updateNamePreviewText);
-            applyNameDirection();
-            updateNamePreviewText();
         }
 
         directionButtons.forEach(button => {
@@ -690,8 +678,7 @@
 
         bottleViewButtons.forEach(button => {
             button.addEventListener("click", function () {
-                const view = this.dataset.view;
-                setBottleView(view, true);
+                setBottleView(this.dataset.view);
             });
         });
 
@@ -703,11 +690,11 @@
                 selectedEngravingSide = this.dataset.engravingSide || "front";
 
                 if (selectedEngravingSide === "front") {
-                    setBottleView("front", true);
+                    setBottleView("front");
                 }
 
                 if (selectedEngravingSide === "back") {
-                    setBottleView("back", true);
+                    setBottleView("back");
                 }
 
                 updateNamePreviewVisibility();
@@ -794,10 +781,45 @@
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const addCartBtn = document.getElementById("addCartBtn");
+        const buyNowBtn = document.getElementById("buyNowBtn");
 
         if (!addCartBtn) return;
 
         let addingToCart = false;
+        let buyingNow = false;
+
+        function getCartPayload() {
+            const selectedSizeBtn = document.querySelector(".size-btn.active");
+            const selectedColorBtn = document.querySelector(".color-dot.active");
+            const selectedEngravingSideBtn = document.querySelector(".engraving-side-btn.active");
+            const selectedDirectionBtn = document.querySelector(".name-direction-btn.active");
+            const selectedFontBtn = document.querySelector(".name-font-btn.active");
+
+            return {
+                product_id: addCartBtn.dataset.productId,
+                quantity: 1,
+                size: selectedSizeBtn?.dataset.sizeName || "900ML",
+                color: selectedColorBtn?.dataset.colorName || "",
+                image: selectedColorBtn?.dataset.image || "",
+                custom_name: document.getElementById("customName")?.value.trim() || "",
+                engraving_side: selectedEngravingSideBtn?.dataset.engravingSide || "",
+                name_direction: selectedDirectionBtn?.dataset.direction || "",
+                name_font: selectedFontBtn?.dataset.font || ""
+            };
+        }
+
+        async function addProductToCart() {
+            const response = await fetch("/cart/add/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                body: JSON.stringify(getCartPayload())
+            });
+
+            return await response.json();
+        }
 
         addCartBtn.addEventListener("click", async function () {
             if (addingToCart) return;
@@ -805,67 +827,12 @@
             addingToCart = true;
 
             const originalText = addCartBtn.innerText;
-            const productId = addCartBtn.dataset.productId;
-
-            const selectedSizeBtn = document.querySelector(".size-btn.active");
-            const selectedColorBtn = document.querySelector(".color-dot.active");
-            const selectedEngravingSideBtn = document.querySelector(".engraving-side-btn.active");
-            const selectedDirectionBtn = document.querySelector(".name-direction-btn.active");
-            const selectedFontBtn = document.querySelector(".name-font-btn.active");
-
-            const selectedSize = selectedSizeBtn
-                ? selectedSizeBtn.dataset.sizeName
-                : "900ML";
-
-            const selectedColor = selectedColorBtn
-                ? selectedColorBtn.dataset.colorName
-                : "";
-
-            const selectedImage = selectedColorBtn
-                ? selectedColorBtn.dataset.image
-                : "";
-
-            const customName =
-                document.getElementById("customName")?.value.trim() || "";
-
-            const engravingSide = selectedEngravingSideBtn
-                ? selectedEngravingSideBtn.dataset.engravingSide
-                : "";
-
-            const nameDirection = selectedDirectionBtn
-                ? selectedDirectionBtn.dataset.direction
-                : "";
-
-            const nameFont = selectedFontBtn
-                ? selectedFontBtn.dataset.font
-                : "";
 
             addCartBtn.disabled = true;
             addCartBtn.innerText = "Adicionando...";
 
             try {
-                const response = await fetch("/cart/add/", {
-                    method: "POST",
-
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRFToken": "{{ csrf_token }}"
-                    },
-
-                    body: JSON.stringify({
-                        product_id: productId,
-                        quantity: 1,
-                        size: selectedSize,
-                        color: selectedColor,
-                        image: selectedImage,
-                        custom_name: customName,
-                        engraving_side: engravingSide,
-                        name_direction: nameDirection,
-                        name_font: nameFont
-                    })
-                });
-
-                const data = await response.json();
+                const data = await addProductToCart();
 
                 if (data.success) {
                     addCartBtn.innerText = "Adicionado";
@@ -901,141 +868,45 @@
                 }, 1200);
             }
         });
+
+        if (buyNowBtn) {
+            buyNowBtn.addEventListener("click", async function (e) {
+                e.preventDefault();
+
+                if (buyingNow) return;
+
+                buyingNow = true;
+
+                const originalText = buyNowBtn.innerText;
+
+                buyNowBtn.style.pointerEvents = "none";
+                buyNowBtn.innerText = "Carregando...";
+
+                try {
+                    const data = await addProductToCart();
+
+                    if (data.success) {
+                        window.location.href = "{% url 'cart:checkout_page' %}";
+                        return;
+                    }
+
+                    alert("Erro ao adicionar produto.");
+
+                } catch (error) {
+                    console.error(error);
+                    alert("Erro ao adicionar produto.");
+                }
+
+                buyNowBtn.style.pointerEvents = "";
+                buyNowBtn.innerText = originalText;
+                buyingNow = false;
+            });
+        }
     });
 </script>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-
-    /*
-    =========================
-    SCROLL MANUAL SUAVE PARA IDS
-    =========================
-    */
-    document.querySelectorAll('a[href^="#"]').forEach((link) => {
-        link.addEventListener("click", function (e) {
-            const targetId = this.getAttribute("href");
-
-            if (!targetId || targetId === "#") return;
-
-            const target = document.querySelector(targetId);
-
-            if (!target) return;
-
-            e.preventDefault();
-
-            const header = document.querySelector("header");
-            const headerHeight = header ? header.offsetHeight : 0;
-            const extraSpace = 30;
-
-            const startPosition = window.pageYOffset;
-
-            const targetPosition =
-                target.getBoundingClientRect().top +
-                window.pageYOffset -
-                headerHeight -
-                extraSpace;
-
-            const distance = targetPosition - startPosition;
-            const duration = 900;
-
-            let startTime = null;
-
-            function easeInOutCubic(t) {
-                return t < 0.5
-                    ? 4 * t * t * t
-                    : 1 - Math.pow(-2 * t + 2, 3) / 2;
-            }
-
-            function animateScroll(currentTime) {
-                if (startTime === null) {
-                    startTime = currentTime;
-                }
-
-                const elapsed = currentTime - startTime;
-                const progress = Math.min(elapsed / duration, 1);
-                const ease = easeInOutCubic(progress);
-
-                window.scrollTo(0, startPosition + distance * ease);
-
-                if (elapsed < duration) {
-                    requestAnimationFrame(animateScroll);
-                }
-            }
-
-            requestAnimationFrame(animateScroll);
-        });
-    });
-
-
-    /*
-    =========================
-    SLIDER HERO
-    =========================
-    */
-    const slides = [...document.querySelectorAll(".hero-image")];
-    const dots = [...document.querySelectorAll(".hero-dot")];
-
-    function updateDots(index) {
-        dots.forEach(dot => dot.classList.remove("active"));
-
-        if (dots[index]) {
-            dots[index].classList.add("active");
-        }
-    }
-
-    if (slides.length > 1) {
-        let current = 0;
-        let isAnimating = false;
-
-        slides.forEach((slide, index) => {
-            slide.classList.remove("active", "prev");
-            slide.style.transform = index === 0 ? "translateX(0)" : "translateX(100%)";
-            slide.style.zIndex = index === 0 ? "3" : "1";
-        });
-
-        setInterval(() => {
-            if (isAnimating) return;
-
-            isAnimating = true;
-
-            const currentSlide = slides[current];
-            const nextIndex = (current + 1) % slides.length;
-            const nextSlide = slides[nextIndex];
-
-            nextSlide.style.transition = "none";
-            nextSlide.style.transform = "translateX(100%)";
-            nextSlide.style.zIndex = "3";
-
-            currentSlide.style.zIndex = "2";
-
-            nextSlide.offsetHeight;
-
-            currentSlide.style.transition = "transform 1.2s ease-in-out";
-            nextSlide.style.transition = "transform 1.2s ease-in-out";
-
-            currentSlide.style.transform = "translateX(-100%)";
-            nextSlide.style.transform = "translateX(0)";
-
-            setTimeout(() => {
-                currentSlide.style.transition = "none";
-                currentSlide.style.transform = "translateX(100%)";
-                currentSlide.style.zIndex = "1";
-
-                current = nextIndex;
-                updateDots(current);
-                isAnimating = false;
-            }, 1200);
-
-        }, 7000);
-    }
-
-
-    /*
-    =========================
-    PAGINAÇÃO COMUNIDADE
-    =========================
-    */
     const cards = [...document.querySelectorAll(".community-card")];
     const numbersContainer = document.querySelector(".community-page-numbers");
     const prevBtn = document.querySelector(".community-page-btn.prev");
@@ -1104,7 +975,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         renderPage(1);
     }
-
 });
 </script>
 
