@@ -1,0 +1,328 @@
+.account-page {
+    min-height: 100vh;
+    padding: 120px 20px 70px;
+    background: #f5f1eb;
+    color: #111;
+}
+
+.account-container {
+    width: min(1060px, 100%);
+    margin: 0 auto;
+}
+
+.account-header-clean {
+    margin-bottom: 26px;
+    padding: 26px;
+    border-radius: 34px;
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, .07);
+    box-shadow: 0 24px 70px rgba(0, 0, 0, .07);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.account-profile-clean {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    min-width: 0;
+}
+
+.account-avatar {
+    width: 66px;
+    height: 66px;
+    border-radius: 50%;
+    background: #111;
+    color: #fff;
+    display: grid;
+    place-items: center;
+    font-size: 24px;
+    font-weight: 900;
+    flex: 0 0 auto;
+}
+
+.account-profile-clean span,
+.panel-label {
+    display: block;
+    margin-bottom: 7px;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: #8a6a3d;
+}
+
+.account-profile-clean h1 {
+    margin: 0;
+    font-size: clamp(28px, 4vw, 46px);
+    line-height: 1;
+    letter-spacing: -0.06em;
+    font-weight: 950;
+}
+
+.account-profile-clean p {
+    margin: 8px 0 0;
+    color: #777;
+    font-size: 14px;
+}
+
+.account-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 0 0 auto;
+}
+
+.shop-link,
+.empty-orders a {
+    height: 46px;
+    padding: 0 22px;
+    border-radius: 999px;
+    background: #111;
+    color: #fff;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 900;
+    white-space: nowrap;
+    transition: .2s ease;
+}
+
+.logout-btn {
+    height: 46px;
+    border: 0;
+    border-radius: 999px;
+    padding: 0 19px;
+    background: #eee7dc;
+    color: #111;
+    font-size: 13px;
+    font-weight: 900;
+    cursor: pointer;
+    transition: .2s ease;
+}
+
+.shop-link:hover,
+.empty-orders a:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, .18);
+}
+
+.logout-btn:hover {
+    background: #111;
+    color: #fff;
+}
+
+.account-content {
+    display: grid;
+    gap: 18px;
+}
+
+.account-panel {
+    padding: 28px;
+    border-radius: 34px;
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, .07);
+    box-shadow: 0 22px 70px rgba(0, 0, 0, .06);
+}
+
+.panel-header {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.panel-header h2 {
+    margin: 0;
+    font-size: 30px;
+    letter-spacing: -0.05em;
+    font-weight: 950;
+}
+
+.panel-header small {
+    color: #777;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.orders-list {
+    display: grid;
+    gap: 14px;
+}
+
+.order-card {
+    border-radius: 26px;
+    background: #faf8f4;
+    border: 1px solid rgba(0, 0, 0, .06);
+    overflow: hidden;
+}
+
+.order-top {
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    border-bottom: 1px solid rgba(0, 0, 0, .06);
+}
+
+.order-top strong {
+    display: block;
+    font-size: 16px;
+    font-weight: 900;
+}
+
+.order-top small {
+    display: block;
+    margin-top: 5px;
+    color: #777;
+    font-size: 12px;
+}
+
+.order-price {
+    text-align: right;
+}
+
+.order-price span {
+    display: block;
+    font-size: 11px;
+    color: #777;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    font-weight: 900;
+}
+
+.order-price strong {
+    margin-top: 4px;
+    font-size: 17px;
+}
+
+.order-product {
+    padding: 16px 20px;
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: 14px;
+    align-items: center;
+}
+
+.order-product + .order-product {
+    border-top: 1px solid rgba(0, 0, 0, .06);
+}
+
+.order-product img {
+    width: 64px;
+    height: 64px;
+    border-radius: 18px;
+    object-fit: cover;
+    background: #eee;
+}
+
+.order-product strong {
+    display: block;
+    font-size: 14px;
+    font-weight: 850;
+}
+
+.order-product small {
+    display: block;
+    margin-top: 4px;
+    color: #747474;
+    font-size: 12px;
+}
+
+.empty-orders {
+    padding: 58px 20px;
+    text-align: center;
+    border-radius: 28px;
+    background: #faf8f4;
+}
+
+.empty-icon {
+    font-size: 38px;
+    margin-bottom: 14px;
+}
+
+.empty-orders h3 {
+    margin: 0;
+    font-size: 24px;
+    letter-spacing: -0.04em;
+    font-weight: 950;
+}
+
+.empty-orders p {
+    margin: 10px auto 22px;
+    max-width: 360px;
+    color: #777;
+    line-height: 1.6;
+}
+
+@media (max-width: 760px) {
+    .account-page {
+        padding: 95px 14px 50px;
+    }
+
+    .account-header-clean {
+        display: grid;
+        padding: 22px;
+        border-radius: 28px;
+    }
+
+    .account-profile-clean {
+        align-items: flex-start;
+    }
+
+    .account-actions {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+
+    .shop-link,
+    .logout-btn {
+        width: 100%;
+    }
+
+    .account-panel {
+        padding: 20px;
+        border-radius: 28px;
+    }
+
+    .panel-header {
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 520px) {
+    .account-avatar {
+        width: 54px;
+        height: 54px;
+        font-size: 20px;
+    }
+
+    .account-profile-clean h1 {
+        font-size: 30px;
+    }
+
+    .order-top {
+        display: grid;
+    }
+
+    .order-price {
+        text-align: left;
+    }
+
+    .order-product {
+        grid-template-columns: 54px 1fr;
+        padding: 14px;
+    }
+
+    .order-product img {
+        width: 54px;
+        height: 54px;
+        border-radius: 15px;
+    }
+}

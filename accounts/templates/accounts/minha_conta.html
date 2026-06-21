@@ -4,136 +4,102 @@
 {% block title %}Minha Conta | Risk Clube{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/accounts.css' %}">
+<link rel="stylesheet" href="{% static 'css/minha_conta.css' %}">
 {% endblock %}
 
 {% block content %}
 <section class="account-page">
     <div class="account-container">
 
-        <header class="account-header">
-            <div>
-                <span>Área do cliente</span>
-                <h1>Minha conta</h1>
-                <p>Acompanhe seus pedidos e gerencie suas informações na Risk Clube.</p>
-            </div>
-
-            <div class="account-user-card">
+        <header class="account-header-clean">
+            <div class="account-profile-clean">
                 <div class="account-avatar">
-                    {{ request.user.email|first|upper }}
+                    {{ request.user.get_full_name|default:request.user.email|first|upper }}
                 </div>
 
                 <div>
-                    <strong>{{ request.user.get_full_name|default:"Cliente Risk" }}</strong>
-                    <small>{{ request.user.email }}</small>
+                    <span>Área do cliente</span>
+                    <h1>{{ request.user.get_full_name|default:"Cliente Risk" }}</h1>
+                    <p>{{ request.user.email }}</p>
                 </div>
             </div>
-        </header>
 
-        <div class="account-layout">
-
-            <aside class="account-sidebar">
-                <nav>
-                    <a href="#resumo" class="active">Resumo</a>
-                    <a href="#pedidos">Pedidos</a>
-                </nav>
+            <div class="account-actions">
+                <a href="/" class="shop-link">Continuar comprando</a>
 
                 <form method="post" action="{% url 'account_logout' %}">
                     {% csrf_token %}
-                    <button type="submit">Sair da conta</button>
+                    <button type="submit" class="logout-btn">Sair</button>
                 </form>
-            </aside>
+            </div>
+        </header>
 
-            <main class="account-main">
+        <main class="account-content">
 
-                <section id="resumo" class="account-card">
-                    <div class="card-title">
-                        <span>Resumo</span>
-                        <h2>Olá, {{ request.user.get_full_name|default:"cliente" }}</h2>
-                    </div>
-
-                    <div class="summary-grid">
-                        <div class="summary-box">
-                            <small>Email</small>
-                            <strong>{{ request.user.email }}</strong>
-                        </div>
-
-                        <div class="summary-box">
-                            <small>Status</small>
-                            <strong>Conta ativa</strong>
-                        </div>
-
-                        <div class="summary-box">
-                            <small>Pedidos</small>
-                            <strong>{{ orders|length }} pedido{{ orders|length|pluralize:"s" }}</strong>
-                        </div>
-                    </div>
-                </section>
-
-                <section id="pedidos" class="account-card">
-                    <div class="card-title">
-                        <span>Compras</span>
+            <section class="account-panel">
+                <div class="panel-header">
+                    <div>
+                        <span class="panel-label">Compras</span>
                         <h2>Meus pedidos</h2>
                     </div>
 
-                    <div class="orders-list">
-                        {% for order in orders %}
-                            <article class="order-card">
+                    <small>
+                        {{ orders|length }} pedido{{ orders|length|pluralize:"s" }}
+                    </small>
+                </div>
 
-                                <div class="order-head">
-                                    <div>
-                                        <strong>Pedido #{{ order.id }}</strong>
-                                        <small>{{ order.created_at|date:"d/m/Y H:i" }}</small>
-                                    </div>
+                <div class="orders-list">
+                    {% for order in orders %}
+                        <article class="order-card">
 
-                                    <span class="order-status status-{{ order.status }}">
-                                        {{ order.get_status_display }}
-                                    </span>
+                            <div class="order-top">
+                                <div>
+                                    <strong>Pedido #{{ order.id }}</strong>
+                                    <small>{{ order.created_at|date:"d/m/Y H:i" }}</small>
                                 </div>
 
-                                <div class="order-items">
-                                    {% for item in order.items.all %}
-                                        <div class="order-item">
-                                            {% if item.image %}
-                                                <img src="{{ item.image }}" alt="{{ item.name }}">
-                                            {% endif %}
-
-                                            <div>
-                                                <strong>{{ item.quantity }}x {{ item.name }}</strong>
-
-                                                <small>
-                                                    {% if item.size %}Tamanho: {{ item.size }}{% endif %}
-                                                    {% if item.color %}{% if item.size %} · {% endif %}Cor: {{ item.color }}{% endif %}
-                                                </small>
-
-                                                {% if item.custom_name %}
-                                                    <small>Nome: {{ item.custom_name }}</small>
-                                                {% endif %}
-                                            </div>
-                                        </div>
-                                    {% endfor %}
-                                </div>
-
-                                <div class="order-total">
+                                <div class="order-price">
                                     <span>Total</span>
                                     <strong>R$ {{ order.total|floatformat:2 }}</strong>
                                 </div>
-
-                            </article>
-                        {% empty %}
-                            <div class="empty-orders">
-                                <div>🛍️</div>
-                                <h3>Você ainda não fez nenhum pedido</h3>
-                                <p>Quando uma compra for finalizada, ela aparecerá aqui.</p>
-                                <a href="/">Ver produtos</a>
                             </div>
-                        {% endfor %}
-                    </div>
-                </section>
 
-            </main>
+                            <div class="order-products">
+                                {% for item in order.items.all %}
+                                    <div class="order-product">
+                                        {% if item.image %}
+                                            <img src="{{ item.image }}" alt="{{ item.name }}">
+                                        {% endif %}
 
-        </div>
+                                        <div>
+                                            <strong>{{ item.quantity }}x {{ item.name }}</strong>
+
+                                            <small>
+                                                {% if item.size %}Tamanho: {{ item.size }}{% endif %}
+                                                {% if item.color %}{% if item.size %} · {% endif %}Cor: {{ item.color }}{% endif %}
+                                            </small>
+
+                                            {% if item.custom_name %}
+                                                <small>Nome: {{ item.custom_name }}</small>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                        </article>
+                    {% empty %}
+                        <div class="empty-orders">
+                            <div class="empty-icon">🛍️</div>
+                            <h3>Nenhum pedido ainda</h3>
+                            <p>Quando você finalizar uma compra, seus pedidos aparecerão aqui.</p>
+                            <a href="/">Ver produtos</a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </section>
+
+        </main>
 
     </div>
 </section>

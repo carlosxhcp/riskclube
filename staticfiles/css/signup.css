@@ -1,0 +1,366 @@
+.account-page {
+    min-height: 100vh;
+    padding: 120px 20px 70px;
+    background: #f6f3ee;
+    color: #171717;
+}
+
+.account-container {
+    width: min(1120px, 100%);
+    margin: 0 auto;
+}
+
+.account-hero {
+    display: flex;
+    justify-content: space-between;
+    gap: 28px;
+    align-items: flex-end;
+    margin-bottom: 28px;
+}
+
+.account-hero-text span,
+.panel-label {
+    display: inline-block;
+    margin-bottom: 10px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: #8a6a3d;
+}
+
+.account-hero-text h1 {
+    margin: 0;
+    font-size: clamp(34px, 5vw, 58px);
+    line-height: .95;
+    letter-spacing: -0.05em;
+    font-weight: 900;
+}
+
+.account-hero-text p {
+    max-width: 560px;
+    margin: 18px 0 0;
+    color: #666;
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+.account-profile {
+    min-width: 360px;
+    padding: 18px;
+    border-radius: 28px;
+    background: rgba(255, 255, 255, .72);
+    border: 1px solid rgba(0, 0, 0, .08);
+    box-shadow: 0 24px 70px rgba(0, 0, 0, .08);
+    backdrop-filter: blur(12px);
+    display: grid;
+    grid-template-columns: 54px 1fr auto;
+    align-items: center;
+    gap: 14px;
+}
+
+.account-avatar {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background: #111;
+    color: #fff;
+    display: grid;
+    place-items: center;
+    font-weight: 900;
+    font-size: 20px;
+}
+
+.account-profile-info {
+    min-width: 0;
+}
+
+.account-profile-info strong {
+    display: block;
+    font-size: 15px;
+    font-weight: 850;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.account-profile-info small {
+    display: block;
+    margin-top: 4px;
+    color: #777;
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.logout-btn {
+    border: 0;
+    border-radius: 999px;
+    padding: 11px 16px;
+    background: #eee7dc;
+    color: #171717;
+    font-weight: 800;
+    font-size: 12px;
+    cursor: pointer;
+    transition: .2s ease;
+}
+
+.logout-btn:hover {
+    background: #171717;
+    color: #fff;
+}
+
+.account-content {
+    display: grid;
+    gap: 18px;
+}
+
+.account-panel {
+    border-radius: 34px;
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, .07);
+    box-shadow: 0 22px 70px rgba(0, 0, 0, .06);
+    padding: 28px;
+}
+
+.account-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    background:
+        radial-gradient(circle at top right, rgba(138, 106, 61, .16), transparent 36%),
+        #fff;
+}
+
+.account-summary h2,
+.panel-header h2 {
+    margin: 0;
+    font-size: 26px;
+    letter-spacing: -0.04em;
+    font-weight: 900;
+}
+
+.account-summary p {
+    margin: 10px 0 0;
+    color: #666;
+    font-size: 15px;
+}
+
+.shop-link,
+.empty-orders a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 46px;
+    padding: 0 22px;
+    border-radius: 999px;
+    background: #111;
+    color: #fff;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 850;
+    transition: .2s ease;
+    white-space: nowrap;
+}
+
+.shop-link:hover,
+.empty-orders a:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 30px rgba(0, 0, 0, .18);
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 20px;
+}
+
+.orders-list {
+    display: grid;
+    gap: 14px;
+}
+
+.order-card {
+    border-radius: 26px;
+    background: #faf8f4;
+    border: 1px solid rgba(0, 0, 0, .06);
+    overflow: hidden;
+}
+
+.order-top {
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: flex-start;
+    border-bottom: 1px solid rgba(0, 0, 0, .06);
+}
+
+.order-top strong {
+    display: block;
+    font-size: 16px;
+    font-weight: 900;
+}
+
+.order-top small {
+    display: block;
+    margin-top: 5px;
+    color: #777;
+    font-size: 12px;
+}
+
+.order-price {
+    text-align: right;
+}
+
+.order-price span {
+    display: block;
+    font-size: 11px;
+    color: #777;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    font-weight: 800;
+}
+
+.order-price strong {
+    margin-top: 4px;
+    font-size: 17px;
+}
+
+.order-products {
+    display: grid;
+    gap: 0;
+}
+
+.order-product {
+    padding: 16px 20px;
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: 14px;
+    align-items: center;
+}
+
+.order-product + .order-product {
+    border-top: 1px solid rgba(0, 0, 0, .06);
+}
+
+.order-product img {
+    width: 64px;
+    height: 64px;
+    border-radius: 18px;
+    object-fit: cover;
+    background: #eee;
+}
+
+.order-product strong {
+    display: block;
+    font-size: 14px;
+    font-weight: 850;
+}
+
+.order-product small {
+    display: block;
+    margin-top: 4px;
+    font-size: 12px;
+    color: #747474;
+}
+
+.empty-orders {
+    padding: 58px 20px;
+    text-align: center;
+    border-radius: 28px;
+    background: #faf8f4;
+}
+
+.empty-icon {
+    font-size: 38px;
+    margin-bottom: 14px;
+}
+
+.empty-orders h3 {
+    margin: 0;
+    font-size: 24px;
+    letter-spacing: -0.04em;
+    font-weight: 900;
+}
+
+.empty-orders p {
+    margin: 10px auto 22px;
+    max-width: 360px;
+    color: #777;
+    line-height: 1.6;
+}
+
+/* ============================= */
+/* RESPONSIVO */
+/* ============================= */
+
+@media (max-width: 820px) {
+    .account-page {
+        padding: 95px 14px 50px;
+    }
+
+    .account-hero {
+        display: grid;
+        gap: 20px;
+    }
+
+    .account-profile {
+        min-width: 0;
+        width: 100%;
+    }
+
+    .account-panel {
+        padding: 20px;
+        border-radius: 26px;
+    }
+
+    .account-summary {
+        display: grid;
+    }
+
+    .shop-link {
+        width: 100%;
+    }
+}
+
+@media (max-width: 520px) {
+    .account-profile {
+        grid-template-columns: 48px 1fr;
+    }
+
+    .account-profile form {
+        grid-column: 1 / -1;
+    }
+
+    .logout-btn {
+        width: 100%;
+    }
+
+    .account-avatar {
+        width: 48px;
+        height: 48px;
+    }
+
+    .order-top {
+        display: grid;
+    }
+
+    .order-price {
+        text-align: left;
+    }
+
+    .order-product {
+        grid-template-columns: 54px 1fr;
+        padding: 14px;
+    }
+
+    .order-product img {
+        width: 54px;
+        height: 54px;
+        border-radius: 15px;
+    }
+}

@@ -25,14 +25,17 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sites",
 
     "cloudinary_storage",
     "cloudinary",
 
+    "accounts.apps.AccountsConfig",
+
     # allauth
     "allauth",
     "allauth.account",
-    "accounts.apps.AccountsConfig",
+    
 
     "pages",
     "products",
@@ -40,6 +43,10 @@ INSTALLED_APPS = [
     "customization",
     "orders",
 ]
+
+ACCOUNT_FORMS = {
+    "signup": "accounts.forms.CustomSignupForm",
+}
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -152,7 +159,7 @@ AUTHENTICATION_BACKENDS = [
 
 SITE_ID = 1
 
-LOGIN_REDIRECT_URL = "/minha-conta/"
+LOGIN_REDIRECT_URL = "accounts:minha_conta"
 ACCOUNT_LOGOUT_REDIRECT_URL = "/"
 
 ACCOUNT_LOGIN_METHODS = {"email"}
