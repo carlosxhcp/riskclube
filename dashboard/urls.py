@@ -10,10 +10,12 @@ urlpatterns = [
     path("variacoes/<int:pk>/editar/", views.variant_edit, name="variant_edit"),
     path("produtos/<int:pk>/variacoes/nova/", views.variant_create, name="variant_create"),
 
+    path("variacoes/imagens/<int:pk>/excluir/", views.variant_image_delete, name="variant_image_delete"),
+    path("variacoes/<int:pk>/excluir/", views.variant_delete, name="variant_delete"),
     path("variacoes/<int:pk>/tamanhos/novo/", views.size_create, name="size_create"),
     path("tamanhos/<int:pk>/editar/", views.size_edit, name="size_edit"),
     path("tamanhos/<int:pk>/excluir/", views.size_delete, name="size_delete"),
     path("produtos/<int:pk>/tamanhos/novo/", views.product_size_create, name="product_size_create"),
-path("produtos/tamanhos/<int:pk>/editar/", views.product_size_edit, name="product_size_edit"),
-path("produtos/tamanhos/<int:pk>/excluir/", views.product_size_delete, name="product_size_delete"),
+    path("produtos/tamanhos/<int:pk>/editar/", views.product_size_edit, name="product_size_edit"),
+    path("produtos/tamanhos/<int:pk>/excluir/", views.product_size_delete, name="product_size_delete"),
 ]

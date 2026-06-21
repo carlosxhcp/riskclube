@@ -1,6 +1,8 @@
 {% extends "dashboard/base_dashboard.html" %}
 
-{% block title %}Editar variação | Risk Clube{% endblock %}
+{% block title %}
+{% if is_create %}Nova variação{% else %}Editar variação{% endif %} | Risk Clube
+{% endblock %}
 
 {% block content %}
 
@@ -15,13 +17,13 @@
     </a>
 </div>
 
-<form method="post" enctype="multipart/form-data" class="dashboard-form">
+<form method="post" enctype="multipart/form-data" class="dashboard-form variant-main-form">
     {% csrf_token %}
 
     <div class="form-card">
 
         <div class="form-preview">
-            {% if variant.image %}
+            {% if variant and variant.image %}
                 <img src="{{ variant.image.url }}" alt="{{ variant.color_name }}">
             {% else %}
                 <span>Sem imagem</span>
@@ -42,20 +44,51 @@
                 {{ form.color_hex.errors }}
             </div>
 
-            <div class="form-field image-field full">
-                <label>Imagem da variação</label>
+            <div class="form-field image-field">
+                <label>Imagem da frente</label>
 
-                {% if variant.image %}
+                {% if variant and variant.image %}
                 <div class="current-image-box">
                     <img src="{{ variant.image.url }}" alt="{{ variant.color_name }}">
                 </div>
                 {% endif %}
 
-                {{ form.image }}
                 {{ form.image.errors }}
+
+                <div class="premium-file-row">
+                    <input type="file" name="image" id="variantFrontImage" class="premium-file-input">
+                    <label for="variantFrontImage" class="premium-file-btn">
+                        Escolher imagem
+                    </label>
+                    <span class="premium-file-name" data-file-name>
+                        Nenhum arquivo selecionado
+                    </span>
+                </div>
             </div>
 
-            <div class="form-field checkbox-field">
+            <div class="form-field image-field">
+                <label>Imagem das costas</label>
+
+                {% if variant and variant.back_image %}
+                <div class="current-image-box">
+                    <img src="{{ variant.back_image.url }}" alt="{{ variant.color_name }}">
+                </div>
+                {% endif %}
+
+                {{ form.back_image.errors }}
+
+                <div class="premium-file-row">
+                    <input type="file" name="back_image" id="variantBackImage" class="premium-file-input">
+                    <label for="variantBackImage" class="premium-file-btn">
+                        Escolher imagem
+                    </label>
+                    <span class="premium-file-name" data-file-name>
+                        Nenhum arquivo selecionado
+                    </span>
+                </div>
+            </div>
+
+            <div class="form-field checkbox-field full">
                 <label>
                     {{ form.active }}
                     Variação ativa
@@ -84,36 +117,141 @@
             <h2>Tamanhos</h2>
         </div>
 
-        <a href="{% url 'dashboard:size_create' variant.id %}" class="dashboard-primary-btn">
-            Novo tamanho
-        </a>
+        {% if variant and variant.id %}
+            <a href="{% url 'dashboard:size_create' variant.id %}" class="dashboard-primary-btn">
+                Novo tamanho
+            </a>
+        {% else %}
+            <button type="button" class="dashboard-primary-btn" disabled>
+                Salve a variação primeiro
+            </button>
+        {% endif %}
     </div>
 
-    <div class="dashboard-mini-list">
-        {% for size in variant.sizes.all %}
-        <div class="dashboard-mini-item">
-            <div>
-                <strong>{{ size.name }}</strong>
+    {% if variant and variant.id %}
+        <div class="dashboard-mini-list">
+            {% for size in variant.sizes.all %}
+            <div class="dashboard-mini-item">
+                <div>
+                    <strong>{{ size.name }}</strong>
 
-                {% if size.active %}
-                    <small class="status-pill active">Ativo</small>
-                {% else %}
-                    <small class="status-pill inactive">Inativo</small>
-                {% endif %}
-            </div>
+                    {% if size.active %}
+                        <small class="status-pill active">Ativo</small>
+                    {% else %}
+                        <small class="status-pill inactive">Inativo</small>
+                    {% endif %}
+                </div>
 
-            <div class="dashboard-mini-actions">
-                <a href="{% url 'dashboard:size_edit' size.id %}">Editar</a>
-                <a href="{% url 'dashboard:size_delete' size.id %}" onclick="return confirm('Excluir este tamanho?')">Excluir</a>
+                <div class="dashboard-mini-actions">
+                    <a href="{% url 'dashboard:size_edit' size.id %}">Editar</a>
+
+                    <a href="{% url 'dashboard:size_delete' size.id %}"
+                       onclick="return confirm('Excluir este tamanho?')">
+                        Excluir
+                    </a>
+                </div>
             </div>
+            {% empty %}
+            <div class="empty-panel">
+                <h2>Nenhum tamanho cadastrado</h2>
+                <p>Adicione tamanhos como 500ml, 750ml ou 1L.</p>
+            </div>
+            {% endfor %}
         </div>
-        {% empty %}
+    {% else %}
         <div class="empty-panel">
-            <h2>Nenhum tamanho cadastrado</h2>
-            <p>Adicione tamanhos como 500ml, 750ml ou 1L.</p>
+            <h2>Salve a variação primeiro</h2>
+            <p>Depois de salvar, você poderá cadastrar os tamanhos dessa variação.</p>
         </div>
-        {% endfor %}
-    </div>
+    {% endif %}
 </div>
+
+<div class="dashboard-subsection">
+    <div class="dashboard-subsection-header">
+        <div>
+            <span>Slides da variação</span>
+            <h2>Galeria de imagens</h2>
+        </div>
+    </div>
+
+    {% if variant and variant.id %}
+
+        <form method="post" enctype="multipart/form-data" class="inline-create-form variant-gallery-upload">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="add_variant_image">
+
+            <div class="premium-file-row">
+                <input type="file" name="variant_image" id="variantGalleryImage" class="premium-file-input" required>
+                <label for="variantGalleryImage" class="premium-file-btn">
+                    Escolher slide
+                </label>
+                <span class="premium-file-name" data-file-name>
+                    Nenhum arquivo selecionado
+                </span>
+            </div>
+
+            <input type="text" name="alt" placeholder="Descrição da imagem">
+
+            <button type="submit">
+                Adicionar slide
+            </button>
+        </form>
+
+        <div class="variation-preview-grid">
+            {% for image in variant.images.all %}
+            <div class="variation-preview-card">
+                <div class="variation-preview-image">
+                    <img src="{{ image.image.url }}" alt="{{ image.alt }}">
+                </div>
+
+                <div>
+                    <strong>{{ image.alt|default:"Imagem da galeria" }}</strong>
+
+                    {% if image.active %}
+                        <small class="status-pill active">Ativa</small>
+                    {% else %}
+                        <small class="status-pill inactive">Inativa</small>
+                    {% endif %}
+                </div>
+
+                <div class="dashboard-mini-actions">
+                    <a href="{% url 'dashboard:variant_image_delete' image.id %}"
+                       onclick="return confirm('Excluir esta imagem?')">
+                        Excluir
+                    </a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-panel">
+                <h2>Nenhum slide cadastrado</h2>
+                <p>Adicione imagens extras para essa cor/variação.</p>
+            </div>
+            {% endfor %}
+        </div>
+
+    {% else %}
+
+        <div class="empty-panel">
+            <h2>Salve a variação primeiro</h2>
+            <p>Depois de salvar, você poderá adicionar os slides dessa cor.</p>
+        </div>
+
+    {% endif %}
+</div>
+
+<script>
+document.querySelectorAll(".premium-file-input").forEach(function (input) {
+    input.addEventListener("change", function () {
+        const row = input.closest(".premium-file-row");
+        const fileName = row.querySelector("[data-file-name]");
+
+        if (!fileName) return;
+
+        fileName.textContent = input.files.length
+            ? input.files[0].name
+            : "Nenhum arquivo selecionado";
+    });
+});
+</script>
 
 {% endblock %}

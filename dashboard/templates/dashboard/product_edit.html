@@ -226,9 +226,16 @@
                 {% endif %}
             </div>
 
-            <a href="{% url 'dashboard:variant_edit' variant.id %}" class="variation-edit-btn">
-                Editar
-            </a>
+            <div class="dashboard-mini-actions">
+    <a href="{% url 'dashboard:variant_edit' variant.id %}">
+        Editar
+    </a>
+
+    <a href="{% url 'dashboard:variant_delete' variant.id %}"
+       onclick="return confirm('Excluir esta variação?')">
+        Excluir
+    </a>
+</div>
         </div>
         {% empty %}
         <div class="empty-panel">

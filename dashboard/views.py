@@ -1,7 +1,7 @@
 from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render, get_object_or_404, redirect
 from .forms import DashboardProductForm, DashboardProductVariantForm, DashboardProductSizeForm, DashboardProductDefaultSizeForm
-from products.models import Product, ProductVariant, ProductSize, ProductDefaultSize
+from products.models import Product, ProductVariant, ProductSize, ProductDefaultSize, VariantImage
 from orders.models import Order
 from django.contrib.auth.models import User
 
@@ -86,6 +86,19 @@ def variant_edit(request, pk):
     variant = get_object_or_404(ProductVariant, pk=pk)
     product = variant.product
 
+    if request.method == "POST" and request.POST.get("action") == "add_variant_image":
+        image = request.FILES.get("variant_image")
+        alt = request.POST.get("alt", "").strip()
+
+        if image:
+            VariantImage.objects.create(
+                variant=variant,
+                image=image,
+                alt=alt
+            )
+
+        return redirect("dashboard:variant_edit", pk=variant.pk)
+
     if request.method == "POST":
         form = DashboardProductVariantForm(
             request.POST,
@@ -104,6 +117,7 @@ def variant_edit(request, pk):
         "variant": variant,
         "product": product,
     })
+
 
 @staff_member_required
 def variant_create(request, pk):
@@ -233,3 +247,22 @@ def product_size_delete(request, pk):
     size.delete()
 
     return redirect("dashboard:product_edit", pk=product_pk)
+
+
+def variant_delete(request, pk):
+    variant = get_object_or_404(ProductVariant, pk=pk)
+    product_id = variant.product.id
+
+    variant.delete()
+
+    return redirect("dashboard:product_edit", pk=product_id)
+
+
+@staff_member_required
+def variant_image_delete(request, pk):
+    image = get_object_or_404(VariantImage, pk=pk)
+    variant_pk = image.variant.pk
+
+    image.delete()
+
+    return redirect("dashboard:variant_edit", pk=variant_pk)

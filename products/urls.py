@@ -14,5 +14,6 @@ urlpatterns = [
     views.customization_choice,
     name="customization_choice"
 ),
+    path("produto/<int:pk>/favoritar/", views.toggle_favorite, name="toggle_favorite"),
     
 ]

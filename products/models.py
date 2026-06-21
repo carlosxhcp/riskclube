@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
+from django.contrib.auth.models import User
 
 
 class Product(models.Model):
@@ -116,6 +117,35 @@ class ProductVariant(models.Model):
         verbose_name="Imagem da frente"
     )
 
+    image_hover = models.ImageField(
+        upload_to="products/variants/hover/",
+        blank=True,
+        null=True,
+        verbose_name="Imagem hover"
+    )
+
+    back_image = models.ImageField(
+        upload_to="products/variants/back/",
+        blank=True,
+        null=True,
+        verbose_name="Imagem das costas"
+    )
+
+    active = models.BooleanField(default=True)
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        related_name="variants"
+    )
+
+    color_name = models.CharField(max_length=50)
+    color_hex = models.CharField(max_length=20, default="#000000")
+
+    image = models.ImageField(
+        upload_to="products/variants/",
+        verbose_name="Imagem da frente"
+    )
+
     back_image = models.ImageField(
         upload_to="products/variants/back/",
         blank=True,
@@ -188,3 +218,12 @@ class ProductDefaultSize(models.Model):
 
     def __str__(self):
         return f"{self.product.name} - {self.name}"
+
+
+class Favorite(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("user", "product")

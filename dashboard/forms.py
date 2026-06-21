@@ -32,6 +32,8 @@ class DashboardProductVariantForm(forms.ModelForm):
             "color_name",
             "color_hex",
             "image",
+            "image_hover",
+            "back_image",
             "active",
         ]
 

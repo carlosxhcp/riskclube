@@ -7,8 +7,21 @@ from .models import (
     ProductImage,
     ProductVariant,
     ProductSize,
+    ProductDefaultSize,
     VariantImage,
 )
+
+
+class ProductDefaultSizeInline(TabularInline):
+    model = ProductDefaultSize
+    verbose_name = "Tamanho padrão"
+    verbose_name_plural = "Tamanhos padrão"
+    extra = 1
+
+    fields = (
+        "name",
+        "active",
+    )
 
 
 class ProductImageInline(TabularInline):
@@ -181,6 +194,7 @@ class ProductAdmin(ModelAdmin):
     )
 
     inlines = [
+        ProductDefaultSizeInline,
         ProductImageInline,
         ProductVariantInline,
     ]
@@ -271,6 +285,25 @@ class ProductSizeAdmin(ModelAdmin):
         "name",
         "variant__color_name",
         "variant__product__name",
+    )
+
+
+@admin.register(ProductDefaultSize)
+class ProductDefaultSizeAdmin(ModelAdmin):
+    list_display = (
+        "product",
+        "name",
+        "active",
+    )
+
+    list_filter = (
+        "active",
+        "product",
+    )
+
+    search_fields = (
+        "name",
+        "product__name",
     )
 
 

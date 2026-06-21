@@ -35,7 +35,47 @@
         </header>
 
         <main class="account-content">
+            <section class="account-panel">
+    <div class="panel-header">
+        <div>
+            <span class="panel-label">Favoritos</span>
+            <h2>Meus favoritos</h2>
+        </div>
 
+        <small>
+            {{ favorites|length }} produto{{ favorites|length|pluralize:"s" }}
+        </small>
+    </div>
+
+    <div class="favorites-list">
+        {% for favorite in favorites %}
+            <article class="favorite-card">
+                <a href="{% url 'products:product_detail' favorite.product.slug %}" class="favorite-image">
+                    {% if favorite.product.image %}
+                        <img src="{{ favorite.product.image.url }}" alt="{{ favorite.product.name }}">
+                    {% endif %}
+                </a>
+
+                <div class="favorite-info">
+                    <a href="{% url 'products:product_detail' favorite.product.slug %}">
+                        {{ favorite.product.name }}
+                    </a>
+
+                    <strong>R$ {{ favorite.product.price }}</strong>
+
+                    <span>Favoritado em {{ favorite.created_at|date:"d/m/Y" }}</span>
+                </div>
+            </article>
+        {% empty %}
+            <div class="empty-orders">
+                <div class="empty-icon">♡</div>
+                <h3>Nenhum favorito ainda</h3>
+                <p>Toque no coração dos produtos para salvar seus favoritos aqui.</p>
+                <a href="/">Ver produtos</a>
+            </div>
+        {% endfor %}
+    </div>
+</section>
             <section class="account-panel">
                 <div class="panel-header">
                     <div>

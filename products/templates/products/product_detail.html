@@ -30,7 +30,7 @@
 
             <div class="product-main-image" data-front-image="{{ product.image.url }}"
                 data-back-image="{% if product.back_image %}{{ product.back_image.url }}{% endif %}">
-                <button type="button" class="galler y-arrow left" id="prevImage">‹</button>
+                <button type="button" class="gallery-arrow left" id="prevImage">‹</button>
 
                 <img id="mainProductImage" src="{{ product.image.url }}" alt="{{ product.name }}">
 
@@ -44,6 +44,15 @@
     <div class="product-content">
 
         <div class="product-content-card">
+            <button
+    type="button"
+    class="favorite-btn {% if is_favorited %}active{% endif %}"
+    id="favoriteBtn"
+    data-product-id="{{ product.id }}"
+    aria-label="Favoritar produto"
+>
+    <i class="{% if is_favorited %}fa-solid{% else %}fa-regular{% endif %} fa-heart"></i>
+</button>
 
             <h1 class="product-title">{{ product.name }}</h1>
 
@@ -335,6 +344,10 @@
         <button class="community-page-btn next" type="button">&#10095;</button>
     </div>
 </section>
+<div id="favoriteToast" class="favorite-toast">
+    <i class="fa-solid fa-heart"></i>
+    <span></span>
+</div>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const mainImage = document.getElementById("mainProductImage");
@@ -977,5 +990,69 @@
         }
     });
 </script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const favoriteBtn = document.getElementById("favoriteBtn");
+    const favoriteToast = document.getElementById("favoriteToast");
 
+    if (!favoriteBtn) return;
+
+    let toastTimer = null;
+
+    function showFavoriteToast(message, removed = false) {
+        if (!favoriteToast) return;
+
+        const text = favoriteToast.querySelector("span");
+
+        if (text) {
+            text.textContent = message;
+        }
+
+        favoriteToast.classList.toggle("removed", removed);
+        favoriteToast.classList.add("show");
+
+        clearTimeout(toastTimer);
+
+        toastTimer = setTimeout(() => {
+            favoriteToast.classList.remove("show");
+        }, 2200);
+    }
+
+    favoriteBtn.addEventListener("click", async function () {
+        const productId = favoriteBtn.dataset.productId;
+        const icon = favoriteBtn.querySelector("i");
+
+        try {
+            const response = await fetch(`/produto/${productId}/favoritar/`, {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": "{{ csrf_token }}"
+                }
+            });
+
+            if (response.redirected) {
+                window.location.href = response.url;
+                return;
+            }
+
+            const data = await response.json();
+
+            favoriteBtn.classList.toggle("active", data.favorited);
+
+            icon.classList.toggle("fa-solid", data.favorited);
+            icon.classList.toggle("fa-regular", !data.favorited);
+
+            if (data.favorited) {
+                showFavoriteToast("Adicionado aos favoritos");
+            } else {
+                showFavoriteToast("Removido dos favoritos", true);
+            }
+
+        } catch (error) {
+            console.error("Erro ao favoritar:", error);
+            showFavoriteToast("Erro ao favoritar", true);
+        }
+    });
+});
+</script>
 {% endblock %}
