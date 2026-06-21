@@ -219,19 +219,22 @@
 
 @media (max-width: 600px) {
     .auth-page {
-        padding: 90px 14px 40px;
+        min-height: calc(100vh - 64px);
+        padding: 55px 14px 40px;
+        background: #f6f6f6;
     }
 
     .auth-bg {
-        inset: -10%;
-        filter: blur(35px);
-        animation: none;
-        transform: none;
+        display: none;
     }
 
     .auth-card {
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
+        margin-top: 0;
+        padding: 34px 22px;
+        border-radius: 28px;
+        background: #fff;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
     }
 
     .auth-header h1 {

@@ -648,6 +648,7 @@
     }
 
     .checkout-sidebar {
+        margin-top: 20px;
         position: static;
         order: -1;
     }
