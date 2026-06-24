@@ -119,7 +119,6 @@ class VariantImageInline(TabularInline):
 
     preview.short_description = "Prévia"
 
-
 @admin.register(Product)
 class ProductAdmin(ModelAdmin):
     list_display = (
@@ -128,6 +127,8 @@ class ProductAdmin(ModelAdmin):
         "engraving_position",
         "price",
         "available",
+        "is_createbottle",
+        "has_model_3d",
         "created",
     )
 
@@ -138,6 +139,7 @@ class ProductAdmin(ModelAdmin):
 
     list_filter = (
         "available",
+        "is_createbottle",
         "engraving_position",
         "created",
     )
@@ -177,11 +179,18 @@ class ProductAdmin(ModelAdmin):
             )
         }),
 
-        ("Personalização", {
+        ("Personalização normal", {
             "fields": (
                 "engraving_position",
                 "default_color_name",
                 "default_color_hex",
+            )
+        }),
+
+        ("CreateBottle", {
+            "fields": (
+                "is_createbottle",
+                "model_3d_url",
             )
         }),
 
@@ -219,6 +228,12 @@ class ProductAdmin(ModelAdmin):
 
     back_preview.short_description = "Prévia costas"
 
+    def has_model_3d(self, obj):
+        if obj and obj.model_3d_url:
+            return "Sim"
+        return "Não"
+
+    has_model_3d.short_description = "Modelo 3D"
 
 @admin.register(ProductVariant)
 class ProductVariantAdmin(ModelAdmin):

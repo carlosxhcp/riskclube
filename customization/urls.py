@@ -5,32 +5,32 @@ app_name = "customization"
 
 urlpatterns = [
     path(
-        "produto/<slug:slug>/personalizar/",
-        views.vip_choose_type,
-        name="vip_choose_type"
+        "personalizar/",
+        views.createbottle_choose_type,
+        name="createbottle_choose_type"
     ),
 
     path(
-        "produto/<slug:slug>/personalizar/<str:custom_type>/modelos/",
-        views.vip_choose_model,
-        name="vip_choose_model"
+        "personalizar/<str:custom_type>/modelos/",
+        views.createbottle_choose_model,
+        name="createbottle_choose_model"
     ),
 
     path(
-        "vip/<slug:slug>/grupo/mockup/",
-        views.vip_group_mockup,
-        name="vip_group_mockup"
+        "personalizar/<slug:slug>/mockup/",
+        views.createbottle_mockup,
+        name="createbottle_mockup"
     ),
 
     path(
-        "vip/<slug:slug>/grupo/resumo/",
-        views.vip_group_summary,
-        name="vip_group_summary"
+        "personalizar/<slug:slug>/grupo/",
+        views.createbottle_group_mockup,
+        name="createbottle_group_mockup"
     ),
 
     path(
-    "vip/<slug:slug>/individual/mockup/<int:model_id>/",
-    views.vip_individual_mockup,
-    name="vip_individual_mockup"
-)
+        "personalizar/<slug:slug>/grupo/resumo/",
+        views.createbottle_group_summary,
+        name="createbottle_group_summary"
+    ),
 ]

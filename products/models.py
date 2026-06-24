@@ -13,7 +13,6 @@ class Product(models.Model):
     ]
 
     name = models.CharField(max_length=255)
-
     slug = models.SlugField(unique=True, blank=True)
 
     price = models.DecimalField(max_digits=10, decimal_places=2)
@@ -56,7 +55,22 @@ class Product(models.Model):
         default="#000000"
     )
 
-    available = models.BooleanField(default=True)
+    available = models.BooleanField(
+        default=True,
+        verbose_name="Disponível"
+    )
+
+    is_createbottle = models.BooleanField(
+        default=False,
+        verbose_name="Disponível no CreateBottle"
+    )
+
+    model_3d_url = models.URLField(
+    blank=True,
+    null=True,
+    verbose_name="URL do modelo 3D da garrafa"
+    )
+    
     created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -102,6 +116,7 @@ class ProductImage(models.Model):
     def __str__(self):
         return f"Imagem de {self.product.name}"
 
+
 class ProductVariant(models.Model):
     product = models.ForeignKey(
         Product,
@@ -131,29 +146,10 @@ class ProductVariant(models.Model):
         verbose_name="Imagem das costas"
     )
 
-    active = models.BooleanField(default=True)
-    product = models.ForeignKey(
-        Product,
-        on_delete=models.CASCADE,
-        related_name="variants"
+    active = models.BooleanField(
+        default=True,
+        verbose_name="Ativa"
     )
-
-    color_name = models.CharField(max_length=50)
-    color_hex = models.CharField(max_length=20, default="#000000")
-
-    image = models.ImageField(
-        upload_to="products/variants/",
-        verbose_name="Imagem da frente"
-    )
-
-    back_image = models.ImageField(
-        upload_to="products/variants/back/",
-        blank=True,
-        null=True,
-        verbose_name="Imagem das costas"
-    )
-
-    active = models.BooleanField(default=True)
 
     class Meta:
         ordering = ["id"]
@@ -173,7 +169,10 @@ class VariantImage(models.Model):
 
     image = models.ImageField(upload_to="products/variant_gallery/")
     alt = models.CharField(max_length=120, blank=True)
-    active = models.BooleanField(default=True)
+    active = models.BooleanField(
+        default=True,
+        verbose_name="Ativa"
+    )
 
     class Meta:
         verbose_name = "Imagem da variação"
@@ -191,7 +190,10 @@ class ProductSize(models.Model):
     )
 
     name = models.CharField(max_length=50)
-    active = models.BooleanField(default=True)
+    active = models.BooleanField(
+        default=True,
+        verbose_name="Ativo"
+    )
 
     class Meta:
         ordering = ["id"]
@@ -201,6 +203,7 @@ class ProductSize(models.Model):
     def __str__(self):
         return f"{self.variant.color_name} - {self.name}"
 
+
 class ProductDefaultSize(models.Model):
     product = models.ForeignKey(
         Product,
@@ -209,7 +212,10 @@ class ProductDefaultSize(models.Model):
     )
 
     name = models.CharField(max_length=50)
-    active = models.BooleanField(default=True)
+    active = models.BooleanField(
+        default=True,
+        verbose_name="Ativo"
+    )
 
     class Meta:
         ordering = ["id"]
@@ -221,9 +227,22 @@ class ProductDefaultSize(models.Model):
 
 
 class Favorite(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE
+    )
+
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE
+    )
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         unique_together = ("user", "product")
+        verbose_name = "Favorito"
+        verbose_name_plural = "Favoritos"
+
+    def __str__(self):
+        return f"{self.user.username} - {self.product.name}"

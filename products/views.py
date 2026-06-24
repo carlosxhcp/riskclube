@@ -60,15 +60,9 @@ def toggle_favorite(request, pk):
     })
 
 
-def customization_choice(request):
-    product = get_object_or_404(
-        Product,
-        available=True
-    )
 
-    return render(request, "products/customization_choice.html", {
-        "product": product,
-    })
+def customization_choice(request):
+    return render(request, "products/customization_choice.html")
 
 @login_required
 def toggle_favorite(request, pk):

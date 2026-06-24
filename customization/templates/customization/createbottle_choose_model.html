@@ -18,43 +18,47 @@
 
     <div class="vip-model-header">
         <h1>Selecione o modelo</h1>
-        <p>Escolha a opção que <strong>mais combina</strong> com você.</p>
+        <p>Escolha a garrafa que você quer personalizar.</p>
     </div>
 
     <div class="vip-model-grid">
 
-        {% for model in models %}
+        {% for product in products %}
 
         <label
             class="vip-model-card"
-            data-url="{% url 'customization:vip_individual_mockup' product.slug model.id %}"
+            data-url="{% url 'customization:createbottle_mockup' product.slug %}"
         >
 
             <input
                 type="radio"
-                name="model_id"
-                value="{{ model.id }}"
+                name="product_slug"
+                value="{{ product.slug }}"
                 class="vip-model-radio"
             >
 
             <div class="vip-model-check-icon">
-                <i class="{{ model.icon_class|default:'bi bi-droplet' }}"></i>
+                <i class="bi bi-droplet"></i>
             </div>
 
             <div class="vip-model-image-box">
                 <img
-                    src="{{ model.image.url }}"
-                    alt="{{ model.name }}"
+                    src="{{ product.image.url }}"
+                    alt="{{ product.name }}"
                     class="vip-model-image"
                 >
             </div>
 
             <div class="vip-model-info">
-                <h3>{{ model.name }}</h3>
+                <h3>{{ product.name }}</h3>
 
                 <p>
-                    {{ model.description|default:"Modelo personalizado Risk Clube" }}
+                    {{ product.description|default:"Modelo personalizado Risk Clube" }}
                 </p>
+
+                <strong class="vip-model-price">
+                    R$ {{ product.price }}
+                </strong>
             </div>
 
             <div class="vip-model-select-row">
@@ -128,21 +132,17 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-
     document.querySelectorAll(".vip-model-card").forEach(card => {
-
         card.addEventListener("click", () => {
-
             const url = card.dataset.url;
+
+            if (!url) return;
 
             setTimeout(() => {
                 window.location.href = url;
             }, 150);
-
         });
-
     });
-
 });
 </script>
 
