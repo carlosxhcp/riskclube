@@ -13,58 +13,40 @@
 <section class="vip-mockup-page">
 
     <div class="vip-mockup-left">
-
         <div class="vip-current-bottle-info">
             <strong>{{ product.name }}</strong>
             <span>Modelo CreateBottle</span>
         </div>
 
         <div class="vip-mockup-stage">
-
             {% if product.model_3d_url %}
-<model-viewer
-    src="{{ product.model_3d_url }}"
-    class="vip-mockup-bottle"
-    camera-controls
-    auto-rotate
-    shadow-intensity="1"
-    exposure="1.2"
-    environment-image="neutral"
-    poster="{{ product.image.url }}"
-    reveal="auto">
-</model-viewer>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-    const viewer = document.querySelector("model-viewer");
+            <model-viewer
+                src="{{ product.model_3d_url }}"
+                class="vip-mockup-bottle"
+                camera-controls
+                camera-orbit="180deg 75deg auto"
+                shadow-intensity="0"
+                exposure="0.85"
+                reveal="auto"
+                interaction-prompt="none"
+                touch-action="pan-y"
+                disable-zoom>
 
-    viewer?.addEventListener("load", () => {
-        const model = viewer.model;
-
-        model.materials.forEach((material) => {
-            material.setAlphaMode("OPAQUE");
-
-            const pbr = material.pbrMetallicRoughness;
-        });
-    });
-});
-</script>
-{% else %}
-            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="vip-mockup-bottle"
-                id="mockupBottleImage">
+                <div slot="poster" class="bottle-loading">
+                    <div class="bottle-loader"></div>
+                    <strong>Carregando mockup</strong>
+                    <span>Preparando sua garrafa personalizada...</span>
+                </div>
+            </model-viewer>
+            {% else %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="vip-mockup-bottle" id="mockupBottleImage">
             {% endif %}
 
-            <div id="mockupText" class="vip-mockup-text vertical">
-                SEU NOME AQUI
-            </div>
-
             <div class="vip-mockup-logo">Risk</div>
-
         </div>
-
     </div>
 
     <div class="vip-mockup-panel">
-
         <div class="vip-panel-logo">Risk</div>
 
         <div class="vip-editing-badge">
@@ -73,13 +55,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         <div class="vip-panel-section">
             <label>Nome na garrafa</label>
-
             <div class="vip-name-input-row">
-                <input type="text" id="nameInput" maxlength="22" placeholder="Digite o nome" value="SEU NOME AQUI">
-
-                <button type="button">
-                    <i class="bi bi-pencil"></i>
-                </button>
+                <input type="text" id="nameInput" maxlength="15" placeholder="Digite seu texto" value="">
+                <button type="button"><i class="bi bi-pencil"></i></button>
             </div>
         </div>
 
@@ -91,36 +69,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
             <div class="vip-font-options">
                 <button type="button" class="vip-font-btn active" data-font="Arial">
-                    <strong>Aa</strong>
-                    <span>Arial</span>
+                    <strong>Aa</strong><span>Arial</span>
                 </button>
-
                 <button type="button" class="vip-font-btn" data-font="Montserrat">
-                    <strong>Aa</strong>
-                    <span>Montserrat</span>
+                    <strong>Aa</strong><span>Montserrat</span>
                 </button>
-
                 <button type="button" class="vip-font-btn" data-font="Georgia">
-                    <strong>Aa</strong>
-                    <span>Georgia</span>
+                    <strong>Aa</strong><span>Georgia</span>
                 </button>
-
                 <button type="button" class="vip-font-btn" data-font="serif">
-                    <strong>Aa</strong>
-                    <span>Serif</span>
+                    <strong>Aa</strong><span>Serif</span>
                 </button>
             </div>
         </div>
 
         <div class="vip-panel-section">
             <label>Orientação</label>
-
             <div class="vip-orientation-options">
                 <button type="button" class="vip-orientation-btn active" data-orientation="vertical">
                     <i class="bi bi-arrows-vertical"></i>
                     Vertical
                 </button>
-
                 <button type="button" class="vip-orientation-btn" data-orientation="horizontal">
                     <i class="bi bi-arrows"></i>
                     Horizontal
@@ -130,7 +99,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         <div class="vip-panel-section">
             <label>Escolha sua categoria</label>
-
             <div class="vip-category-grid">
                 {% for categoria in categorias %}
                 <button type="button" class="vip-category-btn {% if forloop.first %}active{% endif %}">
@@ -156,54 +124,177 @@ document.addEventListener("DOMContentLoaded", () => {
                 <i class="bi bi-arrow-right"></i>
             </button>
         </div>
-
     </div>
 
 </section>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const nameInput = document.getElementById("nameInput");
-        const mockupText = document.getElementById("mockupText");
+document.addEventListener("DOMContentLoaded", () => {
+    const viewer = document.querySelector("model-viewer");
+    const nameInput = document.getElementById("nameInput");
 
-        const fontButtons = document.querySelectorAll(".vip-font-btn");
-        const orientationButtons = document.querySelectorAll(".vip-orientation-btn");
-        const categoryButtons = document.querySelectorAll(".vip-category-btn");
-        const continueBtn = document.querySelector(".vip-next-bottle-btn");
+    const fontButtons = document.querySelectorAll(".vip-font-btn");
+    const orientationButtons = document.querySelectorAll(".vip-orientation-btn");
+    const categoryButtons = document.querySelectorAll(".vip-category-btn");
+    const continueBtn = document.querySelector(".vip-next-bottle-btn");
 
-        nameInput.addEventListener("input", function () {
-            mockupText.textContent = this.value || "SEU NOME AQUI";
+    const isMobile = window.matchMedia("(max-width: 768px)").matches;
+
+    let bottleMaterial = null;
+    let printMaterial = null;
+
+    let currentFont = "Arial";
+    let currentOrientation = "vertical";
+    let typingTimer = null;
+
+    if (viewer && isMobile) {
+        viewer.removeAttribute("auto-rotate");
+        viewer.removeAttribute("environment-image");
+        viewer.setAttribute("camera-controls", "");
+        viewer.setAttribute("touch-action", "pan-y");
+        viewer.setAttribute("interaction-prompt", "none");
+        viewer.setAttribute("disable-zoom", "");
+        viewer.setAttribute("shadow-intensity", "0");
+        viewer.setAttribute("exposure", "0.75");
+        viewer.style.setProperty("--poster-color", "transparent");
+    }
+
+    function makeCanvas(text) {
+        const canvas = document.createElement("canvas");
+        const size = isMobile ? 256 : 1024;
+
+        canvas.width = size;
+        canvas.height = size;
+
+        const ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        const finalText = text && text.trim()
+            ? text.trim().toUpperCase()
+            : "SEU TEXTO AQUI";
+
+        ctx.fillStyle = "#ffffff";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+
+        const scale = size / 1024;
+
+        let fontSize = currentOrientation === "vertical"
+            ? 150 * scale
+            : 175 * scale;
+
+        const maxWidth = currentOrientation === "vertical"
+            ? 610 * scale
+            : 680 * scale;
+
+        const minFontSize = 82 * scale;
+
+        ctx.font = `700 ${fontSize}px ${currentFont}, Arial, sans-serif`;
+
+        while (ctx.measureText(finalText).width > maxWidth && fontSize > minFontSize) {
+            fontSize -= 4 * scale;
+            ctx.font = `700 ${fontSize}px ${currentFont}, Arial, sans-serif`;
+        }
+
+        ctx.save();
+
+        if (currentOrientation === "vertical") {
+            ctx.translate(canvas.width / 2, canvas.height / 2);
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillText(finalText, 0, 0);
+        } else {
+            ctx.fillText(finalText, canvas.width / 2, canvas.height / 2);
+        }
+
+        ctx.restore();
+
+        return canvas;
+    }
+
+    async function updatePrintText() {
+        if (!viewer || !printMaterial) return;
+
+        const canvas = makeCanvas(nameInput.value);
+
+        const texture = await viewer.createTexture(
+            canvas.toDataURL("image/png")
+        );
+
+        printMaterial.pbrMetallicRoughness.baseColorTexture.setTexture(texture);
+        printMaterial.pbrMetallicRoughness.setBaseColorFactor([1, 1, 1, 1]);
+        printMaterial.setAlphaMode("BLEND");
+    }
+
+    function updatePrintTextDebounced() {
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(updatePrintText, isMobile ? 220 : 80);
+    }
+
+    async function setupModel() {
+        if (!viewer || !viewer.model) return;
+
+        viewer.model.materials.forEach((material, index) => {
+            console.log(index, material.name);
+
+            if (material.name === "tripo_mat_fde06271-cfd9-4c7f-affb-0ad8852b8c90") {
+                bottleMaterial = material;
+                bottleMaterial.setAlphaMode("OPAQUE");
+            }
+
+            if (material.name === "PrintMaterialArea") {
+                printMaterial = material;
+            }
         });
 
-        fontButtons.forEach(button => {
-            button.addEventListener("click", function () {
-                fontButtons.forEach(btn => btn.classList.remove("active"));
-                this.classList.add("active");
-                mockupText.style.fontFamily = this.dataset.font;
-            });
-        });
+        if (!printMaterial && viewer.model.materials[1]) {
+            printMaterial = viewer.model.materials[1];
+        }
 
-        orientationButtons.forEach(button => {
-            button.addEventListener("click", function () {
-                orientationButtons.forEach(btn => btn.classList.remove("active"));
-                this.classList.add("active");
+        if (!printMaterial) {
+            console.error("PrintMaterialArea não encontrado.");
+            return;
+        }
 
-                mockupText.classList.remove("vertical", "horizontal");
-                mockupText.classList.add(this.dataset.orientation);
-            });
-        });
+        await updatePrintText();
+    }
 
-        categoryButtons.forEach(button => {
-            button.addEventListener("click", function () {
-                categoryButtons.forEach(btn => btn.classList.remove("active"));
-                this.classList.add("active");
-            });
-        });
+    viewer?.addEventListener("load", setupModel);
 
-        continueBtn.addEventListener("click", function () {
-            alert("Próximo passo: adicionar ao carrinho com personalização.");
+    nameInput?.addEventListener("input", updatePrintTextDebounced);
+    nameInput?.addEventListener("change", updatePrintText);
+    nameInput?.addEventListener("blur", updatePrintText);
+
+    fontButtons.forEach(button => {
+        button.addEventListener("click", () => {
+            fontButtons.forEach(btn => btn.classList.remove("active"));
+            button.classList.add("active");
+
+            currentFont = button.dataset.font || "Arial";
+            updatePrintText();
         });
     });
+
+    orientationButtons.forEach(button => {
+        button.addEventListener("click", () => {
+            orientationButtons.forEach(btn => btn.classList.remove("active"));
+            button.classList.add("active");
+
+            currentOrientation = button.dataset.orientation || "vertical";
+            updatePrintText();
+        });
+    });
+
+    categoryButtons.forEach(button => {
+        button.addEventListener("click", () => {
+            categoryButtons.forEach(btn => btn.classList.remove("active"));
+            button.classList.add("active");
+        });
+    });
+
+    continueBtn?.addEventListener("click", () => {
+        alert("Próximo passo: adicionar ao carrinho com personalização.");
+    });
+});
 </script>
 
 {% endblock %}

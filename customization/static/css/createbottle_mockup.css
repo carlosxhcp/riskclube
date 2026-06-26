@@ -103,8 +103,7 @@
 .vip-panel-logo {
     text-align: center;
     font-size: 30px;
-    font-weight: 900;
-    font-style: italic;
+    font-weight: 700;
     margin-bottom: 28px;
 }
 
@@ -405,4 +404,59 @@ model-viewer.vip-mockup-bottle {
     max-height: 98%;
     max-width: 92%;
     display: block;
+}
+
+.bottle-loading {
+    width: 100%;
+    height: 100%;
+    min-height: 560px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: #f3f3f3;
+    color: #111;
+    text-align: center;
+}
+
+.bottle-loader {
+    width: 34px;
+    height: 34px;
+    border: 3px solid #d5d5d5;
+    border-top-color: #111;
+    border-radius: 50%;
+    animation: bottleSpin .8s linear infinite;
+}
+
+.bottle-loading strong {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.bottle-loading span {
+    font-size: 12px;
+    color: #777;
+}
+
+@keyframes bottleSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+model-viewer::part(default-progress-bar) {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .vip-mockup-bottle {
+        width: 100%;
+        height: 420px;
+    }
+
+    model-viewer::part(default-progress-bar) {
+        display: none;
+    }
 }

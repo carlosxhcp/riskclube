@@ -12,6 +12,7 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
     ".vercel.app",
+    "192.168.15.63",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
