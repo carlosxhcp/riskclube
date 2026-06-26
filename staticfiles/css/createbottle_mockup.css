@@ -385,3 +385,20 @@
     font-weight: 900;
     margin: -12px auto 24px;
 }
+
+.vip-mockup-bottle,
+.vip-mockup-bottle model-viewer,
+model-viewer.vip-mockup-bottle {
+    opacity: 1 !important;
+    filter: none !important;
+    mix-blend-mode: normal !important;
+    background: transparent !important;
+}
+
+model-viewer.vip-mockup-bottle {
+    width: 100%;
+    height: 100%;
+    max-height: 98%;
+    max-width: 92%;
+    display: block;
+}

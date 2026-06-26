@@ -1,0 +1,404 @@
+/* =========================
+   MOCKUP GRUPO VIP
+========================= */
+
+.vip-mockup-page {
+    min-height: 100vh;
+    background: #f8f8f8;
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 40px;
+    padding: 40px;
+}
+
+/* LADO ESQUERDO */
+
+.vip-mockup-left {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.vip-mockup-stage {
+    width: min(520px, 100%);
+    height: 860px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.vip-mockup-bottle {
+    max-height: 98%;
+    max-width: 92%;
+    object-fit: contain;
+    display: block;
+}
+
+.vip-mockup-text {
+    position: absolute;
+    left: 50%;
+    top: 48%;
+    color: #e8e8e8;
+    font-size: 28px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transform-origin: center;
+    pointer-events: none;
+}
+
+.vip-mockup-text.vertical {
+    transform: translate(-50%, -50%) rotate(-90deg);
+}
+
+.vip-mockup-text.horizontal {
+    transform: translate(-50%, -50%) rotate(0deg);
+}
+
+.vip-mockup-logo {
+    position: absolute;
+    bottom: 75px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #fff;
+    font-size: 22px;
+    font-weight: 900;
+    font-style: italic;
+    opacity: 0.9;
+}
+
+.vip-live-preview {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 40px;
+    padding: 0 18px;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    background: #fff;
+    color: #111;
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* PAINEL */
+
+.vip-mockup-panel {
+    background: #fff;
+    border-radius: 18px;
+    padding: 28px;
+    align-self: center;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.08);
+}
+
+.vip-panel-logo {
+    text-align: center;
+    font-size: 30px;
+    font-weight: 900;
+    font-style: italic;
+    margin-bottom: 28px;
+}
+
+.vip-panel-section {
+    margin-bottom: 26px;
+}
+
+.vip-panel-section label,
+.vip-section-title-row label {
+    display: block;
+    color: #111;
+    font-size: 13px;
+    font-weight: 900;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    letter-spacing: 0.5px;
+}
+
+.vip-section-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.vip-section-title-row span {
+    color: #777;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+/* INPUT */
+
+.vip-name-input-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.vip-name-input-row input {
+    width: 100%;
+    height: 46px;
+    border: none;
+    border-bottom: 1px solid #e5e5e5;
+    outline: none;
+    font-size: 14px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.vip-name-input-row button {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid #ddd;
+    background: #fff;
+    cursor: pointer;
+}
+
+/* FONTES */
+
+.vip-font-options {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.vip-font-btn {
+    height: 66px;
+    background: #fff;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.vip-font-btn strong {
+    font-size: 20px;
+}
+
+.vip-font-btn span {
+    font-size: 9px;
+    font-weight: 800;
+    color: #777;
+    text-transform: uppercase;
+}
+
+.vip-font-btn.active {
+    border-color: #111;
+}
+
+/* ORIENTAÇÃO */
+
+.vip-orientation-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.vip-orientation-btn {
+    height: 48px;
+    border: 1px solid transparent;
+    background: #fff;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 900;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.vip-orientation-btn.active {
+    border-color: #111;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+}
+
+/* CATEGORIAS */
+
+.vip-category-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.vip-category-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.vip-category-btn i {
+    width: 54px;
+    height: 54px;
+    background: #111;
+    color: #fff;
+    border-radius: 8px;
+    margin: 0 auto 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+}
+
+.vip-category-btn span {
+    color: #111;
+    font-size: 9px;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.vip-category-btn.active i {
+    box-shadow: 0 0 0 3px #dcdcdc;
+}
+
+/* PREÇO */
+
+.vip-price-box {
+    margin: 30px 0 14px;
+}
+
+.vip-price-box strong {
+    font-size: 17px;
+    font-weight: 900;
+    color: #111;
+}
+
+/* BOTÕES DO FLUXO */
+
+.vip-group-flow-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.vip-copy-all-btn,
+.vip-next-bottle-btn {
+    width: 100%;
+    height: 52px;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: 900;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: 0.25s ease;
+}
+
+.vip-copy-all-btn {
+    background: #fff;
+    color: #111;
+    border: 1px solid #111;
+}
+
+.vip-copy-all-btn:hover {
+    background: #f2f2f2;
+}
+
+.vip-next-bottle-btn {
+    background: #050505;
+    color: #fff;
+    border: 1px solid #050505;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+}
+
+.vip-next-bottle-btn:hover {
+    background: #222;
+}
+
+/* RESPONSIVO */
+
+@media (max-width: 900px) {
+    .vip-mockup-page {
+        grid-template-columns: 1fr;
+        padding: 30px 18px;
+    }
+
+    .vip-mockup-stage {
+        height: 560px;
+    }
+
+    .vip-mockup-panel {
+        width: 100%;
+        max-width: 480px;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 520px) {
+    .vip-mockup-stage {
+        height: 460px;
+    }
+
+    .vip-font-options,
+    .vip-category-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .vip-orientation-options {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+.vip-current-bottle-info {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 14px;
+    padding: 12px 16px;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.06);
+    z-index: 5;
+}
+
+.vip-current-bottle-info strong {
+    display: block;
+    color: #111;
+    font-size: 14px;
+    font-weight: 900;
+}
+
+.vip-current-bottle-info span {
+    display: block;
+    color: #777;
+    font-size: 12px;
+    font-weight: 700;
+    margin-top: 3px;
+}
+
+.vip-editing-badge {
+    width: fit-content;
+    background: #111;
+    color: #fff;
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 900;
+    margin: -12px auto 24px;
+}
+
+.vip-mockup-bottle,
+.vip-mockup-bottle model-viewer,
+model-viewer.vip-mockup-bottle {
+    opacity: 1 !important;
+    filter: none !important;
+    mix-blend-mode: normal !important;
+    background: transparent !important;
+}
+
+model-viewer.vip-mockup-bottle {
+    width: 100%;
+    height: 100%;
+    max-height: 98%;
+    max-width: 92%;
+    display: block;
+}

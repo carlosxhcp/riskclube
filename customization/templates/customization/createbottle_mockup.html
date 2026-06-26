@@ -4,7 +4,7 @@
 {% block title %}Personalizar Garrafa | Risk Clube{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/vip_group_mockup.css' %}">
+<link rel="stylesheet" href="{% static 'css/createbottle_mockup.css' %}">
 <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 {% endblock %}
 
@@ -22,23 +22,36 @@
         <div class="vip-mockup-stage">
 
             {% if product.model_3d_url %}
-                <model-viewer
+<model-viewer
     src="{{ product.model_3d_url }}"
-    alt="{{ product.name }}"
+    class="vip-mockup-bottle"
     camera-controls
     auto-rotate
     shadow-intensity="1"
-    exposure="1"
+    exposure="1.2"
     environment-image="neutral"
-    style="width:100%; height:520px; background:#f4f4f4;"
-></model-viewer>
-            {% else %}
-                <img
-                    src="{{ product.image.url }}"
-                    alt="{{ product.name }}"
-                    class="vip-mockup-bottle"
-                    id="mockupBottleImage"
-                >
+    poster="{{ product.image.url }}"
+    reveal="auto">
+</model-viewer>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const viewer = document.querySelector("model-viewer");
+
+    viewer?.addEventListener("load", () => {
+        const model = viewer.model;
+
+        model.materials.forEach((material) => {
+            material.setAlphaMode("OPAQUE");
+
+            const pbr = material.pbrMetallicRoughness;
+            pbr.setBaseColorFactor([1, 1, 1, 1]);
+        });
+    });
+});
+</script>
+{% else %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="vip-mockup-bottle"
+                id="mockupBottleImage">
             {% endif %}
 
             <div id="mockupText" class="vip-mockup-text vertical">
@@ -63,13 +76,7 @@
             <label>Nome na garrafa</label>
 
             <div class="vip-name-input-row">
-                <input
-                    type="text"
-                    id="nameInput"
-                    maxlength="22"
-                    placeholder="Digite o nome"
-                    value="SEU NOME AQUI"
-                >
+                <input type="text" id="nameInput" maxlength="22" placeholder="Digite o nome" value="SEU NOME AQUI">
 
                 <button type="button">
                     <i class="bi bi-pencil"></i>
@@ -127,15 +134,15 @@
 
             <div class="vip-category-grid">
                 {% for categoria in categorias %}
-                    <button type="button" class="vip-category-btn {% if forloop.first %}active{% endif %}">
-                        <i class="bi bi-gem"></i>
-                        <span>{{ categoria.nome }}</span>
-                    </button>
+                <button type="button" class="vip-category-btn {% if forloop.first %}active{% endif %}">
+                    <i class="bi bi-gem"></i>
+                    <span>{{ categoria.nome }}</span>
+                </button>
                 {% empty %}
-                    <button type="button" class="vip-category-btn active">
-                        <i class="bi bi-gem"></i>
-                        <span>Premium</span>
-                    </button>
+                <button type="button" class="vip-category-btn active">
+                    <i class="bi bi-gem"></i>
+                    <span>Premium</span>
+                </button>
                 {% endfor %}
             </div>
         </div>
@@ -156,48 +163,48 @@
 </section>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-    const nameInput = document.getElementById("nameInput");
-    const mockupText = document.getElementById("mockupText");
+    document.addEventListener("DOMContentLoaded", function () {
+        const nameInput = document.getElementById("nameInput");
+        const mockupText = document.getElementById("mockupText");
 
-    const fontButtons = document.querySelectorAll(".vip-font-btn");
-    const orientationButtons = document.querySelectorAll(".vip-orientation-btn");
-    const categoryButtons = document.querySelectorAll(".vip-category-btn");
-    const continueBtn = document.querySelector(".vip-next-bottle-btn");
+        const fontButtons = document.querySelectorAll(".vip-font-btn");
+        const orientationButtons = document.querySelectorAll(".vip-orientation-btn");
+        const categoryButtons = document.querySelectorAll(".vip-category-btn");
+        const continueBtn = document.querySelector(".vip-next-bottle-btn");
 
-    nameInput.addEventListener("input", function () {
-        mockupText.textContent = this.value || "SEU NOME AQUI";
-    });
+        nameInput.addEventListener("input", function () {
+            mockupText.textContent = this.value || "SEU NOME AQUI";
+        });
 
-    fontButtons.forEach(button => {
-        button.addEventListener("click", function () {
-            fontButtons.forEach(btn => btn.classList.remove("active"));
-            this.classList.add("active");
-            mockupText.style.fontFamily = this.dataset.font;
+        fontButtons.forEach(button => {
+            button.addEventListener("click", function () {
+                fontButtons.forEach(btn => btn.classList.remove("active"));
+                this.classList.add("active");
+                mockupText.style.fontFamily = this.dataset.font;
+            });
+        });
+
+        orientationButtons.forEach(button => {
+            button.addEventListener("click", function () {
+                orientationButtons.forEach(btn => btn.classList.remove("active"));
+                this.classList.add("active");
+
+                mockupText.classList.remove("vertical", "horizontal");
+                mockupText.classList.add(this.dataset.orientation);
+            });
+        });
+
+        categoryButtons.forEach(button => {
+            button.addEventListener("click", function () {
+                categoryButtons.forEach(btn => btn.classList.remove("active"));
+                this.classList.add("active");
+            });
+        });
+
+        continueBtn.addEventListener("click", function () {
+            alert("Próximo passo: adicionar ao carrinho com personalização.");
         });
     });
-
-    orientationButtons.forEach(button => {
-        button.addEventListener("click", function () {
-            orientationButtons.forEach(btn => btn.classList.remove("active"));
-            this.classList.add("active");
-
-            mockupText.classList.remove("vertical", "horizontal");
-            mockupText.classList.add(this.dataset.orientation);
-        });
-    });
-
-    categoryButtons.forEach(button => {
-        button.addEventListener("click", function () {
-            categoryButtons.forEach(btn => btn.classList.remove("active"));
-            this.classList.add("active");
-        });
-    });
-
-    continueBtn.addEventListener("click", function () {
-        alert("Próximo passo: adicionar ao carrinho com personalização.");
-    });
-});
 </script>
 
 {% endblock %}
