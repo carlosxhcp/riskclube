@@ -394,6 +394,19 @@ document.addEventListener("DOMContentLoaded", () => {
         updateControlLabels();
         renderLayersList();
         updatePositionKnob(engraving);
+
+        /*
+         * No celular, leva o PAINEL interno até os controles.
+         * O modelo continua parado na parte superior.
+         */
+        if (window.matchMedia("(max-width: 768px)").matches) {
+            requestAnimationFrame(() => {
+                controlsSection.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start"
+                });
+            });
+        }
     }
 
     function updateControlLabels() {
