@@ -4,7 +4,7 @@
 {% block title %}Personalizar Garrafa | Risk Clube{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/createbottle_mockup.css' %}">
+<link rel="stylesheet" href="{% static 'css/createbottle_mockup_mobile_refeito.css' %}">
 <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
 {% endblock %}
@@ -400,12 +400,19 @@ document.addEventListener("DOMContentLoaded", () => {
          * O modelo continua parado na parte superior.
          */
         if (window.matchMedia("(max-width: 768px)").matches) {
-            requestAnimationFrame(() => {
-                controlsSection.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start"
+            const panel = document.querySelector(".vip-mockup-panel");
+            if (panel) {
+                requestAnimationFrame(() => {
+                    const targetTop = Math.max(
+                        0,
+                        controlsSection.offsetTop - 10
+                    );
+                    panel.scrollTo({
+                        top: targetTop,
+                        behavior: "smooth"
+                    });
                 });
-            });
+            }
         }
     }
 
