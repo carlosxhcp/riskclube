@@ -318,9 +318,37 @@
 
 /* RESPONSIVO */
 
+@media (max-width: 900px) {
+    .vip-mockup-page {
+        grid-template-columns: 1fr;
+        padding: 30px 18px;
+    }
 
+    .vip-mockup-stage {
+        height: 560px;
+    }
 
+    .vip-mockup-panel {
+        width: 100%;
+        max-width: 480px;
+        margin: 0 auto;
+    }
+}
 
+@media (max-width: 520px) {
+    .vip-mockup-stage {
+        height: 460px;
+    }
+
+    .vip-font-options,
+    .vip-category-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .vip-orientation-options {
+        grid-template-columns: 1fr;
+    }
+}
 
 
 .vip-current-bottle-info {
@@ -422,7 +450,16 @@ model-viewer::part(default-progress-bar) {
     display: none;
 }
 
+@media (max-width: 768px) {
+    .vip-mockup-bottle {
+        width: 100%;
+        height: 420px;
+    }
 
+    model-viewer::part(default-progress-bar) {
+        display: none;
+    }
+}
 
 #editorCanvas{
 
@@ -898,166 +935,329 @@ model-viewer::part(default-progress-bar) {
 
     margin: 10px 0;
 }
-
 /* =========================================================
-   EDITOR MOBILE — MODELO FIXO + PAINEL COM SCROLL INTERNO
-   O celular não precisa mais subir/descer a página inteira.
-   ========================================================= */
-
-
-/* =========================================================
-   MOBILE — EDITOR ESTÁVEL
-   A página inteira não rola. A garrafa fica visível em cima
-   e somente o painel de edição possui rolagem interna.
+   MOBILE — LAYOUT SIMPLES / ESTILO PRODUCT CUSTOMIZER
    ========================================================= */
 @media (max-width: 768px) {
-    html, body {
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-        overscroll-behavior: none;
-    }
-
+    html,
     body {
-        position: fixed;
-        inset: 0;
+        width: 100%;
+        max-width: 100%;
+        overflow: hidden !important;
+        overscroll-behavior: none;
     }
 
     .vip-mockup-page {
         width: 100%;
-        height: 100dvh;
-        min-height: 100dvh;
-        max-height: 100dvh;
-        display: grid;
-        grid-template-columns: 1fr;
-        grid-template-rows: 43dvh 57dvh;
-        gap: 0;
-        padding: 0;
-        margin: 0;
-        overflow: hidden;
+        height: calc(100dvh - 64px);
+        min-height: 520px;
+        padding: 0 !important;
+        margin: 0 !important;
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        grid-template-rows: 46% 54%;
+        gap: 0 !important;
+        overflow: hidden !important;
+        background: #fff !important;
     }
 
+    /* PRODUTO */
     .vip-mockup-left {
         width: 100%;
-        height: 100%;
         min-height: 0;
-        position: relative;
+        height: 100%;
         overflow: hidden;
-        background: #f8f8f8;
+        background: #f7f7f7;
     }
 
     .vip-mockup-stage {
-        width: 100%;
+        width: 100% !important;
         height: 100% !important;
-        min-height: 0;
-        max-height: none;
-        margin: 0;
+        min-height: 0 !important;
+        max-height: none !important;
+        padding: 8px 24px 0 !important;
     }
 
+    .vip-mockup-stage model-viewer,
     model-viewer.vip-mockup-bottle,
     .vip-mockup-bottle model-viewer {
         width: 100% !important;
         height: 100% !important;
         max-width: 100% !important;
         max-height: 100% !important;
-        display: block;
     }
 
+    .vip-mockup-logo,
+    .vip-live-preview,
+    .vip-current-bottle-info,
+    .vip-editing-badge,
+    .vip-panel-logo {
+        display: none !important;
+    }
+
+    /* PAINEL INFERIOR */
     .vip-mockup-panel {
-        box-sizing: border-box;
-        width: 100%;
-        height: 100%;
-        min-height: 0;
-        max-height: none;
-        margin: 0;
-        padding: 14px 12px calc(18px + env(safe-area-inset-bottom));
-        border-radius: 18px 18px 0 0;
-        box-shadow: 0 -8px 28px rgba(0,0,0,.08);
-        overflow-x: hidden;
-        overflow-y: auto;
+        width: 100% !important;
+        max-width: none !important;
+        height: 100% !important;
+        min-height: 0 !important;
+        margin: 0 !important;
+        padding: 16px 16px calc(18px + env(safe-area-inset-bottom)) !important;
+        border-radius: 22px 22px 0 0 !important;
+        box-shadow: 0 -10px 30px rgba(0,0,0,.08) !important;
+        align-self: stretch !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
         -webkit-overflow-scrolling: touch;
         overscroll-behavior: contain;
         scrollbar-width: none;
     }
 
-    .vip-mockup-panel::-webkit-scrollbar { display: none; }
-
-    .vip-panel-logo { font-size: 23px; margin-bottom: 12px; }
-    .vip-editing-badge { margin-bottom: 12px; }
-    .vip-panel-section { margin-bottom: 15px; }
-
-    /* Controles ficam no topo do painel quando uma gravação é selecionada. */
-    #engravingControlsSection {
-        position: sticky;
-        top: -14px;
-        z-index: 50;
-        margin: -14px -12px 15px;
-        padding: 12px 12px 14px;
-        background: rgba(255,255,255,.98);
-        border-bottom: 1px solid rgba(0,0,0,.07);
-        box-shadow: 0 6px 18px rgba(0,0,0,.07);
-        -webkit-backdrop-filter: blur(10px);
-        backdrop-filter: blur(10px);
+    .vip-mockup-panel::-webkit-scrollbar {
+        display: none;
     }
 
-    .vip-position-editor { margin-top: 8px; }
+    /* Barrinha visual do bottom sheet */
+    .vip-mockup-panel::before {
+        content: "";
+        display: block;
+        width: 38px;
+        height: 4px;
+        margin: -5px auto 14px;
+        border-radius: 99px;
+        background: #d7d7d7;
+    }
+
+    .vip-panel-section {
+        margin-bottom: 18px !important;
+    }
+
+    .vip-panel-section > label,
+    .vip-section-title-row label {
+        font-size: 11px !important;
+        letter-spacing: .02em;
+        margin-bottom: 8px !important;
+    }
+
+    .vip-section-title-row span {
+        font-size: 9px !important;
+    }
+
+    /* NOME */
+    .vip-name-input-row input {
+        height: 42px !important;
+        font-size: 13px !important;
+    }
+
+    .vip-name-input-row button {
+        width: 34px !important;
+        height: 34px !important;
+    }
+
+    /* FONTE: chips compactos */
+    .vip-font-options {
+        display: grid !important;
+        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+        gap: 6px !important;
+    }
+
+    .vip-font-btn {
+        height: 48px !important;
+        min-width: 0 !important;
+        border-radius: 8px !important;
+    }
+
+    .vip-font-btn strong {
+        font-size: 17px !important;
+    }
+
+    .vip-font-btn span {
+        font-size: 7px !important;
+    }
+
+    /* ORIENTAÇÃO / LADO */
+    .vip-orientation-options,
+    .vip-side-options {
+        gap: 6px !important;
+    }
+
+    .vip-orientation-btn,
+    .vip-side-btn {
+        height: 40px !important;
+        padding: 0 7px !important;
+        border-radius: 8px !important;
+        font-size: 9px !important;
+    }
+
+    /* CATEGORIA: horizontal, sem ocupar espaço */
+    .vip-category-grid {
+        display: flex !important;
+        gap: 8px !important;
+        overflow-x: auto !important;
+        padding: 2px 1px 5px !important;
+        scrollbar-width: none;
+    }
+
+    .vip-category-grid::-webkit-scrollbar {
+        display: none;
+    }
+
+    .vip-category-btn {
+        flex: 0 0 72px !important;
+    }
+
+    .vip-category-btn i {
+        width: 44px !important;
+        height: 44px !important;
+        margin-bottom: 4px !important;
+        font-size: 19px !important;
+        border-radius: 8px !important;
+    }
+
+    .vip-category-btn span {
+        font-size: 7px !important;
+        white-space: nowrap;
+    }
+
+    /* LISTA DE GRAVAÇÕES */
+    .vip-engraving-category {
+        margin-bottom: 6px !important;
+    }
+
+    .vip-engraving-category-btn {
+        min-height: 42px !important;
+        padding: 8px 10px !important;
+        border-radius: 9px !important;
+        font-size: 9px !important;
+    }
+
+    .vip-engraving-category-content {
+        padding: 7px !important;
+    }
+
+    .vip-engraving-items {
+        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+        gap: 6px !important;
+    }
+
+    .vip-engraving-btn {
+        min-height: 72px !important;
+        padding: 5px !important;
+        border-radius: 8px !important;
+        gap: 2px !important;
+    }
+
+    .vip-engraving-btn img {
+        width: 42px !important;
+        height: 42px !important;
+        max-width: 42px !important;
+        max-height: 42px !important;
+    }
+
+    .vip-engraving-btn span {
+        font-size: 7px !important;
+    }
+
+    /* GRAVAÇÕES SELECIONADAS */
+    .vip-engraving-layer-item {
+        min-height: 48px !important;
+        padding: 7px 9px !important;
+        border-radius: 9px !important;
+    }
+
+    /* CONTROLE DE POSIÇÃO */
+    .vip-position-editor {
+        margin-top: 8px !important;
+    }
 
     .vip-position-pad {
-        width: min(220px, 62vw);
-        max-width: 220px;
-        aspect-ratio: 1;
-        margin: 0 auto;
+        width: min(58vw, 205px) !important;
+        max-width: 205px !important;
+        margin: 0 auto !important;
         touch-action: none !important;
-    }
-
-    .vip-position-readout {
-        width: min(280px, 100%);
-        margin: 7px auto 0;
     }
 
     .vip-position-knob {
-        width: 42px;
-        height: 42px;
+        width: 42px !important;
+        height: 42px !important;
     }
 
-    .vip-engraving-control { margin-top: 9px; }
-    .vip-remove-engraving-btn { margin-top: 9px; }
+    .vip-position-readout {
+        margin-top: 7px !important;
+        gap: 6px !important;
+    }
 
-    .vip-name-input-row input { height: 42px; }
-    .vip-font-options { grid-template-columns: repeat(4, 1fr); gap: 6px; }
-    .vip-font-btn { height: 56px; }
-    .vip-category-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-    .vip-engraving-items { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
-    .vip-engraving-btn img { width: 48px !important; height: 48px !important; max-width: 48px !important; max-height: 48px !important; }
+    .vip-position-readout > div {
+        padding: 7px 9px !important;
+    }
 
-    /* Não deixe o gesto no joystick virar scroll do painel. */
-    #engravingPositionPad,
-    #engravingPositionPad * {
-        touch-action: none !important;
+    .vip-position-readout span {
+        font-size: 8px !important;
+    }
+
+    .vip-position-readout strong {
+        font-size: 11px !important;
+    }
+
+    /* TAMANHO / ROTAÇÃO */
+    .vip-engraving-control {
+        margin-top: 12px !important;
+    }
+
+    .vip-control-header {
+        margin-bottom: 5px !important;
+        font-size: 10px !important;
+    }
+
+    .vip-engraving-control input[type="range"] {
+        height: 24px;
+    }
+
+    /* REMOVER */
+    .vip-remove-engraving-btn {
+        min-height: 42px !important;
+        margin-top: 12px !important;
+        border-radius: 9px !important;
+        font-size: 10px !important;
+    }
+
+    /* FLUXO */
+    .vip-group-flow-actions {
+        position: sticky;
+        bottom: -1px;
+        z-index: 20;
+        padding-top: 10px;
+        margin: 12px -16px -18px;
+        padding-left: 16px;
+        padding-right: 16px;
+        padding-bottom: calc(10px + env(safe-area-inset-bottom));
+        background: rgba(255,255,255,.96);
+        backdrop-filter: blur(10px);
+    }
+
+    .vip-copy-all-btn,
+    .vip-next-bottle-btn {
+        height: 46px !important;
+        border-radius: 9px !important;
+        font-size: 11px !important;
     }
 }
 
-@media (max-width: 520px) {
+@media (max-width: 390px) {
     .vip-mockup-page {
-        grid-template-rows: 40dvh 60dvh;
+        grid-template-rows: 43% 57%;
     }
 
     .vip-mockup-panel {
-        padding-left: 10px;
-        padding-right: 10px;
-    }
-
-    #engravingControlsSection {
-        margin-left: -10px;
-        margin-right: -10px;
-        padding-left: 10px;
-        padding-right: 10px;
+        padding-left: 13px !important;
+        padding-right: 13px !important;
     }
 
     .vip-position-pad {
-        width: min(205px, 58vw);
-        max-width: 205px;
+        width: 185px !important;
+    }
+
+    .vip-engraving-items {
+        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
     }
 }

@@ -394,26 +394,6 @@ document.addEventListener("DOMContentLoaded", () => {
         updateControlLabels();
         renderLayersList();
         updatePositionKnob(engraving);
-
-        /*
-         * No celular, leva o PAINEL interno até os controles.
-         * O modelo continua parado na parte superior.
-         */
-        if (window.matchMedia("(max-width: 768px)").matches) {
-            const panel = document.querySelector(".vip-mockup-panel");
-            if (panel) {
-                requestAnimationFrame(() => {
-                    const targetTop = Math.max(
-                        0,
-                        controlsSection.offsetTop - 10
-                    );
-                    panel.scrollTo({
-                        top: targetTop,
-                        behavior: "smooth"
-                    });
-                });
-            }
-        }
     }
 
     function updateControlLabels() {
