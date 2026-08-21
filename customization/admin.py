@@ -71,3 +71,5 @@ class GravacaoAdmin(admin.ModelAdmin):
         return "-"
 
     preview.short_description = "Imagem"
+
+

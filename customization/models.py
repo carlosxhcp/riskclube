@@ -48,3 +48,4 @@ class Gravacao(models.Model):
 
     def __str__(self):
         return self.nome or f"Gravação #{self.id}"
+

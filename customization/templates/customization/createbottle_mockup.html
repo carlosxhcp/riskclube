@@ -6,6 +6,7 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/createbottle_mockup.css' %}">
 <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
@@ -13,33 +14,21 @@
 <section class="vip-mockup-page">
 
     <div class="vip-mockup-left">
-        <div class="vip-current-bottle-info">
-            <strong>{{ product.name }}</strong>
-            <span>Modelo CreateBottle</span>
-        </div>
+
 
         <div class="vip-mockup-stage">
             {% if product.model_3d_url %}
-            <model-viewer
-                src="{{ product.model_3d_url }}"
-                class="vip-mockup-bottle"
-                camera-controls
-                camera-orbit="180deg 75deg auto"
-                shadow-intensity="0"
-                exposure="0.85"
-                reveal="auto"
-                interaction-prompt="none"
-                touch-action="pan-y"
-                disable-zoom>
-
-                <div slot="poster" class="bottle-loading">
-                    <div class="bottle-loader"></div>
-                    <strong>Carregando mockup</strong>
-                    <span>Preparando sua garrafa personalizada...</span>
-                </div>
+            <model-viewer id="bottleViewer" src="{{ product.model_3d_url }}" camera-controls
+                camera-orbit="0deg 75deg auto" exposure="1" shadow-intensity="1" environment-image="neutral" style="
+        width: 100%;
+        height: 700px;
+        display: block;
+    ">
             </model-viewer>
+
             {% else %}
-            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="vip-mockup-bottle" id="mockupBottleImage">
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="vip-mockup-bottle"
+                id="mockupBottleImage">
             {% endif %}
 
             <div class="vip-mockup-logo">Risk</div>
@@ -114,187 +103,1669 @@
             </div>
         </div>
 
-        <div class="vip-price-box">
-            <strong>R$ {{ product.price }}</strong>
+        <div class="vip-panel-section">
+
+            <label>Lado da gravação</label>
+
+            <div class="vip-side-options">
+
+                <button type="button" class="vip-side-btn active" data-side="left">
+                    Lateral esquerda
+                </button>
+
+                <button type="button" class="vip-side-btn" data-side="right">
+                    Lateral direita
+                </button>
+
+            </div>
+
         </div>
 
-        <div class="vip-group-flow-actions">
-            <button type="button" class="vip-next-bottle-btn">
-                Continuar
-                <i class="bi bi-arrow-right"></i>
+        <div class="vip-panel-section">
+            <label>Gravações adicionadas</label>
+
+            <div id="engravingLayersList" class="vip-engraving-layers-list">
+                <div class="vip-engraving-empty">
+                    Nenhuma gravação adicionada.
+                </div>
+            </div>
+        </div>
+
+        <div class="vip-panel-section" id="engravingControlsSection" style="display:none;">
+            <div class="vip-section-title-row">
+                <label>Controles da gravação</label>
+                <span id="selectedEngravingName">Gravação</span>
+            </div>
+
+            <div class="vip-position-editor">
+                <div class="vip-position-pad" id="engravingPositionPad"
+                     aria-label="Arraste para posicionar a gravação"
+                     role="application"
+                     tabindex="0">
+                    <div class="vip-position-grid"></div>
+                    <div class="vip-position-axis-x"></div>
+                    <div class="vip-position-axis-y"></div>
+                    <div class="vip-position-hint">
+                        <span>ARRASTE</span>
+                        <small>para posicionar</small>
+                    </div>
+                    <div class="vip-position-knob" id="engravingPositionKnob">
+                        <span></span>
+                    </div>
+                </div>
+                <div class="vip-position-readout">
+                    <div><span>X</span><strong id="engravingXValue">512</strong></div>
+                    <div><span>Y</span><strong id="engravingYValue">512</strong></div>
+                </div>
+            </div>
+
+            <div class="vip-engraving-control">
+                <div class="vip-control-header">
+                    <span>Tamanho</span>
+                    <strong id="engravingSizeValue">250</strong>
+                </div>
+                <input type="range" id="engravingSizeControl" min="20" max="800" step="1" value="250">
+            </div>
+
+            <div class="vip-engraving-control">
+                <div class="vip-control-header">
+                    <span>Rotação</span>
+                    <strong id="engravingRotationValue">0°</strong>
+                </div>
+                <input type="range" id="engravingRotationControl" min="-180" max="180" step="1" value="0">
+            </div>
+
+            <button type="button" id="removeSelectedEngraving" class="vip-remove-engraving-btn">
+                <i class="bi bi-trash"></i>
+                Remover gravação
             </button>
         </div>
+
+        <div class="vip-panel-section">
+
+            <label>Gravações</label>
+
+            <div class="vip-engraving-grid" id="engravingGrid">
+
+    {% for categoria in categorias %}
+
+        <div class="vip-engraving-category">
+
+            <button
+                type="button"
+                class="vip-engraving-category-btn {% if forloop.first %}active{% endif %}"
+                data-category="{{ categoria.id }}"
+            >
+
+                <span class="vip-engraving-category-left">
+
+                    {% if categoria.icone %}
+                        <img
+                            src="{{ categoria.icone.url }}"
+                            alt="{{ categoria.nome }}"
+                        >
+                    {% endif %}
+
+                    <span>
+                        {{ categoria.nome }}
+                    </span>
+
+                </span>
+
+                <i class="bi bi-chevron-down"></i>
+
+            </button>
+
+
+            <div
+                class="vip-engraving-category-content {% if forloop.first %}open{% endif %}"
+                data-category-content="{{ categoria.id }}"
+            >
+
+                <div class="vip-engraving-items">
+
+                    {% for gravacao in categoria.gravacoes.all %}
+
+                        {% if gravacao.ativo %}
+
+                            <button
+                                type="button"
+                                class="vip-engraving-btn"
+                                data-id="{{ gravacao.id }}"
+                                data-name="{{ gravacao.nome }}"
+                                data-image="{{ gravacao.imagem.url }}"
+                            >
+
+                                <img
+                                    src="{{ gravacao.imagem.url }}"
+                                    alt="{{ gravacao.nome }}"
+                                >
+
+                                {% if gravacao.nome %}
+                                    <span>
+                                        {{ gravacao.nome }}
+                                    </span>
+                                {% endif %}
+
+                            </button>
+
+                        {% endif %}
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    {% empty %}
+
+        <p class="vip-no-engravings">
+            Nenhuma gravação disponível.
+        </p>
+
+    {% endfor %}
+
+</div>
+
+        </div>
+
+    </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    const viewer = document.getElementById("bottleViewer");
+
+    if (!viewer) return;
+
+    const sideButtons = document.querySelectorAll(".vip-side-btn");
+    const engravingButtons = document.querySelectorAll(".vip-engraving-btn");
+
+    const layersList = document.getElementById("engravingLayersList");
+    const controlsSection = document.getElementById("engravingControlsSection");
+    const selectedName = document.getElementById("selectedEngravingName");
+
+    const sizeControl = document.getElementById("engravingSizeControl");
+    const rotationControl = document.getElementById("engravingRotationControl");
+
+    const xValue = document.getElementById("engravingXValue");
+    const yValue = document.getElementById("engravingYValue");
+    const sizeValue = document.getElementById("engravingSizeValue");
+    const rotationValue = document.getElementById("engravingRotationValue");
+
+    const positionPad = document.getElementById("engravingPositionPad");
+    const positionKnob = document.getElementById("engravingPositionKnob");
+
+    const removeButton = document.getElementById("removeSelectedEngraving");
+
+    let leftMaterial = null;
+    let rightMaterial = null;
+    let currentSide = "left";
+
+    /*
+     * Cada gravação agora é independente.
+     *
+     * A textura final de cada lateral é reconstruída com TODAS
+     * as gravações daquele lado.
+     */
+    const engravings = {
+        left: [],
+        right: []
+    };
+
+    let selectedEngravingId = null;
+
+    /*
+     * Controle de renderização:
+     * durante o arraste o navegador dispara muitos pointermove.
+     * Nunca deixamos duas texturas concorrendo para o mesmo material.
+     */
+    let textureRenderVersion = 0;
+    let textureRenderRunning = false;
+    const textureRenderPending = new Set();
+
+    function createCanvas() {
+        const canvas = document.createElement("canvas");
+        canvas.width = 1024;
+        canvas.height = 1024;
+        return canvas;
+    }
+
+    function loadImage(url) {
+        return new Promise((resolve, reject) => {
+            const image = new Image();
+
+            image.crossOrigin = "anonymous";
+
+            image.onload = () => resolve(image);
+
+            image.onerror = () => reject(
+                new Error("Não foi possível carregar o PNG: " + url)
+            );
+
+            image.src = url;
+        });
+    }
+
+    function getCurrentMaterial() {
+        return currentSide === "left"
+            ? leftMaterial
+            : rightMaterial;
+    }
+
+    function getCurrentEngravings() {
+        return engravings[currentSide];
+    }
+
+    function generateId() {
+        return "engraving_" +
+            Date.now().toString(36) +
+            "_" +
+            Math.random().toString(36).substring(2, 8);
+    }
+
+    function getSelectedEngraving() {
+        return getCurrentEngravings().find(
+            engraving => engraving.id === selectedEngravingId
+        ) || null;
+    }
+
+    function selectEngraving(id) {
+        selectedEngravingId = id;
+
+        const engraving = getSelectedEngraving();
+
+        if (!engraving) {
+            controlsSection.style.display = "none";
+            renderLayersList();
+            return;
+        }
+
+        controlsSection.style.display = "block";
+        selectedName.textContent = engraving.name;
+
+        sizeControl.value = engraving.width;
+        rotationControl.value = Math.round(
+            engraving.rotation * 180 / Math.PI
+        );
+
+        updateControlLabels();
+        renderLayersList();
+        updatePositionKnob(engraving);
+    }
+
+    function updateControlLabels() {
+        const engraving = getSelectedEngraving();
+        if (!engraving) return;
+
+        xValue.textContent = Math.round(engraving.x);
+        yValue.textContent = Math.round(engraving.y);
+        sizeValue.textContent = Math.round(engraving.width);
+        rotationValue.textContent =
+            Math.round(engraving.rotation * 180 / Math.PI) + "°";
+    }
+
+    function renderLayersList() {
+        const current = getCurrentEngravings();
+
+        if (!current.length) {
+            layersList.innerHTML = `
+                <div class="vip-engraving-empty">
+                    Nenhuma gravação adicionada.
+                </div>
+            `;
+            return;
+        }
+
+        layersList.innerHTML = "";
+
+        current.forEach((engraving, index) => {
+
+            const item = document.createElement("button");
+
+            item.type = "button";
+
+            item.className =
+                "vip-engraving-layer-item" +
+                (engraving.id === selectedEngravingId ? " active" : "");
+
+            item.dataset.id = engraving.id;
+
+            item.innerHTML = `
+                <span class="vip-layer-number">${index + 1}</span>
+                <span class="vip-layer-preview">
+                    <img src="${engraving.imageUrl}" alt="">
+                </span>
+                <span class="vip-layer-name">${engraving.name}</span>
+                <i class="bi bi-chevron-right"></i>
+            `;
+
+            item.addEventListener("click", () => {
+                selectEngraving(engraving.id);
+            });
+
+            layersList.appendChild(item);
+        });
+    }
+
+    /*
+     * Desenha todas as gravações da lateral novamente.
+     * Isso permite mover uma gravação sem perder as outras.
+     */
+    async function rebuildSideTexture(side) {
+
+        const material =
+            side === "left"
+                ? leftMaterial
+                : rightMaterial;
+
+        if (!material) return;
+
+        /*
+         * Cada chamada recebe uma versão. Se outra movimentação
+         * acontecer antes desta terminar, esta renderização fica
+         * obsoleta e NÃO poderá substituir a textura mais nova.
+         */
+        const renderVersion = ++textureRenderVersion;
+
+        const canvas = createCanvas();
+        const ctx = canvas.getContext("2d");
+
+        ctx.clearRect(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+
+        /*
+         * Fazemos uma cópia da lista e das propriedades para que
+         * nenhuma alteração durante o arraste possa ser desenhada
+         * duas vezes na mesma renderização.
+         */
+        const sideEngravings =
+            engravings[side].map(engraving => ({
+                ...engraving
+            }));
+
+        for (const engraving of sideEngravings) {
+
+            try {
+
+                const image =
+                    engraving.image ||
+                    await loadImage(engraving.imageUrl);
+
+                /*
+                 * Se já existe uma renderização mais nova,
+                 * abandona esta imediatamente.
+                 */
+                if (renderVersion !== textureRenderVersion) {
+                    return;
+                }
+
+                ctx.save();
+
+                ctx.translate(
+                    engraving.x,
+                    engraving.y
+                );
+
+                ctx.rotate(
+                    engraving.rotation
+                );
+
+                ctx.globalAlpha =
+                    engraving.opacity ?? 1;
+
+                ctx.drawImage(
+                    image,
+                    -engraving.width / 2,
+                    -engraving.height / 2,
+                    engraving.width,
+                    engraving.height
+                );
+
+                ctx.restore();
+
+            } catch (error) {
+
+                console.error(
+                    "Erro ao desenhar gravação:",
+                    engraving.name,
+                    error
+                );
+            }
+        }
+
+        /*
+         * Antes de criar/aplicar a textura, verifica novamente
+         * se esta ainda é a posição mais recente.
+         */
+        if (renderVersion !== textureRenderVersion) {
+            return;
+        }
+
+        try {
+
+            const texture =
+                await viewer.createTexture(
+                    canvas.toDataURL("image/png")
+                );
+
+            /*
+             * Esta é a proteção principal contra a duplicação:
+             * uma textura antiga nunca pode voltar depois de uma
+             * textura mais nova ter sido solicitada.
+             */
+            if (renderVersion !== textureRenderVersion) {
+                return;
+            }
+
+            const baseColor =
+                material.pbrMetallicRoughness.baseColorTexture;
+
+            baseColor.setTexture(texture);
+
+            material
+                .pbrMetallicRoughness
+                .setBaseColorFactor([
+                    1,
+                    1,
+                    1,
+                    1
+                ]);
+
+            material.setAlphaMode("BLEND");
+
+        } catch (error) {
+
+            console.error(
+                "Erro ao atualizar textura:",
+                error
+            );
+        }
+    }
+
+    /*
+     * No arraste, agrupa vários pointermove em um único render.
+     * Isso evita criar dezenas de PNGs/texturas por segundo.
+     */
+    function requestRebuildSideTexture(side) {
+
+        textureRenderPending.add(side);
+
+        if (textureRenderRunning) {
+            return;
+        }
+
+        textureRenderRunning = true;
+
+        requestAnimationFrame(async () => {
+
+            const sides =
+                Array.from(textureRenderPending);
+
+            textureRenderPending.clear();
+
+            for (const renderSide of sides) {
+                await rebuildSideTexture(renderSide);
+            }
+
+            textureRenderRunning = false;
+
+            /*
+             * Se o usuário moveu novamente enquanto renderizávamos,
+             * faz mais um frame com a posição final.
+             */
+            if (textureRenderPending.size) {
+                requestRebuildSideTexture(side);
+            }
+        });
+    }
+
+    async function rebuildAllTextures() {
+        await rebuildSideTexture("left");
+        await rebuildSideTexture("right");
+    }
+
+    async function addEngraving(imageUrl, engravingName) {
+
+        if (!imageUrl) {
+            console.error("A gravação não possui imagem.");
+            return;
+        }
+
+        const existing =
+            getCurrentEngravings().find(
+                engraving =>
+                    engraving.imageUrl === imageUrl
+            );
+
+        /*
+         * Se a mesma gravação já existe, apenas seleciona.
+         * Isso evita duplicações acidentais.
+         */
+        if (existing) {
+
+            selectEngraving(existing.id);
+
+            return;
+        }
+
+        const engraving = {
+            id: generateId(),
+
+            name: engravingName || "Gravação",
+
+            imageUrl: imageUrl,
+
+            image: null,
+
+            x: 512,
+            y: 512,
+
+            width: 250,
+            height: 250,
+
+            rotation: 0,
+
+            opacity: 1
+        };
+
+        try {
+            engraving.image = await loadImage(imageUrl);
+        } catch (error) {
+            console.error(error);
+            return;
+        }
+
+        getCurrentEngravings().push(engraving);
+
+        selectEngraving(engraving.id);
+
+        await rebuildSideTexture(currentSide);
+    }
+
+    async function updateSelectedEngraving() {
+
+        const engraving =
+            getSelectedEngraving();
+
+        if (!engraving) return;
+
+        engraving.width =
+            Number(sizeControl.value);
+
+        engraving.height =
+            Number(sizeControl.value);
+
+        engraving.rotation =
+            Number(rotationControl.value)
+            * Math.PI / 180;
+
+        updateControlLabels();
+
+        await rebuildSideTexture(currentSide);
+    }
+
+    function removeSelectedEngraving() {
+
+        if (!selectedEngravingId) return;
+
+        const list =
+            getCurrentEngravings();
+
+        const index =
+            list.findIndex(
+                engraving =>
+                    engraving.id === selectedEngravingId
+            );
+
+        if (index === -1) return;
+
+        list.splice(index, 1);
+
+        selectedEngravingId = null;
+
+        controlsSection.style.display = "none";
+
+        renderLayersList();
+
+        rebuildSideTexture(currentSide);
+    }
+
+    /*
+     * Quando troca de lado, seleciona a última gravação daquele lado.
+     */
+    sideButtons.forEach(button => {
+
+        button.addEventListener("click", async () => {
+
+            sideButtons.forEach(btn =>
+                btn.classList.remove("active")
+            );
+
+            button.classList.add("active");
+
+            currentSide =
+                button.dataset.side || "left";
+
+            selectedEngravingId = null;
+
+            const current =
+                getCurrentEngravings();
+
+            if (current.length) {
+                selectedEngravingId =
+                    current[current.length - 1].id;
+
+                selectEngraving(
+                    selectedEngravingId
+                );
+            } else {
+                controlsSection.style.display = "none";
+                renderLayersList();
+            }
+        });
+
+    });
+
+    engravingButtons.forEach(button => {
+
+        button.addEventListener("click", async () => {
+
+            const imageUrl =
+                button.dataset.image;
+
+            const engravingName =
+                button.dataset.name ||
+                "Gravação";
+
+            await addEngraving(
+                imageUrl,
+                engravingName
+            );
+
+        });
+
+    });
+
+    /*
+     * CONTROLE DE POSIÇÃO POR ARRASTE
+     */
+    function updatePositionKnob(engraving) {
+        if (!positionPad || !positionKnob || !engraving) return;
+
+        const maxX = positionPad.clientWidth * 0.38;
+        const maxY = positionPad.clientHeight * 0.38;
+
+        positionKnob.style.left =
+            `calc(50% + ${((engraving.x - 512) / 512) * maxX}px)`;
+        positionKnob.style.top =
+            `calc(50% + ${((engraving.y - 512) / 512) * maxY}px)`;
+    }
+
+    function moveEngravingFromPointer(event) {
+        const engraving = getSelectedEngraving();
+        if (!engraving || !positionPad) return;
+
+        const rect = positionPad.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const maxDistance = Math.min(rect.width, rect.height) * 0.38;
+
+        let dx = event.clientX - centerX;
+        let dy = event.clientY - centerY;
+        const distance = Math.hypot(dx, dy);
+
+        if (distance > maxDistance) {
+            const factor = maxDistance / distance;
+            dx *= factor;
+            dy *= factor;
+        }
+
+        engraving.x = Math.max(0, Math.min(1024,
+            Math.round(512 + (dx / maxDistance) * 512)
+        ));
+        engraving.y = Math.max(0, Math.min(1024,
+            Math.round(512 + (dy / maxDistance) * 512)
+        ));
+
+        updateControlLabels();
+        updatePositionKnob(engraving);
+        requestRebuildSideTexture(currentSide);
+    }
+
+    let draggingPosition = false;
+
+    if (positionPad) {
+        positionPad.addEventListener("pointerdown", event => {
+            if (!getSelectedEngraving()) return;
+            event.preventDefault();
+            draggingPosition = true;
+
+            try {
+                positionPad.setPointerCapture(event.pointerId);
+            } catch (_) {}
+
+            moveEngravingFromPointer(event);
+        });
+
+        positionPad.addEventListener("pointermove", event => {
+            if (!draggingPosition) return;
+            event.preventDefault();
+            moveEngravingFromPointer(event);
+        });
+
+        positionPad.addEventListener("pointerup", event => {
+            draggingPosition = false;
+            try {
+                positionPad.releasePointerCapture(event.pointerId);
+            } catch (_) {}
+        });
+
+        positionPad.addEventListener("pointercancel", () => {
+            draggingPosition = false;
+        });
+
+        positionPad.addEventListener("keydown", event => {
+            const engraving = getSelectedEngraving();
+            if (!engraving) return;
+
+            const step = event.shiftKey ? 20 : 5;
+            let changed = false;
+
+            if (event.key === "ArrowUp") {
+                engraving.y -= step;
+                changed = true;
+            } else if (event.key === "ArrowDown") {
+                engraving.y += step;
+                changed = true;
+            } else if (event.key === "ArrowLeft") {
+                engraving.x -= step;
+                changed = true;
+            } else if (event.key === "ArrowRight") {
+                engraving.x += step;
+                changed = true;
+            }
+
+            if (!changed) return;
+
+            event.preventDefault();
+
+            engraving.x = Math.max(0, Math.min(1024, engraving.x));
+            engraving.y = Math.max(0, Math.min(1024, engraving.y));
+
+            updateControlLabels();
+            updatePositionKnob(engraving);
+            requestRebuildSideTexture(currentSide);
+        });
+    }
+
+    /*
+     * Atualização em tempo real dos controles.
+     */
+    [sizeControl, rotationControl]
+        .forEach(control => {
+            control.addEventListener(
+                "input",
+                updateSelectedEngraving
+            );
+        });
+
+    removeButton.addEventListener(
+        "click",
+        removeSelectedEngraving
+    );
+
+    /*
+     * MODELO CARREGADO
+     */
+    viewer.addEventListener("load", async () => {
+
+        console.log(
+            "================================"
+        );
+
+        console.log(
+            "LOCALIZANDO MATERIAIS"
+        );
+
+        console.log(
+            "================================"
+        );
+
+        viewer.model.materials.forEach(
+            (material, index) => {
+
+                console.log(
+                    index,
+                    material.name
+                );
+
+                if (
+                    material.name ===
+                    "PrintMaterialLeft"
+                ) {
+
+                    leftMaterial = material;
+
+                    console.log(
+                        "PrintMaterialLeft encontrado"
+                    );
+                }
+
+                if (
+                    material.name ===
+                    "PrintMaterialRight"
+                ) {
+
+                    rightMaterial = material;
+
+                    console.log(
+                        "PrintMaterialRight encontrado"
+                    );
+                }
+            }
+        );
+
+        renderLayersList();
+
+        console.log(
+            "LEFT MATERIAL:",
+            leftMaterial
+        );
+
+        console.log(
+            "RIGHT MATERIAL:",
+            rightMaterial
+        );
+
+        const selected = getSelectedEngraving();
+        if (selected) {
+            updatePositionKnob(selected);
+        }
+
+    });
+
+    viewer.addEventListener("error", event => {
+
+        console.error(
+            "Erro ao carregar o modelo:",
+            event
+        );
+
+    });
+
+});
+</script>
+
+    <div class="vip-price-box">
+        <strong>R$ {{ product.price }}</strong>
+    </div>
+
+    <div class="vip-group-flow-actions">
+        <button type="button" class="vip-next-bottle-btn">
+            Continuar
+            <i class="bi bi-arrow-right"></i>
+        </button>
+    </div>
     </div>
 
 </section>
 
+
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-    const viewer = document.querySelector("model-viewer");
-    const nameInput = document.getElementById("nameInput");
+    document.addEventListener("DOMContentLoaded", () => {
 
-    const fontButtons = document.querySelectorAll(".vip-font-btn");
-    const orientationButtons = document.querySelectorAll(".vip-orientation-btn");
-    const categoryButtons = document.querySelectorAll(".vip-category-btn");
-    const continueBtn = document.querySelector(".vip-next-bottle-btn");
+        const viewer = document.getElementById("bottleViewer");
+        const nameInput = document.getElementById("nameInput");
 
-    const isMobile = window.matchMedia("(max-width: 768px)").matches;
-
-    let bottleMaterial = null;
-    let printMaterial = null;
-
-    let currentFont = "Arial";
-    let currentOrientation = "vertical";
-    let typingTimer = null;
-
-    if (viewer && isMobile) {
-        viewer.removeAttribute("auto-rotate");
-        viewer.removeAttribute("environment-image");
-        viewer.setAttribute("camera-controls", "");
-        viewer.setAttribute("touch-action", "pan-y");
-        viewer.setAttribute("interaction-prompt", "none");
-        viewer.setAttribute("disable-zoom", "");
-        viewer.setAttribute("shadow-intensity", "0");
-        viewer.setAttribute("exposure", "0.75");
-        viewer.style.setProperty("--poster-color", "transparent");
-    }
-
-    function makeCanvas(text) {
-        const canvas = document.createElement("canvas");
-        const size = isMobile ? 256 : 1024;
-
-        canvas.width = size;
-        canvas.height = size;
-
-        const ctx = canvas.getContext("2d");
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        const finalText = text && text.trim()
-            ? text.trim().toUpperCase()
-            : "SEU TEXTO AQUI";
-
-        ctx.fillStyle = "#ffffff";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-
-        const scale = size / 1024;
-
-        let fontSize = currentOrientation === "vertical"
-            ? 150 * scale
-            : 175 * scale;
-
-        const maxWidth = currentOrientation === "vertical"
-            ? 610 * scale
-            : 680 * scale;
-
-        const minFontSize = 82 * scale;
-
-        ctx.font = `700 ${fontSize}px ${currentFont}, Arial, sans-serif`;
-
-        while (ctx.measureText(finalText).width > maxWidth && fontSize > minFontSize) {
-            fontSize -= 4 * scale;
-            ctx.font = `700 ${fontSize}px ${currentFont}, Arial, sans-serif`;
-        }
-
-        ctx.save();
-
-        if (currentOrientation === "vertical") {
-            ctx.translate(canvas.width / 2, canvas.height / 2);
-            ctx.rotate(-Math.PI / 2);
-            ctx.fillText(finalText, 0, 0);
-        } else {
-            ctx.fillText(finalText, canvas.width / 2, canvas.height / 2);
-        }
-
-        ctx.restore();
-
-        return canvas;
-    }
-
-    async function updatePrintText() {
-        if (!viewer || !printMaterial) return;
-
-        const canvas = makeCanvas(nameInput.value);
-
-        const texture = await viewer.createTexture(
-            canvas.toDataURL("image/png")
+        const fontButtons = document.querySelectorAll(".vip-font-btn");
+        const orientationButtons = document.querySelectorAll(
+            ".vip-orientation-btn"
         );
 
-        printMaterial.pbrMetallicRoughness.baseColorTexture.setTexture(texture);
-        printMaterial.pbrMetallicRoughness.setBaseColorFactor([1, 1, 1, 1]);
-        printMaterial.setAlphaMode("BLEND");
-    }
+        let frontMaterial = null;
 
-    function updatePrintTextDebounced() {
-        clearTimeout(typingTimer);
-        typingTimer = setTimeout(updatePrintText, isMobile ? 220 : 80);
-    }
+        let currentFont = "Arial";
+        let currentOrientation = "vertical";
 
-    async function setupModel() {
-        if (!viewer || !viewer.model) return;
 
-        viewer.model.materials.forEach((material, index) => {
-            console.log(index, material.name);
+        // =====================================================
+        // CONFIGURAÇÕES
+        // =====================================================
 
-            if (material.name === "tripo_mat_fde06271-cfd9-4c7f-affb-0ad8852b8c90") {
-                bottleMaterial = material;
-                bottleMaterial.setAlphaMode("OPAQUE");
+        const VERTICAL_MAX_CHARACTERS = 15;
+        const HORIZONTAL_MAX_CHARACTERS = 5;
+
+
+        // =====================================================
+        // LIMITE DE CARACTERES
+        // =====================================================
+
+        function getMaxCharacters() {
+
+            if (currentOrientation === "horizontal") {
+                return HORIZONTAL_MAX_CHARACTERS;
             }
 
-            if (material.name === "PrintMaterialArea") {
-                printMaterial = material;
+            return VERTICAL_MAX_CHARACTERS;
+        }
+
+
+        // =====================================================
+        // CRIA O CANVAS DO NOME
+        // =====================================================
+
+        function createNameCanvas(text) {
+
+            const canvas = document.createElement("canvas");
+
+            canvas.width = 1024;
+            canvas.height = 1024;
+
+            const ctx = canvas.getContext("2d");
+
+            ctx.clearRect(
+                0,
+                0,
+                canvas.width,
+                canvas.height
+            );
+
+            const maxCharacters =
+                getMaxCharacters();
+
+            const name = text
+                .trim()
+                .substring(0, maxCharacters)
+                .toUpperCase();
+
+            if (!name) {
+                return canvas;
             }
-        });
 
-        if (!printMaterial && viewer.model.materials[1]) {
-            printMaterial = viewer.model.materials[1];
+            ctx.fillStyle = "#FFFFFF";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+
+
+            // =====================================================
+            // VERTICAL
+            // =====================================================
+
+            if (currentOrientation === "vertical") {
+
+                const maxWidth = 700;
+
+                let fontSize = 210;
+
+                ctx.font =
+                    `bold ${fontSize}px "${currentFont}"`;
+
+                while (
+                    ctx.measureText(name).width > maxWidth &&
+                    fontSize > 40
+                ) {
+
+                    fontSize--;
+
+                    ctx.font =
+                        `bold ${fontSize}px "${currentFont}"`;
+                }
+
+                ctx.save();
+
+                ctx.translate(
+                    canvas.width / 2 + 70,
+                    canvas.height / 2
+                );
+
+                ctx.rotate(-Math.PI / 2);
+
+                ctx.fillText(
+                    name,
+                    0,
+                    0
+                );
+
+                ctx.restore();
+            }
+
+
+            // =====================================================
+            // HORIZONTAL
+            // =====================================================
+
+            else {
+
+                const maxWidth = 320;
+
+                let fontSize = 175;
+
+                ctx.font =
+                    `bold ${fontSize}px "${currentFont}"`;
+
+                while (
+                    ctx.measureText(name).width > maxWidth &&
+                    fontSize > 40
+                ) {
+
+                    fontSize--;
+
+                    ctx.font =
+                        `bold ${fontSize}px "${currentFont}"`;
+                }
+
+                ctx.fillText(
+                    name,
+                    570,
+                    canvas.height / 2
+                );
+            }
+
+
+            return canvas;
         }
 
-        if (!printMaterial) {
-            console.error("PrintMaterialArea não encontrado.");
-            return;
+        // =====================================================
+        // ATUALIZA O NOME NO MODELO
+        // =====================================================
+
+        async function updateName() {
+
+            if (!frontMaterial) {
+
+                console.warn(
+                    "PrintMaterialFront ainda não está disponível."
+                );
+
+                return;
+            }
+
+
+            const canvas =
+                createNameCanvas(
+                    nameInput.value
+                );
+
+
+            try {
+
+                /*
+                 * Cria textura a partir do Canvas
+                 */
+
+                const texture =
+                    await viewer.createTexture(
+                        canvas.toDataURL("image/png")
+                    );
+
+
+                /*
+                 * Aplica a textura
+                 */
+
+                frontMaterial
+                    .pbrMetallicRoughness
+                    .baseColorTexture
+                    .setTexture(texture);
+
+
+                /*
+                 * Mantém o material branco,
+                 * permitindo que a textura controle
+                 * a aparência.
+                 */
+
+                frontMaterial
+                    .pbrMetallicRoughness
+                    .setBaseColorFactor([
+                        1,
+                        1,
+                        1,
+                        1
+                    ]);
+
+
+                /*
+                 * Permite transparência.
+                 *
+                 * Isso é o que faz a parte sem texto
+                 * continuar mostrando a garrafa preta.
+                 */
+
+                frontMaterial.setAlphaMode("BLEND");
+
+
+                console.log(
+                    "================================"
+                );
+
+                console.log(
+                    "NOME ATUALIZADO"
+                );
+
+                console.log(
+                    "Nome:",
+                    nameInput.value
+                );
+
+                console.log(
+                    "Orientação:",
+                    currentOrientation
+                );
+
+                console.log(
+                    "Fonte:",
+                    currentFont
+                );
+
+                console.log(
+                    "Limite:",
+                    getMaxCharacters()
+                );
+
+                console.log(
+                    "================================"
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "❌ Erro ao criar textura:",
+                    error
+                );
+
+            }
         }
 
-        await updatePrintText();
-    }
 
-    viewer?.addEventListener("load", setupModel);
+        // =====================================================
+        // MODELO CARREGADO
+        // =====================================================
 
-    nameInput?.addEventListener("input", updatePrintTextDebounced);
-    nameInput?.addEventListener("change", updatePrintText);
-    nameInput?.addEventListener("blur", updatePrintText);
+        viewer.addEventListener(
+            "load",
+            async () => {
 
-    fontButtons.forEach(button => {
-        button.addEventListener("click", () => {
-            fontButtons.forEach(btn => btn.classList.remove("active"));
-            button.classList.add("active");
+                console.log(
+                    "================================"
+                );
 
-            currentFont = button.dataset.font || "Arial";
-            updatePrintText();
-        });
+                console.log(
+                    "MODELO CARREGADO"
+                );
+
+                console.log(
+                    "================================"
+                );
+
+
+                /*
+                 * Procura o material frontal
+                 */
+
+                viewer.model.materials.forEach(
+                    (material, index) => {
+
+                        console.log(
+                            index,
+                            material.name
+                        );
+
+
+                        if (
+                            material.name ===
+                            "PrintMaterialFront"
+                        ) {
+
+                            frontMaterial =
+                                material;
+
+
+                            console.log(
+                                "✅ PrintMaterialFront encontrado!"
+                            );
+
+                        }
+
+                    }
+                );
+
+
+                /*
+                 * Aplica o nome inicial
+                 */
+
+                await updateName();
+
+            }
+        );
+
+
+        // =====================================================
+        // DIGITAÇÃO
+        // =====================================================
+
+        nameInput.addEventListener(
+            "input",
+            () => {
+
+                const maxCharacters =
+                    getMaxCharacters();
+
+
+                /*
+                 * Impede ultrapassar o limite da orientação
+                 */
+
+                if (
+                    nameInput.value.length >
+                    maxCharacters
+                ) {
+
+                    nameInput.value =
+                        nameInput.value.substring(
+                            0,
+                            maxCharacters
+                        );
+
+                }
+
+
+                /*
+                 * Atualiza imediatamente
+                 */
+
+                updateName();
+
+            }
+        );
+
+
+        // =====================================================
+        // FONTES
+        // =====================================================
+
+        fontButtons.forEach(
+            button => {
+
+                button.addEventListener(
+                    "click",
+                    () => {
+
+                        /*
+                         * Remove active
+                         */
+
+                        fontButtons.forEach(
+                            btn => {
+
+                                btn.classList.remove(
+                                    "active"
+                                );
+
+                            }
+                        );
+
+
+                        /*
+                         * Ativa botão
+                         */
+
+                        button.classList.add(
+                            "active"
+                        );
+
+
+                        /*
+                         * Pega a fonte
+                         */
+
+                        currentFont =
+                            button.dataset.font ||
+                            "Arial";
+
+
+                        console.log(
+                            "Nova fonte:",
+                            currentFont
+                        );
+
+
+                        /*
+                         * Atualiza a textura
+                         */
+
+                        updateName();
+
+                    }
+                );
+
+            }
+        );
+
+
+        // =====================================================
+        // ORIENTAÇÃO
+        // =====================================================
+
+        orientationButtons.forEach(
+            button => {
+
+                button.addEventListener(
+                    "click",
+                    () => {
+
+                        /*
+                         * Remove active
+                         */
+
+                        orientationButtons.forEach(
+                            btn => {
+
+                                btn.classList.remove(
+                                    "active"
+                                );
+
+                            }
+                        );
+
+
+                        /*
+                         * Ativa botão clicado
+                         */
+
+                        button.classList.add(
+                            "active"
+                        );
+
+
+                        /*
+                         * Pega orientação
+                         */
+
+                        currentOrientation =
+                            button.dataset.orientation ||
+                            "vertical";
+
+
+                        /*
+                         * Novo limite
+                         */
+
+                        const maxCharacters =
+                            getMaxCharacters();
+
+
+                        /*
+                         * Se o texto atual for maior que
+                         * o limite da nova orientação,
+                         * corta automaticamente.
+                         */
+
+                        if (
+                            nameInput.value.length >
+                            maxCharacters
+                        ) {
+
+                            nameInput.value =
+                                nameInput.value.substring(
+                                    0,
+                                    maxCharacters
+                                );
+
+                        }
+
+
+                        console.log(
+                            "Nova orientação:",
+                            currentOrientation
+                        );
+
+                        console.log(
+                            "Novo limite:",
+                            maxCharacters
+                        );
+
+
+                        /*
+                         * Atualiza a textura
+                         */
+
+                        updateName();
+
+                    }
+                );
+
+            }
+        );
+
+
+        // =====================================================
+        // ERRO DO MODEL VIEWER
+        // =====================================================
+
+        viewer.addEventListener(
+            "error",
+            event => {
+
+                console.error(
+                    "❌ ERRO AO CARREGAR O MODELO:",
+                    event
+                );
+
+            }
+        );
+
     });
+</script>
 
-    orientationButtons.forEach(button => {
-        button.addEventListener("click", () => {
-            orientationButtons.forEach(btn => btn.classList.remove("active"));
-            button.classList.add("active");
 
-            currentOrientation = button.dataset.orientation || "vertical";
-            updatePrintText();
-        });
-    });
 
-    categoryButtons.forEach(button => {
-        button.addEventListener("click", () => {
-            categoryButtons.forEach(btn => btn.classList.remove("active"));
-            button.classList.add("active");
-        });
-    });
+<style>
+.vip-engraving-layers-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
+}
 
-    continueBtn?.addEventListener("click", () => {
-        alert("Próximo passo: adicionar ao carrinho com personalização.");
-    });
+.vip-engraving-empty {
+    padding: 14px;
+    border-radius: 10px;
+    background: rgba(255,255,255,.05);
+    color: rgba(255,255,255,.55);
+    font-size: 13px;
+    text-align: center;
+}
+
+.vip-engraving-layer-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 10px;
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 10px;
+    background: rgba(255,255,255,.035);
+    color: inherit;
+    cursor: pointer;
+    text-align: left;
+    transition: .18s ease;
+}
+
+.vip-engraving-layer-item:hover,
+.vip-engraving-layer-item.active {
+    border-color: rgba(255,255,255,.28);
+    background: rgba(255,255,255,.09);
+}
+
+.vip-layer-number {
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(255,255,255,.10);
+    font-size: 11px;
+    flex: 0 0 22px;
+}
+
+.vip-layer-preview {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 7px;
+    background: rgba(255,255,255,.06);
+    overflow: hidden;
+    flex: 0 0 38px;
+}
+
+.vip-layer-preview img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.vip-layer-name {
+    flex: 1;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.vip-position-editor{margin-top:15px}.vip-position-pad{position:relative;width:min(100%,290px);aspect-ratio:1;margin:0 auto;overflow:hidden;border-radius:50%;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;background:radial-gradient(circle at center,rgba(255,255,255,.07) 0 2px,transparent 3px),radial-gradient(circle,rgba(255,255,255,.035) 0 55%,transparent 56%),rgba(0,0,0,.08);border:1px solid rgba(255,255,255,.13);box-shadow:inset 0 0 35px rgba(0,0,0,.14),0 10px 28px rgba(0,0,0,.10)}.vip-position-pad:active{cursor:grabbing}.vip-position-grid{position:absolute;inset:12%;border-radius:50%;pointer-events:none;opacity:.45;background-image:linear-gradient(rgba(0,0,0,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,.055) 1px,transparent 1px);background-size:25% 25%;mask-image:radial-gradient(circle,#000 35%,transparent 72%);-webkit-mask-image:radial-gradient(circle,#000 35%,transparent 72%)}.vip-position-axis-x,.vip-position-axis-y{position:absolute;pointer-events:none;background:rgba(0,0,0,.09)}.vip-position-axis-x{left:9%;right:9%;top:50%;height:1px}.vip-position-axis-y{top:9%;bottom:9%;left:50%;width:1px}.vip-position-hint{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;pointer-events:none;opacity:.25;text-align:center}.vip-position-hint span{font-size:8px;font-weight:800;letter-spacing:.15em}.vip-position-hint small{margin-top:3px;font-size:7px}.vip-position-knob{position:absolute;left:50%;top:50%;width:46px;height:46px;transform:translate(-50%,-50%);border-radius:50%;pointer-events:none;background:radial-gradient(circle at 34% 28%,rgba(255,255,255,.48),transparent 23%),linear-gradient(145deg,rgba(255,255,255,.88),rgba(255,255,255,.55));border:1px solid rgba(0,0,0,.10);box-shadow:0 7px 16px rgba(0,0,0,.20),inset 0 1px 2px rgba(255,255,255,.85)}.vip-position-knob span{position:absolute;left:50%;top:50%;width:8px;height:8px;transform:translate(-50%,-50%);border-radius:50%;background:rgba(0,0,0,.18)}.vip-position-readout{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}.vip-position-readout>div{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border-radius:9px;background:rgba(0,0,0,.035)}.vip-position-readout span{font-size:9px;font-weight:800;opacity:.45}.vip-position-readout strong{font-size:12px;font-variant-numeric:tabular-nums}
+.vip-engraving-control {
+    margin-top: 15px;
+}
+
+.vip-control-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 7px;
+    font-size: 12px;
+}
+
+.vip-control-header strong {
+    font-size: 12px;
+    opacity: .75;
+}
+
+.vip-engraving-control input[type="range"] {
+    width: 100%;
+    cursor: pointer;
+}
+
+.vip-remove-engraving-btn {
+    width: 100%;
+    margin-top: 18px;
+    padding: 11px 14px;
+    border: 0;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 700;
+    background: rgba(255,70,70,.12);
+    color: #ff7777;
+    transition: .18s ease;
+}
+
+.vip-remove-engraving-btn:hover {
+    background: rgba(255,70,70,.20);
+}
+</style>
+
+<script>
+    // =====================================================
+// FOLD DAS CATEGORIAS
+// =====================================================
+
+const categoryButtons =
+    document.querySelectorAll(
+        ".vip-engraving-category-btn"
+    );
+
+
+categoryButtons.forEach(button => {
+
+    button.addEventListener(
+        "click",
+        () => {
+
+            const categoryId =
+                button.dataset.category;
+
+
+            const content =
+                document.querySelector(
+                    `[data-category-content="${categoryId}"]`
+                );
+
+
+            const isOpen =
+                content.classList.contains("open");
+
+
+            // ---------------------------------------------
+            // FECHA TODAS
+            // ---------------------------------------------
+
+            document
+                .querySelectorAll(
+                    ".vip-engraving-category-btn"
+                )
+                .forEach(btn => {
+
+                    btn.classList.remove(
+                        "active"
+                    );
+
+                });
+
+
+            document
+                .querySelectorAll(
+                    ".vip-engraving-category-content"
+                )
+                .forEach(item => {
+
+                    item.classList.remove(
+                        "open"
+                    );
+
+                });
+
+
+            // ---------------------------------------------
+            // ABRE A CLICADA
+            // ---------------------------------------------
+
+            if (!isOpen) {
+
+                button.classList.add(
+                    "active"
+                );
+
+                content.classList.add(
+                    "open"
+                );
+
+            }
+
+        }
+    );
+
 });
 </script>
+
 
 {% endblock %}

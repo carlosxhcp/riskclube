@@ -460,3 +460,478 @@ model-viewer::part(default-progress-bar) {
         display: none;
     }
 }
+
+#editorCanvas{
+
+    position:absolute;
+
+    inset:0;
+
+    width:100%;
+
+    height:100%;
+
+    z-index:50;
+
+    background:transparent;
+
+    cursor:grab;
+
+}
+
+/* =========================================================
+   CATEGORIAS DE GRAVAÇÃO
+   ========================================================= */
+
+.vip-engraving-category {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.vip-engraving-category-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.vip-engraving-category-title img {
+    width: 28px !important;
+    height: 28px !important;
+
+    object-fit: contain;
+
+    display: block;
+}
+
+
+/* =========================================================
+   GRID DAS GRAVAÇÕES
+   ========================================================= */
+
+.vip-engraving-items {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 10px;
+
+    width: 100%;
+}
+
+
+/* =========================================================
+   BOTÃO DA GRAVAÇÃO
+   ========================================================= */
+
+.vip-engraving-btn {
+    appearance: none;
+    -webkit-appearance: none;
+
+    border: 1px solid #e5e5e5;
+
+    background: #ffffff;
+
+    border-radius: 10px;
+
+    padding: 8px;
+
+    width: 100%;
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 5px;
+
+    cursor: pointer;
+
+    transition:
+        border-color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.vip-engraving-btn:hover {
+    border-color: #111;
+
+    transform: translateY(-2px);
+}
+
+
+.vip-engraving-btn.active {
+    border-color: #111;
+
+    box-shadow:
+        0 0 0 2px rgba(0, 0, 0, 0.08);
+}
+
+
+/* =========================================================
+   IMAGEM DA GRAVAÇÃO
+   ========================================================= */
+
+.vip-engraving-btn img {
+    display: block;
+
+    width: 55px !important;
+    height: 55px !important;
+
+    max-width: 55px !important;
+    max-height: 55px !important;
+
+    object-fit: contain;
+
+    margin: 0 !important;
+}
+
+
+/* =========================================================
+   NOME DA GRAVAÇÃO
+   ========================================================= */
+
+.vip-engraving-btn span {
+    display: block;
+
+    width: 100%;
+
+    overflow: hidden;
+
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
+
+    text-align: center;
+
+    font-size: 10px;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   LADO DA GRAVAÇÃO
+   ========================================================= */
+
+.vip-side-options {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 8px;
+
+    width: 100%;
+}
+
+
+.vip-side-btn {
+    appearance: none;
+    -webkit-appearance: none;
+
+    border: 1px solid #dedede;
+
+    background: #fff;
+
+    border-radius: 8px;
+
+    padding: 10px 12px;
+
+    width: 100%;
+
+    font-family: inherit;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease;
+}
+
+
+.vip-side-btn:hover {
+    border-color: #111;
+}
+
+
+.vip-side-btn.active {
+    background: #111;
+
+    color: #fff;
+
+    border-color: #111;
+}
+
+/* =========================================================
+   CATEGORIAS DE GRAVAÇÃO
+   ========================================================= */
+
+.vip-engraving-category {
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+
+/* =========================================================
+   BOTÃO DA CATEGORIA
+   ========================================================= */
+
+.vip-engraving-category-btn {
+    appearance: none;
+    -webkit-appearance: none;
+
+    width: 100%;
+
+    border: 1px solid #e5e5e5;
+
+    background: #fff;
+
+    border-radius: 10px;
+
+    padding: 10px 12px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    cursor: pointer;
+
+    font-family: inherit;
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    text-transform: uppercase;
+
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease;
+}
+
+
+.vip-engraving-category-btn:hover {
+    border-color: #111;
+}
+
+
+.vip-engraving-category-btn.active {
+    border-color: #111;
+
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+
+/* =========================================================
+   LADO ESQUERDO DA CATEGORIA
+   ========================================================= */
+
+.vip-engraving-category-left {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+}
+
+
+/* =========================================================
+   ÍCONE
+   ========================================================= */
+
+.vip-engraving-category-left img {
+    width: 28px !important;
+    height: 28px !important;
+
+    max-width: 28px !important;
+    max-height: 28px !important;
+
+    object-fit: contain;
+
+    display: block;
+}
+
+
+/* =========================================================
+   SETA
+   ========================================================= */
+
+.vip-engraving-category-btn > i {
+    font-size: 13px;
+
+    transition:
+        transform 0.25s ease;
+}
+
+
+.vip-engraving-category-btn.active > i {
+    transform: rotate(180deg);
+}
+
+
+/* =========================================================
+   CONTEÚDO DA CATEGORIA
+   ========================================================= */
+
+.vip-engraving-category-content {
+    display: none;
+
+    padding: 10px;
+
+    border: 1px solid #111;
+
+    border-top: none;
+
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+
+    background: #fff;
+}
+
+
+.vip-engraving-category-content.open {
+    display: block;
+}
+
+
+/* =========================================================
+   GRAVAÇÕES
+   ========================================================= */
+
+.vip-engraving-items {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 8px;
+
+    width: 100%;
+}
+
+
+/* =========================================================
+   BOTÃO DA GRAVAÇÃO
+   ========================================================= */
+
+.vip-engraving-btn {
+    appearance: none;
+    -webkit-appearance: none;
+
+    border: 1px solid #e5e5e5;
+
+    background: #fff;
+
+    border-radius: 8px;
+
+    padding: 6px;
+
+    width: 100%;
+
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 4px;
+
+    cursor: pointer;
+
+    transition:
+        border-color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.vip-engraving-btn:hover {
+    border-color: #111;
+
+    transform: translateY(-1px);
+}
+
+
+.vip-engraving-btn.active {
+    border-color: #111;
+
+    box-shadow:
+        0 0 0 2px rgba(0, 0, 0, 0.08);
+}
+
+
+/* =========================================================
+   IMAGEM
+   ========================================================= */
+
+.vip-engraving-btn img {
+    display: block;
+
+    width: 55px !important;
+    height: 55px !important;
+
+    max-width: 55px !important;
+    max-height: 55px !important;
+
+    object-fit: contain;
+
+    margin: 0 !important;
+}
+
+
+/* =========================================================
+   NOME
+   ========================================================= */
+
+.vip-engraving-btn span {
+    display: block;
+
+    width: 100%;
+
+    overflow: hidden;
+
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
+
+    text-align: center;
+
+    font-size: 9px;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   SEM GRAVAÇÕES
+   ========================================================= */
+
+.vip-no-engravings {
+    font-size: 11px;
+
+    color: #888;
+
+    text-align: center;
+
+    margin: 10px 0;
+}
