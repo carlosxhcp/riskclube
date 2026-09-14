@@ -1,4 +1,6 @@
 from django.db import models
+from django.urls import reverse
+from django.utils.text import slugify
 
 # Create your models here.
 
@@ -33,3 +35,42 @@ class NewsletterLead(models.Model):
 
     def __str__(self):
         return self.email
+    
+
+class Category(models.Model):
+    name = models.CharField(
+        "Nome",
+        max_length=100,
+        unique=True
+    )
+
+    slug = models.SlugField(
+        "Slug",
+        max_length=100,
+        unique=True,
+        blank=True
+    )
+
+    active = models.BooleanField(
+        "Ativa",
+        default=True
+    )
+
+    order = models.PositiveIntegerField(
+        "Ordem",
+        default=0
+    )
+
+    class Meta:
+        verbose_name = "Categoria"
+        verbose_name_plural = "Categorias"
+        ordering = ["order", "name"]
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+
+        super().save(*args, **kwargs)

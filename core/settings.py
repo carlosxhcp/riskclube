@@ -7,7 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config("SECRET_KEY")
 #DEBUG = config("DEBUG", default=True, cast=bool)
-DEBUG = False
+DEBUG = True
 ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
@@ -170,6 +170,6 @@ ACCOUNT_EMAIL_VERIFICATION = "none"
 ACCOUNT_UNIQUE_EMAIL = True
 
 
-#MercadoPago
-MP_PUBLIC_KEY = os.getenv("MP_PUBLIC_KEY")
-MP_ACCESS_TOKEN = os.getenv("MP_ACCESS_TOKEN")
+# MERCADO PAGO
+MP_PUBLIC_KEY = config("MP_PUBLIC_KEY", default="")
+MP_ACCESS_TOKEN = config("MP_ACCESS_TOKEN", default="")

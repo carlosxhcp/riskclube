@@ -2,7 +2,7 @@ from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
 from django.contrib.auth.models import User
-
+from pages.models import Category
 
 class Product(models.Model):
     ENGRAVING_POSITION_CHOICES = [
@@ -69,7 +69,16 @@ class Product(models.Model):
     blank=True,
     null=True,
     verbose_name="URL do modelo 3D da garrafa"
-    )
+    )   
+
+    category = models.ForeignKey(
+    Category,
+    on_delete=models.SET_NULL,
+    null=True,
+    blank=True,
+    related_name="products",
+    verbose_name="Categoria"
+)
     
     created = models.DateTimeField(auto_now_add=True)
 

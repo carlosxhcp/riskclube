@@ -11,11 +11,77 @@ from .models import (
     VariantImage,
 )
 
+from pages.models import Category
+
+# ============================================================
+# CATEGORIAS
+# ============================================================
+
+@admin.register(Category)
+class CategoryAdmin(ModelAdmin):
+
+    list_display = (
+        "name",
+        "slug",
+        "active",
+        "order",
+    )
+
+    list_display_links = (
+        "name",
+    )
+
+    list_filter = (
+        "active",
+    )
+
+    search_fields = (
+        "name",
+        "slug",
+    )
+
+    prepopulated_fields = {
+        "slug": ("name",)
+    }
+
+    list_editable = (
+        "active",
+        "order",
+    )
+
+    ordering = (
+        "order",
+        "name",
+    )
+
+    fieldsets = (
+        ("Informações da categoria", {
+            "fields": (
+                "name",
+                "slug",
+            )
+        }),
+
+        ("Organização", {
+            "fields": (
+                "active",
+                "order",
+            )
+        }),
+    )
+
+
+# ============================================================
+# TAMANHOS PADRÃO DO PRODUTO
+# ============================================================
 
 class ProductDefaultSizeInline(TabularInline):
+
     model = ProductDefaultSize
+
     verbose_name = "Tamanho padrão"
     verbose_name_plural = "Tamanhos padrão"
+
     extra = 1
 
     fields = (
@@ -24,10 +90,17 @@ class ProductDefaultSizeInline(TabularInline):
     )
 
 
+# ============================================================
+# IMAGENS EXTRAS DO PRODUTO
+# ============================================================
+
 class ProductImageInline(TabularInline):
+
     model = ProductImage
+
     verbose_name = "Imagem extra"
     verbose_name_plural = "Imagens extras"
+
     extra = 1
 
     fields = (
@@ -41,20 +114,35 @@ class ProductImageInline(TabularInline):
     )
 
     def preview(self, obj):
+
         if obj and obj.image:
+
             return format_html(
-                '<img src="{}" style="width:72px;height:72px;object-fit:cover;border-radius:12px;border:1px solid #ddd;">',
+                '<img src="{}" '
+                'style="width:72px;'
+                'height:72px;'
+                'object-fit:cover;'
+                'border-radius:12px;'
+                'border:1px solid #ddd;">',
                 obj.image.url
             )
+
         return "Sem imagem"
 
     preview.short_description = "Prévia"
 
 
+# ============================================================
+# VARIAÇÕES DE COR
+# ============================================================
+
 class ProductVariantInline(TabularInline):
+
     model = ProductVariant
+
     verbose_name = "Variação de cor"
     verbose_name_plural = "Variações de cor"
+
     extra = 1
 
     fields = (
@@ -70,20 +158,35 @@ class ProductVariantInline(TabularInline):
     )
 
     def preview(self, obj):
+
         if obj and obj.image:
+
             return format_html(
-                '<img src="{}" style="width:72px;height:72px;object-fit:cover;border-radius:12px;border:1px solid #ddd;">',
+                '<img src="{}" '
+                'style="width:72px;'
+                'height:72px;'
+                'object-fit:cover;'
+                'border-radius:12px;'
+                'border:1px solid #ddd;">',
                 obj.image.url
             )
+
         return "Sem imagem"
 
     preview.short_description = "Prévia"
 
 
+# ============================================================
+# TAMANHOS DA VARIAÇÃO
+# ============================================================
+
 class ProductSizeInline(TabularInline):
+
     model = ProductSize
+
     verbose_name = "Tamanho"
     verbose_name_plural = "Tamanhos"
+
     extra = 1
 
     fields = (
@@ -92,10 +195,17 @@ class ProductSizeInline(TabularInline):
     )
 
 
+# ============================================================
+# IMAGENS DA VARIAÇÃO
+# ============================================================
+
 class VariantImageInline(TabularInline):
+
     model = VariantImage
+
     verbose_name = "Imagem da variação"
     verbose_name_plural = "Imagens da variação"
+
     extra = 1
 
     fields = (
@@ -110,21 +220,35 @@ class VariantImageInline(TabularInline):
     )
 
     def preview(self, obj):
+
         if obj and obj.image:
+
             return format_html(
-                '<img src="{}" style="width:72px;height:72px;object-fit:cover;border-radius:12px;border:1px solid #ddd;">',
+                '<img src="{}" '
+                'style="width:72px;'
+                'height:72px;'
+                'object-fit:cover;'
+                'border-radius:12px;'
+                'border:1px solid #ddd;">',
                 obj.image.url
             )
+
         return "Sem imagem"
 
     preview.short_description = "Prévia"
 
+
+# ============================================================
+# PRODUTO
+# ============================================================
+
 @admin.register(Product)
 class ProductAdmin(ModelAdmin):
+
     list_display = (
         "preview",
         "name",
-        "engraving_position",
+        "category",
         "price",
         "available",
         "is_createbottle",
@@ -138,6 +262,7 @@ class ProductAdmin(ModelAdmin):
     )
 
     list_filter = (
+        "category",
         "available",
         "is_createbottle",
         "engraving_position",
@@ -147,6 +272,7 @@ class ProductAdmin(ModelAdmin):
     search_fields = (
         "name",
         "description",
+        "category__name",
     )
 
     prepopulated_fields = {
@@ -160,15 +286,25 @@ class ProductAdmin(ModelAdmin):
     )
 
     fieldsets = (
+
+        # ====================================================
+        # INFORMAÇÕES PRINCIPAIS
+        # ====================================================
+
         ("Informações principais", {
             "fields": (
                 "preview",
                 "name",
                 "slug",
+                "category",
                 "price",
                 "description",
             )
         }),
+
+        # ====================================================
+        # IMAGENS PRINCIPAIS
+        # ====================================================
 
         ("Imagens principais", {
             "fields": (
@@ -179,6 +315,10 @@ class ProductAdmin(ModelAdmin):
             )
         }),
 
+        # ====================================================
+        # PERSONALIZAÇÃO NORMAL
+        # ====================================================
+
         ("Personalização normal", {
             "fields": (
                 "engraving_position",
@@ -187,12 +327,20 @@ class ProductAdmin(ModelAdmin):
             )
         }),
 
+        # ====================================================
+        # CREATEBOTTLE
+        # ====================================================
+
         ("CreateBottle", {
             "fields": (
                 "is_createbottle",
                 "model_3d_url",
             )
         }),
+
+        # ====================================================
+        # STATUS
+        # ====================================================
 
         ("Status", {
             "fields": (
@@ -209,40 +357,70 @@ class ProductAdmin(ModelAdmin):
     ]
 
     def preview(self, obj):
+
         if obj and obj.image:
+
             return format_html(
-                '<img src="{}" style="width:52px;height:52px;object-fit:cover;border-radius:12px;border:1px solid #ddd;">',
+                '<img src="{}" '
+                'style="width:52px;'
+                'height:52px;'
+                'object-fit:cover;'
+                'border-radius:12px;'
+                'border:1px solid #ddd;">',
                 obj.image.url
             )
+
         return "Sem imagem"
 
     preview.short_description = "Imagem"
 
     def back_preview(self, obj):
+
         if obj and obj.back_image:
+
             return format_html(
-                '<img src="{}" style="width:80px;height:80px;object-fit:cover;border-radius:12px;border:1px solid #ddd;">',
+                '<img src="{}" '
+                'style="width:80px;'
+                'height:80px;'
+                'object-fit:cover;'
+                'border-radius:12px;'
+                'border:1px solid #ddd;">',
                 obj.back_image.url
             )
+
         return "Sem imagem de costas"
 
     back_preview.short_description = "Prévia costas"
 
     def has_model_3d(self, obj):
+
         if obj and obj.model_3d_url:
             return "Sim"
+
         return "Não"
 
     has_model_3d.short_description = "Modelo 3D"
 
+
+# ============================================================
+# VARIAÇÕES
+# ============================================================
+
 @admin.register(ProductVariant)
 class ProductVariantAdmin(ModelAdmin):
+
     list_display = (
         "preview",
         "product",
         "color_name",
         "color_hex_badge",
         "active",
+    )
+
+    list_display_links = (
+        "preview",
+        "product",
+        "color_name",
     )
 
     list_filter = (
@@ -261,20 +439,41 @@ class ProductVariantAdmin(ModelAdmin):
     ]
 
     def preview(self, obj):
+
         if obj and obj.image:
+
             return format_html(
-                '<img src="{}" style="width:52px;height:52px;object-fit:cover;border-radius:12px;border:1px solid #ddd;">',
+                '<img src="{}" '
+                'style="width:52px;'
+                'height:52px;'
+                'object-fit:cover;'
+                'border-radius:12px;'
+                'border:1px solid #ddd;">',
                 obj.image.url
             )
+
         return "Sem imagem"
 
     preview.short_description = "Imagem"
 
     def color_hex_badge(self, obj):
+
         return format_html(
-            '<span style="display:inline-flex;align-items:center;gap:8px;">'
-            '<span style="width:18px;height:18px;border-radius:50%;background:{};border:1px solid #ccc;"></span>'
+            '<span style="display:inline-flex;'
+            'align-items:center;'
+            'gap:8px;">'
+
+            '<span style="'
+            'width:18px;'
+            'height:18px;'
+            'border-radius:50%;'
+            'background:{};'
+            'border:1px solid #ccc;'
+            'display:inline-block;'
+            '"></span>'
+
             '{}'
+
             '</span>',
             obj.color_hex,
             obj.color_hex,
@@ -283,8 +482,13 @@ class ProductVariantAdmin(ModelAdmin):
     color_hex_badge.short_description = "Cor"
 
 
+# ============================================================
+# TAMANHOS
+# ============================================================
+
 @admin.register(ProductSize)
 class ProductSizeAdmin(ModelAdmin):
+
     list_display = (
         "variant",
         "name",
@@ -303,8 +507,13 @@ class ProductSizeAdmin(ModelAdmin):
     )
 
 
+# ============================================================
+# TAMANHOS PADRÃO
+# ============================================================
+
 @admin.register(ProductDefaultSize)
 class ProductDefaultSizeAdmin(ModelAdmin):
+
     list_display = (
         "product",
         "name",
@@ -322,8 +531,13 @@ class ProductDefaultSizeAdmin(ModelAdmin):
     )
 
 
+# ============================================================
+# IMAGENS DAS VARIAÇÕES
+# ============================================================
+
 @admin.register(VariantImage)
 class VariantImageAdmin(ModelAdmin):
+
     list_display = (
         "preview",
         "variant",
@@ -343,11 +557,19 @@ class VariantImageAdmin(ModelAdmin):
     )
 
     def preview(self, obj):
+
         if obj and obj.image:
+
             return format_html(
-                '<img src="{}" style="width:52px;height:52px;object-fit:cover;border-radius:12px;border:1px solid #ddd;">',
+                '<img src="{}" '
+                'style="width:52px;'
+                'height:52px;'
+                'object-fit:cover;'
+                'border-radius:12px;'
+                'border:1px solid #ddd;">',
                 obj.image.url
             )
+
         return "Sem imagem"
 
     preview.short_description = "Imagem"

@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from products.models import Product
+from pages.models import Category
 from .models import CommunityReview
 
 
@@ -43,11 +44,42 @@ def shop(request):
 
 
 def products(request):
+
     products = Product.objects.all()
 
-    return render(request, "pages/products.html", {
+    categories = Category.objects.filter(
+        active=True
+    ).order_by(
+        "order",
+        "name"
+    )
+
+    category_slug = request.GET.get("category")
+
+    current_category = None
+
+    if category_slug:
+
+        current_category = categories.filter(
+            slug=category_slug
+        ).first()
+
+        if current_category:
+            products = products.filter(
+                category=current_category
+            )
+
+    context = {
         "products": products,
-    })
+        "categories": categories,
+        "current_category": current_category,
+    }
+
+    return render(
+        request,
+        "pages/products.html",
+        context
+    )
 
 def mockup_3d(request):
     return render(request, "mockup_3d.html")

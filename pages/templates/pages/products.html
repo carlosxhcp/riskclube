@@ -1,75 +1,159 @@
 {% extends "pages/base.html" %}
 {% load static %}
 
-{% block title %}Risk Clube{% endblock %}
+{% block title %}Produtos | Risk Clube{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/home.css' %}">
+
+<link
+    rel="stylesheet"
+    href="{% static 'css/product.css' %}"
+>
 
 {% endblock %}
 
+
 {% block content %}
 
+<section class="products-page">
+
+    <!-- CATEGORIAS -->
+
+    <nav class="products-category-bar">
+
+    <a
+        href="{% url 'pages:products' %}"
+        class="
+            products-category-link
+            products-filter-link
+            {% if not current_category %}active{% endif %}
+        "
+    >
+        FILTRAR
+    </a>
 
 
-<section class="home-products" id="products">
-    <div class="home-product-grid">
+    <a
+        href="{% url 'pages:products' %}"
+        class="
+            products-category-link
+            {% if not current_category %}active{% endif %}
+        "
+    >
+        TODAS
+    </a>
 
-        {% for product in products %}
 
-            {% if product.is_vip %}
-                <a href="{% url 'customization:vip_choose_type' product.slug %}" class="product-card product-card-link product-card-vip">
-            {% else %}
-                <a href="{{ product.get_absolute_url }}" class="product-card product-card-link">
-            {% endif %}
+    {% for category in categories %}
 
-                <div class="home-product-image-link {% if product.is_vip %}vip-image-link{% endif %}">
-                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="home-product-image">
-                </div>
+        <a
+            href="?category={{ category.slug }}"
+            class="
+                products-category-link
+                {% if current_category == category %}active{% endif %}
+            "
+        >
+            {{ category.name|upper }}
+        </a>
 
-                <div class="home-product-info">
+    {% endfor %}
 
-                    {% if product.is_vip %}
-                    <span class="vip-mini-label">
-                        Personalização exclusiva
-                    </span>
-                    {% endif %}
+</nav>
 
-                    <h3 class="home-product-title">
-                        {{ product.name }}
-                    </h3>
+    <!-- PRODUTOS -->
 
-                    <p class="home-product-price">
-                        R$ {{ product.price }}
-                    </p>
+    <div class="products-content">
 
-                    {% if product.installments %}
-                    <span class="home-product-installments">
-                        {{ product.installments }}
-                    </span>
-                    {% endif %}
+        {% if current_category %}
 
-                    <span class="home-product-button">
-                        {% if product.is_vip %}
-                            Personalizar
-                        {% else %}
-                            Comprar
-                        {% endif %}
-                    </span>
+            <div class="products-heading">
 
-                </div>
-            </a>
+                <h1>
+                    {{ current_category.name|upper }}
+                </h1>
 
-        {% empty %}
+            </div>
 
-            <p class="home-products-empty">
-                Nenhum produto encontrado.
-            </p>
+        {% endif %}
 
-        {% endfor %}
-        
+
+        <div class="products-grid">
+
+            <div class="products-feature">
+
+        <img
+            src="{% static 'img/products-banner.jpg' %}"
+            alt="Risk Clube"
+            class="products-feature-image"
+        >
 
     </div>
+
+
+            {% for product in products %}
+
+                {% if product.is_vip %}
+
+                    <a
+                        href="{% url 'customization:vip_choose_type' product.slug %}"
+                        class="product-item product-item-link"
+                    >
+
+                {% else %}
+
+                    <a
+                        href="{{ product.get_absolute_url }}"
+                        class="product-item product-item-link"
+                    >
+
+                {% endif %}
+
+
+                    <div class="product-image-container">
+
+                        {% if product.image %}
+
+                            <img
+                                src="{{ product.image.url }}"
+                                alt="{{ product.name }}"
+                                class="product-image"
+                            >
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="product-info">
+
+                        <h2 class="product-name">
+                            {{ product.name|upper }}
+                        </h2>
+
+                        <p class="product-price">
+                            R$ {{ product.price }}
+                        </p>
+
+                    </div>
+
+                </a>
+
+            {% empty %}
+
+                <div class="products-empty">
+
+                    <p>
+                        Nenhum produto encontrado.
+                    </p>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
 </section>
 
 {% endblock %}
