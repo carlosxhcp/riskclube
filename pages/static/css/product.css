@@ -133,10 +133,9 @@
 
     display: block;
 
-    border-right: 1px solid #e5e5e5;
-    border-bottom: 1px solid #e5e5e5;
+    border-right: 4px solid #ffffff;
 
-    background: #fff;
+    background: #f5f2f2;
 
     text-decoration: none;
 
@@ -164,7 +163,7 @@
 
     overflow: hidden;
 
-    background: #fff;
+    background: #f5f2f2;
 }
 
 
