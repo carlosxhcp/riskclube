@@ -30,13 +30,17 @@
 
             <div class="product-main-image" data-front-image="{{ product.image.url }}"
                 data-back-image="{% if product.back_image %}{{ product.back_image.url }}{% endif %}">
-                <button type="button" class="gallery-arrow left" id="prevImage">‹</button>
+                <button type="button" class="gallery-arrow left" id="prevImage">
+    <i class="bi bi-chevron-left"></i>
+</button>
 
                 <img id="mainProductImage" src="{{ product.image.url }}" alt="{{ product.name }}">
 
                 <span id="bottleNamePreview" class="bottle-name-preview"></span>
 
-                <button type="button" class="gallery-arrow right" id="nextImage">›</button>
+                <button type="button" class="gallery-arrow right" id="nextImage">
+    <i class="bi bi-chevron-right"></i>
+</button>
             </div>
         </div>
     </div>
@@ -299,10 +303,9 @@
 
 <section class="community-section" id="comunidade">
     <div class="community-header">
-        <span class="community-label">Vozes reais. Estilo que inspira.</span>
-        <h2 class="community-title">COMUNIDADE</h2>
+        <h2 class="community-title">CLUBE</h2>
         <p class="community-subtitle">
-            Avaliações de pessoas que usam, falam e vivem o estilo RISK.
+            <b>comunidade de pessoas reais </b> que usam, falam e vivem o estilo RISK.
         </p>
     </div>
 
@@ -312,7 +315,7 @@
             <article class="community-card">
                 <div class="community-photo-box">
                     {% if item.photo %}
-                    <img src="{{ item.photo.url }}" alt="{{ item.instagram }}">
+                        <img src="{{ item.photo.url }}" alt="{{ item.instagram }}">
                     {% endif %}
 
                     <span class="community-instagram">@{{ item.instagram }}</span>
@@ -321,8 +324,13 @@
                 <div class="community-content">
                     <div class="community-stars">
                         {% for i in "12345" %}
-                        {% if forloop.counter <= item.rating %} ★ {% else %} ☆ {% endif %} {% endfor %} <span>{{
-                            item.rating }},0</span>
+                            {% if forloop.counter <= item.rating %}
+                                ★
+                            {% else %}
+                                ☆
+                            {% endif %}
+                        {% endfor %}
+                        <span>{{ item.rating }},0</span>
                     </div>
 
                     <h3>{{ item.title }}</h3>
@@ -756,6 +764,27 @@
                 updateMainImage(currentIndex + 1);
             });
         }
+
+        document.addEventListener("keydown", function (event) {
+    // IGNORA SE O USUÁRIO ESTIVER DIGITANDO EM UM CAMPO
+    if (
+        event.target.tagName === "INPUT" ||
+        event.target.tagName === "TEXTAREA" ||
+        event.target.tagName === "SELECT"
+    ) {
+        return;
+    }
+
+    if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        updateMainImage(currentIndex - 1);
+    }
+
+    if (event.key === "ArrowRight") {
+        event.preventDefault();
+        updateMainImage(currentIndex + 1);
+    }
+});
 
         window.addEventListener("resize", updateNamePreviewText);
 

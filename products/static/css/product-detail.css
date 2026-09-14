@@ -159,33 +159,57 @@
         transform .22s ease;
 }
 
+
 .gallery-arrow {
     position: absolute;
     top: 50%;
-    width: 44px;
-    height: 44px;
     transform: translateY(-50%);
-    border: 1px solid rgba(0,0,0,.08);
+
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+    margin: 0;
+
+    border: none;
     border-radius: 50%;
-    background: rgba(255,255,255,.82);
-    backdrop-filter: blur(8px);
-    color: #000;
-    font-size: 34px;
-    line-height: 38px;
+
+    background: #fff;
+    color: #111;
+
+    font-size: 18px;
+    line-height: 1;
+
     cursor: pointer;
     z-index: 25;
-    transition:
-        background .22s ease,
-        transform .22s ease,
-        box-shadow .22s ease;
+
+    box-shadow: 0 4px 14px rgba(0,0,0,.10);
+
+    transition: .2s ease;
 }
 
 .gallery-arrow:hover {
     background: #111;
     color: #fff;
-    transform: translateY(-50%) scale(1.05);
-    box-shadow: 0 12px 24px rgba(0,0,0,.18);
 }
+
+.gallery-arrow.left {
+    left: 18px;
+}
+
+.gallery-arrow.right {
+    right: 18px;
+}
+
+.gallery-arrow i {
+    display: block;
+    line-height: 1;
+}
+
 
 .gallery-arrow.left {
     left: 18px;

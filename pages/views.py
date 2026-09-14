@@ -42,6 +42,13 @@ def shop(request):
     })
 
 
+def products(request):
+    products = Product.objects.all()
+
+    return render(request, "pages/products.html", {
+        "products": products,
+    })
+
 def mockup_3d(request):
     return render(request, "mockup_3d.html")
 

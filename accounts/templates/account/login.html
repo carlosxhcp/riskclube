@@ -24,24 +24,32 @@
             {% csrf_token %}
 
             {% if form.non_field_errors %}
-                <div class="auth-error">
-                    {{ form.non_field_errors }}
-                </div>
+            <div class="auth-error">
+                {{ form.non_field_errors }}
+            </div>
             {% endif %}
 
             <div class="auth-field">
                 <label for="id_login">Email</label>
                 {{ form.login }}
                 {% if form.login.errors %}
-                    <small>{{ form.login.errors }}</small>
+                <small>{{ form.login.errors }}</small>
                 {% endif %}
             </div>
 
             <div class="auth-field">
                 <label for="id_password">Senha</label>
-                {{ form.password }}
+
+                <div class="password-wrapper">
+                    {{ form.password }}
+
+                    <button type="button" class="password-toggle" id="password-toggle" aria-label="Mostrar senha">
+                        <i class="bi bi-eye"></i>
+                    </button>
+                </div>
+
                 {% if form.password.errors %}
-                    <small>{{ form.password.errors }}</small>
+                <small>{{ form.password.errors }}</small>
                 {% endif %}
             </div>
 
@@ -57,7 +65,7 @@
             </div>
 
             {% if redirect_field_value %}
-                <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}">
+            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}">
             {% endif %}
 
             <button type="submit" class="auth-btn">
@@ -72,4 +80,26 @@
 
     </div>
 </section>
+
+{% block extra_js %}
+<script>
+    const passwordInput = document.getElementById("id_password");
+    const passwordToggle = document.getElementById("password-toggle");
+    const passwordIcon = passwordToggle.querySelector("i");
+
+    passwordToggle.addEventListener("click", function () {
+        const isPassword = passwordInput.type === "password";
+
+        passwordInput.type = isPassword ? "text" : "password";
+
+        passwordIcon.classList.toggle("bi-eye", !isPassword);
+        passwordIcon.classList.toggle("bi-eye-slash", isPassword);
+
+        passwordToggle.setAttribute(
+            "aria-label",
+            isPassword ? "Ocultar senha" : "Mostrar senha"
+        );
+    });
+</script>
+{% endblock %}
 {% endblock %}
