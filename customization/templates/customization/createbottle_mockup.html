@@ -5,20 +5,11 @@
 
 {% block extra_css %}
 
-<link
-    rel="stylesheet"
-    href="{% static 'css/createbottle_mockup.css' %}"
->
+<link rel="stylesheet" href="{% static 'css/createbottle_mockup.css' %}">
 
-<script
-    type="module"
-    src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"
-></script>
+<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 
-<link
-    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap"
-    rel="stylesheet"
->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,800&display=swap" rel="stylesheet">
 
 {% endblock %}
 
@@ -27,9 +18,7 @@
 
 <section class="vip-mockup-page">
 
-
     <div class="vip-mockup-left">
-
         <div class="vip-mockup-stage">
 
             {% if product.model_3d_url %}
@@ -38,15 +27,12 @@
                 id="bottleViewer"
                 src="{{ product.model_3d_url }}"
                 camera-controls
-                camera-orbit="0deg 75deg auto"
+                disable-zoom
+                camera-orbit="-50deg 75deg auto"
                 exposure="1"
                 shadow-intensity="1"
                 environment-image="neutral"
-                style="
-                    width: 100%;
-                    height: 700px;
-                    display: block;
-                "
+                style="width: 100%; height: 700px; display: block;"
             >
             </model-viewer>
 
@@ -61,1010 +47,348 @@
 
             {% endif %}
 
-
-            <div class="vip-mockup-logo">
-                Risk
-            </div>
+            <div class="vip-mockup-logo">Risk</div>
 
         </div>
-
     </div>
-
 
 
     <div class="vip-mockup-panel">
 
-
-        <!-- =====================================================
-             NOME
-        ====================================================== -->
-
-        <div class="vip-panel-section">
-
-            <label>
-                Nome na garrafa
-            </label>
-
-
-            <div class="vip-name-input-row">
-
-                <input
-                    type="text"
-                    id="nameInput"
-                    maxlength="15"
-                    placeholder="Digite seu texto"
-                    value=""
-                >
-
-
-                <button type="button">
-
-                    <i class="bi bi-pencil"></i>
-
-                </button>
-
-            </div>
-
+        <div class="vip-panel-head">
+            <span class="vip-panel-eyebrow">Risk Clube</span>
+            <h1 class="vip-panel-title">Personalizar garrafa</h1>
+            <p class="vip-panel-sub">{{ product.name }}</p>
         </div>
 
-
-
-        <!-- =====================================================
-             FONTE
-        ====================================================== -->
-
+        <!-- 1. LADO -->
         <div class="vip-panel-section">
-
-            <div class="vip-section-title-row">
-
-                <label>
-                    Fonte
-                </label>
-
-            </div>
-
-
-            <div class="vip-font-options">
-
-
-                <button
-                    type="button"
-                    class="vip-font-btn active"
-                    data-font="Arial"
-                >
-
-                    <strong>
-                        Aa
-                    </strong>
-
-                    <span>
-                        Arial
-                    </span>
-
-                </button>
-
-
-                <button
-                    type="button"
-                    class="vip-font-btn"
-                    data-font="Montserrat"
-                >
-
-                    <strong>
-                        Aa
-                    </strong>
-
-                    <span>
-                        Montserrat
-                    </span>
-
-                </button>
-
-
-                <button
-                    type="button"
-                    class="vip-font-btn"
-                    data-font="Georgia"
-                >
-
-                    <strong>
-                        Aa
-                    </strong>
-
-                    <span>
-                        Georgia
-                    </span>
-
-                </button>
-
-
-                <button
-                    type="button"
-                    class="vip-font-btn"
-                    data-font="serif"
-                >
-
-                    <strong>
-                        Aa
-                    </strong>
-
-                    <span>
-                        Serif
-                    </span>
-
-                </button>
-
-
-            </div>
-
-        </div>
-
-
-
-        <!-- =====================================================
-             ORIENTAÇÃO
-        ====================================================== -->
-
-        <div class="vip-panel-section">
-
-            <label>
-                Orientação
-            </label>
-
-
-            <div class="vip-orientation-options">
-
-
-                <button
-                    type="button"
-                    class="vip-orientation-btn active"
-                    data-orientation="vertical"
-                >
-
-                    <i class="bi bi-arrows-vertical"></i>
-
-                    Vertical
-
-                </button>
-
-
-                <button
-                    type="button"
-                    class="vip-orientation-btn"
-                    data-orientation="horizontal"
-                >
-
-                    <i class="bi bi-arrows"></i>
-
-                    Horizontal
-
-                </button>
-
-
-            </div>
-
-        </div>
-
-
-
-        <!-- =====================================================
-             CATEGORIAS
-        ====================================================== -->
-
-        <div class="vip-panel-section">
-
-            <label>
-                Escolha sua categoria
-            </label>
-
-
-            <div class="vip-category-grid">
-
-                {% for categoria in categorias %}
-
-                <button
-                    type="button"
-                    class="vip-category-btn {% if forloop.first %}active{% endif %}"
-                >
-
-                    <i class="bi bi-gem"></i>
-
-                    <span>
-                        {{ categoria.nome }}
-                    </span>
-
-                </button>
-
-                {% empty %}
-
-                <button
-                    type="button"
-                    class="vip-category-btn active"
-                >
-
-                    <i class="bi bi-gem"></i>
-
-                    <span>
-                        Premium
-                    </span>
-
-                </button>
-
-                {% endfor %}
-
-            </div>
-
-        </div>
-
-
-
-        <!-- =====================================================
-             LADO
-        ====================================================== -->
-
-        <div class="vip-panel-section">
-
-            <label>
-                Lado da gravação
-            </label>
-
-
+            <div class="vip-step-title"><span>1</span> Lado da gravação</div>
             <div class="vip-side-options">
-
-
-                <button
-                    type="button"
-                    class="vip-side-btn active"
-                    data-side="left"
-                >
-
-                    Lateral esquerda
-
-                </button>
-
-
-                <button
-                    type="button"
-                    class="vip-side-btn"
-                    data-side="right"
-                >
-
-                    Lateral direita
-
-                </button>
-
-
+                <button type="button" class="vip-side-btn active" data-side="left">Lateral esquerda</button>
+                <button type="button" class="vip-side-btn" data-side="right">Lateral direita</button>
             </div>
-
         </div>
 
-
-
-        <!-- =====================================================
-             CAMADAS
-        ====================================================== -->
-
+        <!-- 2. NOME -->
         <div class="vip-panel-section">
-
-            <label>
-                Gravações adicionadas
-            </label>
-
-
-            <div
-                id="engravingLayersList"
-                class="vip-engraving-layers-list"
-            >
-
-                <div class="vip-engraving-empty">
-
-                    Nenhuma gravação adicionada.
-
-                </div>
-
+            <div class="vip-step-title"><span>2</span> Nome na garrafa</div>
+            <div class="vip-name-input-row">
+                <input type="text" id="nameInput" maxlength="15" placeholder="Digite seu texto" value="">
             </div>
 
+            <div class="vip-name-options">
+                <div class="vip-font-options">
+                    <button type="button" class="vip-font-btn active" data-font="Arial"><strong>Aa</strong><span>Arial</span></button>
+                    <button type="button" class="vip-font-btn" data-font="Montserrat"><strong>Aa</strong><span>Montserrat</span></button>
+                    <button type="button" class="vip-font-btn" data-font="Georgia"><strong>Aa</strong><span>Georgia</span></button>
+                    <button type="button" class="vip-font-btn" data-font="serif"><strong>Aa</strong><span>Serif</span></button>
+                </div>
+                <div class="vip-orientation-options">
+                    <button type="button" class="vip-orientation-btn active" data-orientation="vertical"><i class="bi bi-arrows-vertical"></i> Vertical</button>
+                    <button type="button" class="vip-orientation-btn" data-orientation="horizontal"><i class="bi bi-arrows"></i> Horizontal</button>
+                </div>
+            </div>
         </div>
 
-
-
-        <!-- =====================================================
-             CONTROLES
-        ====================================================== -->
-
-        <div
-            class="vip-panel-section"
-            id="engravingControlsSection"
-            style="display:none;"
-        >
-
-
-            <div class="vip-section-title-row">
-
-                <label>
-                    Controles
-                </label>
-
-
-                <span id="selectedEngravingName">
-                    Gravação
-                </span>
-
-            </div>
-
-
-
-            <div class="vip-position-editor">
-
-
-                <div
-                    class="vip-position-pad"
-                    id="engravingPositionPad"
-                    aria-label="Arraste para posicionar"
-                    role="application"
-                    tabindex="0"
-                >
-
-                    <div class="vip-position-grid"></div>
-
-                    <div class="vip-position-axis-x"></div>
-
-                    <div class="vip-position-axis-y"></div>
-
-
-                    <div class="vip-position-hint">
-
-                        <span>
-                            ARRASTE
-                        </span>
-
-                        <small>
-                            para posicionar
-                        </small>
-
-                    </div>
-
-
-                    <div
-                        class="vip-position-knob"
-                        id="engravingPositionKnob"
-                    >
-
-                        <span></span>
-
-                    </div>
-
-                </div>
-
-
-
-                <div class="vip-position-readout">
-
-
-                    <div>
-
-                        <span>
-                            X
-                        </span>
-
-                        <strong id="engravingXValue">
-                            512
-                        </strong>
-
-                    </div>
-
-
-                    <div>
-
-                        <span>
-                            Y
-                        </span>
-
-                        <strong id="engravingYValue">
-                            512
-                        </strong>
-
-                    </div>
-
-
-                </div>
-
-            </div>
-
-
-
-            <!-- TAMANHO -->
-
-            <div class="vip-engraving-control">
-
-                <div class="vip-control-header">
-
-                    <span>
-                        Tamanho
-                    </span>
-
-                    <strong id="engravingSizeValue">
-                        250
-                    </strong>
-
-                </div>
-
-
-                <input
-                    type="range"
-                    id="engravingSizeControl"
-                    min="20"
-                    max="800"
-                    step="1"
-                    value="250"
-                >
-
-            </div>
-
-
-
-            <!-- ROTAÇÃO -->
-
-            <div class="vip-engraving-control">
-
-                <div class="vip-control-header">
-
-                    <span>
-                        Rotação
-                    </span>
-
-                    <strong id="engravingRotationValue">
-                        0°
-                    </strong>
-
-                </div>
-
-
-                <input
-                    type="range"
-                    id="engravingRotationControl"
-                    min="-180"
-                    max="180"
-                    step="1"
-                    value="0"
-                >
-
-            </div>
-
-
-
-            <button
-                type="button"
-                id="removeSelectedEngraving"
-                class="vip-remove-engraving-btn"
-            >
-
-                <i class="bi bi-trash"></i>
-
-                Remover gravação
-
-            </button>
-
-        </div>
-
-
-
-        <!-- =====================================================
-             GRAVAÇÕES
-        ====================================================== -->
-
+        <!-- 3. GRAVAÇÕES -->
         <div class="vip-panel-section">
+            <div class="vip-step-title"><span>3</span> Escolha as gravações</div>
 
-            <label>
-                Gravações
-            </label>
-
-
-            <div
-                class="vip-engraving-grid"
-                id="engravingGrid"
-            >
-
+            <div class="vip-engraving-grid" id="engravingGrid">
                 {% for categoria in categorias %}
-
-
                 <div class="vip-engraving-category">
-
-
-                    <button
-                        type="button"
-                        class="vip-engraving-category-btn {% if forloop.first %}active{% endif %}"
-                        data-category="{{ categoria.id }}"
-                    >
-
-
+                    <button type="button" class="vip-engraving-category-btn {% if forloop.first %}active{% endif %}" data-category="{{ categoria.id }}">
                         <span class="vip-engraving-category-left">
-
-
-                            {% if categoria.icone %}
-
-                            <img
-                                src="{{ categoria.icone.url }}"
-                                alt="{{ categoria.nome }}"
-                            >
-
-                            {% endif %}
-
-
-                            <span>
-                                {{ categoria.nome }}
-                            </span>
-
-
+                            {% if categoria.icone %}<img src="{{ categoria.icone.url }}" alt="{{ categoria.nome }}">{% endif %}
+                            <span>{{ categoria.nome }}</span>
                         </span>
-
-
                         <i class="bi bi-chevron-down"></i>
-
-
                     </button>
 
-
-
-                    <div
-                        class="vip-engraving-category-content {% if forloop.first %}open{% endif %}"
-                        data-category-content="{{ categoria.id }}"
-                    >
-
-
+                    <div class="vip-engraving-category-content {% if forloop.first %}open{% endif %}" data-category-content="{{ categoria.id }}">
                         <div class="vip-engraving-items">
-
-
                             {% for gravacao in categoria.gravacoes.all %}
-
-
                             {% if gravacao.ativo %}
-
-
-                            <button
-                                type="button"
-                                class="vip-engraving-btn"
-                                data-id="{{ gravacao.id }}"
-                                data-name="{{ gravacao.nome }}"
-                                data-image="{{ gravacao.imagem.url }}"
-                            >
-
-
-                                <img
-                                    src="{{ gravacao.imagem.url }}"
-                                    alt="{{ gravacao.nome }}"
-                                >
-
-
-                                {% if gravacao.nome %}
-
-                                <span>
-                                    {{ gravacao.nome }}
-                                </span>
-
-                                {% endif %}
-
-
+                            <button type="button" class="vip-engraving-btn" data-id="{{ gravacao.id }}" data-name="{{ gravacao.nome }}" data-image="{{ gravacao.imagem.url }}">
+                                <img src="{{ gravacao.imagem.url }}" alt="{{ gravacao.nome }}">
+                                {% if gravacao.nome %}<span>{{ gravacao.nome }}</span>{% endif %}
                             </button>
-
-
                             {% endif %}
-
-
                             {% endfor %}
-
-
                         </div>
-
-
                     </div>
+                </div>
+                {% empty %}
+                <p class="vip-no-engravings">Nenhuma gravação disponível.</p>
+                {% endfor %}
+            </div>
+        </div>
 
+        <!-- 4. CAMADAS + CONTROLES -->
+        <div class="vip-panel-section">
+            <div class="vip-step-title"><span>4</span> Ajustar gravações</div>
 
+            <div id="engravingLayersList" class="vip-engraving-layers-list">
+                <div class="vip-engraving-empty">Nenhuma gravação adicionada.</div>
+            </div>
+
+            <div id="engravingControlsSection" class="vip-controls-card" style="display:none;">
+
+                <div class="vip-section-title-row">
+                    <label>Editando</label>
+                    <span id="selectedEngravingName">Gravação</span>
                 </div>
 
+                <div class="vip-controls-grid">
 
-                {% empty %}
+                    <div class="vip-position-editor">
+                        <div class="vip-position-pad" id="engravingPositionPad" aria-label="Arraste para posicionar" role="application" tabindex="0">
+                            <div class="vip-position-grid"></div>
+                            <div class="vip-position-axis-x"></div>
+                            <div class="vip-position-axis-y"></div>
+                            <div class="vip-position-hint"><span>ARRASTE</span><small>para posicionar</small></div>
+                            <div class="vip-position-knob" id="engravingPositionKnob"><span></span></div>
+                        </div>
 
+                        <div class="vip-position-readout">
+                            <div><span>X</span><strong id="engravingXValue">140</strong></div>
+                            <div><span>Y</span><strong id="engravingYValue">700</strong></div>
+                        </div>
+                    </div>
 
-                <p class="vip-no-engravings">
-                    Nenhuma gravação disponível.
-                </p>
+                    <div class="vip-controls-side">
 
+                        <div class="vip-engraving-control">
+                            <div class="vip-control-header"><span>Tamanho</span><strong id="engravingSizeValue">250</strong></div>
+                            <input type="range" id="engravingSizeControl" min="20" max="800" step="1" value="250">
+                        </div>
 
-                {% endfor %}
+                        <div class="vip-engraving-control">
+                            <div class="vip-control-header"><span>Rotação</span><strong id="engravingRotationValue">0°</strong></div>
+                            <input type="range" id="engravingRotationControl" min="-180" max="180" step="1" value="0">
+                        </div>
 
+                    </div>
+                </div>
+
+                <div class="vip-controls-actions">
+                    <button type="button" id="resetEngravingPosition" class="vip-reset-engraving-btn">
+                        <i class="bi bi-bullseye"></i> Posição inicial
+                    </button>
+                    <button type="button" id="removeSelectedEngraving" class="vip-remove-engraving-btn">
+                        <i class="bi bi-trash"></i> Remover
+                    </button>
+                </div>
 
             </div>
-
         </div>
 
-
-
-        <!-- =====================================================
-             PREÇO
-        ====================================================== -->
-
-        <div class="vip-price-box">
-
-            <strong>
-                R$ {{ product.price }}
-            </strong>
-
-
+        <!-- PREÇO (fixo no rodapé) -->
+        <div class="vip-price-box vip-price-sticky">
+            <div class="vip-price-row">
+                <span>Total</span>
+                <strong>R$ {{ product.price }}</strong>
+            </div>
             <div class="vip-group-flow-actions">
-
-
-                <button
-                    type="button"
-                    class="vip-next-bottle-btn"
-                >
-
-                    Continuar
-
-                    <i class="bi bi-arrow-right"></i>
-
-                </button>
-
-
+                <button type="button" class="vip-next-bottle-btn">Continuar <i class="bi bi-arrow-right"></i></button>
             </div>
-
         </div>
-
 
     </div>
 
+</section>
 
 
 <script>
 
-
 document.addEventListener("DOMContentLoaded", () => {
-
 
     /* =========================================================
        VIEWER
     ========================================================= */
 
-    const viewer =
-        document.getElementById(
-            "bottleViewer"
-        );
-
+    const viewer = document.getElementById("bottleViewer");
 
     if (!viewer) {
-
-        console.warn(
-            "bottleViewer não encontrado."
-        );
-
+        console.warn("bottleViewer não encontrado.");
         return;
-
     }
 
-
-
-    /* =========================================================
-       MATERIAL DO CYLINDER
-    ========================================================= */
-
     let engravingMaterial = null;
-
 
 
     /* =========================================================
        ELEMENTOS
     ========================================================= */
 
-    const sideButtons =
-        document.querySelectorAll(
-            ".vip-side-btn"
-        );
+    const $ = id => document.getElementById(id);
+
+    const sideButtons = document.querySelectorAll(".vip-side-btn");
+    const engravingButtons = document.querySelectorAll(".vip-engraving-btn");
+    const fontButtons = document.querySelectorAll(".vip-font-btn");
+    const orientationButtons = document.querySelectorAll(".vip-orientation-btn");
+
+    const layersList = $("engravingLayersList");
+    const controlsSection = $("engravingControlsSection");
+    const selectedName = $("selectedEngravingName");
+    const sizeControl = $("engravingSizeControl");
+    const rotationControl = $("engravingRotationControl");
+    const xValue = $("engravingXValue");
+    const yValue = $("engravingYValue");
+    const sizeValue = $("engravingSizeValue");
+    const rotationValue = $("engravingRotationValue");
+    const positionPad = $("engravingPositionPad");
+    const positionKnob = $("engravingPositionKnob");
+    const removeButton = $("removeSelectedEngraving");
+    const nameInput = $("nameInput");
 
 
-    const engravingButtons =
-        document.querySelectorAll(
-            ".vip-engraving-btn"
-        );
+    /* =========================================================
+       AJUSTES DA TEXTURA NO MODELO
+    ========================================================= */
 
+    // Espelhamento horizontal do UV (já estava corrigido antes).
+    const TEXTURE_FLIP_X = true;
 
-    const layersList =
-        document.getElementById(
-            "engravingLayersList"
-        );
+    // Figura de cabeça pra baixo -> TEXTURE_FLIP_Y = true.
+    // Se ficar invertida ao contrário, troque para false.
+    const TEXTURE_FLIP_Y = true;
 
+    // Posição inicial (0 a 1024) na textura.
+    const SIDE_X = {
+        left: 140,
+        right: 652   // lado oposto da garrafa (140 + 512)
+    };
 
-    const controlsSection =
-        document.getElementById(
-            "engravingControlsSection"
-        );
+    const START_Y = 700;
 
+    // Inverte esquerda/direita só no controle de arrastar.
+    // Se ficar invertido de novo, troque para false.
+    const PAD_INVERT_X = true;
+    const PAD_SIGN_X = PAD_INVERT_X ? -1 : 1;
 
-    const selectedName =
-        document.getElementById(
-            "selectedEngravingName"
-        );
+    // O centro do pad = posição inicial da gravação.
+    // As bordas do pad alcançam a garrafa toda (0 a 1024).
+    // PAD_CURVE > 1 deixa o controle mais fino perto do centro.
+    // 1 = linear, 2 = bem fino no centro.
+    const PAD_CURVE = 2.2;
 
+    // Alcance do pad (em px da textura) para cada lado do centro.
+    // Menor = menos sensível. 512 = uma volta inteira em X.
+    const PAD_RANGE = 300;
 
-    const sizeControl =
-        document.getElementById(
-            "engravingSizeControl"
-        );
+    // Corrige o nome espelhado. Se ficar espelhado de novo, troque para false.
+    const NAME_MIRROR_X = true;
 
-
-    const rotationControl =
-        document.getElementById(
-            "engravingRotationControl"
-        );
-
-
-    const xValue =
-        document.getElementById(
-            "engravingXValue"
-        );
-
-
-    const yValue =
-        document.getElementById(
-            "engravingYValue"
-        );
-
-
-    const sizeValue =
-        document.getElementById(
-            "engravingSizeValue"
-        );
-
-
-    const rotationValue =
-        document.getElementById(
-            "engravingRotationValue"
-        );
-
-
-    const positionPad =
-        document.getElementById(
-            "engravingPositionPad"
-        );
-
-
-    const positionKnob =
-        document.getElementById(
-            "engravingPositionKnob"
-        );
-
-
-    const removeButton =
-        document.getElementById(
-            "removeSelectedEngraving"
-        );
-
-
-    const nameInput =
-        document.getElementById(
-            "nameInput"
-        );
-
-
-    const fontButtons =
-        document.querySelectorAll(
-            ".vip-font-btn"
-        );
-
-
-    const orientationButtons =
-        document.querySelectorAll(
-            ".vip-orientation-btn"
-        );
-
+    // Tamanho padrão do nome (o slider "Tamanho" continua ajustando)
+    const NAME_DEFAULT_SIZE = 120;
 
 
     /* =========================================================
        ESTADO
     ========================================================= */
 
-    let currentSide =
-        "left";
+    let currentSide = "left";
+    let selectedEngravingId = null;
 
+    const engravings = { left: [], right: [] };
 
-    let selectedEngravingId =
-        null;
+    let currentFont = "Arial";
+    let currentOrientation = "vertical";
 
+    const VERTICAL_MAX_CHARACTERS = 15;
+    const HORIZONTAL_MAX_CHARACTERS = 5;
 
-    const engravings = {
-
-        left: [],
-
-        right: []
-
-    };
-
-
-    let currentFont =
-        "Arial";
-
-
-    let currentOrientation =
-        "vertical";
-
-
-    const VERTICAL_MAX_CHARACTERS =
-        15;
-
-
-    const HORIZONTAL_MAX_CHARACTERS =
-        5;
-
+    let textureRenderVersion = 0;
+    let textureRenderRunning = false;
+    let textureRenderPending = false;
 
 
     /* =========================================================
-       RENDERIZAÇÃO
-    ========================================================= */
-
-    let textureRenderVersion =
-        0;
-
-
-    let textureRenderRunning =
-        false;
-
-
-    let textureRenderPending =
-        false;
-
-
-
-    /* =========================================================
-       CANVAS
+       UTILITÁRIOS
     ========================================================= */
 
     function createCanvas() {
-
-        const canvas =
-            document.createElement(
-                "canvas"
-            );
-
-
-        canvas.width =
-            1024;
-
-
-        canvas.height =
-            1024;
-
-
+        const canvas = document.createElement("canvas");
+        canvas.width = 1024;
+        canvas.height = 1024;
         return canvas;
-
     }
-
-
-
-    /* =========================================================
-       CARREGAR IMAGEM
-    ========================================================= */
 
     function loadImage(url) {
-
-        return new Promise(
-            (resolve, reject) => {
-
-                const image =
-                    new Image();
-
-
-                image.crossOrigin =
-                    "anonymous";
-
-
-                image.onload = () => {
-
-                    resolve(image);
-
-                };
-
-
-                image.onerror = () => {
-
-                    reject(
-                        new Error(
-                            "Não foi possível carregar a imagem: " +
-                            url
-                        )
-                    );
-
-                };
-
-
-                image.src =
-                    url;
-
-            }
-        );
-
+        return new Promise((resolve, reject) => {
+            const image = new Image();
+            image.crossOrigin = "anonymous";
+            image.onload = () => resolve(image);
+            image.onerror = () => reject(
+                new Error("Não foi possível carregar a imagem: " + url)
+            );
+            image.src = url;
+        });
     }
-
-
-
-    /* =========================================================
-       ID
-    ========================================================= */
 
     function generateId() {
-
-        return (
-            "layer_" +
-            Date.now().toString(36) +
-            "_" +
-            Math.random()
-                .toString(36)
-                .substring(2, 8)
-        );
-
+        return "layer_" +
+            Date.now().toString(36) + "_" +
+            Math.random().toString(36).substring(2, 8);
     }
 
+    // X dá a volta na garrafa (0 e 1024 são o mesmo ponto).
+    function wrapX(value) {
+        return ((value % 1024) + 1024) % 1024;
+    }
 
+    // Acompanha o deslocamento horizontal da gravação girando a câmera.
+    function rotateBottleWithEngraving(previousX, nextX) {
+        if (!Number.isFinite(previousX) || !Number.isFinite(nextX)) return;
 
-    /* =========================================================
-       CAMADAS ATUAIS
-    ========================================================= */
+        let delta = nextX - previousX;
+        if (delta > 512) delta -= 1024;
+        if (delta < -512) delta += 1024;
+        if (!delta) return;
+
+        const orbit = viewer.getCameraOrbit();
+        const direction = PAD_SIGN_X;
+        // Amplifica o giro para acompanhar visualmente o deslocamento no controle.
+        const CAMERA_FOLLOW_FACTOR = 3.4;
+        const theta = orbit.theta + (delta / 1024) * Math.PI * 2 * direction * CAMERA_FOLLOW_FACTOR;
+        viewer.cameraOrbit = `${theta}rad ${orbit.phi}rad ${orbit.radius}m`;
+    }
+
+    // Y pode passar um pouco das bordas da área de gravação.
+    const Y_MIN = -256;
+    const Y_MAX = 1280;
+
+    function clampY(value) {
+        return Math.max(Y_MIN, Math.min(Y_MAX, value));
+    }
+
+    // Desenha cópias deslocadas para a gravação não cortar na emenda.
+    const WRAP_OFFSETS = [-1024, 0, 1024];
 
     function getCurrentEngravings() {
-
-        return engravings[
-            currentSide
-        ];
-
+        return engravings[currentSide];
     }
-
-
 
     function getSelectedEngraving() {
-
         return getCurrentEngravings()
-            .find(
-                layer =>
-                    layer.id ===
-                    selectedEngravingId
-            ) || null;
-
+            .find(layer => layer.id === selectedEngravingId) || null;
     }
-
-
-
-    /* =========================================================
-       LIMITE DO NOME
-    ========================================================= */
 
     function getMaxCharacters() {
-
-        return currentOrientation ===
-            "horizontal"
-
+        return currentOrientation === "horizontal"
             ? HORIZONTAL_MAX_CHARACTERS
-
             : VERTICAL_MAX_CHARACTERS;
-
     }
 
-
-
-    /* =========================================================
-       ENCONTRAR NOME
-    ========================================================= */
-
-    function getNameLayer(
-        side = currentSide
-    ) {
-
-        return engravings[side]
-            .find(
-                layer =>
-                    layer.type ===
-                    "name"
-            ) || null;
-
+    function getNameLayer(side = currentSide) {
+        return engravings[side].find(layer => layer.type === "name") || null;
     }
 
+    function hideControls() {
+        if (controlsSection) controlsSection.style.display = "none";
+    }
 
 
     /* =========================================================
@@ -1073,72 +397,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function createNameLayer() {
 
-        const existing =
-            getNameLayer();
+        const existing = getNameLayer();
 
-
-        if (existing) {
-
-            return existing;
-
-        }
-
+        if (existing) return existing;
 
         const nameLayer = {
-
-            id:
-                generateId(),
-
-            type:
-                "name",
-
-            name:
-                "Nome",
-
-            text:
-                "",
-
-            x:
-                currentSide ===
-                    "left"
-                    ? 350
-                    : 674,
-
-            y:
-                512,
-
-            width:
-                250,
-
-            height:
-                250,
-
-            rotation:
-                0,
-
-            opacity:
-                1,
-
-            font:
-                currentFont,
-
-            orientation:
-                currentOrientation
-
+            id: generateId(),
+            type: "name",
+            name: "Nome",
+            text: "",
+            x: SIDE_X[currentSide],
+            y: START_Y,
+            width: NAME_DEFAULT_SIZE,
+            height: NAME_DEFAULT_SIZE,
+            rotation: 0,
+            opacity: 1,
+            font: currentFont,
+            orientation: currentOrientation
         };
 
-
-        engravings[
-            currentSide
-        ].push(
-            nameLayer
-        );
-
+        engravings[currentSide].push(nameLayer);
 
         return nameLayer;
-
     }
-
 
 
     /* =========================================================
@@ -1147,305 +428,137 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function updateNameLayerFromInput() {
 
-        if (!nameInput) {
+        if (!nameInput) return;
 
-            return;
+        const rawText = nameInput.value
+            .trim()
+            .substring(0, getMaxCharacters())
+            .toUpperCase();
 
-        }
+        nameInput.value = rawText;
 
-
-        const rawText =
-            nameInput.value
-                .trim()
-                .substring(
-                    0,
-                    getMaxCharacters()
-                )
-                .toUpperCase();
-
-
-        nameInput.value =
-            rawText;
-
-
-        let nameLayer =
-            getNameLayer();
-
+        let nameLayer = getNameLayer();
 
         if (!rawText) {
 
             if (nameLayer) {
-
-                const index =
-                    getCurrentEngravings()
-                        .findIndex(
-                            layer =>
-                                layer.type ===
-                                "name"
-                        );
-
+                const index = getCurrentEngravings()
+                    .findIndex(layer => layer.type === "name");
 
                 if (index !== -1) {
-
-                    getCurrentEngravings()
-                        .splice(
-                            index,
-                            1
-                        );
-
+                    getCurrentEngravings().splice(index, 1);
                 }
-
             }
 
+            selectedEngravingId = null;
 
-            selectedEngravingId =
-                null;
-
-
-            if (controlsSection) {
-
-                controlsSection.style.display =
-                    "none";
-
-            }
-
-
+            hideControls();
             renderLayersList();
-
-
             requestRebuildEngravingTexture();
 
             return;
-
         }
 
+        if (!nameLayer) nameLayer = createNameLayer();
 
-        if (!nameLayer) {
+        nameLayer.text = rawText;
+        nameLayer.font = currentFont;
+        nameLayer.orientation = currentOrientation;
 
-            nameLayer =
-                createNameLayer();
+        selectedEngravingId = nameLayer.id;
 
-        }
-
-
-        nameLayer.text =
-            rawText;
-
-
-        nameLayer.font =
-            currentFont;
-
-
-        nameLayer.orientation =
-            currentOrientation;
-
-
-        selectedEngravingId =
-            nameLayer.id;
-
-
-        selectEngraving(
-            nameLayer.id
-        );
-
+        selectEngraving(nameLayer.id);
 
         requestRebuildEngravingTexture();
-
     }
-
 
 
     /* =========================================================
        DESENHAR NOME
     ========================================================= */
 
-    function drawNameLayer(
-        ctx,
-        layer
-    ) {
+    function drawNameLayer(ctx, layer) {
 
-        if (
-            !layer ||
-            !layer.text
-        ) {
+        if (!layer || !layer.text) return;
 
-            return;
+        const text = layer.text
+            .substring(
+                0,
+                layer.orientation === "horizontal"
+                    ? HORIZONTAL_MAX_CHARACTERS
+                    : VERTICAL_MAX_CHARACTERS
+            )
+            .toUpperCase();
 
-        }
-
-
-        const text =
-            layer.text
-                .substring(
-                    0,
-                    layer.orientation ===
-                        "horizontal"
-                        ? HORIZONTAL_MAX_CHARACTERS
-                        : VERTICAL_MAX_CHARACTERS
-                )
-                .toUpperCase();
-
-
-        if (!text) {
-
-            return;
-
-        }
-
+        if (!text) return;
 
         ctx.save();
 
+        ctx.translate(layer.x, layer.y);
 
-        ctx.translate(
-            layer.x,
-            layer.y
-        );
+        // Rotação definida pelo usuário
+        ctx.rotate(layer.rotation);
 
-
-        /*
-         * ROTAÇÃO DEFINIDA PELO USUÁRIO
-         */
-
-        ctx.rotate(
-            layer.rotation
-        );
-
-
-        /*
-         * ORIENTAÇÃO VERTICAL
-         */
-
-        if (
-            layer.orientation ===
-            "vertical"
-        ) {
-
-            ctx.rotate(
-                -Math.PI / 2
-            );
-
+        // Orientação vertical
+        if (layer.orientation === "vertical") {
+            ctx.rotate(-Math.PI / 2);
         }
 
+        // Desespelha o texto (o UV do modelo inverte a leitura)
+        if (NAME_MIRROR_X) {
+            ctx.scale(-1, 1);
+        }
 
-        ctx.fillStyle =
-            "#FFFFFF";
+        ctx.fillStyle = "#FFFFFF";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
 
+        const fontFamily = layer.font || "Arial";
 
-        ctx.textAlign =
-            "center";
+        const MIN_FONT = 16;
 
+        let fontSize = Math.max(MIN_FONT, layer.width * 0.35);
 
-        ctx.textBaseline =
-            "middle";
+        const maxWidth = layer.orientation === "vertical" ? 420 : 200;
 
+        ctx.font = `bold ${fontSize}px "${fontFamily}"`;
 
-        const fontFamily =
-            layer.font ||
-            "Arial";
-
-
-        let fontSize =
-            Math.max(
-                40,
-                layer.width * 0.70
-            );
-
-
-        const maxWidth =
-            layer.orientation ===
-                "vertical"
-                ? 700
-                : 320;
-
-
-        ctx.font =
-            `bold ${fontSize}px "${fontFamily}"`;
-
-
-        while (
-            ctx.measureText(text).width >
-                maxWidth &&
-            fontSize > 40
-        ) {
-
+        while (ctx.measureText(text).width > maxWidth && fontSize > MIN_FONT) {
             fontSize--;
-
-
-            ctx.font =
-                `bold ${fontSize}px "${fontFamily}"`;
-
+            ctx.font = `bold ${fontSize}px "${fontFamily}"`;
         }
 
-
-        ctx.fillText(
-            text,
-            0,
-            0
-        );
-
+        ctx.fillText(text, 0, 0);
 
         ctx.restore();
-
     }
-
 
 
     /* =========================================================
        DESENHAR IMAGEM
     ========================================================= */
 
-    function drawImageLayer(
-        ctx,
-        layer
-    ) {
+    function drawImageLayer(ctx, layer) {
 
-        if (
-            !layer ||
-            !layer.image
-        ) {
-
-            return;
-
-        }
-
+        if (!layer || !layer.image) return;
 
         ctx.save();
 
+        ctx.translate(layer.x, layer.y);
+        ctx.rotate(layer.rotation);
 
-        ctx.translate(
-            layer.x,
-            layer.y
-        );
-
-
-        ctx.rotate(
-            layer.rotation
-        );
-
-
-        ctx.globalAlpha =
-            layer.opacity ?? 1;
-
+        ctx.globalAlpha = layer.opacity ?? 1;
 
         ctx.drawImage(
-
             layer.image,
-
             -layer.width / 2,
-
             -layer.height / 2,
-
             layer.width,
-
             layer.height
-
         );
 
-
         ctx.restore();
-
     }
-
 
 
     /* =========================================================
@@ -1455,246 +568,102 @@ document.addEventListener("DOMContentLoaded", () => {
     async function rebuildEngravingTexture() {
 
         if (!engravingMaterial) {
-
-            console.warn(
-                "Material Cylinder ainda não está disponível."
-            );
-
+            console.warn("Material Cylinder ainda não está disponível.");
             return;
-
         }
 
+        const renderVersion = ++textureRenderVersion;
 
-        const renderVersion =
-            ++textureRenderVersion;
+        const canvas = createCanvas();
+        const ctx = canvas.getContext("2d");
 
-
-        const canvas =
-            createCanvas();
-
-
-        const ctx =
-            canvas.getContext(
-                "2d"
-            );
-
-
-        ctx.clearRect(
-            0,
-            0,
-            canvas.width,
-            canvas.height
-        );
-
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         /*
-         * =====================================================
-         * CORREÇÃO PRINCIPAL
-         * =====================================================
+         * O UV do Cylinder está espelhado / invertido.
+         * Invertemos o canvas antes de desenhar.
          *
-         * O UV DO CYLINDER ESTÁ HORIZONTALMENTE ESPELHADO.
+         * FLIP_X corrige o espelhamento horizontal.
+         * FLIP_Y corrige a figura de cabeça pra baixo.
          *
-         * ENTÃO INVERTEMOS O CANVAS ANTES DE DESENHAR.
-         *
-         * ISSO CORRIGE:
-         *
-         * - NOME
-         * - GRAVAÇÕES
-         * - POSIÇÃO X
-         * - ROTAÇÃO
-         *
-         * A COORDENADA LÓGICA CONTINUA NORMAL:
-         *
-         * X MENOR = ESQUERDA
-         * X MAIOR = DIREITA
-         *
-         * =====================================================
+         * As coordenadas lógicas continuam normais:
+         * X menor = esquerda, X maior = direita
+         * Y menor = cima,     Y maior = baixo
          */
 
         ctx.save();
 
-
         ctx.translate(
-            canvas.width,
-            0
+            TEXTURE_FLIP_X ? canvas.width : 0,
+            TEXTURE_FLIP_Y ? canvas.height : 0
         );
-
 
         ctx.scale(
-            -1,
-            1
+            TEXTURE_FLIP_X ? -1 : 1,
+            TEXTURE_FLIP_Y ? -1 : 1
         );
 
+        const allLayers = [...engravings.left, ...engravings.right];
 
-        /*
-         * =====================================================
-         * TODAS AS CAMADAS
-         * =====================================================
-         */
+        for (const layer of allLayers) {
 
-        const allLayers = [
-
-            ...engravings.left,
-
-            ...engravings.right
-
-        ];
-
-
-        for (
-            const layer
-            of allLayers
-        ) {
-
-            if (
-                renderVersion !==
-                textureRenderVersion
-            ) {
-
+            if (renderVersion !== textureRenderVersion) {
                 ctx.restore();
-
                 return;
-
             }
-
 
             try {
 
-                /*
-                 * NOME
-                 */
-
-                if (
-                    layer.type ===
-                    "name"
-                ) {
-
-                    drawNameLayer(
-                        ctx,
-                        layer
-                    );
-
+                if (layer.type === "name") {
+                    for (const off of WRAP_OFFSETS) {
+                        drawNameLayer(ctx, { ...layer, x: layer.x + off });
+                    }
                     continue;
-
                 }
 
-
-                /*
-                 * GRAVAÇÃO
-                 */
-
-                if (
-                    layer.type ===
-                    "engraving"
-                ) {
+                if (layer.type === "engraving") {
 
                     if (!layer.image) {
-
-                        layer.image =
-                            await loadImage(
-                                layer.imageUrl
-                            );
-
+                        layer.image = await loadImage(layer.imageUrl);
                     }
 
-
-                    drawImageLayer(
-                        ctx,
-                        layer
-                    );
-
+                    for (const off of WRAP_OFFSETS) {
+                        drawImageLayer(ctx, { ...layer, x: layer.x + off });
+                    }
                 }
 
             } catch (error) {
-
-                console.error(
-                    "Erro ao desenhar camada:",
-                    layer,
-                    error
-                );
-
+                console.error("Erro ao desenhar camada:", layer, error);
             }
-
         }
-
-
-        /*
-         * TERMINA A TRANSFORMAÇÃO
-         */
 
         ctx.restore();
 
-
-        if (
-            renderVersion !==
-            textureRenderVersion
-        ) {
-
-            return;
-
-        }
-
+        if (renderVersion !== textureRenderVersion) return;
 
         try {
 
-            const texture =
-                await viewer.createTexture(
-                    canvas.toDataURL(
-                        "image/png"
-                    )
-                );
+            const texture = await viewer.createTexture(
+                canvas.toDataURL("image/png")
+            );
 
-
-            if (
-                renderVersion !==
-                textureRenderVersion
-            ) {
-
-                return;
-
-            }
-
-
-            /*
-             * APLICA TEXTURA NO CYLINDER
-             */
+            if (renderVersion !== textureRenderVersion) return;
 
             engravingMaterial
                 .pbrMetallicRoughness
                 .baseColorTexture
-                .setTexture(
-                    texture
-                );
-
+                .setTexture(texture);
 
             engravingMaterial
                 .pbrMetallicRoughness
-                .setBaseColorFactor(
-                    [
-                        1,
-                        1,
-                        1,
-                        1
-                    ]
-                );
+                .setBaseColorFactor([1, 1, 1, 1]);
 
-
-            engravingMaterial.setAlphaMode(
-                "BLEND"
-            );
-
+            engravingMaterial.setAlphaMode("BLEND");
 
         } catch (error) {
-
-            console.error(
-                "Erro ao atualizar textura:",
-                error
-            );
-
+            console.error("Erro ao atualizar textura:", error);
         }
-
     }
-
 
 
     /* =========================================================
@@ -1703,50 +672,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function requestRebuildEngravingTexture() {
 
-        textureRenderPending =
-            true;
+        textureRenderPending = true;
 
+        if (textureRenderRunning) return;
 
-        if (
-            textureRenderRunning
-        ) {
+        textureRenderRunning = true;
 
-            return;
+        requestAnimationFrame(async () => {
 
-        }
+            textureRenderPending = false;
 
+            await rebuildEngravingTexture();
 
-        textureRenderRunning =
-            true;
+            textureRenderRunning = false;
 
-
-        requestAnimationFrame(
-            async () => {
-
-                textureRenderPending =
-                    false;
-
-
-                await rebuildEngravingTexture();
-
-
-                textureRenderRunning =
-                    false;
-
-
-                if (
-                    textureRenderPending
-                ) {
-
-                    requestRebuildEngravingTexture();
-
-                }
-
+            if (textureRenderPending) {
+                requestRebuildEngravingTexture();
             }
-        );
-
+        });
     }
-
 
 
     /* =========================================================
@@ -1755,165 +699,53 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function renderLayersList() {
 
-        if (!layersList) {
+        if (!layersList) return;
 
-            return;
-
-        }
-
-
-        const current =
-            getCurrentEngravings();
-
+        const current = getCurrentEngravings();
 
         if (!current.length) {
-
             layersList.innerHTML = `
-
                 <div class="vip-engraving-empty">
-
                     Nenhuma gravação adicionada.
-
                 </div>
-
             `;
-
             return;
-
         }
 
+        layersList.innerHTML = "";
 
-        layersList.innerHTML =
-            "";
+        current.forEach((layer, index) => {
 
+            const item = document.createElement("button");
 
-        current.forEach(
-            (layer, index) => {
+            item.type = "button";
 
-                const item =
-                    document.createElement(
-                        "button"
-                    );
+            item.className =
+                "vip-engraving-layer-item" +
+                (layer.id === selectedEngravingId ? " active" : "");
 
+            item.dataset.id = layer.id;
 
-                item.type =
-                    "button";
+            const preview = layer.type === "name"
+                ? `<span style="font-size: 13px; font-weight: 700;">Aa</span>`
+                : `<img src="${layer.imageUrl}" alt="">`;
 
+            const layerTitle = layer.type === "name"
+                ? (layer.text ? `Nome: ${layer.text}` : "Nome")
+                : layer.name;
 
-                item.className =
-                    "vip-engraving-layer-item" +
+            item.innerHTML = `
+                <span class="vip-layer-number">${index + 1}</span>
+                <span class="vip-layer-preview">${preview}</span>
+                <span class="vip-layer-name">${layerTitle}</span>
+                <i class="bi bi-chevron-right"></i>
+            `;
 
-                    (
-                        layer.id ===
-                        selectedEngravingId
+            item.addEventListener("click", () => selectEngraving(layer.id));
 
-                            ? " active"
-
-                            : ""
-                    );
-
-
-                item.dataset.id =
-                    layer.id;
-
-
-                let preview;
-
-
-                if (
-                    layer.type ===
-                    "name"
-                ) {
-
-                    preview = `
-
-                        <span
-                            style="
-                                font-size: 13px;
-                                font-weight: 700;
-                            "
-                        >
-                            Aa
-                        </span>
-
-                    `;
-
-                } else {
-
-                    preview = `
-
-                        <img
-                            src="${layer.imageUrl}"
-                            alt=""
-                        >
-
-                    `;
-
-                }
-
-
-                const layerTitle =
-                    layer.type ===
-                        "name"
-
-                        ? (
-                            layer.text
-                                ? `Nome: ${layer.text}`
-                                : "Nome"
-                        )
-
-                        : layer.name;
-
-
-                item.innerHTML = `
-
-                    <span class="vip-layer-number">
-
-                        ${index + 1}
-
-                    </span>
-
-
-                    <span class="vip-layer-preview">
-
-                        ${preview}
-
-                    </span>
-
-
-                    <span class="vip-layer-name">
-
-                        ${layerTitle}
-
-                    </span>
-
-
-                    <i class="bi bi-chevron-right"></i>
-
-                `;
-
-
-                item.addEventListener(
-                    "click",
-                    () => {
-
-                        selectEngraving(
-                            layer.id
-                        );
-
-                    }
-                );
-
-
-                layersList.appendChild(
-                    item
-                );
-
-            }
-        );
-
+            layersList.appendChild(item);
+        });
     }
-
 
 
     /* =========================================================
@@ -1922,144 +754,56 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function selectEngraving(id) {
 
-        selectedEngravingId =
-            id;
+        selectedEngravingId = id;
 
-
-        const layer =
-            getSelectedEngraving();
-
+        const layer = getSelectedEngraving();
 
         if (!layer) {
-
-            if (controlsSection) {
-
-                controlsSection.style.display =
-                    "none";
-
-            }
-
-
+            hideControls();
             renderLayersList();
-
             return;
-
         }
 
-
-        if (controlsSection) {
-
-            controlsSection.style.display =
-                "block";
-
-        }
-
+        if (controlsSection) controlsSection.style.display = "block";
 
         if (selectedName) {
-
-            if (
-                layer.type ===
-                "name"
-            ) {
-
-                selectedName.textContent =
-                    layer.text
-                        ? `Nome: ${layer.text}`
-                        : "Nome";
-
-            } else {
-
-                selectedName.textContent =
-                    layer.name;
-
-            }
-
+            selectedName.textContent = layer.type === "name"
+                ? (layer.text ? `Nome: ${layer.text}` : "Nome")
+                : layer.name;
         }
 
-
-        if (sizeControl) {
-
-            sizeControl.value =
-                layer.width;
-
-        }
-
+        if (sizeControl) sizeControl.value = layer.width;
 
         if (rotationControl) {
+            rotationControl.value = Math.round(layer.rotation * 180 / Math.PI);
+        }
 
-            rotationControl.value =
-                Math.round(
-                    layer.rotation *
-                    180 /
-                    Math.PI
+        if (layer.type === "name") {
+
+            if (nameInput) nameInput.value = layer.text || "";
+
+            currentFont = layer.font || currentFont;
+            currentOrientation = layer.orientation || currentOrientation;
+
+            fontButtons.forEach(button => {
+                button.classList.toggle(
+                    "active",
+                    button.dataset.font === currentFont
                 );
+            });
 
+            orientationButtons.forEach(button => {
+                button.classList.toggle(
+                    "active",
+                    button.dataset.orientation === currentOrientation
+                );
+            });
         }
-
-
-        if (
-            layer.type ===
-            "name"
-        ) {
-
-            if (nameInput) {
-
-                nameInput.value =
-                    layer.text || "";
-
-            }
-
-
-            currentFont =
-                layer.font ||
-                currentFont;
-
-
-            currentOrientation =
-                layer.orientation ||
-                currentOrientation;
-
-
-            fontButtons.forEach(
-                button => {
-
-                    button.classList.toggle(
-                        "active",
-                        button.dataset.font ===
-                            currentFont
-                    );
-
-                }
-            );
-
-
-            orientationButtons.forEach(
-                button => {
-
-                    button.classList.toggle(
-                        "active",
-                        button.dataset.orientation ===
-                            currentOrientation
-                    );
-
-                }
-            );
-
-        }
-
 
         updateControlLabels();
-
-
         renderLayersList();
-
-
-        updatePositionKnob(
-            layer
-        );
-
+        updatePositionKnob(layer);
     }
-
 
 
     /* =========================================================
@@ -2068,183 +812,74 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function updateControlLabels() {
 
-        const layer =
-            getSelectedEngraving();
+        const layer = getSelectedEngraving();
 
+        if (!layer) return;
 
-        if (!layer) {
-
-            return;
-
-        }
-
-
-        if (xValue) {
-
-            xValue.textContent =
-                Math.round(
-                    layer.x
-                );
-
-        }
-
-
-        if (yValue) {
-
-            yValue.textContent =
-                Math.round(
-                    layer.y
-                );
-
-        }
-
-
-        if (sizeValue) {
-
-            sizeValue.textContent =
-                Math.round(
-                    layer.width
-                );
-
-        }
-
+        if (xValue) xValue.textContent = Math.round(layer.x);
+        if (yValue) yValue.textContent = Math.round(layer.y);
+        if (sizeValue) sizeValue.textContent = Math.round(layer.width);
 
         if (rotationValue) {
-
             rotationValue.textContent =
-                Math.round(
-                    layer.rotation *
-                    180 /
-                    Math.PI
-                ) + "°";
-
+                Math.round(layer.rotation * 180 / Math.PI) + "°";
         }
-
     }
-
 
 
     /* =========================================================
        ADICIONAR GRAVAÇÃO
     ========================================================= */
 
-    async function addEngraving(
-        imageUrl,
-        engravingName
-    ) {
+    async function addEngraving(imageUrl, engravingName) {
 
         if (!imageUrl) {
-
-            console.error(
-                "A gravação não possui imagem."
-            );
-
+            console.error("A gravação não possui imagem.");
             return;
-
         }
 
-
-        const existing =
-            getCurrentEngravings()
-                .find(
-                    layer =>
-                        layer.type ===
-                            "engraving" &&
-                        layer.imageUrl ===
-                            imageUrl
-                );
-
-
-        if (existing) {
-
-            selectEngraving(
-                existing.id
-            );
-
-            return;
-
-        }
-
-
-        const initialX =
-            currentSide ===
-                "left"
-                ? 350
-                : 674;
-
-
-        const layer = {
-
-            id:
-                generateId(),
-
-            type:
-                "engraving",
-
-            name:
-                engravingName ||
-                "Gravação",
-
-            imageUrl:
-                imageUrl,
-
-            image:
-                null,
-
-            x:
-                initialX,
-
-            y:
-                512,
-
-            width:
-                250,
-
-            height:
-                250,
-
-            rotation:
-                0,
-
-            opacity:
-                1
-
-        };
-
-
-        try {
-
-            layer.image =
-                await loadImage(
-                    imageUrl
-                );
-
-        } catch (error) {
-
-            console.error(
-                error
-            );
-
-            return;
-
-        }
-
-
-        getCurrentEngravings()
-            .push(
-                layer
-            );
-
-
-        selectEngraving(
-            layer.id
+        const existing = getCurrentEngravings().find(
+            layer =>
+                layer.type === "engraving" &&
+                layer.imageUrl === imageUrl
         );
 
+        if (existing) {
+            selectEngraving(existing.id);
+            return;
+        }
+
+        const layer = {
+            id: generateId(),
+            type: "engraving",
+            name: engravingName || "Gravação",
+            imageUrl: imageUrl,
+            image: null,
+            x: SIDE_X[currentSide],
+            y: START_Y,
+            width: 250,
+            height: 250,
+            rotation: 0,
+            opacity: 1
+        };
+
+        try {
+            layer.image = await loadImage(imageUrl);
+        } catch (error) {
+            console.error(error);
+            return;
+        }
+
+        getCurrentEngravings().push(layer);
+
+        selectEngraving(layer.id);
+
+        if (controlsSection) {
+            controlsSection.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
 
         await rebuildEngravingTexture();
-
     }
-
 
 
     /* =========================================================
@@ -2253,55 +888,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function updateSelectedEngraving() {
 
-        const layer =
-            getSelectedEngraving();
+        const layer = getSelectedEngraving();
 
-
-        if (!layer) {
-
-            return;
-
-        }
-
+        if (!layer) return;
 
         if (sizeControl) {
-
-            layer.width =
-                Number(
-                    sizeControl.value
-                );
-
-
-            layer.height =
-                Number(
-                    sizeControl.value
-                );
-
+            layer.width = Number(sizeControl.value);
+            layer.height = Number(sizeControl.value);
         }
-
 
         if (rotationControl) {
-
-            layer.rotation =
-                Number(
-                    rotationControl.value
-                ) *
-                Math.PI /
-                180;
-
+            layer.rotation = Number(rotationControl.value) * Math.PI / 180;
         }
 
-
         updateControlLabels();
-
-
         renderLayersList();
 
-
         await rebuildEngravingTexture();
-
     }
-
 
 
     /* =========================================================
@@ -2310,418 +914,161 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function removeSelectedEngraving() {
 
-        if (!selectedEngravingId) {
+        if (!selectedEngravingId) return;
 
-            return;
+        const list = getCurrentEngravings();
 
-        }
-
-
-        const list =
-            getCurrentEngravings();
-
-
-        const index =
-            list.findIndex(
-                layer =>
-                    layer.id ===
-                    selectedEngravingId
-            );
-
-
-        if (index === -1) {
-
-            return;
-
-        }
-
-
-        const removed =
-            list[index];
-
-
-        list.splice(
-            index,
-            1
+        const index = list.findIndex(
+            layer => layer.id === selectedEngravingId
         );
 
+        if (index === -1) return;
 
-        selectedEngravingId =
-            null;
+        const removed = list[index];
 
+        list.splice(index, 1);
 
-        if (
-            removed.type ===
-            "name"
-        ) {
+        selectedEngravingId = null;
 
-            if (nameInput) {
-
-                nameInput.value =
-                    "";
-
-            }
-
+        if (removed.type === "name" && nameInput) {
+            nameInput.value = "";
         }
 
-
-        if (controlsSection) {
-
-            controlsSection.style.display =
-                "none";
-
-        }
-
-
+        hideControls();
         renderLayersList();
-
-
         requestRebuildEngravingTexture();
-
     }
-
 
 
     /* =========================================================
        TROCA DE LADO
     ========================================================= */
 
-    sideButtons.forEach(
-        button => {
+    sideButtons.forEach(button => {
 
-            button.addEventListener(
-                "click",
-                () => {
+        button.addEventListener("click", () => {
 
-                    sideButtons.forEach(
-                        btn =>
-                            btn.classList.remove(
-                                "active"
-                            )
-                    );
+            sideButtons.forEach(btn => btn.classList.remove("active"));
 
+            button.classList.add("active");
 
-                    button.classList.add(
-                        "active"
-                    );
+            currentSide = button.dataset.side || "left";
 
+            selectedEngravingId = null;
 
-                    currentSide =
-                        button.dataset.side ||
-                        "left";
+            const nameLayer = getNameLayer();
 
+            if (nameInput) nameInput.value = nameLayer?.text || "";
 
-                    selectedEngravingId =
-                        null;
+            if (nameLayer) {
+                currentFont = nameLayer.font || currentFont;
+                currentOrientation = nameLayer.orientation || currentOrientation;
+            }
 
+            renderLayersList();
 
-                    const nameLayer =
-                        getNameLayer();
+            if (nameLayer) {
+                selectEngraving(nameLayer.id);
+            } else {
+                hideControls();
+            }
 
-
-                    if (nameInput) {
-
-                        nameInput.value =
-                            nameLayer?.text ||
-                            "";
-
-                    }
-
-
-                    if (nameLayer) {
-
-                        currentFont =
-                            nameLayer.font ||
-                            currentFont;
-
-
-                        currentOrientation =
-                            nameLayer.orientation ||
-                            currentOrientation;
-
-                    }
-
-
-                    renderLayersList();
-
-
-                    if (
-                        nameLayer
-                    ) {
-
-                        selectEngraving(
-                            nameLayer.id
-                        );
-
-                    } else {
-
-                        if (controlsSection) {
-
-                            controlsSection.style.display =
-                                "none";
-
-                        }
-
-                    }
-
-
-                    requestRebuildEngravingTexture();
-
-                }
-            );
-
-        }
-    );
-
+            requestRebuildEngravingTexture();
+        });
+    });
 
 
     /* =========================================================
        BOTÕES DE GRAVAÇÃO
     ========================================================= */
 
-    engravingButtons.forEach(
-        button => {
+    engravingButtons.forEach(button => {
 
-            button.addEventListener(
-                "click",
-                async () => {
+        button.addEventListener("click", async () => {
 
-                    const imageUrl =
-                        button.dataset.image;
-
-
-                    const engravingName =
-                        button.dataset.name ||
-                        "Gravação";
-
-
-                    await addEngraving(
-                        imageUrl,
-                        engravingName
-                    );
-
-                }
+            await addEngraving(
+                button.dataset.image,
+                button.dataset.name || "Gravação"
             );
-
-        }
-    );
-
+        });
+    });
 
 
     /* =========================================================
        ATUALIZAR POSIÇÃO DO KNOB
     ========================================================= */
 
-    function updatePositionKnob(
-        layer
-    ) {
+    // O pad cobre uma volta inteira em X (±512) e ±512 em Y,
+    // sempre a partir da posição inicial (centro do pad).
+    function padToTexture(n, home) {
 
-        if (
-            !positionPad ||
-            !positionKnob ||
-            !layer
-        ) {
+        const e = Math.sign(n) * Math.pow(Math.abs(n), PAD_CURVE);
 
-            return;
-
-        }
-
-
-        const maxX =
-            positionPad.clientWidth *
-            0.38;
-
-
-        const maxY =
-            positionPad.clientHeight *
-            0.38;
-
-
-        /*
-         * X NORMAL
-         *
-         * 512 = CENTRO
-         * MENOR = ESQUERDA
-         * MAIOR = DIREITA
-         */
-
-        positionKnob.style.left =
-            `calc(50% + ${
-                (
-                    (layer.x - 512) /
-                    512
-                ) *
-                maxX
-            }px)`;
-
-
-        /*
-         * Y NORMAL
-         *
-         * 512 = CENTRO
-         * MENOR = CIMA
-         * MAIOR = BAIXO
-         */
-
-        positionKnob.style.top =
-            `calc(50% + ${
-                (
-                    (layer.y - 512) /
-                    512
-                ) *
-                maxY
-            }px)`;
-
+        return home + e * PAD_RANGE;
     }
 
+    function textureToPad(value, home, wrap) {
+
+        let d = value - home;
+
+        if (wrap) {
+            d = ((d + 512) % 1024 + 1024) % 1024 - 512;
+        }
+
+        const e = Math.max(-1, Math.min(1, d / PAD_RANGE));
+
+        return Math.sign(e) * Math.pow(Math.abs(e), 1 / PAD_CURVE);
+    }
+
+    function updatePositionKnob(layer) {
+
+        if (!positionPad || !positionKnob || !layer) return;
+
+        const maxX = positionPad.clientWidth * 0.38;
+        const maxY = positionPad.clientHeight * 0.38;
+
+        const nx = textureToPad(layer.x, SIDE_X[currentSide], true);
+        const ny = textureToPad(layer.y, START_Y, false);
+
+        positionKnob.style.left = `calc(50% + ${PAD_SIGN_X * nx * maxX}px)`;
+        positionKnob.style.top = `calc(50% + ${ny * maxY}px)`;
+    }
 
 
     /* =========================================================
        MOVER PELO MOUSE
     ========================================================= */
 
-    function moveEngravingFromPointer(
-        event
-    ) {
+    function moveEngravingFromPointer(event) {
 
-        const layer =
-            getSelectedEngraving();
+        const layer = getSelectedEngraving();
 
+        if (!layer || !positionPad) return;
 
-        if (
-            !layer ||
-            !positionPad
-        ) {
+        const rect = positionPad.getBoundingClientRect();
 
-            return;
+        const maxDistance = Math.min(rect.width, rect.height) * 0.38;
 
-        }
+        const nx = Math.max(-1, Math.min(1,
+            (event.clientX - (rect.left + rect.width / 2)) / maxDistance
+        ));
 
+        const ny = Math.max(-1, Math.min(1,
+            (event.clientY - (rect.top + rect.height / 2)) / maxDistance
+        ));
 
-        const rect =
-            positionPad.getBoundingClientRect();
-
-
-        const centerX =
-            rect.left +
-            rect.width / 2;
-
-
-        const centerY =
-            rect.top +
-            rect.height / 2;
-
-
-        const maxDistance =
-            Math.min(
-                rect.width,
-                rect.height
-            ) * 0.38;
-
-
-        let dx =
-            event.clientX -
-            centerX;
-
-
-        let dy =
-            event.clientY -
-            centerY;
-
-
-        const distance =
-            Math.hypot(
-                dx,
-                dy
-            );
-
-
-        if (
-            distance >
-            maxDistance
-        ) {
-
-            const factor =
-                maxDistance /
-                distance;
-
-
-            dx *= factor;
-
-
-            dy *= factor;
-
-        }
-
-
-        /*
-         * =====================================================
-         * COORDENADA X NORMAL
-         * =====================================================
-         *
-         * DIREITA DO CONTROLE
-         * = DIREITA DA GARRAFA
-         *
-         * NÃO INVERTER AQUI.
-         *
-         * A INVERSÃO JÁ É CORRIGIDA NO CANVAS.
-         */
-
-        layer.x =
-            Math.max(
-                0,
-                Math.min(
-                    1024,
-                    Math.round(
-                        512 +
-                        (
-                            dx /
-                            maxDistance
-                        ) *
-                        512
-                    )
-                )
-            );
-
-
-        /*
-         * Y NORMAL
-         */
-
-        layer.y =
-            Math.max(
-                0,
-                Math.min(
-                    1024,
-                    Math.round(
-                        512 +
-                        (
-                            dy /
-                            maxDistance
-                        ) *
-                        512
-                    )
-                )
-            );
-
+        const previousX = layer.x;
+        layer.x = wrapX(Math.round(padToTexture(PAD_SIGN_X * nx, SIDE_X[currentSide])));
+        layer.y = clampY(Math.round(padToTexture(ny, START_Y)));
+        rotateBottleWithEngraving(previousX, layer.x);
 
         updateControlLabels();
-
-
-        updatePositionKnob(
-            layer
-        );
-
-
+        updatePositionKnob(layer);
         requestRebuildEngravingTexture();
-
     }
 
-
-
-    let draggingPosition =
-        false;
-
+    let draggingPosition = false;
+    let dragStart = null;
 
 
     /* =========================================================
@@ -2730,257 +1077,115 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (positionPad) {
 
+        positionPad.addEventListener("pointerdown", event => {
 
-        positionPad.addEventListener(
-            "pointerdown",
-            event => {
+            if (!getSelectedEngraving()) return;
 
-                if (
-                    !getSelectedEngraving()
-                ) {
+            event.preventDefault();
 
-                    return;
+            draggingPosition = true;
 
-                }
+            const current = getSelectedEngraving();
 
+            dragStart = {
+                pointerX: event.clientX,
+                pointerY: event.clientY,
+                layerX: current.x,
+                layerY: current.y
+            };
 
-                event.preventDefault();
+            try {
+                positionPad.setPointerCapture(event.pointerId);
+            } catch (_) {}
 
+            moveEngravingFromPointer(event);
+        });
 
-                draggingPosition =
-                    true;
+        positionPad.addEventListener("pointermove", event => {
 
+            if (!draggingPosition) return;
 
-                try {
+            event.preventDefault();
 
-                    positionPad.setPointerCapture(
-                        event.pointerId
-                    );
+            moveEngravingFromPointer(event);
+        });
 
-                } catch (_) {}
+        positionPad.addEventListener("pointerup", event => {
 
+            draggingPosition = false;
+            dragStart = null;
 
-                moveEngravingFromPointer(
-                    event
-                );
+            try {
+                positionPad.releasePointerCapture(event.pointerId);
+            } catch (_) {}
+        });
 
-            }
-        );
+        positionPad.addEventListener("pointercancel", () => {
+            draggingPosition = false;
+            dragStart = null;
+        });
 
 
-        positionPad.addEventListener(
-            "pointermove",
-            event => {
+        /* SETAS */
 
-                if (
-                    !draggingPosition
-                ) {
+        positionPad.addEventListener("keydown", event => {
 
-                    return;
+            const layer = getSelectedEngraving();
 
-                }
+            if (!layer) return;
 
+            const step = event.shiftKey ? 10 : 2;
+            const previousX = layer.x;
 
-                event.preventDefault();
+            let changed = true;
 
+            if (event.key === "ArrowUp") layer.y -= step;
+            else if (event.key === "ArrowDown") layer.y += step;
+            else if (event.key === "ArrowLeft") layer.x -= step * PAD_SIGN_X;
+            else if (event.key === "ArrowRight") layer.x += step * PAD_SIGN_X;
+            else changed = false;
 
-                moveEngravingFromPointer(
-                    event
-                );
+            if (!changed) return;
 
-            }
-        );
+            event.preventDefault();
 
+            layer.x = wrapX(layer.x);
+            layer.y = clampY(layer.y);
+            rotateBottleWithEngraving(previousX, layer.x);
 
-        positionPad.addEventListener(
-            "pointerup",
-            event => {
-
-                draggingPosition =
-                    false;
-
-
-                try {
-
-                    positionPad.releasePointerCapture(
-                        event.pointerId
-                    );
-
-                } catch (_) {}
-
-            }
-        );
-
-
-        positionPad.addEventListener(
-            "pointercancel",
-            () => {
-
-                draggingPosition =
-                    false;
-
-            }
-        );
-
-
-
-        /* =====================================================
-           SETAS
-        ====================================================== */
-
-        positionPad.addEventListener(
-            "keydown",
-            event => {
-
-                const layer =
-                    getSelectedEngraving();
-
-
-                if (!layer) {
-
-                    return;
-
-                }
-
-
-                const step =
-                    event.shiftKey
-                        ? 20
-                        : 5;
-
-
-                let changed =
-                    false;
-
-
-                if (
-                    event.key ===
-                    "ArrowUp"
-                ) {
-
-                    layer.y -=
-                        step;
-
-
-                    changed =
-                        true;
-
-                }
-
-
-                else if (
-                    event.key ===
-                    "ArrowDown"
-                ) {
-
-                    layer.y +=
-                        step;
-
-
-                    changed =
-                        true;
-
-                }
-
-
-                else if (
-                    event.key ===
-                    "ArrowLeft"
-                ) {
-
-                    layer.x -=
-                        step;
-
-
-                    changed =
-                        true;
-
-                }
-
-
-                else if (
-                    event.key ===
-                    "ArrowRight"
-                ) {
-
-                    layer.x +=
-                        step;
-
-
-                    changed =
-                        true;
-
-                }
-
-
-                if (!changed) {
-
-                    return;
-
-                }
-
-
-                event.preventDefault();
-
-
-                layer.x =
-                    Math.max(
-                        0,
-                        Math.min(
-                            1024,
-                            layer.x
-                        )
-                    );
-
-
-                layer.y =
-                    Math.max(
-                        0,
-                        Math.min(
-                            1024,
-                            layer.y
-                        )
-                    );
-
-
-                updateControlLabels();
-
-
-                updatePositionKnob(
-                    layer
-                );
-
-
-                requestRebuildEngravingTexture();
-
-            }
-        );
-
+            updateControlLabels();
+            updatePositionKnob(layer);
+            requestRebuildEngravingTexture();
+        });
     }
 
+
+    /* POSIÇÃO INICIAL */
+
+    const resetButton = $("resetEngravingPosition");
+
+    if (resetButton) {
+        resetButton.addEventListener("click", () => {
+            const layer = getSelectedEngraving();
+            if (!layer) return;
+            layer.x = SIDE_X[currentSide];
+            layer.y = START_Y;
+            updateControlLabels();
+            updatePositionKnob(layer);
+            requestRebuildEngravingTexture();
+        });
+    }
 
 
     /* =========================================================
        SLIDERS
     ========================================================= */
 
-    [
-        sizeControl,
-        rotationControl
-
-    ]
+    [sizeControl, rotationControl]
         .filter(Boolean)
-        .forEach(
-            control => {
-
-                control.addEventListener(
-                    "input",
-                    updateSelectedEngraving
-                );
-
-            }
-        );
-
+        .forEach(control => {
+            control.addEventListener("input", updateSelectedEngraving);
+        });
 
 
     /* =========================================================
@@ -2988,151 +1193,66 @@ document.addEventListener("DOMContentLoaded", () => {
     ========================================================= */
 
     if (removeButton) {
-
-        removeButton.addEventListener(
-            "click",
-            removeSelectedEngraving
-        );
-
+        removeButton.addEventListener("click", removeSelectedEngraving);
     }
-
 
 
     /* =========================================================
        FONTES
     ========================================================= */
 
-    fontButtons.forEach(
-        button => {
+    fontButtons.forEach(button => {
 
-            button.addEventListener(
-                "click",
-                () => {
+        button.addEventListener("click", () => {
 
-                    fontButtons.forEach(
-                        btn =>
-                            btn.classList.remove(
-                                "active"
-                            )
-                    );
+            fontButtons.forEach(btn => btn.classList.remove("active"));
 
+            button.classList.add("active");
 
-                    button.classList.add(
-                        "active"
-                    );
+            currentFont = button.dataset.font || "Arial";
 
+            const selected = getSelectedEngraving();
 
-                    currentFont =
-                        button.dataset.font ||
-                        "Arial";
+            if (selected && selected.type === "name") {
+                selected.font = currentFont;
+            }
 
-
-                    const selected =
-                        getSelectedEngraving();
-
-
-                    if (
-                        selected &&
-                        selected.type ===
-                            "name"
-                    ) {
-
-                        selected.font =
-                            currentFont;
-
-                    }
-
-
-                    requestRebuildEngravingTexture();
-
-                }
-            );
-
-        }
-    );
-
+            requestRebuildEngravingTexture();
+        });
+    });
 
 
     /* =========================================================
        ORIENTAÇÃO
     ========================================================= */
 
-    orientationButtons.forEach(
-        button => {
+    orientationButtons.forEach(button => {
 
-            button.addEventListener(
-                "click",
-                () => {
+        button.addEventListener("click", () => {
 
-                    orientationButtons.forEach(
-                        btn =>
-                            btn.classList.remove(
-                                "active"
-                            )
-                    );
+            orientationButtons.forEach(btn => btn.classList.remove("active"));
 
+            button.classList.add("active");
 
-                    button.classList.add(
-                        "active"
-                    );
+            currentOrientation = button.dataset.orientation || "vertical";
 
+            const maxCharacters = getMaxCharacters();
 
-                    currentOrientation =
-                        button.dataset.orientation ||
-                        "vertical";
+            if (nameInput && nameInput.value.length > maxCharacters) {
+                nameInput.value = nameInput.value.substring(0, maxCharacters);
+            }
 
+            const selected = getSelectedEngraving();
 
-                    const maxCharacters =
-                        getMaxCharacters();
+            if (selected && selected.type === "name") {
+                selected.orientation = currentOrientation;
+                selected.text = nameInput?.value || selected.text;
+            }
 
-
-                    if (
-                        nameInput &&
-                        nameInput.value.length >
-                        maxCharacters
-                    ) {
-
-                        nameInput.value =
-                            nameInput.value.substring(
-                                0,
-                                maxCharacters
-                            );
-
-                    }
-
-
-                    const selected =
-                        getSelectedEngraving();
-
-
-                    if (
-                        selected &&
-                        selected.type ===
-                            "name"
-                    ) {
-
-                        selected.orientation =
-                            currentOrientation;
-
-
-                        selected.text =
-                            nameInput?.value ||
-                            selected.text;
-
-                    }
-
-
-                    requestRebuildEngravingTexture();
-
-
-                    renderLayersList();
-
-                }
-            );
-
-        }
-    );
-
+            requestRebuildEngravingTexture();
+            renderLayersList();
+        });
+    });
 
 
     /* =========================================================
@@ -3140,923 +1260,112 @@ document.addEventListener("DOMContentLoaded", () => {
     ========================================================= */
 
     if (nameInput) {
-
-        nameInput.addEventListener(
-            "input",
-            () => {
-
-                updateNameLayerFromInput();
-
-            }
-        );
-
+        nameInput.addEventListener("input", updateNameLayerFromInput);
     }
-
 
 
     /* =========================================================
        CARREGAMENTO DO GLB
     ========================================================= */
 
-    viewer.addEventListener(
-        "load",
-        async () => {
+    viewer.addEventListener("load", async () => {
 
-            console.log(
-                "================================"
-            );
+        const materials = viewer.model.materials;
 
+        materials.forEach((material, index) => {
+            console.log(index, "Material:", material.name);
+        });
 
-            console.log(
-                "MODELO CARREGADO"
-            );
+        const byName = name => materials.find(
+            material =>
+                (material.name || "").trim().toLowerCase() === name
+        ) || null;
 
+        engravingMaterial = byName("cylinder") || byName("forma");
 
-            console.log(
-                "MATERIAIS ENCONTRADOS"
-            );
-
-
-            console.log(
-                "================================"
-            );
-
-
-            const materials =
-                viewer.model.materials;
-
-
-            /*
-             * MOSTRA MATERIAIS
-             */
-
-            materials.forEach(
-                (
-                    material,
-                    index
-                ) => {
-
-                    console.log(
-                        index,
-                        "Material:",
-                        material.name
-                    );
-
-                }
-            );
-
-
-            /*
-             * MATERIAL CYLINDER
-             */
-
-            engravingMaterial =
-                materials.find(
-                    material =>
-                        (
-                            material.name ||
-                            ""
-                        )
-                            .trim()
-                            .toLowerCase() ===
-                        "cylinder"
-                ) || null;
-
-
-            /*
-             * COMPATIBILIDADE COM FORMA
-             */
-
-            if (
-                !engravingMaterial
-            ) {
-
-                engravingMaterial =
-                    materials.find(
-                        material =>
-                            (
-                                material.name ||
-                                ""
-                            )
-                                .trim()
-                                .toLowerCase() ===
-                            "forma"
-                    ) || null;
-
-            }
-
-
-            /*
-             * FALLBACK
-             */
-
-            if (
-                !engravingMaterial
-            ) {
-
-                engravingMaterial =
-                    materials.find(
-                        material => {
-
-                            const name =
-                                (
-                                    material.name ||
-                                    ""
-                                )
-                                    .trim()
-                                    .toLowerCase();
-
-
-                            return (
-                                name !==
-                                "garrafa"
-                            );
-
-                        }
-                    ) || null;
-
-            }
-
-
-            if (
-                !engravingMaterial
-            ) {
-
-                console.error(
-                    "Não foi possível encontrar o material do Cylinder."
-                );
-
-
-                console.error(
-                    "Materiais encontrados:",
-                    materials.map(
-                        material =>
-                            material.name
-                    )
-                );
-
-
-                return;
-
-            }
-
-
-            console.log(
-                "Material da área de gravação:",
-                engravingMaterial.name
-            );
-
-
-            /*
-             * CONFIGURA MATERIAL
-             */
-
-            try {
-
-                await engravingMaterial.ensureLoaded();
-
-
-                engravingMaterial.setAlphaMode(
-                    "BLEND"
-                );
-
-
-                engravingMaterial
-                    .pbrMetallicRoughness
-                    .setBaseColorFactor(
-                        [
-                            1,
-                            1,
-                            1,
-                            1
-                        ]
-                    );
-
-
-                console.log(
-                    "Material Cylinder configurado."
-                );
-
-            } catch (error) {
-
-                console.warn(
-                    "Aviso ao configurar material:",
-                    error
-                );
-
-            }
-
-
-            /*
-             * INTERFACE
-             */
-
-            renderLayersList();
-
-
-            /*
-             * RENDER INICIAL
-             */
-
-            await rebuildEngravingTexture();
-
+        // Fallback: qualquer material que não seja a garrafa
+        if (!engravingMaterial) {
+            engravingMaterial = materials.find(
+                material =>
+                    (material.name || "").trim().toLowerCase() !== "garrafa"
+            ) || null;
         }
-    );
 
-
-
-    /* =========================================================
-       ERRO GLB
-    ========================================================= */
-
-    viewer.addEventListener(
-        "error",
-        event => {
-
+        if (!engravingMaterial) {
+            console.error("Não foi possível encontrar o material do Cylinder.");
             console.error(
-                "Erro ao carregar o modelo:",
-                event
+                "Materiais encontrados:",
+                materials.map(material => material.name)
             );
-
+            return;
         }
-    );
+
+        console.log("Material da área de gravação:", engravingMaterial.name);
+
+        try {
+
+            await engravingMaterial.ensureLoaded();
+
+            engravingMaterial.setAlphaMode("BLEND");
+
+            engravingMaterial
+                .pbrMetallicRoughness
+                .setBaseColorFactor([1, 1, 1, 1]);
+
+            console.log("Material Cylinder configurado.");
+
+        } catch (error) {
+            console.warn("Aviso ao configurar material:", error);
+        }
+
+        renderLayersList();
+
+        await rebuildEngravingTexture();
+    });
+
+    viewer.addEventListener("error", event => {
+        console.error("Erro ao carregar o modelo:", event);
+    });
 
 });
-
 
 </script>
 
 
 
-<style>
-
-
-/* =========================================================
-   LISTA DE CAMADAS
-========================================================= */
-
-.vip-engraving-layers-list {
-
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 8px;
-
-    margin-top: 10px;
-
-}
-
-
-.vip-engraving-empty {
-
-    padding: 14px;
-
-    border-radius: 10px;
-
-    background:
-        rgba(255,255,255,.05);
-
-    color:
-        rgba(255,255,255,.55);
-
-    font-size: 13px;
-
-    text-align: center;
-
-}
-
-
-.vip-engraving-layer-item {
-
-    width: 100%;
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 10px;
-
-    padding: 9px 10px;
-
-    border:
-        1px solid
-        rgba(255,255,255,.08);
-
-    border-radius: 10px;
-
-    background:
-        rgba(255,255,255,.035);
-
-    color: inherit;
-
-    cursor: pointer;
-
-    text-align: left;
-
-    transition: .18s ease;
-
-}
-
-
-.vip-engraving-layer-item:hover,
-.vip-engraving-layer-item.active {
-
-    border-color:
-        rgba(255,255,255,.28);
-
-    background:
-        rgba(255,255,255,.09);
-
-}
-
-
-.vip-layer-number {
-
-    width: 22px;
-
-    height: 22px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    border-radius: 50%;
-
-    background:
-        rgba(255,255,255,.10);
-
-    font-size: 11px;
-
-    flex: 0 0 22px;
-
-}
-
-
-.vip-layer-preview {
-
-    width: 38px;
-
-    height: 38px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    border-radius: 7px;
-
-    background:
-        rgba(255,255,255,.06);
-
-    overflow: hidden;
-
-    flex: 0 0 38px;
-
-}
-
-
-.vip-layer-preview img {
-
-    max-width: 100%;
-
-    max-height: 100%;
-
-    object-fit: contain;
-
-}
-
-
-.vip-layer-name {
-
-    flex: 1;
-
-    font-size: 13px;
-
-    font-weight: 600;
-
-}
-
-
-/* =========================================================
-   POSIÇÃO
-========================================================= */
-
-.vip-position-editor {
-
-    margin-top: 15px;
-
-}
-
-
-.vip-position-pad {
-
-    position: relative;
-
-    width: min(100%, 290px);
-
-    aspect-ratio: 1;
-
-    margin: 0 auto;
-
-    overflow: hidden;
-
-    border-radius: 50%;
-
-    cursor: grab;
-
-    touch-action: none;
-
-    user-select: none;
-
-    -webkit-user-select: none;
-
-    background:
-
-        radial-gradient(
-            circle at center,
-            rgba(255,255,255,.07) 0 2px,
-            transparent 3px
-        ),
-
-        radial-gradient(
-            circle,
-            rgba(255,255,255,.035) 0 55%,
-            transparent 56%
-        ),
-
-        rgba(0,0,0,.08);
-
-    border:
-        1px solid
-        rgba(255,255,255,.13);
-
-    box-shadow:
-
-        inset 0 0 35px
-        rgba(0,0,0,.14),
-
-        0 10px 28px
-        rgba(0,0,0,.10);
-
-}
-
-
-.vip-position-pad:active {
-
-    cursor: grabbing;
-
-}
-
-
-.vip-position-grid {
-
-    position: absolute;
-
-    inset: 12%;
-
-    border-radius: 50%;
-
-    pointer-events: none;
-
-    opacity: .45;
-
-    background-image:
-
-        linear-gradient(
-            rgba(0,0,0,.055) 1px,
-            transparent 1px
-        ),
-
-        linear-gradient(
-            90deg,
-            rgba(0,0,0,.055) 1px,
-            transparent 1px
-        );
-
-    background-size: 25% 25%;
-
-    mask-image:
-
-        radial-gradient(
-            circle,
-            #000 35%,
-            transparent 72%
-        );
-
-    -webkit-mask-image:
-
-        radial-gradient(
-            circle,
-            #000 35%,
-            transparent 72%
-        );
-
-}
-
-
-.vip-position-axis-x,
-.vip-position-axis-y {
-
-    position: absolute;
-
-    pointer-events: none;
-
-    background:
-        rgba(0,0,0,.09);
-
-}
-
-
-.vip-position-axis-x {
-
-    left: 9%;
-
-    right: 9%;
-
-    top: 50%;
-
-    height: 1px;
-
-}
-
-
-.vip-position-axis-y {
-
-    top: 9%;
-
-    bottom: 9%;
-
-    left: 50%;
-
-    width: 1px;
-
-}
-
-
-.vip-position-hint {
-
-    position: absolute;
-
-    left: 50%;
-
-    top: 50%;
-
-    transform:
-        translate(-50%,-50%);
-
-    display: flex;
-
-    flex-direction: column;
-
-    align-items: center;
-
-    pointer-events: none;
-
-    opacity: .25;
-
-    text-align: center;
-
-}
-
-
-.vip-position-hint span {
-
-    font-size: 8px;
-
-    font-weight: 800;
-
-    letter-spacing: .15em;
-
-}
-
-
-.vip-position-hint small {
-
-    margin-top: 3px;
-
-    font-size: 7px;
-
-}
-
-
-.vip-position-knob {
-
-    position: absolute;
-
-    left: 50%;
-
-    top: 50%;
-
-    width: 46px;
-
-    height: 46px;
-
-    transform:
-        translate(-50%,-50%);
-
-    border-radius: 50%;
-
-    pointer-events: none;
-
-    background:
-
-        radial-gradient(
-            circle at 34% 28%,
-            rgba(255,255,255,.48),
-            transparent 23%
-        ),
-
-        linear-gradient(
-            145deg,
-            rgba(255,255,255,.88),
-            rgba(255,255,255,.55)
-        );
-
-    border:
-        1px solid
-        rgba(0,0,0,.10);
-
-    box-shadow:
-
-        0 7px 16px
-        rgba(0,0,0,.20),
-
-        inset 0 1px 2px
-        rgba(255,255,255,.85);
-
-}
-
-
-.vip-position-knob span {
-
-    position: absolute;
-
-    left: 50%;
-
-    top: 50%;
-
-    width: 8px;
-
-    height: 8px;
-
-    transform:
-        translate(-50%,-50%);
-
-    border-radius: 50%;
-
-    background:
-        rgba(0,0,0,.18);
-
-}
-
-
-/* =========================================================
-   LEITURA
-========================================================= */
-
-.vip-position-readout {
-
-    display: grid;
-
-    grid-template-columns:
-        1fr 1fr;
-
-    gap: 8px;
-
-    margin-top: 9px;
-
-}
-
-
-.vip-position-readout > div {
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    padding: 8px 10px;
-
-    border-radius: 9px;
-
-    background:
-        rgba(0,0,0,.035);
-
-}
-
-
-.vip-position-readout span {
-
-    font-size: 9px;
-
-    font-weight: 800;
-
-    opacity: .45;
-
-}
-
-
-.vip-position-readout strong {
-
-    font-size: 12px;
-
-    font-variant-numeric:
-        tabular-nums;
-
-}
-
-
-/* =========================================================
-   CONTROLES
-========================================================= */
-
-.vip-engraving-control {
-
-    margin-top: 15px;
-
-}
-
-
-.vip-control-header {
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    margin-bottom: 7px;
-
-    font-size: 12px;
-
-}
-
-
-.vip-control-header strong {
-
-    font-size: 12px;
-
-    opacity: .75;
-
-}
-
-
-.vip-engraving-control
-input[type="range"] {
-
-    width: 100%;
-
-    cursor: pointer;
-
-}
-
-
-/* =========================================================
-   REMOVER
-========================================================= */
-
-.vip-remove-engraving-btn {
-
-    width: 100%;
-
-    margin-top: 18px;
-
-    padding: 11px 14px;
-
-    border: 0;
-
-    border-radius: 10px;
-
-    cursor: pointer;
-
-    font-weight: 700;
-
-    background:
-        rgba(255,70,70,.12);
-
-    color:
-        #ff7777;
-
-    transition: .18s ease;
-
-}
-
-
-.vip-remove-engraving-btn:hover {
-
-    background:
-        rgba(255,70,70,.20);
-
-}
-
-</style>
-
-
 
 <script>
 
+/* FOLD DAS CATEGORIAS */
 
-/* =====================================================
-   FOLD DAS CATEGORIAS
-===================================================== */
+document.querySelectorAll(".vip-engraving-category-btn").forEach(button => {
 
-const categoryButtons =
-    document.querySelectorAll(
-        ".vip-engraving-category-btn"
-    );
+    button.addEventListener("click", () => {
 
-
-categoryButtons.forEach(
-    button => {
-
-        button.addEventListener(
-            "click",
-            () => {
-
-                const categoryId =
-                    button.dataset.category;
-
-
-                const content =
-                    document.querySelector(
-                        `[data-category-content="${categoryId}"]`
-                    );
-
-
-                if (!content) {
-
-                    return;
-
-                }
-
-
-                const isOpen =
-                    content.classList.contains(
-                        "open"
-                    );
-
-
-                /*
-                 * FECHA TODAS
-                 */
-
-                document
-                    .querySelectorAll(
-                        ".vip-engraving-category-btn"
-                    )
-                    .forEach(
-                        btn => {
-
-                            btn.classList.remove(
-                                "active"
-                            );
-
-                        }
-                    );
-
-
-                document
-                    .querySelectorAll(
-                        ".vip-engraving-category-content"
-                    )
-                    .forEach(
-                        item => {
-
-                            item.classList.remove(
-                                "open"
-                            );
-
-                        }
-                    );
-
-
-                /*
-                 * ABRE A CLICADA
-                 */
-
-                if (!isOpen) {
-
-                    button.classList.add(
-                        "active"
-                    );
-
-
-                    content.classList.add(
-                        "open"
-                    );
-
-                }
-
-            }
+        const content = document.querySelector(
+            `[data-category-content="${button.dataset.category}"]`
         );
 
-    }
-);
+        if (!content) return;
+
+        const isOpen = content.classList.contains("open");
+
+        // Fecha todas
+        document
+            .querySelectorAll(".vip-engraving-category-btn")
+            .forEach(btn => btn.classList.remove("active"));
+
+        document
+            .querySelectorAll(".vip-engraving-category-content")
+            .forEach(item => item.classList.remove("open"));
+
+        // Abre a clicada
+        if (!isOpen) {
+            button.classList.add("active");
+            content.classList.add("open");
+        }
+    });
+});
 
 </script>
 

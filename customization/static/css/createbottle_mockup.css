@@ -1,409 +1,792 @@
-/* =========================
-   MOCKUP GRUPO VIP
-========================= */
+/* =========================================================
+   RISK CLUBE — PERSONALIZADOR DE GARRAFA
+   Interface premium: marfim, grafite e dourado discreto
+========================================================= */
 
 .vip-mockup-page {
+    --ink: #171715;
+    --ink-2: #343430;
+    --muted: #777770;
+    --line: #e6e2da;
+    --soft: #f5f5f5;
+    --gold: #555555;
+    --gold-soft: #eeeeee;
+    --danger: #b83c3c;
+    --radius: 16px;
+    --ease: cubic-bezier(.22, .61, .36, 1);
+
     min-height: 100vh;
-    background: #f8f8f8;
     display: grid;
-    grid-template-columns: 1fr 380px;
-    gap: 40px;
-    padding: 40px;
+    grid-template-columns: minmax(0, 1.15fr) minmax(390px, 440px);
+    align-items: start;
+    gap: clamp(24px, 3vw, 48px);
+    padding: clamp(24px, 3vw, 48px);
+    background: #f2f2f2;
+    color: var(--ink);
+    font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
 }
 
-/* LADO ESQUERDO */
+.vip-mockup-page *,
+.vip-mockup-page *::before,
+.vip-mockup-page *::after { box-sizing: border-box; }
+
+.vip-mockup-page button { font: inherit; }
+
+/* MODELO 3D */
 
 .vip-mockup-left {
-    position: relative;
+    position: sticky;
+    top: 24px;
+    align-self: start;
     display: flex;
     align-items: center;
     justify-content: center;
+    min-width: 0;
 }
 
 .vip-mockup-stage {
-    width: min(520px, 100%);
-    height: 860px;
     position: relative;
+    width: 100%;
+    max-width: 760px;
+    height: min(800px, calc(100vh - 48px));
+    min-height: 540px;
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
+    border: 1px solid rgba(23, 23, 21, .06);
+    border-radius: 28px;
+    background:
+        radial-gradient(ellipse at 50% 42%, #fff 0%, #fbfaf7 48%, #eeeeee 100%);
+    box-shadow: 0 24px 70px rgba(36, 31, 23, .10), 0 2px 8px rgba(36, 31, 23, .04);
 }
 
-.vip-mockup-bottle {
-    max-height: 98%;
-    max-width: 92%;
-    object-fit: contain;
-    display: block;
-       background:
-        radial-gradient(circle at 50% 35%, #ffffff 0%, #e9e9e9 38%, #d2d2d2 100%);
-    border-radius: 32px;
-    filter: drop-shadow(0 30px 35px rgba(0,0,0,.22));
-}
-
-.vip-mockup-text {
+.vip-mockup-stage::after {
+    content: "";
     position: absolute;
-    left: 50%;
-    top: 48%;
-    color: #e8e8e8;
-    font-size: 28px;
-    font-weight: 500;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    transform-origin: center;
+    inset: 14px;
+    border: 1px solid rgba(0, 0, 0, .08);
+    border-radius: 20px;
     pointer-events: none;
 }
 
-.vip-mockup-text.vertical {
-    transform: translate(-50%, -50%) rotate(-90deg);
+.vip-mockup-stage model-viewer {
+    position: relative;
+    z-index: 1;
+    width: 100% !important;
+    height: 100% !important;
+    --poster-color: transparent;
+    background: transparent;
 }
 
-.vip-mockup-text.horizontal {
-    transform: translate(-50%, -50%) rotate(0deg);
+model-viewer::part(default-progress-bar) { display: none; }
+
+.vip-mockup-bottle {
+    max-width: 90%;
+    max-height: 94%;
+    display: block;
+    object-fit: contain;
+    filter: drop-shadow(0 28px 28px rgba(0, 0, 0, .20));
 }
 
 .vip-mockup-logo {
     position: absolute;
-    bottom: 75px;
+    z-index: 2;
+    bottom: 34px;
     left: 50%;
     transform: translateX(-50%);
-    color: #fff;
-    font-size: 22px;
-    font-weight: 900;
+    color: var(--ink);
+    font-size: 12px;
+    font-weight: 800;
     font-style: italic;
-    opacity: 0.9;
-}
-
-.vip-live-preview {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    height: 40px;
-    padding: 0 18px;
-    border-radius: 8px;
-    border: 1px solid #e0e0e0;
-    background: #fff;
-    color: #111;
-    font-size: 13px;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    letter-spacing: .34em;
+    text-transform: uppercase;
+    opacity: .38;
+    pointer-events: none;
 }
 
 /* PAINEL */
 
 .vip-mockup-panel {
-    background: #fff;
-    border-radius: 18px;
+    position: sticky;
+    top: 24px;
+    align-self: start;
+    max-height: calc(100vh - 48px);
+    overflow-x: hidden;
+    overflow-y: auto;
     padding: 28px;
-    align-self: center;
-    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(23, 23, 21, .06);
+    border-radius: 22px;
+    background: #fff;
+    box-shadow: 0 20px 60px rgba(36, 31, 23, .09), 0 2px 8px rgba(36, 31, 23, .03);
+    scrollbar-width: thin;
+    scrollbar-color: #d5d0c7 transparent;
 }
 
-.vip-panel-logo {
-    text-align: center;
-    font-size: 30px;
-    font-weight: 700;
-    margin-bottom: 28px;
+.vip-mockup-panel::-webkit-scrollbar,
+.vip-engraving-items::-webkit-scrollbar { width: 5px; }
+.vip-mockup-panel::-webkit-scrollbar-thumb,
+.vip-engraving-items::-webkit-scrollbar-thumb { background: #d5d0c7; border-radius: 99px; }
+
+.vip-panel-head {
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--line);
 }
 
-.vip-panel-section {
-    margin-bottom: 26px;
+.vip-panel-eyebrow {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--gold);
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .24em;
+    text-transform: uppercase;
 }
+
+.vip-panel-title {
+    margin: 0;
+    color: var(--ink);
+    font-size: clamp(20px, 2vw, 25px);
+    font-weight: 800;
+    letter-spacing: -.045em;
+    line-height: 1.2;
+}
+
+.vip-panel-sub {
+    margin: 7px 0 0;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.6;
+}
+
+.vip-panel-section { min-width: 0; margin-bottom: 26px; }
 
 .vip-panel-section label,
 .vip-section-title-row label {
     display: block;
-    color: #111;
-    font-size: 13px;
-    font-weight: 900;
+    margin: 0 0 10px;
+    color: var(--ink);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .12em;
     text-transform: uppercase;
-    margin-bottom: 12px;
-    letter-spacing: 0.5px;
+}
+
+.vip-step-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 13px;
+    color: var(--ink);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+}
+
+.vip-step-title span {
+    flex: 0 0 23px;
+    width: 23px;
+    height: 23px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(0, 0, 0, .22);
+    border-radius: 50%;
+    background: #eeeeee;
+    color: #333333;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0;
 }
 
 .vip-section-title-row {
     display: flex;
+    align-items: center;
     justify-content: space-between;
-    align-items: center;
-}
-
-.vip-section-title-row span {
-    color: #777;
-    font-size: 11px;
-    font-weight: 800;
-    text-transform: uppercase;
-}
-
-/* INPUT */
-
-.vip-name-input-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.vip-name-input-row input {
-    width: 100%;
-    height: 46px;
-    border: none;
-    border-bottom: 1px solid #e5e5e5;
-    outline: none;
-    font-size: 14px;
-    font-weight: 800;
-    text-transform: uppercase;
-}
-
-.vip-name-input-row button {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    border: 1px solid #ddd;
-    background: #fff;
-    cursor: pointer;
-}
-
-/* FONTES */
-
-.vip-font-options {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-}
-
-.vip-font-btn {
-    height: 66px;
-    background: #fff;
-    border: 1px solid transparent;
-    border-radius: 10px;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-.vip-font-btn strong {
-    font-size: 20px;
-}
-
-.vip-font-btn span {
-    font-size: 9px;
-    font-weight: 800;
-    color: #777;
-    text-transform: uppercase;
-}
-
-.vip-font-btn.active {
-    border-color: #111;
-}
-
-/* ORIENTAÇÃO */
-
-.vip-orientation-options {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
     gap: 12px;
 }
 
-.vip-orientation-btn {
+.vip-section-title-row span {
+    max-width: 60%;
+    overflow: hidden;
+    color: var(--muted);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+/* CAMPO DE NOME E OPÇÕES */
+
+.vip-name-input-row input {
+    width: 100%;
     height: 48px;
-    border: 1px solid transparent;
-    background: #fff;
+    padding: 0 14px;
+    border: 1px solid #dedbd4;
     border-radius: 10px;
-    font-size: 12px;
-    font-weight: 900;
+    outline: none;
+    background: #fafafa;
+    color: var(--ink);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    transition: border-color .2s var(--ease), background .2s var(--ease), box-shadow .2s var(--ease);
+}
+
+.vip-name-input-row input::placeholder {
+    color: #aaa69e;
+    font-weight: 500;
+    letter-spacing: .03em;
+    text-transform: none;
+}
+
+.vip-name-input-row input:focus {
+    border-color: var(--gold);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, .07);
+}
+
+.vip-name-options { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+
+.vip-side-options,
+.vip-orientation-options {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 4px;
+    padding: 4px;
+    border: 1px solid #eeece7;
+    border-radius: 11px;
+    background: #f4f4f4;
+}
+
+.vip-side-btn,
+.vip-orientation-btn {
+    min-width: 0;
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: #77756e;
+    font-size: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: color .2s var(--ease), background .2s var(--ease), box-shadow .2s var(--ease);
+}
+
+.vip-side-btn:hover,
+.vip-orientation-btn:hover { color: var(--ink); }
+
+.vip-side-btn.active,
+.vip-orientation-btn.active {
+    background: #fff;
+    color: var(--ink);
+    box-shadow: 0 2px 7px rgba(23, 23, 21, .09), 0 0 0 1px rgba(23, 23, 21, .04);
+}
+
+.vip-font-options { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 7px; }
+
+.vip-font-btn {
+    min-width: 0;
+    height: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: #fff;
+    cursor: pointer;
+    transition: border-color .2s var(--ease), background .2s var(--ease), transform .2s var(--ease), box-shadow .2s var(--ease);
+}
+
+.vip-font-btn strong { color: var(--ink); font-size: 19px; line-height: 1; }
+.vip-font-btn span { color: var(--muted); font-size: 7px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
+.vip-font-btn:hover { transform: translateY(-1px); border-color: #bcb6aa; background: #fcfcfc; }
+.vip-font-btn.active { border-color: #555; background: #f3f3f3; box-shadow: inset 0 0 0 1px var(--gold); }
+.vip-font-btn.active span { color: #333333; }
+
+/* BIBLIOTECA DE GRAVAÇÕES */
+
+.vip-engraving-category { margin-bottom: 8px; }
+
+.vip-engraving-category-btn {
+    width: 100%;
+    min-height: 46px;
+    padding: 0 13px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: #fff;
+    color: var(--ink);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .07em;
+    text-align: left;
     text-transform: uppercase;
     cursor: pointer;
+    transition: border-color .2s var(--ease), background .2s var(--ease), border-radius .2s var(--ease);
 }
 
-.vip-orientation-btn.active {
-    border-color: #111;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+.vip-engraving-category-btn:hover { border-color: #c5bfb3; background: #fcfcfc; }
+.vip-engraving-category-btn.active { border-color: var(--gold); border-bottom-right-radius: 0; border-bottom-left-radius: 0; background: #f3f3f3; }
+.vip-engraving-category-left { min-width: 0; display: flex; align-items: center; gap: 10px; }
+.vip-engraving-category-left img { width: 27px; height: 27px; display: block; object-fit: contain; }
+.vip-engraving-category-btn > i { color: var(--muted); font-size: 12px; transition: transform .2s var(--ease); }
+.vip-engraving-category-btn.active > i { transform: rotate(180deg); color: #333333; }
+
+.vip-engraving-category-content {
+    display: none;
+    padding: 11px;
+    border: 1px solid var(--gold);
+    border-top: 0;
+    border-radius: 0 0 10px 10px;
+    background: #fff;
 }
 
-/* CATEGORIAS */
+.vip-engraving-category-content.open { display: block; animation: vipFade .22s var(--ease); }
 
-.vip-category-grid {
+@keyframes vipFade {
+    from { opacity: 0; transform: translateY(-3px); }
+    to { opacity: 1; transform: none; }
+}
+
+.vip-engraving-items {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 7px;
+    max-height: 260px;
+    overflow-y: auto;
+    padding: 2px;
+    scrollbar-width: thin;
 }
 
-.vip-category-btn {
-    background: transparent;
-    border: none;
+.vip-engraving-btn {
+    min-width: 0;
+    padding: 8px 4px 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    border: 1px solid #ebe8e1;
+    border-radius: 9px;
+    background: #f7f7f7;
     cursor: pointer;
+    transition: border-color .2s var(--ease), background .2s var(--ease), transform .2s var(--ease), box-shadow .2s var(--ease);
 }
 
-.vip-category-btn i {
-    width: 54px;
-    height: 54px;
-    background: #111;
-    color: #fff;
-    border-radius: 8px;
-    margin: 0 auto 8px;
+.vip-engraving-btn:hover {
+    transform: translateY(-2px);
+    border-color: var(--gold);
+    background: #fff;
+    box-shadow: 0 6px 15px rgba(23, 23, 21, .08);
+}
+
+.vip-engraving-btn:active { transform: translateY(0); }
+.vip-engraving-btn img { width: 48px; height: 48px; display: block; object-fit: contain; }
+.vip-engraving-btn span {
+    width: 100%;
+    overflow: hidden;
+    color: var(--ink-2);
+    font-size: 8px;
+    font-weight: 700;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.vip-no-engravings { margin: 12px 0; color: var(--muted); font-size: 11px; text-align: center; }
+
+/* CAMADAS */
+
+.vip-engraving-layers-list { display: flex; flex-direction: column; gap: 7px; }
+
+.vip-engraving-empty {
+    padding: 18px 14px;
+    border: 1px dashed #d7d2c8;
+    border-radius: 10px;
+    background: #fafafa;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.6;
+    text-align: center;
+}
+
+.vip-engraving-layer-item {
+    width: 100%;
+    min-height: 52px;
+    padding: 7px 11px 7px 9px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: #fff;
+    color: var(--ink);
+    text-align: left;
+    cursor: pointer;
+    transition: border-color .2s var(--ease), background .2s var(--ease), box-shadow .2s var(--ease);
+}
+
+.vip-engraving-layer-item:hover { border-color: #c5bfb3; }
+.vip-engraving-layer-item.active { border-color: #555; background: #f3f3f3; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .22); }
+
+.vip-layer-number {
+    flex: 0 0 22px;
+    width: 22px;
+    height: 22px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 26px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: #fff;
+    font-size: 9px;
+    font-weight: 800;
 }
 
-.vip-category-btn span {
-    color: #111;
-    font-size: 9px;
-    font-weight: 900;
+.vip-layer-preview {
+    flex: 0 0 36px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 1px solid #efede8;
+    border-radius: 8px;
+    background: #f7f7f7;
+}
+
+.vip-layer-preview img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.vip-layer-name { flex: 1; min-width: 0; overflow: hidden; color: var(--ink); font-size: 11px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+.vip-engraving-layer-item > i { color: var(--muted); font-size: 11px; }
+
+/* CONTROLES DA GRAVAÇÃO */
+
+.vip-controls-card {
+    margin-top: 12px;
+    padding: 16px;
+    border: 1px solid var(--line);
+    border-radius: 13px;
+    background: #fafafa;
+    animation: vipFade .25s var(--ease);
+}
+
+.vip-controls-card .vip-section-title-row { margin-bottom: 14px; }
+.vip-controls-card .vip-section-title-row label { margin: 0; }
+
+.vip-controls-grid {
+    display: grid;
+    grid-template-columns: 150px minmax(0, 1fr);
+    gap: 16px;
+    align-items: center;
+}
+
+.vip-position-editor { margin: 0; }
+
+.vip-position-pad {
+    position: relative;
+    width: 150px;
+    aspect-ratio: 1;
+    margin: 0 auto;
+    overflow: hidden;
+    border: 1px solid #d9d5cc;
+    border-radius: 50%;
+    outline: none;
+    background: radial-gradient(circle at 50% 40%, #fff 0%, #f0f0f0 100%);
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, .06), 0 1px 0 #fff;
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: box-shadow .2s var(--ease);
+}
+
+.vip-position-pad:focus-visible { box-shadow: 0 0 0 3px rgba(0, 0, 0, .12), inset 0 2px 8px rgba(0, 0, 0, .06); }
+.vip-position-pad:active { cursor: grabbing; }
+
+.vip-position-grid {
+    position: absolute;
+    inset: 8%;
+    border-radius: 50%;
+    pointer-events: none;
+    background-image: linear-gradient(rgba(23, 23, 21, .07) 1px, transparent 1px), linear-gradient(90deg, rgba(23, 23, 21, .07) 1px, transparent 1px);
+    background-size: 25% 25%;
+    -webkit-mask-image: radial-gradient(circle, #000 30%, transparent 75%);
+    mask-image: radial-gradient(circle, #000 30%, transparent 75%);
+}
+
+.vip-position-axis-x,
+.vip-position-axis-y { position: absolute; pointer-events: none; background: rgba(23, 23, 21, .14); }
+.vip-position-axis-x { top: 50%; right: 8%; left: 8%; height: 1px; }
+.vip-position-axis-y { top: 8%; bottom: 8%; left: 50%; width: 1px; }
+
+.vip-position-hint {
+    position: absolute;
+    bottom: 16%;
+    left: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transform: translateX(-50%);
+    opacity: .38;
+    text-align: center;
+    pointer-events: none;
+}
+
+.vip-position-hint span { font-size: 8px; font-weight: 800; letter-spacing: .18em; }
+.vip-position-hint small { margin-top: 2px; font-size: 7px; font-weight: 600; }
+
+.vip-position-knob {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 28px;
+    height: 28px;
+    transform: translate(-50%, -50%);
+    border: 2px solid #fff;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #55534e, #171715 70%);
+    box-shadow: 0 5px 12px rgba(0, 0, 0, .25), 0 0 0 1px rgba(23, 23, 21, .12);
+    pointer-events: none;
+}
+
+.vip-position-knob span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 6px;
+    height: 6px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: var(--gold);
+}
+
+.vip-position-readout { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 10px; }
+
+.vip-position-readout > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 7px 9px;
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    background: #fff;
+}
+
+.vip-position-readout span { color: var(--muted); font-size: 8px; font-weight: 800; }
+.vip-position-readout strong { color: var(--ink); font-size: 10px; font-variant-numeric: tabular-nums; }
+
+.vip-engraving-control { margin-top: 16px; }
+.vip-controls-side .vip-engraving-control:first-child { margin-top: 0; }
+
+.vip-control-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 9px;
+    color: var(--ink-2);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .05em;
     text-transform: uppercase;
 }
 
-.vip-category-btn.active i {
-    box-shadow: 0 0 0 3px #dcdcdc;
+.vip-control-header strong { color: var(--muted); font-size: 10px; font-variant-numeric: tabular-nums; }
+
+.vip-engraving-control input[type="range"] {
+    width: 100%;
+    height: 4px;
+    appearance: none;
+    -webkit-appearance: none;
+    border-radius: 99px;
+    outline: none;
+    background: #dcd8cf;
+    cursor: pointer;
 }
 
-/* PREÇO */
-
-.vip-price-box {
-    margin: 30px 0 14px;
+.vip-engraving-control input[type="range"]::-webkit-slider-thumb {
+    width: 17px;
+    height: 17px;
+    appearance: none;
+    -webkit-appearance: none;
+    border: 3px solid #fff;
+    border-radius: 50%;
+    background: var(--ink);
+    box-shadow: 0 2px 7px rgba(0, 0, 0, .22);
+    transition: transform .15s var(--ease);
 }
 
-.vip-price-box strong {
-    font-size: 17px;
-    font-weight: 900;
-    color: #111;
+.vip-engraving-control input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+
+.vip-engraving-control input[type="range"]::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border: 3px solid #fff;
+    border-radius: 50%;
+    background: var(--ink);
+    box-shadow: 0 2px 7px rgba(0, 0, 0, .22);
 }
 
-/* BOTÕES DO FLUXO */
+.vip-controls-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 16px; }
 
-.vip-group-flow-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+.vip-reset-engraving-btn,
+.vip-remove-engraving-btn {
+    min-width: 0;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    border-radius: 9px;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color .2s var(--ease), background .2s var(--ease), border-color .2s var(--ease), transform .2s var(--ease);
 }
+
+.vip-reset-engraving-btn { border: 1px solid #dedbd4; background: #fff; color: var(--ink); }
+.vip-reset-engraving-btn:hover { border-color: var(--ink); background: #f4f4f4; }
+.vip-remove-engraving-btn { border: 1px solid #efd5d5; background: #fff8f8; color: var(--danger); }
+.vip-remove-engraving-btn:hover { border-color: var(--danger); background: var(--danger); color: #fff; }
+
+/* PREÇO E AÇÕES */
+
+.vip-price-box { margin: 0; }
+
+.vip-price-sticky {
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+    margin: 0 -28px;
+    padding: 18px 28px 22px;
+    border-top: 1px solid rgba(230, 226, 218, .8);
+    background: linear-gradient(180deg, rgba(255, 255, 255, .92), #fff 24%);
+}
+
+.vip-price-row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 13px; }
+.vip-price-row span { color: var(--muted); font-size: 9px; font-weight: 800; letter-spacing: .15em; text-transform: uppercase; }
+.vip-price-row strong { color: var(--ink); font-size: 23px; font-weight: 800; letter-spacing: -.04em; }
+
+.vip-group-flow-actions { display: flex; flex-direction: column; gap: 8px; }
 
 .vip-copy-all-btn,
 .vip-next-bottle-btn {
     width: 100%;
-    height: 52px;
-    border-radius: 9px;
-    font-size: 13px;
-    font-weight: 900;
+    min-height: 48px;
+    border-radius: 10px;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .1em;
     text-transform: uppercase;
     cursor: pointer;
-    transition: 0.25s ease;
+    transition: transform .2s var(--ease), box-shadow .2s var(--ease), background .2s var(--ease), border-color .2s var(--ease);
 }
 
-.vip-copy-all-btn {
-    background: #fff;
-    color: #111;
-    border: 1px solid #111;
-}
-
-.vip-copy-all-btn:hover {
-    background: #f2f2f2;
-}
+.vip-copy-all-btn { border: 1px solid #d8d4cc; background: #fff; color: var(--ink); }
+.vip-copy-all-btn:hover { border-color: var(--ink); background: #f7f7f7; }
 
 .vip-next-bottle-btn {
-    background: #050505;
-    color: #fff;
-    border: 1px solid #050505;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 18px;
+    gap: 12px;
+    border: 1px solid #171715;
+    background: linear-gradient(135deg, #30302c, #111110);
+    color: #fff;
+    box-shadow: 0 7px 16px rgba(23, 23, 21, .17), inset 0 1px 0 rgba(255, 255, 255, .12);
 }
 
-.vip-next-bottle-btn:hover {
-    background: #222;
+.vip-next-bottle-btn:hover { transform: translateY(-1px); box-shadow: 0 10px 22px rgba(23, 23, 21, .22), inset 0 1px 0 rgba(255, 255, 255, .12); }
+.vip-next-bottle-btn i { transition: transform .2s var(--ease); }
+.vip-next-bottle-btn:hover i { transform: translateX(3px); }
+
+/* COMPATIBILIDADE COM OUTRAS TELAS */
+
+.vip-category-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.vip-category-btn { border: 0; background: transparent; cursor: pointer; }
+.vip-category-btn i {
+    width: 54px;
+    height: 54px;
+    margin: 0 auto 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(177, 138, 80, .18);
+    border-radius: 12px;
+    background: #f2f2f2;
+    color: var(--ink);
+    font-size: 22px;
+    transition: background .2s var(--ease), color .2s var(--ease), border-color .2s var(--ease);
 }
-
-/* RESPONSIVO */
-
-@media (max-width: 900px) {
-    .vip-mockup-page {
-        grid-template-columns: 1fr;
-        padding: 30px 18px;
-    }
-
-    .vip-mockup-stage {
-        height: 560px;
-    }
-
-    .vip-mockup-panel {
-        width: 100%;
-        max-width: 480px;
-        margin: 0 auto;
-    }
-}
-
-@media (max-width: 520px) {
-    .vip-mockup-stage {
-        height: 460px;
-    }
-
-    .vip-font-options,
-    .vip-category-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .vip-orientation-options {
-        grid-template-columns: 1fr;
-    }
-}
-
+.vip-category-btn span { color: var(--ink); font-size: 9px; font-weight: 800; text-transform: uppercase; }
+.vip-category-btn:hover i,
+.vip-category-btn.active i { border-color: var(--ink); background: var(--ink); color: #fff; }
 
 .vip-current-bottle-info {
     position: absolute;
-    top: 20px;
-    left: 20px;
-    background: #fff;
-    border: 1px solid #e5e5e5;
-    border-radius: 14px;
-    padding: 12px 16px;
-    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.06);
     z-index: 5;
+    top: 28px;
+    left: 28px;
+    padding: 11px 14px;
+    border: 1px solid rgba(23, 23, 21, .08);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, .88);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, .05);
+    backdrop-filter: blur(8px);
 }
-
-.vip-current-bottle-info strong {
-    display: block;
-    color: #111;
-    font-size: 14px;
-    font-weight: 900;
-}
-
-.vip-current-bottle-info span {
-    display: block;
-    color: #777;
-    font-size: 12px;
-    font-weight: 700;
-    margin-top: 3px;
-}
+.vip-current-bottle-info strong { display: block; color: var(--ink); font-size: 12px; font-weight: 800; }
+.vip-current-bottle-info span { display: block; margin-top: 3px; color: var(--muted); font-size: 10px; font-weight: 700; }
 
 .vip-editing-badge {
     width: fit-content;
-    background: #111;
-    color: #fff;
-    padding: 8px 14px;
+    margin: -10px auto 20px;
+    padding: 7px 12px;
+    border: 1px solid rgba(0, 0, 0, .12);
     border-radius: 999px;
-    font-size: 12px;
-    font-weight: 900;
-    margin: -12px auto 24px;
+    background: #eeeeee;
+    color: #333333;
+    font-size: 10px;
+    font-weight: 800;
 }
 
-.vip-mockup-bottle,
-.vip-mockup-bottle model-viewer,
-model-viewer.vip-mockup-bottle {
-    opacity: 1 !important;
-    filter: none !important;
-    mix-blend-mode: normal !important;
-    background: transparent !important;
-}
-
-model-viewer.vip-mockup-bottle {
-    width: 100%;
-    height: 100%;
-    max-height: 98%;
-    max-width: 92%;
-    display: block;
+.vip-live-preview {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    min-height: 36px;
+    padding: 0 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid rgba(23, 23, 21, .08);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, .9);
+    color: var(--ink);
+    font-size: 11px;
+    font-weight: 700;
+    backdrop-filter: blur(8px);
 }
 
 .bottle-loading {
@@ -415,849 +798,306 @@ model-viewer.vip-mockup-bottle {
     align-items: center;
     justify-content: center;
     gap: 10px;
-    background: #f3f3f3;
-    color: #111;
+    background: var(--soft);
     text-align: center;
 }
+.bottle-loader { width: 32px; height: 32px; border: 3px solid #e0ddd6; border-top-color: #555; border-radius: 50%; animation: bottleSpin .8s linear infinite; }
+.bottle-loading strong { color: var(--ink); font-size: 13px; font-weight: 700; }
+.bottle-loading span { color: var(--muted); font-size: 11px; }
+@keyframes bottleSpin { to { transform: rotate(360deg); } }
 
-.bottle-loader {
-    width: 34px;
-    height: 34px;
-    border: 3px solid #d5d5d5;
-    border-top-color: #111;
-    border-radius: 50%;
-    animation: bottleSpin .8s linear infinite;
-}
+#editorCanvas { position: absolute; z-index: 50; inset: 0; width: 100%; height: 100%; background: transparent; cursor: grab; }
 
-.bottle-loading strong {
-    font-size: 14px;
-    font-weight: 700;
-}
+/* TABLET */
 
-.bottle-loading span {
-    font-size: 12px;
-    color: #777;
-}
-
-@keyframes bottleSpin {
-    to {
-        transform: rotate(360deg);
+@media (max-width: 1100px) {
+    .vip-mockup-page {
+        grid-template-columns: minmax(0, 1fr) minmax(340px, 400px);
+        gap: 22px;
+        padding: 24px;
     }
+    .vip-mockup-stage { min-height: 500px; }
+    .vip-mockup-panel { padding: 24px; }
+    .vip-controls-grid { grid-template-columns: 126px minmax(0, 1fr); gap: 12px; }
+    .vip-position-pad { width: 126px; }
+    .vip-price-sticky { margin-right: -24px; margin-left: -24px; padding-right: 24px; padding-left: 24px; }
 }
 
-
-model-viewer::part(default-progress-bar) {
-    display: none;
+@media (max-width: 900px) and (min-width: 769px) {
+    .vip-mockup-page { grid-template-columns: minmax(0, 1fr); gap: 22px; }
+    .vip-mockup-left, .vip-mockup-panel { position: static; }
+    .vip-mockup-stage { height: 540px; min-height: 0; margin: 0 auto; }
+    .vip-mockup-panel { width: 100%; max-width: 720px; max-height: none; margin: 0 auto; }
+    .vip-controls-grid { grid-template-columns: 150px minmax(0, 1fr); }
+    .vip-position-pad { width: 150px; }
 }
+
+/* MOBILE — VISUALIZAÇÃO SUPERIOR + PAINEL INFERIOR */
 
 @media (max-width: 768px) {
-    .vip-mockup-bottle {
-        width: 100%;
-        height: 420px;
-    }
-
-    model-viewer::part(default-progress-bar) {
-        display: none;
-    }
-}
-
-#editorCanvas{
-
-    position:absolute;
-
-    inset:0;
-
-    width:100%;
-
-    height:100%;
-
-    z-index:50;
-
-    background:transparent;
-
-    cursor:grab;
-
-}
-
-/* =========================================================
-   CATEGORIAS DE GRAVAÇÃO
-   ========================================================= */
-
-.vip-engraving-category {
-    width: 100%;
-    margin-bottom: 20px;
-}
-
-.vip-engraving-category-title {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 10px;
-
-    font-size: 12px;
-    font-weight: 800;
-    text-transform: uppercase;
-}
-
-.vip-engraving-category-title img {
-    width: 28px !important;
-    height: 28px !important;
-
-    object-fit: contain;
-
-    display: block;
-}
-
-
-/* =========================================================
-   GRID DAS GRAVAÇÕES
-   ========================================================= */
-
-.vip-engraving-items {
-    display: grid;
-
-    grid-template-columns:
-        repeat(4, minmax(0, 1fr));
-
-    gap: 10px;
-
-    width: 100%;
-}
-
-
-/* =========================================================
-   BOTÃO DA GRAVAÇÃO
-   ========================================================= */
-
-.vip-engraving-btn {
-    appearance: none;
-    -webkit-appearance: none;
-
-    border: 1px solid #e5e5e5;
-
-    background: #ffffff;
-
-    border-radius: 10px;
-
-    padding: 8px;
-
-    width: 100%;
-    min-width: 0;
-
-    display: flex;
-    flex-direction: column;
-
-    align-items: center;
-    justify-content: center;
-
-    gap: 5px;
-
-    cursor: pointer;
-
-    transition:
-        border-color 0.2s ease,
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
-}
-
-
-.vip-engraving-btn:hover {
-    border-color: #111;
-
-    transform: translateY(-2px);
-}
-
-
-.vip-engraving-btn.active {
-    border-color: #111;
-
-    box-shadow:
-        0 0 0 2px rgba(0, 0, 0, 0.08);
-}
-
-
-/* =========================================================
-   IMAGEM DA GRAVAÇÃO
-   ========================================================= */
-
-.vip-engraving-btn img {
-    display: block;
-
-    width: 55px !important;
-    height: 55px !important;
-
-    max-width: 55px !important;
-    max-height: 55px !important;
-
-    object-fit: contain;
-
-    margin: 0 !important;
-}
-
-
-/* =========================================================
-   NOME DA GRAVAÇÃO
-   ========================================================= */
-
-.vip-engraving-btn span {
-    display: block;
-
-    width: 100%;
-
-    overflow: hidden;
-
-    white-space: nowrap;
-
-    text-overflow: ellipsis;
-
-    text-align: center;
-
-    font-size: 10px;
-
-    font-weight: 700;
-}
-
-
-/* =========================================================
-   LADO DA GRAVAÇÃO
-   ========================================================= */
-
-.vip-side-options {
-    display: grid;
-
-    grid-template-columns: 1fr 1fr;
-
-    gap: 8px;
-
-    width: 100%;
-}
-
-
-.vip-side-btn {
-    appearance: none;
-    -webkit-appearance: none;
-
-    border: 1px solid #dedede;
-
-    background: #fff;
-
-    border-radius: 8px;
-
-    padding: 10px 12px;
-
-    width: 100%;
-
-    font-family: inherit;
-
-    font-size: 11px;
-
-    font-weight: 700;
-
-    cursor: pointer;
-
-    transition:
-        background 0.2s ease,
-        color 0.2s ease,
-        border-color 0.2s ease;
-}
-
-
-.vip-side-btn:hover {
-    border-color: #111;
-}
-
-
-.vip-side-btn.active {
-    background: #111;
-
-    color: #fff;
-
-    border-color: #111;
-}
-
-/* =========================================================
-   CATEGORIAS DE GRAVAÇÃO
-   ========================================================= */
-
-.vip-engraving-category {
-    width: 100%;
-    margin-bottom: 8px;
-}
-
-
-/* =========================================================
-   BOTÃO DA CATEGORIA
-   ========================================================= */
-
-.vip-engraving-category-btn {
-    appearance: none;
-    -webkit-appearance: none;
-
-    width: 100%;
-
-    border: 1px solid #e5e5e5;
-
-    background: #fff;
-
-    border-radius: 10px;
-
-    padding: 10px 12px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    cursor: pointer;
-
-    font-family: inherit;
-
-    font-size: 11px;
-
-    font-weight: 800;
-
-    text-transform: uppercase;
-
-    transition:
-        border-color 0.2s ease,
-        background 0.2s ease;
-}
-
-
-.vip-engraving-category-btn:hover {
-    border-color: #111;
-}
-
-
-.vip-engraving-category-btn.active {
-    border-color: #111;
-
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-}
-
-
-/* =========================================================
-   LADO ESQUERDO DA CATEGORIA
-   ========================================================= */
-
-.vip-engraving-category-left {
-    display: flex;
-
-    align-items: center;
-
-    gap: 8px;
-}
-
-
-/* =========================================================
-   ÍCONE
-   ========================================================= */
-
-.vip-engraving-category-left img {
-    width: 28px !important;
-    height: 28px !important;
-
-    max-width: 28px !important;
-    max-height: 28px !important;
-
-    object-fit: contain;
-
-    display: block;
-}
-
-
-/* =========================================================
-   SETA
-   ========================================================= */
-
-.vip-engraving-category-btn > i {
-    font-size: 13px;
-
-    transition:
-        transform 0.25s ease;
-}
-
-
-.vip-engraving-category-btn.active > i {
-    transform: rotate(180deg);
-}
-
-
-/* =========================================================
-   CONTEÚDO DA CATEGORIA
-   ========================================================= */
-
-.vip-engraving-category-content {
-    display: none;
-
-    padding: 10px;
-
-    border: 1px solid #111;
-
-    border-top: none;
-
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-
-    background: #fff;
-}
-
-
-.vip-engraving-category-content.open {
-    display: block;
-}
-
-
-/* =========================================================
-   GRAVAÇÕES
-   ========================================================= */
-
-.vip-engraving-items {
-    display: grid;
-
-    grid-template-columns:
-        repeat(4, minmax(0, 1fr));
-
-    gap: 8px;
-
-    width: 100%;
-}
-
-
-/* =========================================================
-   BOTÃO DA GRAVAÇÃO
-   ========================================================= */
-
-.vip-engraving-btn {
-    appearance: none;
-    -webkit-appearance: none;
-
-    border: 1px solid #e5e5e5;
-
-    background: #fff;
-
-    border-radius: 8px;
-
-    padding: 6px;
-
-    width: 100%;
-
-    min-width: 0;
-
-    display: flex;
-
-    flex-direction: column;
-
-    align-items: center;
-
-    justify-content: center;
-
-    gap: 4px;
-
-    cursor: pointer;
-
-    transition:
-        border-color 0.2s ease,
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
-}
-
-
-.vip-engraving-btn:hover {
-    border-color: #111;
-
-    transform: translateY(-1px);
-}
-
-
-.vip-engraving-btn.active {
-    border-color: #111;
-
-    box-shadow:
-        0 0 0 2px rgba(0, 0, 0, 0.08);
-}
-
-
-/* =========================================================
-   IMAGEM
-   ========================================================= */
-
-.vip-engraving-btn img {
-    display: block;
-
-    width: 55px !important;
-    height: 55px !important;
-
-    max-width: 55px !important;
-    max-height: 55px !important;
-
-    object-fit: contain;
-
-    margin: 0 !important;
-}
-
-
-/* =========================================================
-   NOME
-   ========================================================= */
-
-.vip-engraving-btn span {
-    display: block;
-
-    width: 100%;
-
-    overflow: hidden;
-
-    white-space: nowrap;
-
-    text-overflow: ellipsis;
-
-    text-align: center;
-
-    font-size: 9px;
-
-    font-weight: 700;
-}
-
-
-/* =========================================================
-   SEM GRAVAÇÕES
-   ========================================================= */
-
-.vip-no-engravings {
-    font-size: 11px;
-
-    color: #888;
-
-    text-align: center;
-
-    margin: 10px 0;
-}
-/* =========================================================
-   MOBILE — LAYOUT SIMPLES / ESTILO PRODUCT CUSTOMIZER
-   ========================================================= */
-@media (max-width: 768px) {
-    html,
-    body {
-        width: 100%;
-        max-width: 100%;
-        overflow: hidden !important;
-        overscroll-behavior: none;
-    }
+    html, body { width: 100%; max-width: 100%; overflow: hidden !important; overscroll-behavior: none; }
 
     .vip-mockup-page {
         width: 100%;
         height: calc(100dvh - 64px);
-        min-height: 520px;
-        padding: 0 !important;
-        margin: 0 !important;
-        display: grid !important;
-        grid-template-columns: 1fr !important;
-        grid-template-rows: 46% 54%;
-        gap: 0 !important;
-        overflow: hidden !important;
-        background: #fff !important;
-    }
-
-    /* PRODUTO */
-    .vip-mockup-left {
-        width: 100%;
-        min-height: 0;
-        height: 100%;
+        min-height: 500px;
+        padding: 0;
+        gap: 0;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: 44% 56%;
         overflow: hidden;
-        background: #f7f7f7;
+        background: #f2f2f2;
     }
 
+    .vip-mockup-left { position: relative; top: 0; width: 100%; height: 100%; min-height: 0; overflow: hidden; }
     .vip-mockup-stage {
-        width: 100% !important;
-        height: 100% !important;
-        min-height: 0 !important;
-        max-height: none !important;
-        padding: 8px 24px 0 !important;
+        width: 100%;
+        max-width: none;
+        height: 100%;
+        min-height: 0;
+        border: 0;
+        border-radius: 0;
+        background: radial-gradient(ellipse at 50% 44%, #fff 0%, #f5f5f5 70%, #f0f0f0 100%);
+        box-shadow: none;
     }
-
-    .vip-mockup-stage model-viewer,
-    model-viewer.vip-mockup-bottle,
-    .vip-mockup-bottle model-viewer {
-        width: 100% !important;
-        height: 100% !important;
-        max-width: 100% !important;
-        max-height: 100% !important;
-    }
+    .vip-mockup-stage::after { inset: 8px; border-radius: 14px; }
 
     .vip-mockup-logo,
     .vip-live-preview,
     .vip-current-bottle-info,
     .vip-editing-badge,
-    .vip-panel-logo {
-        display: none !important;
-    }
+    .vip-panel-head { display: none !important; }
 
-    /* PAINEL INFERIOR */
     .vip-mockup-panel {
-        width: 100% !important;
-        max-width: none !important;
-        height: 100% !important;
-        min-height: 0 !important;
-        margin: 0 !important;
-        padding: 16px 16px calc(18px + env(safe-area-inset-bottom)) !important;
-        border-radius: 22px 22px 0 0 !important;
-        box-shadow: 0 -10px 30px rgba(0,0,0,.08) !important;
-        align-self: stretch !important;
-        overflow-y: auto !important;
-        overflow-x: hidden !important;
-        -webkit-overflow-scrolling: touch;
+        position: relative;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        max-height: none;
+        padding: 13px 17px 0;
+        border: 1px solid rgba(23, 23, 21, .06);
+        border-bottom: 0;
+        border-radius: 20px 20px 0 0;
+        background: #fff;
+        box-shadow: 0 -10px 28px rgba(36, 31, 23, .09);
+        overflow-x: hidden;
+        overflow-y: auto;
         overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
         scrollbar-width: none;
     }
+    .vip-mockup-panel::-webkit-scrollbar { display: none; }
 
-    .vip-mockup-panel::-webkit-scrollbar {
-        display: none;
-    }
-
-    /* Barrinha visual do bottom sheet */
     .vip-mockup-panel::before {
         content: "";
-        display: block;
-        width: 38px;
+        width: 36px;
         height: 4px;
-        margin: -5px auto 14px;
+        display: block;
+        margin: 0 auto 15px;
         border-radius: 99px;
-        background: #d7d7d7;
+        background: #d8d5ce;
     }
 
-    .vip-panel-section {
-        margin-bottom: 18px !important;
-    }
+    .vip-panel-section { margin-bottom: 19px; }
+    .vip-step-title { margin-bottom: 10px; font-size: 10px; }
+    .vip-name-input-row input { height: 44px; font-size: 12px; }
+    .vip-font-options { gap: 6px; }
+    .vip-font-btn { height: 49px; border-radius: 9px; }
+    .vip-font-btn strong { font-size: 16px; }
+    .vip-font-btn span { font-size: 7px; }
+    .vip-side-btn, .vip-orientation-btn { height: 36px; font-size: 9px; }
 
-    .vip-panel-section > label,
-    .vip-section-title-row label {
-        font-size: 11px !important;
-        letter-spacing: .02em;
-        margin-bottom: 8px !important;
-    }
+    .vip-engraving-items { max-height: none; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+    .vip-engraving-btn { padding: 6px 3px 5px; }
+    .vip-engraving-btn img { width: 40px; height: 40px; }
+    .vip-engraving-btn span { font-size: 7px; }
+    .vip-engraving-category-btn { min-height: 41px; font-size: 9px; }
 
-    .vip-section-title-row span {
-        font-size: 9px !important;
-    }
+    .vip-controls-card { padding: 13px; }
+    .vip-controls-grid { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+    .vip-position-pad { width: min(56vw, 190px); }
+    .vip-position-knob { width: 32px; height: 32px; }
+    .vip-engraving-control input[type="range"] { height: 6px; }
+    .vip-engraving-control input[type="range"]::-webkit-slider-thumb { width: 23px; height: 23px; }
 
-    /* NOME */
-    .vip-name-input-row input {
-        height: 42px !important;
-        font-size: 13px !important;
+    .vip-price-sticky {
+        margin: 0 -17px;
+        padding: 12px 17px calc(12px + env(safe-area-inset-bottom));
+        background: linear-gradient(180deg, rgba(255, 255, 255, .94), #fff 20%);
     }
-
-    .vip-name-input-row button {
-        width: 34px !important;
-        height: 34px !important;
-    }
-
-    /* FONTE: chips compactos */
-    .vip-font-options {
-        display: grid !important;
-        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-        gap: 6px !important;
-    }
-
-    .vip-font-btn {
-        height: 48px !important;
-        min-width: 0 !important;
-        border-radius: 8px !important;
-    }
-
-    .vip-font-btn strong {
-        font-size: 17px !important;
-    }
-
-    .vip-font-btn span {
-        font-size: 7px !important;
-    }
-
-    /* ORIENTAÇÃO / LADO */
-    .vip-orientation-options,
-    .vip-side-options {
-        gap: 6px !important;
-    }
-
-    .vip-orientation-btn,
-    .vip-side-btn {
-        height: 40px !important;
-        padding: 0 7px !important;
-        border-radius: 8px !important;
-        font-size: 9px !important;
-    }
-
-    /* CATEGORIA: horizontal, sem ocupar espaço */
-    .vip-category-grid {
-        display: flex !important;
-        gap: 8px !important;
-        overflow-x: auto !important;
-        padding: 2px 1px 5px !important;
-        scrollbar-width: none;
-    }
-
-    .vip-category-grid::-webkit-scrollbar {
-        display: none;
-    }
-
-    .vip-category-btn {
-        flex: 0 0 72px !important;
-    }
-
-    .vip-category-btn i {
-        width: 44px !important;
-        height: 44px !important;
-        margin-bottom: 4px !important;
-        font-size: 19px !important;
-        border-radius: 8px !important;
-    }
-
-    .vip-category-btn span {
-        font-size: 7px !important;
-        white-space: nowrap;
-    }
-
-    /* LISTA DE GRAVAÇÕES */
-    .vip-engraving-category {
-        margin-bottom: 6px !important;
-    }
-
-    .vip-engraving-category-btn {
-        min-height: 42px !important;
-        padding: 8px 10px !important;
-        border-radius: 9px !important;
-        font-size: 9px !important;
-    }
-
-    .vip-engraving-category-content {
-        padding: 7px !important;
-    }
-
-    .vip-engraving-items {
-        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-        gap: 6px !important;
-    }
-
-    .vip-engraving-btn {
-        min-height: 72px !important;
-        padding: 5px !important;
-        border-radius: 8px !important;
-        gap: 2px !important;
-    }
-
-    .vip-engraving-btn img {
-        width: 42px !important;
-        height: 42px !important;
-        max-width: 42px !important;
-        max-height: 42px !important;
-    }
-
-    .vip-engraving-btn span {
-        font-size: 7px !important;
-    }
-
-    /* GRAVAÇÕES SELECIONADAS */
-    .vip-engraving-layer-item {
-        min-height: 48px !important;
-        padding: 7px 9px !important;
-        border-radius: 9px !important;
-    }
-
-    /* CONTROLE DE POSIÇÃO */
-    .vip-position-editor {
-        margin-top: 8px !important;
-    }
-
-    .vip-position-pad {
-        width: min(58vw, 205px) !important;
-        max-width: 205px !important;
-        margin: 0 auto !important;
-        touch-action: none !important;
-    }
-
-    .vip-position-knob {
-        width: 42px !important;
-        height: 42px !important;
-    }
-
-    .vip-position-readout {
-        margin-top: 7px !important;
-        gap: 6px !important;
-    }
-
-    .vip-position-readout > div {
-        padding: 7px 9px !important;
-    }
-
-    .vip-position-readout span {
-        font-size: 8px !important;
-    }
-
-    .vip-position-readout strong {
-        font-size: 11px !important;
-    }
-
-    /* TAMANHO / ROTAÇÃO */
-    .vip-engraving-control {
-        margin-top: 12px !important;
-    }
-
-    .vip-control-header {
-        margin-bottom: 5px !important;
-        font-size: 10px !important;
-    }
-
-    .vip-engraving-control input[type="range"] {
-        height: 24px;
-    }
-
-    /* REMOVER */
-    .vip-remove-engraving-btn {
-        min-height: 42px !important;
-        margin-top: 12px !important;
-        border-radius: 9px !important;
-        font-size: 10px !important;
-    }
-
-    /* FLUXO */
-    .vip-group-flow-actions {
-        position: sticky;
-        bottom: -1px;
-        z-index: 20;
-        padding-top: 10px;
-        margin: 12px -16px -18px;
-        padding-left: 16px;
-        padding-right: 16px;
-        padding-bottom: calc(10px + env(safe-area-inset-bottom));
-        background: rgba(255,255,255,.96);
-        backdrop-filter: blur(10px);
-    }
-
-    .vip-copy-all-btn,
-    .vip-next-bottle-btn {
-        height: 46px !important;
-        border-radius: 9px !important;
-        font-size: 11px !important;
-    }
+    .vip-price-row { margin-bottom: 9px; }
+    .vip-price-row strong { font-size: 20px; }
+    .vip-next-bottle-btn, .vip-copy-all-btn { min-height: 46px; font-size: 10px; }
 }
 
 @media (max-width: 390px) {
+    .vip-mockup-page { grid-template-rows: 42% 58%; }
+    .vip-mockup-panel { padding-right: 13px; padding-left: 13px; }
+    .vip-price-sticky { margin-right: -13px; margin-left: -13px; padding-right: 13px; padding-left: 13px; }
+    .vip-engraving-items { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+/* DESKTOP AMPLO — PAINEL ORGANIZADO EM COLUNAS */
+
+@media (min-width: 1200px) {
     .vip-mockup-page {
-        grid-template-rows: 43% 57%;
+        grid-template-columns: minmax(340px, 34%) minmax(0, 1fr);
+        align-items: center;
+        gap: 24px;
+        padding: 24px 32px;
+    }
+
+    .vip-mockup-left { position: relative; top: auto; align-self: center; }
+    .vip-mockup-stage { height: clamp(560px, calc(100vh - 48px), 760px); min-height: 0; }
+
+    .vip-mockup-panel {
+        position: relative;
+        top: auto;
+        align-self: center;
+        height: auto;
+        max-height: calc(100vh - 48px);
+        padding: 22px 26px;
+        display: grid;
+        grid-template-columns: minmax(210px, .75fr) minmax(0, 1.1fr) minmax(0, .95fr);
+        grid-template-rows: auto auto minmax(0, 1fr) auto;
+        grid-template-areas:
+            "head head head"
+            "lado grav ajuste"
+            "nome grav ajuste"
+            "preco preco preco";
+        column-gap: 22px;
+        row-gap: 14px;
+    }
+
+    .vip-mockup-panel > :nth-child(1) { grid-area: head; }
+    .vip-mockup-panel > :nth-child(2) { grid-area: lado; }
+    .vip-mockup-panel > :nth-child(3) { grid-area: nome; }
+    .vip-mockup-panel > :nth-child(4) { grid-area: grav; }
+    .vip-mockup-panel > :nth-child(5) { grid-area: ajuste; }
+    .vip-mockup-panel > :nth-child(6) { grid-area: preco; }
+
+    .vip-panel-section { min-height: 0; margin: 0; }
+    .vip-mockup-panel > :nth-child(4),
+    .vip-mockup-panel > :nth-child(5) {
+        padding-left: 22px;
+        border-left: 1px solid var(--line);
+        overflow-y: auto;
+        scrollbar-width: thin;
+    }
+
+    .vip-panel-head {
+        margin: 0;
+        padding-bottom: 14px;
+        display: flex;
+        align-items: baseline;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+    .vip-panel-eyebrow { margin: 0; }
+    .vip-panel-title { font-size: 20px; }
+    .vip-panel-sub { margin: 0 0 0 auto; }
+
+    .vip-font-options { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+    .vip-font-btn { height: 48px; }
+    .vip-font-btn span { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .vip-engraving-items { max-height: 340px; }
+    .vip-engraving-layers-list { max-height: 132px; overflow-y: auto; }
+    .vip-engraving-layer-item { min-height: 45px; }
+    .vip-controls-card { margin-top: 11px; padding: 13px; }
+    .vip-controls-grid { grid-template-columns: 126px minmax(0, 1fr); gap: 12px; }
+    .vip-position-pad { width: 126px; }
+    .vip-position-readout { grid-template-columns: 1fr; gap: 4px; margin-top: 8px; }
+    .vip-position-hint { display: none; }
+    .vip-controls-side .vip-engraving-control { margin-top: 0; }
+    .vip-controls-side .vip-engraving-control + .vip-engraving-control { margin-top: 14px; }
+
+    .vip-price-sticky {
+        position: static;
+        margin: 0;
+        padding: 14px 0 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 22px;
+        border-top: 1px solid var(--line);
+        background: none;
+    }
+    .vip-price-row { margin: 0; gap: 14px; align-items: baseline; justify-content: flex-start; }
+    .vip-group-flow-actions { width: min(360px, 48%); }
+    .vip-next-bottle-btn, .vip-copy-all-btn { min-height: 46px; }
+}
+
+@media (min-width: 1200px) and (max-height: 820px) {
+    .vip-panel-head { padding-bottom: 10px; }
+    .vip-mockup-panel { padding: 17px 22px; row-gap: 10px; }
+    .vip-position-pad { width: 112px; }
+    .vip-position-hint { display: none; }
+    .vip-engraving-btn img { width: 38px; height: 38px; }
+    .vip-engraving-items { max-height: 270px; }
+}
+
+/* ACESSIBILIDADE E MOVIMENTO */
+
+.vip-mockup-page button:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .vip-mockup-page *,
+    .vip-mockup-page *::before,
+    .vip-mockup-page *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+    }
+}
+
+
+/* =========================================================
+   AJUSTE FINAL — PAINÉIS COM A MESMA ALTURA
+   Paleta exclusivamente preto, branco e cinza
+========================================================= */
+
+.vip-mockup-page {
+    --gold: #555555;
+    --gold-soft: #eeeeee;
+    background: #f2f2f2;
+}
+
+@media (min-width: 1200px) {
+    .vip-mockup-page {
+        align-items: stretch;
+    }
+
+    .vip-mockup-left,
+    .vip-mockup-panel {
+        height: clamp(560px, calc(100vh - 48px), 760px);
+        min-height: 0;
+        align-self: stretch;
+    }
+
+    .vip-mockup-stage {
+        height: 100%;
+        min-height: 0;
     }
 
     .vip-mockup-panel {
-        padding-left: 13px !important;
-        padding-right: 13px !important;
+        max-height: 100%;
+        overflow-y: auto;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1199px) {
+    .vip-mockup-left,
+    .vip-mockup-panel {
+        min-height: 540px;
     }
 
-    .vip-position-pad {
-        width: 185px !important;
-    }
-
-    .vip-engraving-items {
-        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    .vip-mockup-stage {
+        height: 540px;
+        min-height: 0;
     }
 }
