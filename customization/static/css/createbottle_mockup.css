@@ -17,12 +17,17 @@
     --danger: #b83c3c;
     --radius: 14px;
     --ease: cubic-bezier(.22, .61, .36, 1);
+
     --shadow-sm: 0 1px 2px rgba(20, 20, 19, .05), 0 2px 8px rgba(20, 20, 19, .04);
     --shadow-md: 0 8px 24px rgba(20, 20, 19, .08), 0 2px 6px rgba(20, 20, 19, .04);
     --shadow-lg: 0 28px 70px rgba(20, 20, 19, .11), 0 3px 10px rgba(20, 20, 19, .04);
 
+    /* estado selecionado: suave, com sombra, sem contorno preto */
+    --sel-bg: linear-gradient(180deg, #ffffff 0%, #f4f4f2 100%);
+    --sel-border: rgba(20, 20, 19, .10);
+    --sel-shadow: 0 10px 26px rgba(20, 20, 19, .11), 0 2px 6px rgba(20, 20, 19, .05);
+
     min-height: 70vh;
-    
     display: grid;
     grid-template-columns: minmax(0, 1.15fr) minmax(390px, 440px);
     align-items: start;
@@ -39,9 +44,10 @@
 .vip-mockup-page *::before,
 .vip-mockup-page *::after { box-sizing: border-box; }
 
-.vip-mockup-page button { font: inherit; }
+.vip-mockup-page button { font: inherit; touch-action: manipulation; }
 .vip-mockup-page button:disabled,
 .vip-mockup-page input:disabled { cursor: not-allowed; }
+.vip-mockup-page [hidden] { display: none !important; }
 
 
 /* =========================================================
@@ -77,17 +83,15 @@
     box-shadow: var(--shadow-lg);
 }
 
-/* moldura interna */
 .vip-mockup-stage::after {
     content: "";
     position: absolute;
     inset: 14px;
-    border: 1px solid rgba(0, 0, 0, .07);
+    border: 1px solid rgba(0, 0, 0, .06);
     border-radius: 20px;
     pointer-events: none;
 }
 
-/* dica de interação */
 .vip-mockup-stage::before {
     content: "Arraste para girar";
     position: absolute;
@@ -241,8 +245,6 @@ model-viewer::part(default-progress-mask) { background: transparent; }
     border-top: 1px solid var(--line);
 }
 
-.vip-panel-section:last-of-type { padding-bottom: 22px; }
-
 .vip-panel-section label,
 .vip-section-title-row label {
     display: block;
@@ -312,6 +314,9 @@ model-viewer::part(default-progress-mask) { background: transparent; }
     white-space: nowrap;
 }
 
+/* barra de abas: só aparece no mobile */
+.vip-mobile-tabs { display: none; }
+
 
 /* =========================================================
    NOME E FONTES
@@ -344,9 +349,9 @@ model-viewer::part(default-progress-mask) { background: transparent; }
 .vip-name-input-row input:hover { border-color: #bdb9b0; }
 
 .vip-name-input-row input:focus {
-    border-color: var(--ink);
+    border-color: rgba(20, 20, 19, .28);
     background: #fff;
-    box-shadow: 0 0 0 4px rgba(20, 20, 19, .07);
+    box-shadow: 0 0 0 4px rgba(20, 20, 19, .06), var(--shadow-sm);
 }
 
 .vip-name-options { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
@@ -354,6 +359,7 @@ model-viewer::part(default-progress-mask) { background: transparent; }
 .vip-font-options { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
 
 .vip-font-btn {
+    position: relative;
     min-width: 0;
     height: 62px;
     display: flex;
@@ -370,7 +376,6 @@ model-viewer::part(default-progress-mask) { background: transparent; }
 
 .vip-font-btn strong { color: var(--ink); font-size: 20px; line-height: 1; }
 
-/* cada botão mostra a própria fonte */
 .vip-font-btn[data-font="Arial"] strong { font-family: Arial, sans-serif; }
 .vip-font-btn[data-font="Montserrat"] strong { font-family: "Montserrat", sans-serif; }
 .vip-font-btn[data-font="Georgia"] strong { font-family: Georgia, serif; }
@@ -389,17 +394,36 @@ model-viewer::part(default-progress-mask) { background: transparent; }
     white-space: nowrap;
 }
 
-.vip-font-btn:hover { transform: translateY(-2px); border-color: #b9b5ab; box-shadow: var(--shadow-sm); }
+.vip-font-btn:hover { transform: translateY(-2px); border-color: var(--line-2); box-shadow: var(--shadow-sm); }
 .vip-font-btn:active { transform: translateY(0); }
 
+/* fonte selecionada: card claro com sombra e um check discreto */
 .vip-font-btn.active {
-    border-color: var(--ink);
-    background: var(--ink);
-    box-shadow: 0 8px 18px rgba(20, 20, 19, .2);
+    border-color: var(--sel-border);
+    background: var(--sel-bg);
+    box-shadow: var(--sel-shadow);
 }
 
-.vip-font-btn.active strong { color: #fff; }
-.vip-font-btn.active span { color: rgba(255, 255, 255, .7); }
+.vip-font-btn.active span { color: var(--ink-2); }
+
+.vip-font-btn.active::after {
+    content: "\2713";
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 15px;
+    height: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--ink);
+    color: #fff;
+    font-size: 8px;
+    font-weight: 800;
+    line-height: 1;
+    box-shadow: 0 2px 6px rgba(20, 20, 19, .25);
+}
 
 
 /* =========================================================
@@ -430,10 +454,11 @@ model-viewer::part(default-progress-mask) { background: transparent; }
     transition: border-color .2s var(--ease), background .2s var(--ease), border-radius .2s var(--ease), box-shadow .2s var(--ease);
 }
 
-.vip-engraving-category-btn:hover { border-color: #bdb9b0; background: var(--soft); }
+.vip-engraving-category-btn:hover { border-color: var(--line-2); background: var(--soft); }
 
 .vip-engraving-category-btn.active {
-    border-color: var(--ink);
+    border-color: var(--line-2);
+    border-bottom-color: transparent;
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
     background: var(--soft);
@@ -453,10 +478,11 @@ model-viewer::part(default-progress-mask) { background: transparent; }
 .vip-engraving-category-content {
     display: none;
     padding: 12px;
-    border: 1px solid var(--ink);
+    border: 1px solid var(--line-2);
     border-top: 0;
     border-radius: 0 0 12px 12px;
     background: #fff;
+    box-shadow: var(--shadow-sm);
 }
 
 .vip-engraving-category-content.open { display: block; animation: vipFade .25s var(--ease); }
@@ -477,6 +503,7 @@ model-viewer::part(default-progress-mask) { background: transparent; }
 }
 
 .vip-engraving-btn {
+    position: relative;
     min-width: 0;
     padding: 9px 4px 7px;
     display: flex;
@@ -493,7 +520,7 @@ model-viewer::part(default-progress-mask) { background: transparent; }
 
 .vip-engraving-btn:hover {
     transform: translateY(-3px);
-    border-color: var(--ink);
+    border-color: var(--line-2);
     background: #fff;
     box-shadow: var(--shadow-md);
 }
@@ -522,6 +549,32 @@ model-viewer::part(default-progress-mask) { background: transparent; }
     white-space: nowrap;
 }
 
+/* gravação já adicionada na garrafa */
+.vip-engraving-btn.is-added {
+    border-color: var(--sel-border);
+    background: var(--sel-bg);
+    box-shadow: var(--shadow-sm);
+}
+
+.vip-engraving-btn.is-added::after {
+    content: "\2713";
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 15px;
+    height: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--ink);
+    color: #fff;
+    font-size: 8px;
+    font-weight: 800;
+    line-height: 1;
+    box-shadow: 0 2px 6px rgba(20, 20, 19, .25);
+}
+
 .vip-no-engravings { margin: 12px 0; color: var(--muted); font-size: 11px; text-align: center; }
 
 
@@ -545,45 +598,48 @@ model-viewer::part(default-progress-mask) { background: transparent; }
     text-align: center;
 }
 
+.vip-empty-link { display: none; }
+
 .vip-engraving-layer-item {
     position: relative;
     width: 100%;
     min-height: 54px;
-    padding: 7px 12px 7px 10px;
+    padding: 7px 12px 7px 12px;
     display: flex;
     align-items: center;
     gap: 10px;
     overflow: hidden;
     border: 1px solid var(--line);
-    border-radius: 12px;
+    border-radius: 14px;
     background: #fff;
     color: var(--ink);
     text-align: left;
     cursor: pointer;
     animation: vipFade .25s var(--ease);
-    transition: border-color .2s var(--ease), background .2s var(--ease), box-shadow .2s var(--ease);
+    transition: border-color .2s var(--ease), background .2s var(--ease), box-shadow .2s var(--ease), transform .2s var(--ease);
 }
 
 .vip-engraving-layer-item::before {
     content: "";
     position: absolute;
-    top: 10px;
-    bottom: 10px;
+    top: 14px;
+    bottom: 14px;
     left: 0;
     width: 3px;
-    border-radius: 0 3px 3px 0;
-    background: var(--ink);
+    border-radius: 0 4px 4px 0;
+    background: linear-gradient(180deg, #55554f, #141413);
     opacity: 0;
     transform: scaleY(.4);
     transition: opacity .2s var(--ease), transform .2s var(--ease);
 }
 
-.vip-engraving-layer-item:hover { border-color: #bdb9b0; box-shadow: var(--shadow-sm); }
+.vip-engraving-layer-item:hover { border-color: var(--line-2); box-shadow: var(--shadow-sm); }
 
+/* camada selecionada: sem contorno preto, só luz, sombra e um acento lateral */
 .vip-engraving-layer-item.active {
-    border-color: var(--ink);
-    background: var(--soft);
-    box-shadow: 0 0 0 1px var(--ink);
+    border-color: var(--sel-border);
+    background: var(--sel-bg);
+    box-shadow: var(--sel-shadow);
 }
 
 .vip-engraving-layer-item.active::before { opacity: 1; transform: none; }
@@ -596,10 +652,17 @@ model-viewer::part(default-progress-mask) { background: transparent; }
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    background: var(--ink);
-    color: #fff;
+    background: var(--soft-2);
+    color: var(--ink-2);
     font-size: 9px;
     font-weight: 800;
+    transition: background .2s var(--ease), color .2s var(--ease), box-shadow .2s var(--ease);
+}
+
+.vip-engraving-layer-item.active .vip-layer-number {
+    background: var(--ink);
+    color: #fff;
+    box-shadow: 0 3px 8px rgba(20, 20, 19, .25);
 }
 
 .vip-layer-preview {
@@ -611,9 +674,11 @@ model-viewer::part(default-progress-mask) { background: transparent; }
     justify-content: center;
     overflow: hidden;
     border: 1px solid #ecebe6;
-    border-radius: 9px;
+    border-radius: 10px;
     background: var(--soft);
 }
+
+.vip-engraving-layer-item.active .vip-layer-preview { background: #fff; box-shadow: var(--shadow-sm); }
 
 .vip-layer-preview img { max-width: 100%; max-height: 100%; object-fit: contain; }
 
@@ -628,7 +693,7 @@ model-viewer::part(default-progress-mask) { background: transparent; }
     white-space: nowrap;
 }
 
-.vip-engraving-layer-item > i { color: var(--muted); font-size: 11px; transition: transform .2s var(--ease), color .2s var(--ease); }
+.vip-engraving-layer-item > i { color: var(--muted-2); font-size: 11px; transition: transform .2s var(--ease), color .2s var(--ease); }
 .vip-engraving-layer-item:hover > i,
 .vip-engraving-layer-item.active > i { transform: translateX(2px); color: var(--ink); }
 
@@ -641,11 +706,20 @@ model-viewer::part(default-progress-mask) { background: transparent; }
     margin-top: 14px;
     padding: 18px;
     border: 1px solid var(--line);
-    border-radius: 16px;
+    border-radius: 18px;
     background: linear-gradient(180deg, #fff 0%, var(--soft) 100%);
     box-shadow: var(--shadow-sm);
-    transition: opacity .3s var(--ease);
+    opacity: .55;
+    transition: opacity .3s var(--ease), box-shadow .3s var(--ease), border-color .3s var(--ease);
 }
+
+.vip-controls-card.is-active {
+    border-color: var(--sel-border);
+    box-shadow: var(--sel-shadow);
+    opacity: 1;
+}
+
+.vip-controls-card:not(.is-active) .vip-position-pad { pointer-events: none; }
 
 .vip-controls-card .vip-section-title-row { margin-bottom: 16px; }
 
@@ -688,7 +762,7 @@ model-viewer::part(default-progress-mask) { background: transparent; }
 }
 
 .vip-position-pad:focus-visible {
-    box-shadow: 0 0 0 3px rgba(20, 20, 19, .16), inset 0 3px 10px rgba(0, 0, 0, .07);
+    box-shadow: 0 0 0 4px rgba(20, 20, 19, .10), inset 0 3px 10px rgba(0, 0, 0, .07);
 }
 
 .vip-position-pad:active { cursor: grabbing; }
@@ -707,7 +781,7 @@ model-viewer::part(default-progress-mask) { background: transparent; }
 }
 
 .vip-position-axis-x,
-.vip-position-axis-y { position: absolute; pointer-events: none; background: rgba(20, 20, 19, .16); }
+.vip-position-axis-y { position: absolute; pointer-events: none; background: rgba(20, 20, 19, .14); }
 .vip-position-axis-x { top: 50%; right: 8%; left: 8%; height: 1px; }
 .vip-position-axis-y { top: 8%; bottom: 8%; left: 50%; width: 1px; }
 
@@ -737,14 +811,14 @@ model-viewer::part(default-progress-mask) { background: transparent; }
     border: 2px solid #fff;
     border-radius: 50%;
     background: radial-gradient(circle at 35% 30%, #5a5a56, #141413 70%);
-    box-shadow: 0 6px 14px rgba(0, 0, 0, .28), 0 0 0 1px rgba(20, 20, 19, .14), 0 0 0 6px rgba(20, 20, 19, .06);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, .28), 0 0 0 6px rgba(20, 20, 19, .06);
     pointer-events: none;
     transition: transform .15s var(--ease), box-shadow .15s var(--ease);
 }
 
 .vip-position-pad:active .vip-position-knob {
     transform: translate(-50%, -50%) scale(1.12);
-    box-shadow: 0 8px 18px rgba(0, 0, 0, .32), 0 0 0 1px rgba(20, 20, 19, .14), 0 0 0 9px rgba(20, 20, 19, .08);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, .32), 0 0 0 9px rgba(20, 20, 19, .08);
 }
 
 .vip-position-knob span {
@@ -776,7 +850,12 @@ model-viewer::part(default-progress-mask) { background: transparent; }
 
 /* sliders */
 
-.vip-engraving-control { margin-top: 18px; }
+.vip-engraving-control {
+    --track: 4px;
+    --thumb: 18px;
+    margin-top: 18px;
+}
+
 .vip-controls-side .vip-engraving-control:first-child { margin-top: 0; }
 
 .vip-control-header {
@@ -784,7 +863,7 @@ model-viewer::part(default-progress-mask) { background: transparent; }
     align-items: center;
     justify-content: space-between;
     gap: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 6px;
     color: var(--ink-2);
     font-size: 10px;
     font-weight: 700;
@@ -805,18 +884,31 @@ model-viewer::part(default-progress-mask) { background: transparent; }
 
 .vip-engraving-control input[type="range"] {
     width: 100%;
-    height: 4px;
+    height: 28px;
+    margin: 0;
     appearance: none;
     -webkit-appearance: none;
-    border-radius: 99px;
     outline: none;
-    background: #d9d6ce;
+    background: transparent;
     cursor: pointer;
 }
 
+.vip-engraving-control input[type="range"]::-webkit-slider-runnable-track {
+    height: var(--track);
+    border-radius: 99px;
+    background: #dcd9d1;
+}
+
+.vip-engraving-control input[type="range"]::-moz-range-track {
+    height: var(--track);
+    border-radius: 99px;
+    background: #dcd9d1;
+}
+
 .vip-engraving-control input[type="range"]::-webkit-slider-thumb {
-    width: 18px;
-    height: 18px;
+    width: var(--thumb);
+    height: var(--thumb);
+    margin-top: calc((var(--track) - var(--thumb)) / 2);
     appearance: none;
     -webkit-appearance: none;
     border: 3px solid #fff;
@@ -826,20 +918,22 @@ model-viewer::part(default-progress-mask) { background: transparent; }
     transition: transform .15s var(--ease), box-shadow .15s var(--ease);
 }
 
-.vip-engraving-control input[type="range"]:hover::-webkit-slider-thumb { transform: scale(1.12); }
-.vip-engraving-control input[type="range"]:active::-webkit-slider-thumb { box-shadow: 0 2px 8px rgba(0, 0, 0, .28), 0 0 0 6px rgba(20, 20, 19, .1); }
-
 .vip-engraving-control input[type="range"]::-moz-range-thumb {
-    width: 12px;
-    height: 12px;
+    box-sizing: border-box;
+    width: var(--thumb);
+    height: var(--thumb);
     border: 3px solid #fff;
     border-radius: 50%;
     background: var(--ink);
     box-shadow: 0 2px 8px rgba(0, 0, 0, .28);
 }
 
-.vip-engraving-control input[type="range"]:focus-visible { box-shadow: 0 0 0 4px rgba(20, 20, 19, .1); }
-.vip-engraving-control input[type="range"]:disabled { background: #e6e4de; }
+.vip-engraving-control input[type="range"]:hover::-webkit-slider-thumb { transform: scale(1.1); }
+.vip-engraving-control input[type="range"]:active::-webkit-slider-thumb { box-shadow: 0 2px 8px rgba(0, 0, 0, .28), 0 0 0 7px rgba(20, 20, 19, .09); }
+.vip-engraving-control input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 2px 8px rgba(0, 0, 0, .28), 0 0 0 6px rgba(20, 20, 19, .12); }
+
+.vip-engraving-control input[type="range"]:disabled::-webkit-slider-runnable-track { background: #e6e4de; }
+.vip-engraving-control input[type="range"]:disabled::-moz-range-track { background: #e6e4de; }
 .vip-engraving-control input[type="range"]:disabled::-webkit-slider-thumb { background: var(--muted-2); box-shadow: none; }
 .vip-engraving-control input[type="range"]:disabled::-moz-range-thumb { background: var(--muted-2); box-shadow: none; }
 
@@ -850,12 +944,12 @@ model-viewer::part(default-progress-mask) { background: transparent; }
 .vip-reset-engraving-btn,
 .vip-remove-engraving-btn {
     min-width: 0;
-    height: 42px;
+    height: 44px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 7px;
-    border-radius: 10px;
+    border-radius: 12px;
     font-size: 9px;
     font-weight: 800;
     letter-spacing: .06em;
@@ -864,14 +958,14 @@ model-viewer::part(default-progress-mask) { background: transparent; }
     transition: color .2s var(--ease), background .2s var(--ease), border-color .2s var(--ease), transform .2s var(--ease), box-shadow .2s var(--ease);
 }
 
-.vip-reset-engraving-btn { border: 1px solid var(--line-2); background: #fff; color: var(--ink); }
-.vip-reset-engraving-btn:hover:not(:disabled) { border-color: var(--ink); background: var(--ink); color: #fff; transform: translateY(-1px); }
+.vip-reset-engraving-btn { border: 1px solid var(--line-2); background: #fff; color: var(--ink); box-shadow: var(--shadow-sm); }
+.vip-reset-engraving-btn:hover:not(:disabled) { border-color: var(--ink); background: var(--ink); color: #fff; transform: translateY(-1px); box-shadow: var(--shadow-md); }
 
 .vip-remove-engraving-btn { border: 1px solid #efd5d5; background: #fff8f8; color: var(--danger); }
 .vip-remove-engraving-btn:hover:not(:disabled) { border-color: var(--danger); background: var(--danger); color: #fff; transform: translateY(-1px); }
 
 .vip-reset-engraving-btn:disabled,
-.vip-remove-engraving-btn:disabled { border-color: var(--line); background: var(--soft); color: var(--muted-2); }
+.vip-remove-engraving-btn:disabled { border-color: var(--line); background: var(--soft); color: var(--muted-2); box-shadow: none; }
 
 
 /* =========================================================
@@ -904,7 +998,7 @@ model-viewer::part(default-progress-mask) { background: transparent; }
     width: 100%;
     min-height: 50px;
     overflow: hidden;
-    border-radius: 12px;
+    border-radius: 13px;
     font-size: 10px;
     font-weight: 800;
     letter-spacing: .12em;
@@ -927,7 +1021,6 @@ model-viewer::part(default-progress-mask) { background: transparent; }
     box-shadow: 0 8px 18px rgba(20, 20, 19, .2), inset 0 1px 0 rgba(255, 255, 255, .12);
 }
 
-/* brilho que atravessa o botão no hover */
 .vip-next-bottle-btn::after {
     content: "";
     position: absolute;
@@ -942,7 +1035,7 @@ model-viewer::part(default-progress-mask) { background: transparent; }
 
 .vip-next-bottle-btn:hover { transform: translateY(-2px); box-shadow: 0 14px 28px rgba(20, 20, 19, .26), inset 0 1px 0 rgba(255, 255, 255, .12); }
 .vip-next-bottle-btn:hover::after { left: 120%; }
-.vip-next-bottle-btn:active { transform: translateY(0); }
+.vip-next-bottle-btn:active { transform: translateY(0) scale(.99); }
 .vip-next-bottle-btn i { transition: transform .2s var(--ease); }
 .vip-next-bottle-btn:hover i { transform: translateX(4px); }
 
@@ -1100,7 +1193,8 @@ model-viewer::part(default-progress-mask) { background: transparent; }
 
 
 /* =========================================================
-   MOBILE — VISUALIZAÇÃO SUPERIOR + PAINEL INFERIOR
+   MOBILE — GARRAFA EM CIMA + PAINEL EM ABAS EMBAIXO
+   A garrafa fica sempre visível enquanto o usuário ajusta.
 ========================================================= */
 
 @media (max-width: 768px) {
@@ -1114,7 +1208,7 @@ model-viewer::part(default-progress-mask) { background: transparent; }
         gap: 0;
         display: grid;
         grid-template-columns: minmax(0, 1fr);
-        grid-template-rows: 44% 56%;
+        grid-template-rows: 42% 58%;
         overflow: hidden;
         background: #f2f2f1;
     }
@@ -1132,13 +1226,14 @@ model-viewer::part(default-progress-mask) { background: transparent; }
     }
 
     .vip-mockup-stage::after { inset: 8px; border-radius: 14px; }
-    .vip-mockup-stage::before { top: 18px; padding: 6px 12px; font-size: 8px; }
+    .vip-mockup-stage::before { top: 16px; padding: 6px 12px; font-size: 8px; }
 
     .vip-mockup-logo,
     .vip-live-preview,
     .vip-current-bottle-info,
     .vip-editing-badge,
-    .vip-panel-head { display: none !important; }
+    .vip-panel-head,
+    .vip-step-title { display: none !important; }
 
     .vip-mockup-panel {
         position: relative;
@@ -1146,12 +1241,12 @@ model-viewer::part(default-progress-mask) { background: transparent; }
         width: 100%;
         height: 100%;
         max-height: none;
-        padding: 12px 18px 0;
-        border: 1px solid rgba(20, 20, 19, .06);
+        padding: 10px 18px 0;
+        border: 1px solid rgba(20, 20, 19, .05);
         border-bottom: 0;
-        border-radius: 22px 22px 0 0;
+        border-radius: 24px 24px 0 0;
         background: #fff;
-        box-shadow: 0 -12px 30px rgba(20, 20, 19, .1);
+        box-shadow: 0 -14px 34px rgba(20, 20, 19, .10);
         overflow-x: hidden;
         overflow-y: auto;
         overscroll-behavior: contain;
@@ -1166,63 +1261,176 @@ model-viewer::part(default-progress-mask) { background: transparent; }
         width: 38px;
         height: 4px;
         display: block;
-        margin: 0 auto 16px;
+        margin: 0 auto 12px;
         border-radius: 99px;
         background: var(--line-2);
     }
 
-    .vip-panel-section { padding-bottom: 20px; }
-    .vip-panel-section + .vip-panel-section { padding-top: 20px; }
-    .vip-step-title { margin-bottom: 11px; font-size: 10px; }
+    /* abas */
 
-    .vip-name-input-row input { height: 46px; font-size: 13px; }
+    .vip-mobile-tabs {
+        position: sticky;
+        top: 0;
+        z-index: 6;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 4px;
+        margin: 0 0 14px;
+        padding: 4px;
+        border-radius: 15px;
+        background: var(--soft-2);
+        box-shadow: inset 0 1px 2px rgba(20, 20, 19, .05), 0 12px 0 0 #fff;
+    }
 
-    .vip-font-options { gap: 6px; }
-    .vip-font-btn { height: 52px; border-radius: 10px; }
-    .vip-font-btn strong { font-size: 17px; }
+    .vip-tab-btn {
+        min-width: 0;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        border: 0;
+        border-radius: 12px;
+        background: transparent;
+        color: var(--muted);
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: .05em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: background .2s var(--ease), color .2s var(--ease), box-shadow .2s var(--ease);
+    }
+
+    .vip-tab-btn i { font-size: 13px; }
+
+    .vip-tab-btn.active {
+        background: #fff;
+        color: var(--ink);
+        box-shadow: 0 4px 12px rgba(20, 20, 19, .10), 0 1px 2px rgba(20, 20, 19, .06);
+    }
+
+    .vip-tab-count {
+        min-width: 16px;
+        height: 16px;
+        padding: 0 4px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 99px;
+        background: var(--ink);
+        color: #fff;
+        font-size: 9px;
+        font-style: normal;
+        font-weight: 800;
+        letter-spacing: 0;
+    }
+
+    /* uma seção por vez */
+
+    .vip-mockup-panel[data-tab="nome"] .vip-sec-engravings,
+    .vip-mockup-panel[data-tab="nome"] .vip-sec-adjust,
+    .vip-mockup-panel[data-tab="gravacoes"] .vip-sec-name,
+    .vip-mockup-panel[data-tab="gravacoes"] .vip-sec-adjust,
+    .vip-mockup-panel[data-tab="ajuste"] .vip-sec-name,
+    .vip-mockup-panel[data-tab="ajuste"] .vip-sec-engravings { display: none; }
+
+    .vip-mockup-panel .vip-panel-section,
+    .vip-mockup-panel .vip-panel-section + .vip-panel-section {
+        padding: 0 0 20px;
+        border-top: 0;
+        animation: vipFade .25s var(--ease);
+    }
+
+    /* campos e botões confortáveis para o toque */
+
+    .vip-name-input-row input { height: 52px; font-size: 16px; }
+
+    .vip-font-options { gap: 8px; }
+    .vip-font-btn { height: 58px; border-radius: 12px; }
+    .vip-font-btn strong { font-size: 18px; }
     .vip-font-btn span { font-size: 7px; }
 
-    .vip-side-btn,
-    .vip-orientation-btn { height: 36px; font-size: 9px; }
-
-    .vip-engraving-items { max-height: none; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
-    .vip-engraving-btn { padding: 7px 3px 5px; }
-    .vip-engraving-btn img { max-width: 42px; }
+    .vip-engraving-items { max-height: none; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+    .vip-engraving-btn { padding: 8px 3px 6px; }
+    .vip-engraving-btn img { max-width: 44px; }
     .vip-engraving-btn span { font-size: 7px; }
-    .vip-engraving-category-btn { min-height: 44px; font-size: 9px; }
+    .vip-engraving-category-btn { min-height: 50px; font-size: 10px; }
 
-    .vip-controls-card { padding: 14px; }
-    .vip-controls-grid { grid-template-columns: minmax(0, 1fr); gap: 16px; }
-    .vip-position-pad { width: min(56vw, 190px); }
-    .vip-position-knob { width: 32px; height: 32px; }
-    .vip-engraving-control input[type="range"] { height: 6px; }
-    .vip-engraving-control input[type="range"]::-webkit-slider-thumb { width: 24px; height: 24px; }
-    .vip-engraving-control input[type="range"]::-moz-range-thumb { width: 18px; height: 18px; }
+    .vip-engraving-layer-item { min-height: 58px; }
+
+    .vip-engraving-empty { padding: 22px 14px; }
+
+    .vip-empty-link {
+        margin: 12px auto 0;
+        padding: 0 18px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 0;
+        border-radius: 99px;
+        background: var(--ink);
+        color: #fff;
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        box-shadow: 0 6px 14px rgba(20, 20, 19, .2);
+        cursor: pointer;
+    }
+
+    /* controles: pad e sliders lado a lado, tudo visível sem rolar */
+
+    .vip-controls-card { margin-top: 12px; padding: 14px; border-radius: 18px; }
+    .vip-controls-grid { grid-template-columns: clamp(118px, 34vw, 150px) minmax(0, 1fr); gap: 14px; }
+    .vip-position-pad { width: 100%; }
+    .vip-position-hint { display: none; }
+    .vip-position-knob { width: 30px; height: 30px; }
+    .vip-position-readout { margin-top: 8px; }
+
+    .vip-engraving-control { --track: 6px; --thumb: 26px; margin-top: 12px; }
+    .vip-control-header { font-size: 9px; }
+    .vip-controls-actions { margin-top: 14px; }
+    .vip-reset-engraving-btn,
+    .vip-remove-engraving-btn { height: 48px; font-size: 9px; }
+
+    /* barra de preço compacta: valor + botão numa linha */
 
     .vip-price-sticky {
         margin: 0 -18px;
         padding: 12px 18px calc(12px + env(safe-area-inset-bottom));
-        box-shadow: 0 -8px 20px rgba(20, 20, 19, .05);
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        box-shadow: 0 -10px 24px rgba(20, 20, 19, .06);
     }
 
-    .vip-price-row { margin-bottom: 10px; }
+    .vip-price-row { flex-direction: column; align-items: flex-start; gap: 2px; margin: 0; }
     .vip-price-row strong { font-size: 20px; }
+    .vip-group-flow-actions { flex: 1; }
     .vip-next-bottle-btn,
-    .vip-copy-all-btn { min-height: 48px; font-size: 10px; }
+    .vip-copy-all-btn { min-height: 52px; font-size: 10px; }
+
+    .vip-side-btn,
+    .vip-orientation-btn { height: 36px; font-size: 9px; }
 }
 
 @media (max-width: 390px) {
-    .vip-mockup-page { grid-template-rows: 42% 58%; }
     .vip-mockup-panel { padding-right: 14px; padding-left: 14px; }
-    .vip-price-sticky { margin-right: -14px; margin-left: -14px; padding-right: 14px; padding-left: 14px; }
+    .vip-price-sticky { margin-right: -14px; margin-left: -14px; padding-right: 14px; padding-left: 14px; gap: 12px; }
     .vip-engraving-items { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .vip-tab-btn { font-size: 9px; letter-spacing: .03em; }
+    .vip-tab-btn i { display: none; }
+}
+
+/* celulares baixos / deitados: mais espaço para o painel */
+@media (max-width: 768px) and (max-height: 640px) {
+    .vip-mockup-page { grid-template-rows: 36% 64%; }
 }
 
 
 /* =========================================================
    DESKTOP AMPLO — PAINEL EM 3 COLUNAS
-   Filhos do painel: 1 cabeçalho, 2 nome, 3 gravações,
-   4 ajustes, 5 preço
 ========================================================= */
 
 @media (min-width: 1200px) {
@@ -1260,27 +1468,24 @@ model-viewer::part(default-progress-mask) { background: transparent; }
         overflow: hidden;
     }
 
-    .vip-mockup-panel > :nth-child(1) { grid-area: head; }
-    .vip-mockup-panel > :nth-child(2) { grid-area: nome; }
-    .vip-mockup-panel > :nth-child(3) { grid-area: grav; }
-    .vip-mockup-panel > :nth-child(4) { grid-area: ajuste; }
-    .vip-mockup-panel > :nth-child(5) { grid-area: preco; }
+    .vip-panel-head { grid-area: head; }
+    .vip-sec-name { grid-area: nome; }
+    .vip-sec-engravings { grid-area: grav; }
+    .vip-sec-adjust { grid-area: ajuste; }
+    .vip-price-sticky { grid-area: preco; }
 
     .vip-panel-section,
-    .vip-panel-section + .vip-panel-section,
-    .vip-panel-section:last-of-type {
+    .vip-panel-section + .vip-panel-section {
         min-height: 0;
         margin: 0;
         padding: 18px 0 0;
         border-top: 0;
+        overflow-y: auto;
+        scrollbar-width: thin;
     }
 
-    .vip-mockup-panel > :nth-child(2),
-    .vip-mockup-panel > :nth-child(3),
-    .vip-mockup-panel > :nth-child(4) { overflow-y: auto; scrollbar-width: thin; }
-
-    .vip-mockup-panel > :nth-child(3),
-    .vip-mockup-panel > :nth-child(4) {
+    .vip-sec-engravings,
+    .vip-sec-adjust {
         padding-left: 24px;
         border-left: 1px solid var(--line);
     }
@@ -1310,7 +1515,7 @@ model-viewer::part(default-progress-mask) { background: transparent; }
     .vip-position-readout { grid-template-columns: 1fr; gap: 4px; margin-top: 10px; }
     .vip-position-hint { display: none; }
     .vip-controls-side .vip-engraving-control { margin-top: 0; }
-    .vip-controls-side .vip-engraving-control + .vip-engraving-control { margin-top: 16px; }
+    .vip-controls-side .vip-engraving-control + .vip-engraving-control { margin-top: 14px; }
 
     .vip-price-sticky {
         position: static;
@@ -1336,8 +1541,7 @@ model-viewer::part(default-progress-mask) { background: transparent; }
     .vip-mockup-panel { padding: 18px 24px; }
     .vip-panel-head { padding-bottom: 12px; }
     .vip-panel-section,
-    .vip-panel-section + .vip-panel-section,
-    .vip-panel-section:last-of-type { padding-top: 14px; }
+    .vip-panel-section + .vip-panel-section { padding-top: 14px; }
     .vip-position-pad { width: 112px; }
     .vip-engraving-btn img { max-width: 40px; }
     .vip-engraving-items { max-height: 270px; }
@@ -1349,7 +1553,7 @@ model-viewer::part(default-progress-mask) { background: transparent; }
 ========================================================= */
 
 .vip-mockup-page button:focus-visible {
-    outline: 2px solid var(--ink);
+    outline: 2px solid rgba(20, 20, 19, .45);
     outline-offset: 2px;
 }
 

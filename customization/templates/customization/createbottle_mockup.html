@@ -6,7 +6,6 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/createbottle_mockup.css' %}">
 <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 {% endblock %}
 
@@ -40,18 +39,25 @@
     </div>
 
 
-    <div class="vip-mockup-panel">
+    <div class="vip-mockup-panel" data-tab="nome">
 
         <div class="vip-panel-head">
             <h1 class="vip-panel-title">Personalizar garrafa</h1>
             <p class="vip-panel-sub">{{ product.name }}</p>
         </div>
 
+        <!-- ABAS (somente no mobile) -->
+        <div class="vip-mobile-tabs" role="tablist">
+            <button type="button" class="vip-tab-btn active" data-tab="nome" role="tab" aria-selected="true"><i class="bi bi-fonts"></i> Nome</button>
+            <button type="button" class="vip-tab-btn" data-tab="gravacoes" role="tab" aria-selected="false"><i class="bi bi-grid"></i> Gravações</button>
+            <button type="button" class="vip-tab-btn" data-tab="ajuste" role="tab" aria-selected="false"><i class="bi bi-sliders"></i> Ajustar <em class="vip-tab-count" id="layersCount" hidden>0</em></button>
+        </div>
+
         <!-- 1. NOME -->
-        <div class="vip-panel-section">
+        <div class="vip-panel-section vip-sec-name">
             <div class="vip-step-title"><span>1</span> Nome na garrafa</div>
             <div class="vip-name-input-row">
-                <input type="text" id="nameInput" maxlength="15" placeholder="Digite seu texto" value="">
+                <input type="text" id="nameInput" maxlength="15" placeholder="Digite seu texto" value="" autocomplete="off" autocapitalize="characters" enterkeyhint="done">
             </div>
 
             <div class="vip-name-options">
@@ -65,7 +71,7 @@
         </div>
 
         <!-- 2. GRAVAÇÕES -->
-        <div class="vip-panel-section">
+        <div class="vip-panel-section vip-sec-engravings">
             <div class="vip-step-title"><span>2</span> Escolha as gravações</div>
 
             <div class="vip-engraving-grid" id="engravingGrid">
@@ -99,11 +105,14 @@
         </div>
 
         <!-- 3. CAMADAS + CONTROLES -->
-        <div class="vip-panel-section">
+        <div class="vip-panel-section vip-sec-adjust">
             <div class="vip-step-title"><span>3</span> Ajustar gravações</div>
 
             <div id="engravingLayersList" class="vip-engraving-layers-list">
-                <div class="vip-engraving-empty">Nenhuma gravação adicionada.</div>
+                <div class="vip-engraving-empty">
+                    Nenhuma gravação adicionada.
+                    <button type="button" class="vip-empty-link" data-go-tab="gravacoes">Escolher gravação</button>
+                </div>
             </div>
 
             <div id="engravingControlsSection" class="vip-controls-card">
@@ -181,10 +190,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const $ = id => document.getElementById(id);
 
+    const panel = document.querySelector(".vip-mockup-panel");
+    const tabButtons = document.querySelectorAll(".vip-tab-btn");
     const engravingButtons = document.querySelectorAll(".vip-engraving-btn");
     const fontButtons = document.querySelectorAll(".vip-font-btn");
 
     const layersList = $("engravingLayersList");
+    const layersCount = $("layersCount");
     const controlsSection = $("engravingControlsSection");
     const selectedName = $("selectedEngravingName");
     const sizeControl = $("engravingSizeControl");
@@ -231,6 +243,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Cópias deslocadas para a gravação não cortar na emenda da textura
     const WRAP_OFFSETS = [-TEXTURE_SIZE, 0, TEXTURE_SIZE];
+
+    const EMPTY_LAYERS_HTML = `
+        <div class="vip-engraving-empty">
+            Nenhuma gravação adicionada.
+            <button type="button" class="vip-empty-link" data-go-tab="gravacoes">Escolher gravação</button>
+        </div>
+    `;
 
 
     /* =========================================================
@@ -286,6 +305,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* =========================================================
+       ABAS (MOBILE)
+    ========================================================= */
+
+    function setTab(name) {
+        panel.dataset.tab = name;
+
+        tabButtons.forEach(button => {
+            const active = button.dataset.tab === name;
+            button.classList.toggle("active", active);
+            button.setAttribute("aria-selected", active ? "true" : "false");
+        });
+
+        panel.scrollTop = 0;
+    }
+
+    tabButtons.forEach(button => {
+        button.addEventListener("click", () => setTab(button.dataset.tab));
+    });
+
+    // botão "Escolher gravação" do estado vazio
+    panel.addEventListener("click", event => {
+        const go = event.target.closest("[data-go-tab]");
+        if (go) setTab(go.dataset.goTab);
+    });
+
+
+    /* =========================================================
        DESENHO NA TEXTURA
     ========================================================= */
 
@@ -332,6 +378,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const version = ++renderVersion;
 
+        // garante que as fontes do nome já carregaram antes de desenhar
+        await Promise.all(
+            layers
+                .filter(layer => layer.type === "name")
+                .map(layer => document.fonts.load(`bold 40px "${layer.font}"`, layer.text))
+        );
+
+        if (version !== renderVersion) return;
+
         const canvas = document.createElement("canvas");
         canvas.width = TEXTURE_SIZE;
         canvas.height = TEXTURE_SIZE;
@@ -340,13 +395,6 @@ document.addEventListener("DOMContentLoaded", () => {
         ctx.save();
         ctx.translate(TEXTURE_FLIP_X ? TEXTURE_SIZE : 0, TEXTURE_FLIP_Y ? TEXTURE_SIZE : 0);
         ctx.scale(TEXTURE_FLIP_X ? -1 : 1, TEXTURE_FLIP_Y ? -1 : 1);
-
-        await Promise.all(
-    layers
-        .filter(layer => layer.type === "name")
-        .map(layer => document.fonts.load(`bold 40px "${layer.font}"`))
-);
-
 
         for (const layer of layers) {
             if (version !== renderVersion) {
@@ -408,9 +456,25 @@ document.addEventListener("DOMContentLoaded", () => {
         return layer.name;
     }
 
+    // marca na biblioteca as gravações já usadas e atualiza o contador da aba
+    function syncLibrary() {
+        const added = new Set(layers.filter(layer => layer.type === "image").map(layer => layer.imageUrl));
+
+        engravingButtons.forEach(button => {
+            button.classList.toggle("is-added", added.has(button.dataset.image));
+        });
+
+        if (layersCount) {
+            layersCount.textContent = layers.length;
+            layersCount.hidden = !layers.length;
+        }
+    }
+
     function renderLayersList() {
+        syncLibrary();
+
         if (!layers.length) {
-            layersList.innerHTML = `<div class="vip-engraving-empty">Nenhuma gravação adicionada.</div>`;
+            layersList.innerHTML = EMPTY_LAYERS_HTML;
             return;
         }
 
@@ -442,9 +506,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const layer = getSelected();
         const enabled = !!layer;
 
-        controlsSection.style.opacity = enabled ? "1" : "0.5";
+        controlsSection.classList.toggle("is-active", enabled);
         [sizeControl, rotationControl, resetButton, removeButton].forEach(el => el.disabled = !enabled);
-        positionPad.style.pointerEvents = enabled ? "" : "none";
 
         const x = layer ? layer.x : START_X;
         const y = layer ? layer.y : START_Y;
@@ -525,6 +588,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     nameInput.addEventListener("input", updateNameFromInput);
 
+    // "OK" do teclado do celular fecha o teclado
+    nameInput.addEventListener("keydown", event => {
+        if (event.key === "Enter") nameInput.blur();
+    });
+
     fontButtons.forEach(button => {
         button.addEventListener("click", () => {
             fontButtons.forEach(btn => btn.classList.remove("active"));
@@ -551,6 +619,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const existing = layers.find(layer => layer.type === "image" && layer.imageUrl === imageUrl);
             if (existing) {
+                setTab("ajuste");
                 selectLayer(existing.id);
                 return;
             }
@@ -575,8 +644,10 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             layers.push(layer);
+
+            // no mobile, leva o usuário direto para os ajustes da gravação recém-adicionada
+            setTab("ajuste");
             selectLayer(layer.id);
-            controlsSection.scrollIntoView({ behavior: "smooth", block: "nearest" });
             requestRebuild();
         });
     });
