@@ -174,40 +174,78 @@ MP_PUBLIC_KEY = config("MP_PUBLIC_KEY", default="")
 MP_ACCESS_TOKEN = config("MP_ACCESS_TOKEN", default="")
 
 # JAZZMIN
+
 JAZZMIN_SETTINGS = {
     "site_title": "Risk Clube Admin",
     "site_header": "Risk Clube",
-    "site_brand": "Risk Clube",
+    "site_brand": "RISK CLUBE",
     "welcome_sign": "Painel administrativo",
     "copyright": "Risk Clube",
 
     "show_sidebar": True,
     "navigation_expanded": False,
+    "show_ui_builder": True,
 
     "hide_apps": [
         "sites",
     ],
 
-    "hide_models": [],
+    "hide_models": [
+        "auth.group",
+    ],
 
     "order_with_respect_to": [
         "products",
         "orders",
-        "accounts",
         "customization",
+        "accounts",
         "cart",
         "pages",
+        "auth",
     ],
 
     "icons": {
-        "auth": "fas fa-users-cog",
-        "accounts": "fas fa-users",
         "products": "fas fa-box",
+        "products.product": "fas fa-box-open",
         "orders": "fas fa-shopping-cart",
         "customization": "fas fa-paint-brush",
+        "accounts": "fas fa-users",
+        "accounts.customuser": "fas fa-user",
         "cart": "fas fa-shopping-basket",
         "pages": "fas fa-file-alt",
+        "auth": "fas fa-users-cog",
     },
+}
 
-    "show_ui_builder": False,
+
+JAZZMIN_UI_TWEAKS = {
+    "theme": "flatly",
+    "default_theme_mode": "light",
+
+    "navbar": "navbar-white navbar-light",
+    "sidebar": "sidebar-dark-primary",
+    "accent": "accent-dark",
+
+    "navbar_small_text": False,
+    "sidebar_small_text": False,
+    "footer_small_text": True,
+    "body_small_text": False,
+
+    "brand_small_text": False,
+    "brand_colour": "navbar-dark",
+
+    "sidebar_nav_small_text": False,
+    "sidebar_nav_child_indent": True,
+    "sidebar_nav_compact": True,
+    "sidebar_nav_legacy_style": False,
+    "sidebar_nav_flat_style": True,
+
+    "button_classes": {
+        "primary": "btn-dark",
+        "secondary": "btn-secondary",
+        "info": "btn-info",
+        "success": "btn-success",
+        "warning": "btn-warning",
+        "danger": "btn-danger",
+    },
 }
