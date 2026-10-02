@@ -1,409 +1,1044 @@
-/* =========================
-   MOCKUP GRUPO VIP
-========================= */
+/* =========================================================
+   RISK CLUBE — PERSONALIZADOR DE GARRAFA
+   Visual flat, cantos retos, preto / branco / cinza
+========================================================= */
 
 .vip-mockup-page {
-    min-height: 100vh;
-    background: #f8f8f8;
+    --ink: #141413;
+    --ink-2: #3a3a37;
+    --muted: #76766f;
+    --muted-2: #a3a39b;
+    --line: #e7e5df;
+    --line-2: #d2cfc7;
+    --soft: #f6f6f5;
+    --soft-2: #eeeeec;
+    --danger: #b83c3c;
+    --ease: cubic-bezier(.22, .61, .36, 1);
+    --r: 4px;
+    --silver: #d4d7dc;
+
+    --shadow-sm: 0 1px 2px rgba(20, 20, 19, .06);
+    --shadow-md: 0 6px 18px rgba(20, 20, 19, .08);
+    --shadow-lg: 0 20px 50px rgba(20, 20, 19, .09);
+
+    /* selecionado: fundo branco, borda escura fina e barra lateral interna */
+    --sel-bg: #fff;
+    --sel-border: var(--ink);
+
+    min-height: 70vh;
     display: grid;
-    grid-template-columns: 1fr 380px;
-    gap: 40px;
-    padding: 40px;
+    grid-template-columns: minmax(0, 1.15fr) minmax(400px, 450px);
+    align-items: start;
+    gap: clamp(24px, 3vw, 48px);
+    padding: clamp(24px, 3vw, 48px);
+    background: #f1f1f0;
+    color: var(--ink);
+    font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
 }
 
-/* LADO ESQUERDO */
+.vip-mockup-page *,
+.vip-mockup-page *::before,
+.vip-mockup-page *::after { box-sizing: border-box; }
+
+.vip-mockup-page button { font: inherit; border-radius: var(--r); touch-action: manipulation; }
+.vip-mockup-page button:disabled,
+.vip-mockup-page input:disabled { cursor: not-allowed; }
+.vip-mockup-page [hidden] { display: none !important; }
+
+
+/* =========================================================
+   MODELO 3D
+========================================================= */
 
 .vip-mockup-left {
-    position: relative;
+    position: sticky;
+    top: 24px;
+    align-self: start;
     display: flex;
     align-items: center;
     justify-content: center;
+    min-width: 0;
 }
 
 .vip-mockup-stage {
-    width: min(520px, 100%);
-    height: 860px;
     position: relative;
+    width: 100%;
+    max-width: 760px;
+    height: min(800px, calc(100vh - 48px));
+    min-height: 540px;
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: var(--r);
+    background:
+        radial-gradient(ellipse 60% 50% at 50% 42%, #ffffff 0%, rgba(255, 255, 255, 0) 70%),
+        #f6f6f5;
 }
 
-.vip-mockup-bottle {
-    max-height: 98%;
-    max-width: 92%;
-    object-fit: contain;
-    display: block;
-       background:
-        radial-gradient(circle at 50% 35%, #ffffff 0%, #e9e9e9 38%, #d2d2d2 100%);
-    border-radius: 32px;
-    filter: drop-shadow(0 30px 35px rgba(0,0,0,.22));
-}
+.vip-mockup-stage::after { display: none; }
 
-.vip-mockup-text {
+.vip-mockup-stage::before {
+    content: "Arraste para girar";
     position: absolute;
+    z-index: 2;
+    top: 24px;
     left: 50%;
-    top: 48%;
-    color: #e8e8e8;
-    font-size: 28px;
-    font-weight: 500;
-    letter-spacing: 2px;
+    transform: translateX(-50%);
+    padding: 8px 14px;
+    border: 1px solid var(--line);
+    background: rgba(255, 255, 255, .85);
+    color: var(--muted);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .16em;
     text-transform: uppercase;
-    transform-origin: center;
     pointer-events: none;
 }
 
-.vip-mockup-text.vertical {
-    transform: translate(-50%, -50%) rotate(-90deg);
+.vip-mockup-stage model-viewer {
+    position: relative;
+    z-index: 1;
+    width: 100% !important;
+    height: 100% !important;
+    --poster-color: transparent;
+    --progress-bar-color: #141413;
+    --progress-bar-height: 2px;
+    background: transparent;
+    outline: none;
 }
 
-.vip-mockup-text.horizontal {
-    transform: translate(-50%, -50%) rotate(0deg);
+model-viewer::part(default-progress-mask) { background: transparent; }
+
+.vip-mockup-bottle {
+    max-width: 90%;
+    max-height: 94%;
+    display: block;
+    object-fit: contain;
+    filter: drop-shadow(0 30px 26px rgba(0, 0, 0, .18));
 }
 
 .vip-mockup-logo {
     position: absolute;
-    bottom: 75px;
+    z-index: 2;
+    bottom: 28px;
     left: 50%;
-    transform: translateX(-50%);
-    color: #fff;
-    font-size: 22px;
-    font-weight: 900;
-    font-style: italic;
-    opacity: 0.9;
-}
-
-.vip-live-preview {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    height: 40px;
-    padding: 0 18px;
-    border-radius: 8px;
-    border: 1px solid #e0e0e0;
-    background: #fff;
-    color: #111;
-    font-size: 13px;
-    font-weight: 700;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 14px;
+    transform: translateX(-50%);
+    color: var(--ink);
+    font-size: 12px;
+    font-weight: 800;
+    font-style: italic;
+    letter-spacing: .34em;
+    text-transform: uppercase;
+    opacity: .35;
+    pointer-events: none;
 }
 
-/* PAINEL */
+.vip-mockup-logo::before,
+.vip-mockup-logo::after {
+    content: "";
+    width: 28px;
+    height: 1px;
+    background: currentColor;
+    opacity: .5;
+}
+
+
+/* =========================================================
+   PAINEL
+========================================================= */
 
 .vip-mockup-panel {
+    position: sticky;
+    top: 24px;
+    align-self: start;
+    max-height: calc(100vh - 48px);
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 32px;
+    border: 1px solid var(--line);
+    border-radius: var(--r);
     background: #fff;
-    border-radius: 18px;
-    padding: 28px;
-    align-self: center;
-    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.08);
+    box-shadow: var(--shadow-lg);
+    scrollbar-width: thin;
+    scrollbar-color: var(--line-2) transparent;
 }
 
-.vip-panel-logo {
-    text-align: center;
-    font-size: 30px;
-    font-weight: 700;
-    margin-bottom: 28px;
+.vip-mockup-panel::-webkit-scrollbar,
+.vip-engraving-items::-webkit-scrollbar,
+.vip-engraving-layers-list::-webkit-scrollbar { width: 5px; }
+
+.vip-mockup-panel::-webkit-scrollbar-thumb,
+.vip-engraving-items::-webkit-scrollbar-thumb,
+.vip-engraving-layers-list::-webkit-scrollbar-thumb { background: var(--line-2); }
+
+.vip-panel-head {
+    margin-bottom: 8px;
+    padding-bottom: 26px;
+    border-bottom: 1px solid var(--line);
+}
+
+.vip-panel-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    color: var(--muted);
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .26em;
+    text-transform: uppercase;
+}
+
+.vip-panel-eyebrow::before {
+    content: "";
+    width: 22px;
+    height: 1px;
+    background: currentColor;
+}
+
+.vip-panel-title {
+    margin: 0;
+    color: var(--ink);
+    font-size: clamp(21px, 2vw, 26px);
+    font-weight: 800;
+    letter-spacing: -.04em;
+    line-height: 1.15;
+}
+
+.vip-panel-sub {
+    margin: 10px 0 0;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.7;
 }
 
 .vip-panel-section {
-    margin-bottom: 26px;
+    min-width: 0;
+    margin-bottom: 0;
+    padding-bottom: 32px;
 }
+
+.vip-panel-section + .vip-panel-section {
+    padding-top: 32px;
+    border-top: 1px solid var(--line);
+}
+
+.vip-panel-section:last-of-type { padding-bottom: 28px; }
 
 .vip-panel-section label,
 .vip-section-title-row label {
     display: block;
-    color: #111;
-    font-size: 13px;
-    font-weight: 900;
+    margin: 0;
+    color: var(--ink);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .12em;
     text-transform: uppercase;
-    margin-bottom: 12px;
-    letter-spacing: 0.5px;
+}
+
+.vip-step-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+    color: var(--ink);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+}
+
+.vip-step-title::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+}
+
+.vip-step-title span {
+    flex: 0 0 24px;
+    width: 24px;
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--r);
+    background: var(--ink);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0;
 }
 
 .vip-section-title-row {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
+    gap: 14px;
 }
 
 .vip-section-title-row span {
-    color: #777;
-    font-size: 11px;
-    font-weight: 800;
+    max-width: 62%;
+    overflow: hidden;
+    padding: 5px 10px;
+    border: 1px solid var(--line);
+    border-radius: var(--r);
+    background: var(--soft);
+    color: var(--ink-2);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-overflow: ellipsis;
     text-transform: uppercase;
+    white-space: nowrap;
 }
 
-/* INPUT */
+/* barra de abas: só aparece no mobile */
+.vip-mobile-tabs { display: none; }
 
-.vip-name-input-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
+
+/* =========================================================
+   NOME E FONTES
+========================================================= */
 
 .vip-name-input-row input {
     width: 100%;
-    height: 46px;
-    border: none;
-    border-bottom: 1px solid #e5e5e5;
+    height: 54px;
+    padding: 0 16px;
+    border: 1px solid #000;
+    border-radius: var(--r);
     outline: none;
+    background: linear-gradient(180deg, #232323 0%, #121212 100%);
+    color: var(--silver);
+    text-shadow: 0 1px 0 rgba(0, 0, 0, .8), 0 -1px 0 rgba(255, 255, 255, .25);
+    caret-color: var(--silver);
+    font-family: inherit;
     font-size: 14px;
-    font-weight: 800;
+    font-weight: 700;
+    letter-spacing: .08em;
     text-transform: uppercase;
+    transition: border-color .2s var(--ease), box-shadow .2s var(--ease);
 }
 
-.vip-name-input-row button {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    border: 1px solid #ddd;
-    background: #fff;
-    cursor: pointer;
+.vip-name-input-row input::placeholder {
+    color: #7d7f84;
+    text-shadow: none;
+    font-weight: 500;
+    letter-spacing: .02em;
+    text-transform: none;
 }
 
-/* FONTES */
+.vip-name-input-row input:hover { border-color: #3a3a3a; }
 
-.vip-font-options {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
+.vip-name-input-row input:focus {
+    border-color: #000;
+    box-shadow: 0 0 0 3px rgba(20, 20, 19, .12);
 }
+
+.vip-name-options { display: flex; flex-direction: column; gap: 12px; margin-top: 14px; }
+
+.vip-font-options { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
 
 .vip-font-btn {
+    position: relative;
+    min-width: 0;
     height: 66px;
-    background: #fff;
-    border: 1px solid transparent;
-    border-radius: 10px;
-    cursor: pointer;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 6px;
+    border: 1px solid var(--line);
+    border-radius: var(--r);
+    background: #fff;
+    cursor: pointer;
+    transition: border-color .2s var(--ease), background .2s var(--ease);
 }
 
-.vip-font-btn strong {
-    font-size: 20px;
-}
+.vip-font-btn strong { color: var(--ink); font-size: 20px; line-height: 1; }
+
+.vip-font-btn[data-font="Arial"] strong { font-family: Arial, sans-serif; }
+.vip-font-btn[data-font="Montserrat"] strong { font-family: "Montserrat", sans-serif; }
+.vip-font-btn[data-font="Georgia"] strong { font-family: Georgia, serif; }
+.vip-font-btn[data-font="serif"] strong { font-family: "Times New Roman", serif; }
+.vip-font-btn[data-font="Ma Shan Zheng"] strong { font-family: "Ma Shan Zheng", cursive; }
 
 .vip-font-btn span {
-    font-size: 9px;
+    max-width: 100%;
+    overflow: hidden;
+    color: var(--muted);
+    font-size: 7.5px;
     font-weight: 800;
-    color: #777;
+    letter-spacing: .06em;
+    text-overflow: ellipsis;
     text-transform: uppercase;
+    white-space: nowrap;
 }
+
+.vip-font-btn:hover { border-color: var(--muted-2); background: var(--soft); }
 
 .vip-font-btn.active {
-    border-color: #111;
+    border-color: var(--sel-border);
+    background: var(--sel-bg);
+    box-shadow: inset 0 -2px 0 var(--ink);
 }
 
-/* ORIENTAÇÃO */
+.vip-font-btn.active span { color: var(--ink); }
 
-.vip-orientation-options {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+
+/* =========================================================
+   BIBLIOTECA DE GRAVAÇÕES
+========================================================= */
+
+.vip-engraving-category { margin-bottom: 12px; }
+.vip-engraving-category:last-child { margin-bottom: 0; }
+
+.vip-engraving-category-btn {
+    width: 100%;
+    min-height: 52px;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     gap: 12px;
-}
-
-.vip-orientation-btn {
-    height: 48px;
-    border: 1px solid transparent;
+    border: 1px solid var(--line);
+    border-radius: var(--r);
     background: #fff;
-    border-radius: 10px;
-    font-size: 12px;
-    font-weight: 900;
+    color: var(--ink);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .08em;
+    text-align: left;
     text-transform: uppercase;
     cursor: pointer;
+    transition: border-color .2s var(--ease), background .2s var(--ease);
 }
 
-.vip-orientation-btn.active {
-    border-color: #111;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+.vip-engraving-category-btn:hover { border-color: var(--line-2); background: var(--soft); }
+
+.vip-engraving-category-btn.active {
+    border-color: var(--ink);
+    background: #fff;
 }
 
-/* CATEGORIAS */
+.vip-engraving-category-left { min-width: 0; display: flex; align-items: center; gap: 12px; }
+.vip-engraving-category-left img { width: 26px; height: 26px; display: block; object-fit: contain; }
 
-.vip-category-grid {
+.vip-engraving-category-btn > i {
+    color: var(--muted);
+    font-size: 11px;
+    transition: transform .25s var(--ease), color .2s var(--ease);
+}
+
+.vip-engraving-category-btn.active > i { transform: rotate(180deg); color: var(--ink); }
+
+.vip-engraving-category-content {
+    display: none;
+    margin-top: 8px;
+    padding: 14px;
+    border: 1px solid var(--line);
+    border-radius: var(--r);
+    background: var(--soft);
+}
+
+.vip-engraving-category-content.open { display: block; animation: vipFade .25s var(--ease); }
+
+@keyframes vipFade {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: none; }
+}
+
+.vip-engraving-items {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 10px;
+    max-height: 280px;
+    overflow-y: auto;
+    padding: 2px;
+    scrollbar-width: thin;
 }
 
-.vip-category-btn {
-    background: transparent;
-    border: none;
+.vip-engraving-btn {
+    position: relative;
+    min-width: 0;
+    padding: 12px 4px 9px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 1px solid var(--line);
+    border-radius: var(--r);
+    background: var(--soft);
     cursor: pointer;
+    transition: border-color .2s var(--ease), background .2s var(--ease);
 }
 
-.vip-category-btn i {
-    width: 54px;
-    height: 54px;
-    background: #111;
-    color: #fff;
-    border-radius: 8px;
-    margin: 0 auto 8px;
+.vip-engraving-btn:hover { border-color: var(--muted-2); background: #fff; }
+.vip-engraving-btn:active { background: var(--soft-2); }
+
+.vip-engraving-btn img {
+    width: 100%;
+    max-width: 50px;
+    aspect-ratio: 1;
+    display: block;
+    object-fit: contain;
+}
+
+.vip-engraving-btn span {
+    width: 100%;
+    overflow: hidden;
+    color: var(--ink-2);
+    font-size: 8px;
+    font-weight: 700;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* gravação já adicionada: borda escura + canto marcado */
+.vip-engraving-btn.is-added {
+    border-color: var(--ink);
+    background: #fff;
+}
+
+.vip-engraving-btn.is-added::after {
+    content: "\2713";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 16px;
+    height: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 26px;
+    border-radius: 0 calc(var(--r) - 1px) 0 var(--r);
+    background: var(--ink);
+    color: #fff;
+    font-size: 9px;
+    font-weight: 800;
+    line-height: 1;
 }
 
-.vip-category-btn span {
-    color: #111;
+.vip-no-engravings { margin: 14px 0; color: var(--muted); font-size: 11px; text-align: center; }
+
+
+/* =========================================================
+   CAMADAS
+========================================================= */
+
+.vip-engraving-layers-list { display: flex; flex-direction: column; gap: 10px; }
+
+.vip-engraving-empty {
+    padding: 24px 16px;
+    border: 1px dashed var(--line-2);
+    border-radius: var(--r);
+    background: var(--soft);
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.7;
+    text-align: center;
+}
+
+.vip-empty-link { display: none; }
+
+.vip-engraving-layer-item {
+    position: relative;
+    width: 100%;
+    min-height: 64px;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: var(--r);
+    background: #fff;
+    color: var(--ink);
+    text-align: left;
+    cursor: pointer;
+    animation: vipFade .25s var(--ease);
+    transition: border-color .2s var(--ease), background .2s var(--ease), box-shadow .2s var(--ease);
+}
+
+/* a barra lateral agora é interna (box-shadow), não vaza para fora do card */
+.vip-engraving-layer-item::before { display: none; }
+
+.vip-engraving-layer-item:hover { border-color: var(--line-2); background: var(--soft); }
+
+.vip-engraving-layer-item.active {
+    border-color: var(--sel-border);
+    background: var(--sel-bg);
+    box-shadow: inset 3px 0 0 var(--ink);
+}
+
+.vip-layer-number {
+    flex: 0 0 22px;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--r);
+    background: var(--soft-2);
+    color: var(--ink-2);
     font-size: 9px;
-    font-weight: 900;
+    font-weight: 800;
+    transition: background .2s var(--ease), color .2s var(--ease);
+}
+
+.vip-engraving-layer-item.active .vip-layer-number {
+    background: var(--ink);
+    color: #fff;
+}
+
+.vip-layer-preview {
+    flex: 0 0 40px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: var(--r);
+    background: var(--soft);
+}
+
+.vip-engraving-layer-item.active .vip-layer-preview { background: #fff; }
+
+.vip-layer-preview img { max-width: 80%; max-height: 80%; object-fit: contain; }
+
+.vip-layer-name {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    color: var(--ink);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .02em;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.vip-engraving-layer-item > i { color: var(--muted-2); font-size: 11px; transition: transform .2s var(--ease), color .2s var(--ease); }
+.vip-engraving-layer-item:hover > i,
+.vip-engraving-layer-item.active > i { transform: translateX(2px); color: var(--ink); }
+
+
+/* =========================================================
+   CONTROLES DA GRAVAÇÃO
+========================================================= */
+
+.vip-controls-card {
+    margin-top: 18px;
+    padding: 22px;
+    border: 1px solid var(--line);
+    border-radius: var(--r);
+    background: #fff;
+    opacity: .5;
+    transition: opacity .3s var(--ease), border-color .3s var(--ease);
+}
+
+.vip-controls-card.is-active {
+    border-color: var(--line-2);
+    opacity: 1;
+}
+
+.vip-controls-card:not(.is-active) .vip-position-pad { pointer-events: none; }
+
+.vip-controls-card .vip-section-title-row { margin-bottom: 20px; }
+
+.vip-controls-grid {
+    display: grid;
+    grid-template-columns: 150px minmax(0, 1fr);
+    gap: 24px;
+    align-items: center;
+}
+
+.vip-position-editor { margin: 0; }
+
+/* pad de posição (continua circular: representa a volta da garrafa) */
+
+.vip-position-pad {
+    position: relative;
+    width: 150px;
+    aspect-ratio: 1;
+    margin: 0 auto;
+    overflow: hidden;
+    border: 1px solid var(--line-2);
+    border-radius: 50%;
+    outline: none;
+    background: var(--soft);
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: border-color .2s var(--ease);
+}
+
+.vip-position-pad::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: repeating-radial-gradient(circle at 50% 50%, transparent 0 22px, rgba(20, 20, 19, .06) 22px 23px);
+    pointer-events: none;
+}
+
+.vip-position-pad:focus-visible { border-color: var(--ink); box-shadow: 0 0 0 3px rgba(20, 20, 19, .1); }
+.vip-position-pad:active { cursor: grabbing; border-color: var(--ink); }
+
+.vip-position-grid {
+    position: absolute;
+    inset: 8%;
+    border-radius: 50%;
+    pointer-events: none;
+    background-image:
+        linear-gradient(rgba(20, 20, 19, .06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(20, 20, 19, .06) 1px, transparent 1px);
+    background-size: 25% 25%;
+    -webkit-mask-image: radial-gradient(circle, #000 30%, transparent 75%);
+    mask-image: radial-gradient(circle, #000 30%, transparent 75%);
+}
+
+.vip-position-axis-x,
+.vip-position-axis-y { position: absolute; pointer-events: none; background: rgba(20, 20, 19, .14); }
+.vip-position-axis-x { top: 50%; right: 8%; left: 8%; height: 1px; }
+.vip-position-axis-y { top: 8%; bottom: 8%; left: 50%; width: 1px; }
+
+.vip-position-hint {
+    position: absolute;
+    bottom: 15%;
+    left: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transform: translateX(-50%);
+    opacity: .4;
+    text-align: center;
+    pointer-events: none;
+}
+
+.vip-position-hint span { font-size: 8px; font-weight: 800; letter-spacing: .18em; }
+.vip-position-hint small { margin-top: 2px; font-size: 7px; font-weight: 600; }
+
+.vip-position-knob {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 24px;
+    height: 24px;
+    transform: translate(-50%, -50%);
+    border: 3px solid #fff;
+    border-radius: 50%;
+    background: var(--ink);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .3);
+    pointer-events: none;
+    transition: transform .15s var(--ease);
+}
+
+.vip-position-pad:active .vip-position-knob { transform: translate(-50%, -50%) scale(1.1); }
+
+.vip-position-knob span { display: none; }
+
+.vip-position-readout { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; }
+
+.vip-position-readout > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 7px 10px;
+    border: 1px solid var(--line);
+    border-radius: var(--r);
+    background: var(--soft);
+}
+
+.vip-position-readout span { color: var(--muted); font-size: 8px; font-weight: 800; letter-spacing: .08em; }
+.vip-position-readout strong { color: var(--ink); font-size: 10px; font-variant-numeric: tabular-nums; }
+
+/* sliders */
+
+.vip-engraving-control {
+    --track: 3px;
+    --thumb: 16px;
+    margin-top: 22px;
+}
+
+.vip-controls-side .vip-engraving-control:first-child { margin-top: 0; }
+
+.vip-control-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 8px;
+    color: var(--ink-2);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .06em;
     text-transform: uppercase;
 }
 
-.vip-category-btn.active i {
-    box-shadow: 0 0 0 3px #dcdcdc;
+.vip-control-header strong {
+    min-width: 42px;
+    padding: 3px 8px;
+    border-radius: var(--r);
+    background: var(--soft-2);
+    color: var(--ink);
+    font-size: 10px;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
 }
 
-/* PREÇO */
-
-.vip-price-box {
-    margin: 30px 0 14px;
+.vip-engraving-control input[type="range"] {
+    width: 100%;
+    height: 28px;
+    margin: 0;
+    appearance: none;
+    -webkit-appearance: none;
+    outline: none;
+    background: transparent;
+    cursor: pointer;
 }
 
-.vip-price-box strong {
-    font-size: 17px;
-    font-weight: 900;
-    color: #111;
+.vip-engraving-control input[type="range"]::-webkit-slider-runnable-track {
+    height: var(--track);
+    border-radius: var(--r);
+    background: var(--line-2);
 }
 
-/* BOTÕES DO FLUXO */
-
-.vip-group-flow-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+.vip-engraving-control input[type="range"]::-moz-range-track {
+    height: var(--track);
+    border-radius: var(--r);
+    background: var(--line-2);
 }
+
+.vip-engraving-control input[type="range"]::-webkit-slider-thumb {
+    width: var(--thumb);
+    height: var(--thumb);
+    margin-top: calc((var(--track) - var(--thumb)) / 2);
+    appearance: none;
+    -webkit-appearance: none;
+    border: 0;
+    border-radius: var(--r);
+    background: var(--ink);
+    transition: transform .15s var(--ease);
+}
+
+.vip-engraving-control input[type="range"]::-moz-range-thumb {
+    box-sizing: border-box;
+    width: var(--thumb);
+    height: var(--thumb);
+    border: 0;
+    border-radius: var(--r);
+    background: var(--ink);
+}
+
+.vip-engraving-control input[type="range"]:hover::-webkit-slider-thumb { transform: scale(1.12); }
+.vip-engraving-control input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px rgba(20, 20, 19, .14); }
+
+.vip-engraving-control input[type="range"]:disabled::-webkit-slider-runnable-track { background: var(--line); }
+.vip-engraving-control input[type="range"]:disabled::-moz-range-track { background: var(--line); }
+.vip-engraving-control input[type="range"]:disabled::-webkit-slider-thumb { background: var(--muted-2); }
+.vip-engraving-control input[type="range"]:disabled::-moz-range-thumb { background: var(--muted-2); }
+
+/* ações */
+
+.vip-controls-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 24px; }
+
+.vip-reset-engraving-btn,
+.vip-remove-engraving-btn {
+    min-width: 0;
+    height: 46px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-radius: var(--r);
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color .2s var(--ease), background .2s var(--ease), border-color .2s var(--ease);
+}
+
+.vip-reset-engraving-btn { border: 1px solid var(--line-2); background: #fff; color: var(--ink); }
+.vip-reset-engraving-btn:hover:not(:disabled) { border-color: var(--ink); background: var(--ink); color: #fff; }
+
+.vip-remove-engraving-btn { border: 1px solid #e6c9c9; background: #fff; color: var(--danger); }
+.vip-remove-engraving-btn:hover:not(:disabled) { border-color: var(--danger); background: var(--danger); color: #fff; }
+
+.vip-reset-engraving-btn:disabled,
+.vip-remove-engraving-btn:disabled { border-color: var(--line); background: var(--soft); color: var(--muted-2); }
+
+
+/* =========================================================
+   PREÇO E AÇÕES
+========================================================= */
+
+.vip-price-box { margin: 0; }
+
+.vip-price-sticky {
+    position: sticky;
+    bottom: -1px;
+    z-index: 10;
+    margin: 0 -32px -32px;
+    padding: 22px 32px 28px;
+    border-top: 1px solid var(--line);
+    background: #fff;
+}
+
+.vip-price-row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+.vip-price-row span { color: var(--muted); font-size: 9px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+.vip-price-row strong { color: var(--ink); font-size: 24px; font-weight: 800; letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
+
+.vip-group-flow-actions { display: flex; flex-direction: column; gap: 10px; }
 
 .vip-copy-all-btn,
 .vip-next-bottle-btn {
     width: 100%;
-    height: 52px;
-    border-radius: 9px;
-    font-size: 13px;
-    font-weight: 900;
+    min-height: 52px;
+    border-radius: var(--r);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .12em;
     text-transform: uppercase;
     cursor: pointer;
-    transition: 0.25s ease;
+    transition: background .2s var(--ease), border-color .2s var(--ease), color .2s var(--ease);
 }
 
-.vip-copy-all-btn {
-    background: #fff;
-    color: #111;
-    border: 1px solid #111;
-}
-
-.vip-copy-all-btn:hover {
-    background: #f2f2f2;
-}
+.vip-copy-all-btn { border: 1px solid var(--line-2); background: #fff; color: var(--ink); }
+.vip-copy-all-btn:hover { border-color: var(--ink); background: var(--soft); }
 
 .vip-next-bottle-btn {
-    background: #050505;
-    color: #fff;
-    border: 1px solid #050505;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 18px;
+    gap: 12px;
+    border: 1px solid var(--ink);
+    background: var(--ink);
+    color: #fff;
 }
 
-.vip-next-bottle-btn:hover {
-    background: #222;
+.vip-next-bottle-btn::after { display: none; }
+
+.vip-next-bottle-btn:hover { background: #2c2c29; border-color: #2c2c29; }
+.vip-next-bottle-btn:active { background: #000; }
+.vip-next-bottle-btn i { transition: transform .2s var(--ease); }
+.vip-next-bottle-btn:hover i { transform: translateX(4px); }
+
+
+/* =========================================================
+   COMPATIBILIDADE COM OUTRAS TELAS
+========================================================= */
+
+.vip-side-options,
+.vip-orientation-options {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 4px;
+    padding: 4px;
+    border: 1px solid var(--line);
+    border-radius: var(--r);
+    background: var(--soft-2);
 }
 
-/* RESPONSIVO */
-
-@media (max-width: 900px) {
-    .vip-mockup-page {
-        grid-template-columns: 1fr;
-        padding: 30px 18px;
-    }
-
-    .vip-mockup-stage {
-        height: 560px;
-    }
-
-    .vip-mockup-panel {
-        width: 100%;
-        max-width: 480px;
-        margin: 0 auto;
-    }
+.vip-side-btn,
+.vip-orientation-btn {
+    min-width: 0;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 0;
+    border-radius: var(--r);
+    background: transparent;
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: color .2s var(--ease), background .2s var(--ease);
 }
 
-@media (max-width: 520px) {
-    .vip-mockup-stage {
-        height: 460px;
-    }
+.vip-side-btn:hover,
+.vip-orientation-btn:hover { color: var(--ink); }
 
-    .vip-font-options,
-    .vip-category-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+.vip-side-btn.active,
+.vip-orientation-btn.active { background: #fff; color: var(--ink); box-shadow: var(--shadow-sm); }
 
-    .vip-orientation-options {
-        grid-template-columns: 1fr;
-    }
+.vip-category-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.vip-category-btn { border: 0; background: transparent; cursor: pointer; }
+.vip-category-btn i {
+    width: 54px;
+    height: 54px;
+    margin: 0 auto 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--line);
+    border-radius: var(--r);
+    background: var(--soft);
+    color: var(--ink);
+    font-size: 22px;
+    transition: background .2s var(--ease), color .2s var(--ease), border-color .2s var(--ease);
 }
-
+.vip-category-btn span { color: var(--ink); font-size: 9px; font-weight: 800; text-transform: uppercase; }
+.vip-category-btn:hover i,
+.vip-category-btn.active i { border-color: var(--ink); background: var(--ink); color: #fff; }
 
 .vip-current-bottle-info {
     position: absolute;
-    top: 20px;
-    left: 20px;
-    background: #fff;
-    border: 1px solid #e5e5e5;
-    border-radius: 14px;
-    padding: 12px 16px;
-    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.06);
     z-index: 5;
+    top: 24px;
+    left: 24px;
+    padding: 12px 16px;
+    border: 1px solid var(--line);
+    border-radius: var(--r);
+    background: rgba(255, 255, 255, .92);
 }
-
-.vip-current-bottle-info strong {
-    display: block;
-    color: #111;
-    font-size: 14px;
-    font-weight: 900;
-}
-
-.vip-current-bottle-info span {
-    display: block;
-    color: #777;
-    font-size: 12px;
-    font-weight: 700;
-    margin-top: 3px;
-}
+.vip-current-bottle-info strong { display: block; color: var(--ink); font-size: 12px; font-weight: 800; }
+.vip-current-bottle-info span { display: block; margin-top: 4px; color: var(--muted); font-size: 10px; font-weight: 700; }
 
 .vip-editing-badge {
     width: fit-content;
-    background: #111;
-    color: #fff;
-    padding: 8px 14px;
-    border-radius: 999px;
-    font-size: 12px;
-    font-weight: 900;
-    margin: -12px auto 24px;
+    margin: -10px auto 20px;
+    padding: 7px 12px;
+    border: 1px solid var(--line-2);
+    border-radius: var(--r);
+    background: var(--soft-2);
+    color: var(--ink-2);
+    font-size: 10px;
+    font-weight: 800;
 }
 
-.vip-mockup-bottle,
-.vip-mockup-bottle model-viewer,
-model-viewer.vip-mockup-bottle {
-    opacity: 1 !important;
-    filter: none !important;
-    mix-blend-mode: normal !important;
-    background: transparent !important;
-}
-
-model-viewer.vip-mockup-bottle {
-    width: 100%;
-    height: 100%;
-    max-height: 98%;
-    max-width: 92%;
-    display: block;
+.vip-live-preview {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    min-height: 38px;
+    padding: 0 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid #000;
+    border-radius: var(--r);
+    background: linear-gradient(180deg, #232323 0%, #121212 100%);
+    color: var(--silver);
+    text-shadow: 0 1px 0 rgba(0, 0, 0, .8), 0 -1px 0 rgba(255, 255, 255, .25);
+    font-size: 11px;
+    font-weight: 700;
 }
 
 .bottle-loading {
@@ -415,849 +1050,500 @@ model-viewer.vip-mockup-bottle {
     align-items: center;
     justify-content: center;
     gap: 10px;
-    background: #f3f3f3;
-    color: #111;
+    background: var(--soft);
     text-align: center;
 }
+.bottle-loader { width: 32px; height: 32px; border: 3px solid #e0ddd6; border-top-color: #555; border-radius: 50%; animation: bottleSpin .8s linear infinite; }
+.bottle-loading strong { color: var(--ink); font-size: 13px; font-weight: 700; }
+.bottle-loading span { color: var(--muted); font-size: 11px; }
+@keyframes bottleSpin { to { transform: rotate(360deg); } }
 
-.bottle-loader {
-    width: 34px;
-    height: 34px;
-    border: 3px solid #d5d5d5;
-    border-top-color: #111;
-    border-radius: 50%;
-    animation: bottleSpin .8s linear infinite;
-}
+#editorCanvas { position: absolute; z-index: 50; inset: 0; width: 100%; height: 100%; background: transparent; cursor: grab; }
 
-.bottle-loading strong {
-    font-size: 14px;
-    font-weight: 700;
-}
 
-.bottle-loading span {
-    font-size: 12px;
-    color: #777;
-}
+/* =========================================================
+   TABLET
+========================================================= */
 
-@keyframes bottleSpin {
-    to {
-        transform: rotate(360deg);
+@media (max-width: 1100px) {
+    .vip-mockup-page {
+        grid-template-columns: minmax(0, 1fr) minmax(350px, 410px);
+        gap: 24px;
+        padding: 24px;
     }
+    .vip-mockup-stage { min-height: 500px; }
+    .vip-mockup-panel { padding: 28px; }
+    .vip-controls-grid { grid-template-columns: 126px minmax(0, 1fr); gap: 18px; }
+    .vip-position-pad { width: 126px; }
+    .vip-price-sticky { margin: 0 -28px -28px; padding: 18px 28px 24px; }
+}
+
+@media (max-width: 900px) and (min-width: 769px) {
+    .vip-mockup-page { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+    .vip-mockup-left,
+    .vip-mockup-panel { position: static; }
+    .vip-mockup-stage { height: 540px; min-height: 0; margin: 0 auto; }
+    .vip-mockup-panel { width: 100%; max-width: 720px; max-height: none; margin: 0 auto; }
+    .vip-controls-grid { grid-template-columns: 150px minmax(0, 1fr); }
+    .vip-position-pad { width: 150px; }
 }
 
 
-model-viewer::part(default-progress-bar) {
-    display: none;
-}
+/* =========================================================
+   MOBILE — GARRAFA EM CIMA + PAINEL EM ABAS EMBAIXO
+========================================================= */
 
 @media (max-width: 768px) {
-    .vip-mockup-bottle {
-        width: 100%;
-        height: 420px;
-    }
-
-    model-viewer::part(default-progress-bar) {
-        display: none;
-    }
-}
-
-#editorCanvas{
-
-    position:absolute;
-
-    inset:0;
-
-    width:100%;
-
-    height:100%;
-
-    z-index:50;
-
-    background:transparent;
-
-    cursor:grab;
-
-}
-
-/* =========================================================
-   CATEGORIAS DE GRAVAÇÃO
-   ========================================================= */
-
-.vip-engraving-category {
-    width: 100%;
-    margin-bottom: 20px;
-}
-
-.vip-engraving-category-title {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 10px;
-
-    font-size: 12px;
-    font-weight: 800;
-    text-transform: uppercase;
-}
-
-.vip-engraving-category-title img {
-    width: 28px !important;
-    height: 28px !important;
-
-    object-fit: contain;
-
-    display: block;
-}
-
-
-/* =========================================================
-   GRID DAS GRAVAÇÕES
-   ========================================================= */
-
-.vip-engraving-items {
-    display: grid;
-
-    grid-template-columns:
-        repeat(4, minmax(0, 1fr));
-
-    gap: 10px;
-
-    width: 100%;
-}
-
-
-/* =========================================================
-   BOTÃO DA GRAVAÇÃO
-   ========================================================= */
-
-.vip-engraving-btn {
-    appearance: none;
-    -webkit-appearance: none;
-
-    border: 1px solid #e5e5e5;
-
-    background: #ffffff;
-
-    border-radius: 10px;
-
-    padding: 8px;
-
-    width: 100%;
-    min-width: 0;
-
-    display: flex;
-    flex-direction: column;
-
-    align-items: center;
-    justify-content: center;
-
-    gap: 5px;
-
-    cursor: pointer;
-
-    transition:
-        border-color 0.2s ease,
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
-}
-
-
-.vip-engraving-btn:hover {
-    border-color: #111;
-
-    transform: translateY(-2px);
-}
-
-
-.vip-engraving-btn.active {
-    border-color: #111;
-
-    box-shadow:
-        0 0 0 2px rgba(0, 0, 0, 0.08);
-}
-
-
-/* =========================================================
-   IMAGEM DA GRAVAÇÃO
-   ========================================================= */
-
-.vip-engraving-btn img {
-    display: block;
-
-    width: 55px !important;
-    height: 55px !important;
-
-    max-width: 55px !important;
-    max-height: 55px !important;
-
-    object-fit: contain;
-
-    margin: 0 !important;
-}
-
-
-/* =========================================================
-   NOME DA GRAVAÇÃO
-   ========================================================= */
-
-.vip-engraving-btn span {
-    display: block;
-
-    width: 100%;
-
-    overflow: hidden;
-
-    white-space: nowrap;
-
-    text-overflow: ellipsis;
-
-    text-align: center;
-
-    font-size: 10px;
-
-    font-weight: 700;
-}
-
-
-/* =========================================================
-   LADO DA GRAVAÇÃO
-   ========================================================= */
-
-.vip-side-options {
-    display: grid;
-
-    grid-template-columns: 1fr 1fr;
-
-    gap: 8px;
-
-    width: 100%;
-}
-
-
-.vip-side-btn {
-    appearance: none;
-    -webkit-appearance: none;
-
-    border: 1px solid #dedede;
-
-    background: #fff;
-
-    border-radius: 8px;
-
-    padding: 10px 12px;
-
-    width: 100%;
-
-    font-family: inherit;
-
-    font-size: 11px;
-
-    font-weight: 700;
-
-    cursor: pointer;
-
-    transition:
-        background 0.2s ease,
-        color 0.2s ease,
-        border-color 0.2s ease;
-}
-
-
-.vip-side-btn:hover {
-    border-color: #111;
-}
-
-
-.vip-side-btn.active {
-    background: #111;
-
-    color: #fff;
-
-    border-color: #111;
-}
-
-/* =========================================================
-   CATEGORIAS DE GRAVAÇÃO
-   ========================================================= */
-
-.vip-engraving-category {
-    width: 100%;
-    margin-bottom: 8px;
-}
-
-
-/* =========================================================
-   BOTÃO DA CATEGORIA
-   ========================================================= */
-
-.vip-engraving-category-btn {
-    appearance: none;
-    -webkit-appearance: none;
-
-    width: 100%;
-
-    border: 1px solid #e5e5e5;
-
-    background: #fff;
-
-    border-radius: 10px;
-
-    padding: 10px 12px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    cursor: pointer;
-
-    font-family: inherit;
-
-    font-size: 11px;
-
-    font-weight: 800;
-
-    text-transform: uppercase;
-
-    transition:
-        border-color 0.2s ease,
-        background 0.2s ease;
-}
-
-
-.vip-engraving-category-btn:hover {
-    border-color: #111;
-}
-
-
-.vip-engraving-category-btn.active {
-    border-color: #111;
-
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-}
-
-
-/* =========================================================
-   LADO ESQUERDO DA CATEGORIA
-   ========================================================= */
-
-.vip-engraving-category-left {
-    display: flex;
-
-    align-items: center;
-
-    gap: 8px;
-}
-
-
-/* =========================================================
-   ÍCONE
-   ========================================================= */
-
-.vip-engraving-category-left img {
-    width: 28px !important;
-    height: 28px !important;
-
-    max-width: 28px !important;
-    max-height: 28px !important;
-
-    object-fit: contain;
-
-    display: block;
-}
-
-
-/* =========================================================
-   SETA
-   ========================================================= */
-
-.vip-engraving-category-btn > i {
-    font-size: 13px;
-
-    transition:
-        transform 0.25s ease;
-}
-
-
-.vip-engraving-category-btn.active > i {
-    transform: rotate(180deg);
-}
-
-
-/* =========================================================
-   CONTEÚDO DA CATEGORIA
-   ========================================================= */
-
-.vip-engraving-category-content {
-    display: none;
-
-    padding: 10px;
-
-    border: 1px solid #111;
-
-    border-top: none;
-
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-
-    background: #fff;
-}
-
-
-.vip-engraving-category-content.open {
-    display: block;
-}
-
-
-/* =========================================================
-   GRAVAÇÕES
-   ========================================================= */
-
-.vip-engraving-items {
-    display: grid;
-
-    grid-template-columns:
-        repeat(4, minmax(0, 1fr));
-
-    gap: 8px;
-
-    width: 100%;
-}
-
-
-/* =========================================================
-   BOTÃO DA GRAVAÇÃO
-   ========================================================= */
-
-.vip-engraving-btn {
-    appearance: none;
-    -webkit-appearance: none;
-
-    border: 1px solid #e5e5e5;
-
-    background: #fff;
-
-    border-radius: 8px;
-
-    padding: 6px;
-
-    width: 100%;
-
-    min-width: 0;
-
-    display: flex;
-
-    flex-direction: column;
-
-    align-items: center;
-
-    justify-content: center;
-
-    gap: 4px;
-
-    cursor: pointer;
-
-    transition:
-        border-color 0.2s ease,
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
-}
-
-
-.vip-engraving-btn:hover {
-    border-color: #111;
-
-    transform: translateY(-1px);
-}
-
-
-.vip-engraving-btn.active {
-    border-color: #111;
-
-    box-shadow:
-        0 0 0 2px rgba(0, 0, 0, 0.08);
-}
-
-
-/* =========================================================
-   IMAGEM
-   ========================================================= */
-
-.vip-engraving-btn img {
-    display: block;
-
-    width: 55px !important;
-    height: 55px !important;
-
-    max-width: 55px !important;
-    max-height: 55px !important;
-
-    object-fit: contain;
-
-    margin: 0 !important;
-}
-
-
-/* =========================================================
-   NOME
-   ========================================================= */
-
-.vip-engraving-btn span {
-    display: block;
-
-    width: 100%;
-
-    overflow: hidden;
-
-    white-space: nowrap;
-
-    text-overflow: ellipsis;
-
-    text-align: center;
-
-    font-size: 9px;
-
-    font-weight: 700;
-}
-
-
-/* =========================================================
-   SEM GRAVAÇÕES
-   ========================================================= */
-
-.vip-no-engravings {
-    font-size: 11px;
-
-    color: #888;
-
-    text-align: center;
-
-    margin: 10px 0;
-}
-/* =========================================================
-   MOBILE — LAYOUT SIMPLES / ESTILO PRODUCT CUSTOMIZER
-   ========================================================= */
-@media (max-width: 768px) {
-    html,
-    body {
-        width: 100%;
-        max-width: 100%;
-        overflow: hidden !important;
-        overscroll-behavior: none;
-    }
+    html, body { width: 100%; max-width: 100%; overflow: hidden !important; overscroll-behavior: none; }
 
     .vip-mockup-page {
         width: 100%;
         height: calc(100dvh - 64px);
-        min-height: 520px;
-        padding: 0 !important;
-        margin: 0 !important;
-        display: grid !important;
-        grid-template-columns: 1fr !important;
-        grid-template-rows: 46% 54%;
-        gap: 0 !important;
-        overflow: hidden !important;
-        background: #fff !important;
+        min-height: 500px;
+        padding: 0;
+        gap: 0;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: 42% 58%;
+        overflow: hidden;
+        background: #f2f2f1;
     }
 
-    /* PRODUTO */
-    .vip-mockup-left {
-        width: 100%;
-        min-height: 0;
-        height: 100%;
-        overflow: hidden;
-        background: #f7f7f7;
-    }
+    .vip-mockup-left { position: relative; top: 0; width: 100%; height: 100%; min-height: 0; overflow: hidden; }
 
     .vip-mockup-stage {
-        width: 100% !important;
-        height: 100% !important;
-        min-height: 0 !important;
-        max-height: none !important;
-        padding: 8px 24px 0 !important;
+        width: 100%;
+        max-width: none;
+        height: 100%;
+        min-height: 0;
+        border: 0;
+        box-shadow: none;
     }
 
-    .vip-mockup-stage model-viewer,
-    model-viewer.vip-mockup-bottle,
-    .vip-mockup-bottle model-viewer {
-        width: 100% !important;
-        height: 100% !important;
-        max-width: 100% !important;
-        max-height: 100% !important;
-    }
+    .vip-mockup-stage::before { top: 14px; padding: 6px 12px; font-size: 8px; }
 
     .vip-mockup-logo,
     .vip-live-preview,
     .vip-current-bottle-info,
     .vip-editing-badge,
-    .vip-panel-logo {
-        display: none !important;
-    }
+    .vip-panel-head,
+    .vip-step-title { display: none !important; }
 
-    /* PAINEL INFERIOR */
     .vip-mockup-panel {
-        width: 100% !important;
-        max-width: none !important;
-        height: 100% !important;
-        min-height: 0 !important;
-        margin: 0 !important;
-        padding: 16px 16px calc(18px + env(safe-area-inset-bottom)) !important;
-        border-radius: 22px 22px 0 0 !important;
-        box-shadow: 0 -10px 30px rgba(0,0,0,.08) !important;
-        align-self: stretch !important;
-        overflow-y: auto !important;
-        overflow-x: hidden !important;
-        -webkit-overflow-scrolling: touch;
+        position: relative;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        max-height: none;
+        padding: 12px 20px 0;
+        border: 0;
+        border-top: 1px solid var(--line-2);
+        background: #fff;
+        box-shadow: 0 -10px 28px rgba(20, 20, 19, .08);
+        overflow-x: hidden;
+        overflow-y: auto;
         overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
         scrollbar-width: none;
     }
 
-    .vip-mockup-panel::-webkit-scrollbar {
-        display: none;
-    }
+    .vip-mockup-panel::-webkit-scrollbar { display: none; }
 
-    /* Barrinha visual do bottom sheet */
-    .vip-mockup-panel::before {
-        content: "";
-        display: block;
-        width: 38px;
-        height: 4px;
-        margin: -5px auto 14px;
-        border-radius: 99px;
-        background: #d7d7d7;
-    }
+    .vip-mockup-panel::before { display: none; }
 
-    .vip-panel-section {
-        margin-bottom: 18px !important;
-    }
+    /* abas */
 
-    .vip-panel-section > label,
-    .vip-section-title-row label {
-        font-size: 11px !important;
-        letter-spacing: .02em;
-        margin-bottom: 8px !important;
-    }
-
-    .vip-section-title-row span {
-        font-size: 9px !important;
-    }
-
-    /* NOME */
-    .vip-name-input-row input {
-        height: 42px !important;
-        font-size: 13px !important;
-    }
-
-    .vip-name-input-row button {
-        width: 34px !important;
-        height: 34px !important;
-    }
-
-    /* FONTE: chips compactos */
-    .vip-font-options {
-        display: grid !important;
-        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-        gap: 6px !important;
-    }
-
-    .vip-font-btn {
-        height: 48px !important;
-        min-width: 0 !important;
-        border-radius: 8px !important;
-    }
-
-    .vip-font-btn strong {
-        font-size: 17px !important;
-    }
-
-    .vip-font-btn span {
-        font-size: 7px !important;
-    }
-
-    /* ORIENTAÇÃO / LADO */
-    .vip-orientation-options,
-    .vip-side-options {
-        gap: 6px !important;
-    }
-
-    .vip-orientation-btn,
-    .vip-side-btn {
-        height: 40px !important;
-        padding: 0 7px !important;
-        border-radius: 8px !important;
-        font-size: 9px !important;
-    }
-
-    /* CATEGORIA: horizontal, sem ocupar espaço */
-    .vip-category-grid {
-        display: flex !important;
-        gap: 8px !important;
-        overflow-x: auto !important;
-        padding: 2px 1px 5px !important;
-        scrollbar-width: none;
-    }
-
-    .vip-category-grid::-webkit-scrollbar {
-        display: none;
-    }
-
-    .vip-category-btn {
-        flex: 0 0 72px !important;
-    }
-
-    .vip-category-btn i {
-        width: 44px !important;
-        height: 44px !important;
-        margin-bottom: 4px !important;
-        font-size: 19px !important;
-        border-radius: 8px !important;
-    }
-
-    .vip-category-btn span {
-        font-size: 7px !important;
-        white-space: nowrap;
-    }
-
-    /* LISTA DE GRAVAÇÕES */
-    .vip-engraving-category {
-        margin-bottom: 6px !important;
-    }
-
-    .vip-engraving-category-btn {
-        min-height: 42px !important;
-        padding: 8px 10px !important;
-        border-radius: 9px !important;
-        font-size: 9px !important;
-    }
-
-    .vip-engraving-category-content {
-        padding: 7px !important;
-    }
-
-    .vip-engraving-items {
-        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-        gap: 6px !important;
-    }
-
-    .vip-engraving-btn {
-        min-height: 72px !important;
-        padding: 5px !important;
-        border-radius: 8px !important;
-        gap: 2px !important;
-    }
-
-    .vip-engraving-btn img {
-        width: 42px !important;
-        height: 42px !important;
-        max-width: 42px !important;
-        max-height: 42px !important;
-    }
-
-    .vip-engraving-btn span {
-        font-size: 7px !important;
-    }
-
-    /* GRAVAÇÕES SELECIONADAS */
-    .vip-engraving-layer-item {
-        min-height: 48px !important;
-        padding: 7px 9px !important;
-        border-radius: 9px !important;
-    }
-
-    /* CONTROLE DE POSIÇÃO */
-    .vip-position-editor {
-        margin-top: 8px !important;
-    }
-
-    .vip-position-pad {
-        width: min(58vw, 205px) !important;
-        max-width: 205px !important;
-        margin: 0 auto !important;
-        touch-action: none !important;
-    }
-
-    .vip-position-knob {
-        width: 42px !important;
-        height: 42px !important;
-    }
-
-    .vip-position-readout {
-        margin-top: 7px !important;
-        gap: 6px !important;
-    }
-
-    .vip-position-readout > div {
-        padding: 7px 9px !important;
-    }
-
-    .vip-position-readout span {
-        font-size: 8px !important;
-    }
-
-    .vip-position-readout strong {
-        font-size: 11px !important;
-    }
-
-    /* TAMANHO / ROTAÇÃO */
-    .vip-engraving-control {
-        margin-top: 12px !important;
-    }
-
-    .vip-control-header {
-        margin-bottom: 5px !important;
-        font-size: 10px !important;
-    }
-
-    .vip-engraving-control input[type="range"] {
-        height: 24px;
-    }
-
-    /* REMOVER */
-    .vip-remove-engraving-btn {
-        min-height: 42px !important;
-        margin-top: 12px !important;
-        border-radius: 9px !important;
-        font-size: 10px !important;
-    }
-
-    /* FLUXO */
-    .vip-group-flow-actions {
+    .vip-mobile-tabs {
         position: sticky;
-        bottom: -1px;
-        z-index: 20;
-        padding-top: 10px;
-        margin: 12px -16px -18px;
-        padding-left: 16px;
-        padding-right: 16px;
-        padding-bottom: calc(10px + env(safe-area-inset-bottom));
-        background: rgba(255,255,255,.96);
-        backdrop-filter: blur(10px);
+        top: 0;
+        z-index: 6;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0;
+        margin: 0 0 20px;
+        padding: 0;
+        border-bottom: 1px solid var(--line);
+        background: #fff;
+        box-shadow: 0 12px 0 0 #fff;
     }
 
-    .vip-copy-all-btn,
-    .vip-next-bottle-btn {
-        height: 46px !important;
-        border-radius: 9px !important;
-        font-size: 11px !important;
+    .vip-tab-btn {
+        position: relative;
+        min-width: 0;
+        height: 46px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        color: var(--muted);
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: color .2s var(--ease);
     }
+
+    .vip-tab-btn i { font-size: 13px; }
+
+    .vip-tab-btn.active { color: var(--ink); }
+
+    .vip-tab-btn.active::after {
+        content: "";
+        position: absolute;
+        right: 0;
+        bottom: -1px;
+        left: 0;
+        height: 2px;
+        background: var(--ink);
+    }
+
+    .vip-tab-count {
+        min-width: 16px;
+        height: 16px;
+        padding: 0 4px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: var(--r);
+        background: var(--ink);
+        color: #fff;
+        font-size: 9px;
+        font-style: normal;
+        font-weight: 800;
+        letter-spacing: 0;
+    }
+
+    /* uma seção por vez */
+
+    .vip-mockup-panel[data-tab="nome"] .vip-sec-engravings,
+    .vip-mockup-panel[data-tab="nome"] .vip-sec-adjust,
+    .vip-mockup-panel[data-tab="gravacoes"] .vip-sec-name,
+    .vip-mockup-panel[data-tab="gravacoes"] .vip-sec-adjust,
+    .vip-mockup-panel[data-tab="ajuste"] .vip-sec-name,
+    .vip-mockup-panel[data-tab="ajuste"] .vip-sec-engravings { display: none; }
+
+    .vip-mockup-panel .vip-panel-section,
+    .vip-mockup-panel .vip-panel-section + .vip-panel-section {
+        padding: 0 0 24px;
+        border-top: 0;
+        animation: vipFade .25s var(--ease);
+    }
+
+    /* campos e botões confortáveis para o toque */
+
+    .vip-name-input-row input { height: 54px; font-size: 16px; }
+
+    .vip-font-options { gap: 8px; }
+    .vip-font-btn { height: 60px; }
+    .vip-font-btn strong { font-size: 18px; }
+    .vip-font-btn span { font-size: 7px; }
+
+    .vip-engraving-items { max-height: none; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+    .vip-engraving-btn { padding: 10px 3px 7px; }
+    .vip-engraving-btn img { max-width: 44px; }
+    .vip-engraving-btn span { font-size: 7px; }
+    .vip-engraving-category-btn { min-height: 52px; font-size: 10px; }
+
+    .vip-engraving-layer-item { min-height: 60px; }
+
+    .vip-engraving-empty { padding: 24px 16px; }
+
+    .vip-empty-link {
+        margin: 14px auto 0;
+        padding: 0 20px;
+        height: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 0;
+        border-radius: var(--r);
+        background: var(--ink);
+        color: #fff;
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        cursor: pointer;
+    }
+
+    /* controles */
+
+    .vip-controls-card { margin-top: 14px; padding: 16px; }
+    .vip-controls-grid { grid-template-columns: clamp(118px, 34vw, 150px) minmax(0, 1fr); gap: 16px; }
+    .vip-position-pad { width: 100%; }
+    .vip-position-hint { display: none; }
+    .vip-position-knob { width: 28px; height: 28px; }
+    .vip-position-readout { margin-top: 10px; }
+
+    .vip-engraving-control { --track: 4px; --thumb: 24px; margin-top: 14px; }
+    .vip-control-header { font-size: 9px; }
+    .vip-controls-actions { margin-top: 16px; }
+    .vip-reset-engraving-btn,
+    .vip-remove-engraving-btn { height: 48px; font-size: 9px; }
+
+    /* barra de preço compacta */
+
+    .vip-price-sticky {
+        margin: 0 -20px;
+        padding: 14px 20px calc(14px + env(safe-area-inset-bottom));
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        box-shadow: 0 -8px 20px rgba(20, 20, 19, .05);
+    }
+
+    .vip-price-row { flex-direction: column; align-items: flex-start; gap: 2px; margin: 0; }
+    .vip-price-row strong { font-size: 20px; }
+    .vip-group-flow-actions { flex: 1; }
+    .vip-next-bottle-btn,
+    .vip-copy-all-btn { min-height: 52px; font-size: 10px; }
+
+    .vip-side-btn,
+    .vip-orientation-btn { height: 38px; font-size: 9px; }
 }
 
 @media (max-width: 390px) {
+    .vip-mockup-panel { padding-right: 14px; padding-left: 14px; }
+    .vip-price-sticky { margin-right: -14px; margin-left: -14px; padding-right: 14px; padding-left: 14px; gap: 12px; }
+    .vip-engraving-items { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .vip-tab-btn { font-size: 9px; letter-spacing: .03em; }
+    .vip-tab-btn i { display: none; }
+}
+
+/* celulares baixos / deitados */
+@media (max-width: 768px) and (max-height: 640px) {
+    .vip-mockup-page { grid-template-rows: 36% 64%; }
+}
+
+
+/* =========================================================
+   DESKTOP AMPLO — PAINEL EM 3 COLUNAS
+========================================================= */
+
+@media (min-width: 1200px) {
     .vip-mockup-page {
-        grid-template-rows: 43% 57%;
+        grid-template-columns: minmax(340px, 34%) minmax(0, 1fr);
+        align-items: stretch;
+        gap: 28px;
+        padding: 28px 36px;
     }
+
+    .vip-mockup-left,
+    .vip-mockup-panel {
+        height: clamp(580px, calc(100vh - 56px), 780px);
+        min-height: 0;
+        align-self: center;
+    }
+
+    .vip-mockup-left { position: relative; top: auto; }
+    .vip-mockup-stage { height: 100%; min-height: 0; }
 
     .vip-mockup-panel {
-        padding-left: 13px !important;
-        padding-right: 13px !important;
+        position: relative;
+        top: auto;
+        max-height: 100%;
+        padding: 28px 32px;
+        display: grid;
+        grid-template-columns: minmax(210px, .75fr) minmax(0, 1.1fr) minmax(0, 1fr);
+        grid-template-rows: auto minmax(0, 1fr) auto;
+        grid-template-areas:
+            "head head head"
+            "nome grav ajuste"
+            "preco preco preco";
+        column-gap: 0;
+        row-gap: 0;
+        overflow: hidden;
     }
 
-    .vip-position-pad {
-        width: 185px !important;
+    .vip-panel-head { grid-area: head; }
+    .vip-sec-name { grid-area: nome; }
+    .vip-sec-engravings { grid-area: grav; }
+    .vip-sec-adjust { grid-area: ajuste; }
+    .vip-price-sticky { grid-area: preco; }
+
+    .vip-mockup-panel .vip-panel-section,
+    .vip-mockup-panel .vip-panel-section + .vip-panel-section {
+        min-height: 0;
+        margin: 0;
+        padding: 24px 28px 12px;
+        border-top: 0;
+        overflow-y: auto;
+        scrollbar-width: thin;
     }
 
-    .vip-engraving-items {
-        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    /* cada coluna tem respiro próprio dos dois lados da linha divisória */
+    .vip-mockup-panel .vip-panel-section.vip-sec-name { padding-left: 0; }
+
+    .vip-mockup-panel .vip-panel-section.vip-sec-engravings,
+    .vip-mockup-panel .vip-panel-section.vip-sec-adjust {
+        border-left: 1px solid var(--line);
+    }
+
+    .vip-mockup-panel .vip-panel-section.vip-sec-adjust { padding-right: 0; }
+
+    .vip-panel-head {
+        margin: 0;
+        padding-bottom: 20px;
+        display: flex;
+        align-items: baseline;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+    .vip-panel-eyebrow { margin: 0; }
+    .vip-panel-title { font-size: 21px; }
+    .vip-panel-sub { margin: 0 0 0 auto; }
+
+    .vip-font-options { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+    .vip-font-btn { height: 56px; }
+    .vip-engraving-items { max-height: 340px; }
+    .vip-engraving-layers-list { max-height: 160px; overflow-y: auto; }
+    .vip-engraving-layer-item { min-height: 56px; }
+
+    .vip-controls-card { margin-top: 16px; padding: 18px; }
+    .vip-controls-grid { grid-template-columns: 126px minmax(0, 1fr); gap: 18px; }
+    .vip-position-pad { width: 126px; }
+    .vip-position-readout { grid-template-columns: 1fr; gap: 6px; margin-top: 12px; }
+    .vip-position-hint { display: none; }
+    .vip-controls-side .vip-engraving-control { margin-top: 0; }
+    .vip-controls-side .vip-engraving-control + .vip-engraving-control { margin-top: 18px; }
+
+    .vip-price-sticky {
+        position: static;
+        margin: 0;
+        padding: 20px 0 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        border-top: 1px solid var(--line);
+        background: none;
+    }
+
+    .vip-price-row { margin: 0; gap: 14px; justify-content: flex-start; }
+    .vip-group-flow-actions { width: min(380px, 48%); flex-direction: row; }
+    .vip-group-flow-actions > * { flex: 1; }
+    .vip-next-bottle-btn,
+    .vip-copy-all-btn { min-height: 50px; }
+}
+
+@media (min-width: 1200px) and (max-height: 820px) {
+    .vip-mockup-panel { padding: 22px 28px; }
+    .vip-panel-head { padding-bottom: 14px; }
+    .vip-panel-section,
+    .vip-panel-section + .vip-panel-section { padding-top: 18px; }
+    .vip-position-pad { width: 112px; }
+    .vip-engraving-btn img { max-width: 40px; }
+    .vip-engraving-items { max-height: 270px; }
+}
+
+
+/* =========================================================
+   ACESSIBILIDADE E MOVIMENTO
+========================================================= */
+
+.vip-mockup-page button:focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .vip-mockup-page *,
+    .vip-mockup-page *::before,
+    .vip-mockup-page *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+    }
+}
+
+
+/* =========================================================
+   BLINDAGEM CONTRA ESTILOS GLOBAIS DO TEMA
+========================================================= */
+
+.vip-mockup-page .vip-reset-engraving-btn,
+.vip-mockup-page .vip-remove-engraving-btn,
+.vip-mockup-page .vip-next-bottle-btn,
+.vip-mockup-page .vip-copy-all-btn,
+.vip-mockup-page .vip-engraving-category-btn {
+    font-family: inherit;
+    font-size: 10px;
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.vip-mockup-page .vip-reset-engraving-btn,
+.vip-mockup-page .vip-remove-engraving-btn { padding: 0 12px; }
+
+.vip-mockup-page .vip-reset-engraving-btn i,
+.vip-mockup-page .vip-remove-engraving-btn i { font-size: 13px; }
+
+/* =========================================================
+   AJUSTE FINO — POSICIONAMENTO MAIS PRECISO
+   Mantém o editor horizontal e melhora o feedback de uso.
+========================================================= */
+
+.vip-position-pad {
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: none;
+    transition: border-color .18s ease, box-shadow .18s ease,
+                background-color .18s ease;
+}
+
+.vip-position-pad:hover {
+    border-color: var(--line-2);
+    background-color: #fafaf9;
+}
+
+.vip-position-pad:focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 3px;
+}
+
+.vip-position-pad:active {
+    cursor: grabbing;
+}
+
+.vip-position-knob {
+    will-change: left, top, transform;
+    transition: box-shadow .16s ease, background-color .16s ease,
+                border-color .16s ease;
+}
+
+.vip-position-pad:active .vip-position-knob {
+    transform: translate(-50%, -50%) scale(1.06);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .2);
+}
+
+.vip-position-readout > div {
+    min-width: 0;
+}
+
+.vip-engraving-control input[type="range"] {
+    cursor: pointer;
+    touch-action: pan-y;
+}
+
+.vip-engraving-control input[type="range"]:focus-visible {
+    outline: 2px solid rgba(20, 20, 19, .45);
+    outline-offset: 4px;
+    border-radius: 999px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .vip-position-pad,
+    .vip-position-knob {
+        transition: none;
     }
 }

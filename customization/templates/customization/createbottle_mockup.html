@@ -227,8 +227,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const Y_MAX = 1280;
 
     const PAD_SIGN_X = -1;          // inverte esquerda/direita do pad
-    const PAD_CURVE = 2.2;          // >1 = mais fino perto do centro
-    const PAD_RANGE = 300;          // alcance do pad em px da textura
+    const PAD_CURVE = 3.0;          // curva mais suave: maior precisão perto do centro
+    const PAD_RANGE = 180;          // alcance reduzido para movimentos mais controlados
 
     // Câmera: a garrafa gira para deixar a gravação sempre de frente.
     // THETA_HOME = ângulo (horizontal) da câmera em que a posição inicial (START_X) fica de frente.
@@ -769,7 +769,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const layer = getSelected();
         if (!layer) return;
 
-        const step = event.shiftKey ? 10 : 2;
+        const step = event.shiftKey ? 5 : 1;
 
         if (event.key === "ArrowUp") layer.y -= step;
         else if (event.key === "ArrowDown") layer.y += step;

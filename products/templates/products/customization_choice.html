@@ -9,6 +9,8 @@
 
 {% block content %}
 
+{% static 'images/garrafa.png' as bottle_image %}
+
 <!-- PÁGINA VIP -->
 <section class="vip-custom-page">
 
@@ -32,7 +34,11 @@
             <!-- IMAGEM -->
             <div class="vip-option-image-box">
 
-                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="vip-option-image">
+                <img
+                    src="{{ bottle_image }}"
+                    alt="Garrafa VIP"
+                    class="vip-option-image"
+                >
 
             </div>
 
@@ -82,14 +88,23 @@
             <!-- MOCKUP -->
             <div class="vip-option-image-box vip-group-preview">
 
-                <img src="{{ product.image.url }}" alt="{{ product.name }}"
-                    class="vip-option-image vip-bottle vip-bottle-left">
+                <img
+                    src="{{ bottle_image }}"
+                    alt="Garrafa VIP"
+                    class="vip-option-image vip-bottle vip-bottle-left"
+                >
 
-                <img src="{{ product.image.url }}" alt="{{ product.name }}"
-                    class="vip-option-image vip-bottle vip-bottle-center">
+                <img
+                    src="{{ bottle_image }}"
+                    alt="Garrafa VIP"
+                    class="vip-option-image vip-bottle vip-bottle-center"
+                >
 
-                <img src="{{ product.image.url }}" alt="{{ product.name }}"
-                    class="vip-option-image vip-bottle vip-bottle-right">
+                <img
+                    src="{{ bottle_image }}"
+                    alt="Garrafa VIP"
+                    class="vip-option-image vip-bottle vip-bottle-right"
+                >
 
             </div>
 
@@ -157,7 +172,6 @@
                 </div>
             </div>
 
-            
             <div class="vip-benefit-item">
                 <i class="bi bi-stars"></i>
 
@@ -175,7 +189,6 @@
             </div>
 
         </div>
-
 
     </div>
 
