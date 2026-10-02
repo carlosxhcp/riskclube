@@ -2,6 +2,8 @@ from pathlib import Path
 import dj_database_url
 from decouple import config
 import os
+from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -20,7 +22,8 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 INSTALLED_APPS = [
-
+    "dashboard",
+    "unfold",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -172,3 +175,29 @@ ACCOUNT_UNIQUE_EMAIL = True
 # MERCADO PAGO
 MP_PUBLIC_KEY = config("MP_PUBLIC_KEY", default="")
 MP_ACCESS_TOKEN = config("MP_ACCESS_TOKEN", default="")
+
+
+# UNFOLD
+
+UNFOLD = {
+    "SIDEBAR": {
+        "show_search": False,
+        "show_all_applications": False,
+        "navigation": [
+            {
+                "title": "Loja",
+                "icon": "shopping_bag",
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": "Produtos",
+                        "icon": "inventory_2",
+                        "link": reverse_lazy(
+                            "admin:products_product_changelist"
+                        ),
+                    },
+                ],
+            },
+        ],
+    },
+}
