@@ -2,8 +2,6 @@ from pathlib import Path
 import dj_database_url
 from decouple import config
 import os
-from django.urls import reverse_lazy
-from django.utils.translation import gettext_lazy as _
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -22,8 +20,7 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 INSTALLED_APPS = [
-    "dashboard",
-    "unfold",
+    "jazzmin",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -176,28 +173,41 @@ ACCOUNT_UNIQUE_EMAIL = True
 MP_PUBLIC_KEY = config("MP_PUBLIC_KEY", default="")
 MP_ACCESS_TOKEN = config("MP_ACCESS_TOKEN", default="")
 
+# JAZZMIN
+JAZZMIN_SETTINGS = {
+    "site_title": "Risk Clube Admin",
+    "site_header": "Risk Clube",
+    "site_brand": "Risk Clube",
+    "welcome_sign": "Painel administrativo",
+    "copyright": "Risk Clube",
 
-# UNFOLD
+    "show_sidebar": True,
+    "navigation_expanded": False,
 
-UNFOLD = {
-    "SIDEBAR": {
-        "show_search": False,
-        "show_all_applications": False,
-        "navigation": [
-            {
-                "title": "Loja",
-                "icon": "shopping_bag",
-                "collapsible": True,
-                "items": [
-                    {
-                        "title": "Produtos",
-                        "icon": "inventory_2",
-                        "link": reverse_lazy(
-                            "admin:products_product_changelist"
-                        ),
-                    },
-                ],
-            },
-        ],
+    "hide_apps": [
+        "sites",
+    ],
+
+    "hide_models": [],
+
+    "order_with_respect_to": [
+        "products",
+        "orders",
+        "accounts",
+        "customization",
+        "cart",
+        "pages",
+    ],
+
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "accounts": "fas fa-users",
+        "products": "fas fa-box",
+        "orders": "fas fa-shopping-cart",
+        "customization": "fas fa-paint-brush",
+        "cart": "fas fa-shopping-basket",
+        "pages": "fas fa-file-alt",
     },
+
+    "show_ui_builder": False,
 }
