@@ -227,8 +227,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const Y_MAX = 1280;
 
     const PAD_SIGN_X = -1;          // inverte esquerda/direita do pad
-    const PAD_CURVE = 3.0;          // curva mais suave: maior precisão perto do centro
-    const PAD_RANGE = 180;          // alcance reduzido para movimentos mais controlados
+    const PAD_EDGE = 0.38;          // fração do pad usada como raio de movimento do knob
+    const PAD_SENSITIVITY = 0.3;    // 1 = pad inteiro dá uma volta; menor = mais preciso
 
     // Câmera: a garrafa gira para deixar a gravação sempre de frente.
     // THETA_HOME = ângulo (horizontal) da câmera em que a posição inicial (START_X) fica de frente.
@@ -317,7 +317,7 @@ document.addEventListener("DOMContentLoaded", () => {
             button.setAttribute("aria-selected", active ? "true" : "false");
         });
 
-        panel.scrollTop = 0;
+        panel.querySelectorAll(".vip-panel-section").forEach(section => { section.scrollTop = 0; });
     }
 
     tabButtons.forEach(button => {
@@ -696,60 +696,79 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /* =========================================================
        PAD DE POSIÇÃO
+       Arraste relativo e contínuo: ao passar da borda do pad,
+       a gravação continua girando pela garrafa sem limite.
+       PAD_SENSITIVITY controla a precisão (menor = mais preciso).
     ========================================================= */
 
-    function padToTexture(n, home) {
-        return home + Math.sign(n) * Math.pow(Math.abs(n), PAD_CURVE) * PAD_RANGE;
+    const Y_MID = (Y_MIN + Y_MAX) / 2;
+    const Y_HALF = (Y_MAX - Y_MIN) / 2;
+
+    // Raio (em px) em que o knob se move dentro do pad
+    function padRadius() {
+        return {
+            x: positionPad.clientWidth * PAD_EDGE,
+            y: positionPad.clientHeight * PAD_EDGE
+        };
     }
 
-    function textureToPad(value, home, wrap) {
-        let d = value - home;
-        if (wrap) d = ((d + 512) % 1024 + 1024) % 1024 - 512;
-
-        const e = Math.max(-1, Math.min(1, d / PAD_RANGE));
-        return Math.sign(e) * Math.pow(Math.abs(e), 1 / PAD_CURVE);
-    }
-
+    // Knob acompanha a posição real da gravação (X em volta completa, Y no intervalo todo)
     function updatePositionKnob(layer) {
-        const maxX = positionPad.clientWidth * 0.38;
-        const maxY = positionPad.clientHeight * 0.38;
+        const r = padRadius();
 
-        const nx = layer ? textureToPad(layer.x, START_X, true) : 0;
-        const ny = layer ? textureToPad(layer.y, START_Y, false) : 0;
+        let nx = 0;
+        let ny = 0;
 
-        positionKnob.style.left = `calc(50% + ${PAD_SIGN_X * nx * maxX}px)`;
-        positionKnob.style.top = `calc(50% + ${ny * maxY}px)`;
+        if (layer) {
+            // distância de START_X no intervalo [-512, 512)
+            const d = ((layer.x - START_X + TEXTURE_SIZE / 2) % TEXTURE_SIZE + TEXTURE_SIZE) % TEXTURE_SIZE - TEXTURE_SIZE / 2;
+            nx = d / (TEXTURE_SIZE / 2);
+            ny = (layer.y - Y_MID) / Y_HALF;
+        }
+
+        positionKnob.style.left = `calc(50% + ${PAD_SIGN_X * nx * r.x}px)`;
+        positionKnob.style.top = `calc(50% + ${ny * r.y}px)`;
     }
+
+    let dragging = false;
+    let dragStart = null;
 
     function moveFromPointer(event) {
         const layer = getSelected();
-        if (!layer) return;
+        if (!layer || !dragStart) return;
 
-        const rect = positionPad.getBoundingClientRect();
-        const maxDistance = Math.min(rect.width, rect.height) * 0.38;
+        const r = padRadius();
 
-        const nx = Math.max(-1, Math.min(1, (event.clientX - (rect.left + rect.width / 2)) / maxDistance));
-        const ny = Math.max(-1, Math.min(1, (event.clientY - (rect.top + rect.height / 2)) / maxDistance));
+        // unidades de textura por pixel, reduzidas pela sensibilidade
+        const unitsPerPxX = (TEXTURE_SIZE / (2 * r.x)) * PAD_SENSITIVITY;
+        const unitsPerPxY = ((Y_MAX - Y_MIN) / (2 * r.y)) * PAD_SENSITIVITY;
 
-        layer.x = wrapX(Math.round(padToTexture(PAD_SIGN_X * nx, START_X)));
-        layer.y = clampY(Math.round(padToTexture(ny, START_Y)));
+        const dx = event.clientX - dragStart.pointerX;
+        const dy = event.clientY - dragStart.pointerY;
+
+        layer.x = wrapX(Math.round(dragStart.layerX + PAD_SIGN_X * dx * unitsPerPxX));
+        layer.y = clampY(Math.round(dragStart.layerY + dy * unitsPerPxY));
 
         faceEngraving(layer.x);
         updateControls();
         requestRebuild();
     }
 
-    let dragging = false;
-
     positionPad.addEventListener("pointerdown", event => {
-        if (!getSelected()) return;
+        const layer = getSelected();
+        if (!layer) return;
 
         event.preventDefault();
         dragging = true;
 
-        try { positionPad.setPointerCapture(event.pointerId); } catch (_) {}
+        dragStart = {
+            pointerX: event.clientX,
+            pointerY: event.clientY,
+            layerX: layer.x,
+            layerY: layer.y
+        };
 
-        moveFromPointer(event);
+        try { positionPad.setPointerCapture(event.pointerId); } catch (_) {}
     });
 
     positionPad.addEventListener("pointermove", event => {
@@ -758,12 +777,16 @@ document.addEventListener("DOMContentLoaded", () => {
         moveFromPointer(event);
     });
 
-    positionPad.addEventListener("pointerup", event => {
+    function endDrag(event) {
         dragging = false;
-        try { positionPad.releasePointerCapture(event.pointerId); } catch (_) {}
-    });
+        dragStart = null;
+        if (event && event.pointerId !== undefined) {
+            try { positionPad.releasePointerCapture(event.pointerId); } catch (_) {}
+        }
+    }
 
-    positionPad.addEventListener("pointercancel", () => { dragging = false; });
+    positionPad.addEventListener("pointerup", endDrag);
+    positionPad.addEventListener("pointercancel", endDrag);
 
     positionPad.addEventListener("keydown", event => {
         const layer = getSelected();

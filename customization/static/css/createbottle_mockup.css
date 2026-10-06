@@ -1090,26 +1090,47 @@ model-viewer::part(default-progress-mask) { background: transparent; }
 
 
 /* =========================================================
-   MOBILE — GARRAFA EM CIMA + PAINEL EM ABAS EMBAIXO
+   MOBILE — GARRAFA EM CIMA + PAINEL EM 3 BLOCOS FIXOS
+
+   Painel = coluna flex:
+     1) abas            (altura fixa, topo)
+     2) seção ativa     (ocupa o que sobra, ÚNICA parte que rola)
+     3) preço + botão   (altura fixa, sempre colado embaixo)
 ========================================================= */
 
 @media (max-width: 768px) {
-    html, body { width: 100%; max-width: 100%; overflow: hidden !important; overscroll-behavior: none; }
+
+    html, body {
+        width: 100%;
+        max-width: 100%;
+        overflow: hidden !important;
+        overscroll-behavior: none;
+    }
 
     .vip-mockup-page {
         width: 100%;
+        height: calc(100vh - 64px);
         height: calc(100dvh - 64px);
-        min-height: 500px;
+        min-height: 0;
         padding: 0;
         gap: 0;
         display: grid;
         grid-template-columns: minmax(0, 1fr);
-        grid-template-rows: 42% 58%;
+        grid-template-rows: minmax(0, 38%) minmax(0, 1fr);
         overflow: hidden;
         background: #f2f2f1;
     }
 
-    .vip-mockup-left { position: relative; top: 0; width: 100%; height: 100%; min-height: 0; overflow: hidden; }
+    /* ---------- garrafa ---------- */
+
+    .vip-mockup-left {
+        position: relative;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        min-height: 0;
+        overflow: hidden;
+    }
 
     .vip-mockup-stage {
         width: 100%;
@@ -1120,7 +1141,7 @@ model-viewer::part(default-progress-mask) { background: transparent; }
         box-shadow: none;
     }
 
-    .vip-mockup-stage::before { top: 14px; padding: 6px 12px; font-size: 8px; }
+    .vip-mockup-stage::before { top: 12px; padding: 6px 12px; font-size: 8px; }
 
     .vip-mockup-logo,
     .vip-live-preview,
@@ -1129,48 +1150,46 @@ model-viewer::part(default-progress-mask) { background: transparent; }
     .vip-panel-head,
     .vip-step-title { display: none !important; }
 
+    /* ---------- painel (coluna flex) ---------- */
+
     .vip-mockup-panel {
         position: relative;
         top: 0;
         width: 100%;
         height: 100%;
         max-height: none;
-        padding: 12px 20px 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
         border: 0;
         border-top: 1px solid var(--line-2);
+        border-radius: 0;
         background: #fff;
         box-shadow: 0 -10px 28px rgba(20, 20, 19, .08);
-        overflow-x: hidden;
-        overflow-y: auto;
-        overscroll-behavior: contain;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
     }
-
-    .vip-mockup-panel::-webkit-scrollbar { display: none; }
 
     .vip-mockup-panel::before { display: none; }
 
-    /* abas */
+    /* ---------- 1) abas ---------- */
 
     .vip-mobile-tabs {
-        position: sticky;
-        top: 0;
+        position: relative;
+        flex: 0 0 auto;
         z-index: 6;
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 0;
-        margin: 0 0 20px;
-        padding: 0;
+        margin: 0;
+        padding: 0 20px;
         border-bottom: 1px solid var(--line);
         background: #fff;
-        box-shadow: 0 12px 0 0 #fff;
     }
 
     .vip-tab-btn {
         position: relative;
         min-width: 0;
-        height: 46px;
+        height: 48px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -1217,7 +1236,7 @@ model-viewer::part(default-progress-mask) { background: transparent; }
         letter-spacing: 0;
     }
 
-    /* uma seção por vez */
+    /* ---------- 2) seção ativa: uma por vez, única área que rola ---------- */
 
     .vip-mockup-panel[data-tab="nome"] .vip-sec-engravings,
     .vip-mockup-panel[data-tab="nome"] .vip-sec-adjust,
@@ -1228,12 +1247,55 @@ model-viewer::part(default-progress-mask) { background: transparent; }
 
     .vip-mockup-panel .vip-panel-section,
     .vip-mockup-panel .vip-panel-section + .vip-panel-section {
-        padding: 0 0 24px;
+        flex: 1 1 0;
+        min-height: 0;
+        margin: 0;
+        padding: 20px 20px 28px;
+        overflow-x: hidden;
+        overflow-y: auto;
         border-top: 0;
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
         animation: vipFade .25s var(--ease);
     }
 
-    /* campos e botões confortáveis para o toque */
+    .vip-mockup-panel .vip-panel-section::-webkit-scrollbar { display: none; }
+
+    /* ---------- 3) preço + continuar: SEMPRE fixo embaixo ---------- */
+
+    .vip-mockup-panel .vip-price-sticky {
+        position: relative;
+        bottom: auto;
+        z-index: 7;
+        flex: 0 0 auto;
+        margin: 0;
+        padding: 12px 20px calc(12px + env(safe-area-inset-bottom, 0px));
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        border-top: 1px solid var(--line);
+        background: #fff;
+        box-shadow: 0 -8px 20px rgba(20, 20, 19, .05);
+    }
+
+    .vip-price-row {
+        flex: 0 0 auto;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2px;
+        margin: 0;
+    }
+
+    .vip-price-row span { font-size: 8px; }
+    .vip-price-row strong { font-size: 20px; white-space: nowrap; }
+
+    .vip-group-flow-actions { flex: 1 1 auto; min-width: 0; }
+
+    .vip-next-bottle-btn,
+    .vip-copy-all-btn { min-height: 50px; font-size: 10px; }
+
+    /* ---------- campos e botões confortáveis para o toque ---------- */
 
     .vip-name-input-row input { height: 54px; font-size: 16px; }
 
@@ -1255,7 +1317,7 @@ model-viewer::part(default-progress-mask) { background: transparent; }
     .vip-empty-link {
         margin: 14px auto 0;
         padding: 0 20px;
-        height: 42px;
+        height: 44px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -1270,7 +1332,7 @@ model-viewer::part(default-progress-mask) { background: transparent; }
         cursor: pointer;
     }
 
-    /* controles */
+    /* ---------- controles ---------- */
 
     .vip-controls-card { margin-top: 14px; padding: 16px; }
     .vip-controls-grid { grid-template-columns: clamp(118px, 34vw, 150px) minmax(0, 1fr); gap: 16px; }
@@ -1285,30 +1347,26 @@ model-viewer::part(default-progress-mask) { background: transparent; }
     .vip-reset-engraving-btn,
     .vip-remove-engraving-btn { height: 48px; font-size: 9px; }
 
-    /* barra de preço compacta */
-
-    .vip-price-sticky {
-        margin: 0 -20px;
-        padding: 14px 20px calc(14px + env(safe-area-inset-bottom));
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        box-shadow: 0 -8px 20px rgba(20, 20, 19, .05);
-    }
-
-    .vip-price-row { flex-direction: column; align-items: flex-start; gap: 2px; margin: 0; }
-    .vip-price-row strong { font-size: 20px; }
-    .vip-group-flow-actions { flex: 1; }
-    .vip-next-bottle-btn,
-    .vip-copy-all-btn { min-height: 52px; font-size: 10px; }
-
     .vip-side-btn,
     .vip-orientation-btn { height: 38px; font-size: 9px; }
 }
 
+/* celulares estreitos */
 @media (max-width: 390px) {
-    .vip-mockup-panel { padding-right: 14px; padding-left: 14px; }
-    .vip-price-sticky { margin-right: -14px; margin-left: -14px; padding-right: 14px; padding-left: 14px; gap: 12px; }
+    .vip-mobile-tabs { padding-right: 14px; padding-left: 14px; }
+
+    .vip-mockup-panel .vip-panel-section,
+    .vip-mockup-panel .vip-panel-section + .vip-panel-section {
+        padding-right: 14px;
+        padding-left: 14px;
+    }
+
+    .vip-mockup-panel .vip-price-sticky {
+        padding-right: 14px;
+        padding-left: 14px;
+        gap: 12px;
+    }
+
     .vip-engraving-items { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .vip-tab-btn { font-size: 9px; letter-spacing: .03em; }
     .vip-tab-btn i { display: none; }
@@ -1316,7 +1374,10 @@ model-viewer::part(default-progress-mask) { background: transparent; }
 
 /* celulares baixos / deitados */
 @media (max-width: 768px) and (max-height: 640px) {
-    .vip-mockup-page { grid-template-rows: 36% 64%; }
+    .vip-mockup-page { grid-template-rows: minmax(0, 34%) minmax(0, 1fr); }
+    .vip-tab-btn { height: 42px; }
+    .vip-mockup-panel .vip-price-sticky { padding-top: 8px; padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px)); }
+    .vip-next-bottle-btn { min-height: 44px; }
 }
 
 
@@ -1487,9 +1548,9 @@ model-viewer::part(default-progress-mask) { background: transparent; }
 .vip-mockup-page .vip-reset-engraving-btn i,
 .vip-mockup-page .vip-remove-engraving-btn i { font-size: 13px; }
 
+
 /* =========================================================
    AJUSTE FINO — POSICIONAMENTO MAIS PRECISO
-   Mantém o editor horizontal e melhora o feedback de uso.
 ========================================================= */
 
 .vip-position-pad {
