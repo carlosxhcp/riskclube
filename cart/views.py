@@ -11,6 +11,7 @@ from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 
+from customization.models import BottleCustomization
 from products.models import Product
 from orders.models import Order, OrderItem
 from cart.models import Coupon
@@ -177,7 +178,6 @@ def cart_data(request):
     return JsonResponse(get_cart_payload(request))
 
 
-@require_POST
 def cart_add_ajax(request):
     try:
         data = json.loads(request.body)
@@ -204,7 +204,21 @@ def cart_add_ajax(request):
     name_direction = str(data.get("name_direction") or "").strip()[:20]
     name_font = str(data.get("name_font") or "").strip()[:100]
 
-    product = get_object_or_404(Product, id=product_id)
+    product = get_object_or_404(
+        Product,
+        id=product_id
+    )
+
+    customization_id = data.get("customization_id")
+
+    customization = None
+
+    if customization_id:
+        customization = get_object_or_404(
+            BottleCustomization,
+            id=customization_id,
+            product=product
+        )
 
     cart = request.session.get("cart", {})
 
@@ -220,25 +234,42 @@ def cart_add_ajax(request):
         f"{safe_size}_"
         f"{safe_custom_name}_"
         f"{safe_engraving_side}_"
-        f"{safe_name_direction}"
+        f"{safe_name_direction}_"
+        f"{customization_id or 'none'}"
     )
 
-    final_image = data.get("image") or (product.image.url if product.image else "")
+    final_image = (
+        data.get("image")
+        or (product.image.url if product.image else "")
+    )
 
     if cart_key in cart:
-        cart[cart_key]["quantity"] = int(cart[cart_key].get("quantity", 1)) + quantity
+        cart[cart_key]["quantity"] = (
+            int(cart[cart_key].get("quantity", 1))
+            + quantity
+        )
+
     else:
         cart[cart_key] = {
             "product_id": product.id,
             "name": product.name,
             "price": str(product.price),
             "quantity": quantity,
+
             "size": size,
             "color": color,
+
             "custom_name": custom_name,
             "engraving_side": engraving_side,
             "name_direction": name_direction,
             "name_font": name_font,
+
+            "customization_id": (
+                customization.id
+                if customization
+                else None
+            ),
+
             "image": final_image,
         }
 

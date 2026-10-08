@@ -13,10 +13,13 @@ ALLOWED_HOSTS = [
     "localhost",
     ".vercel.app",
     "192.168.15.63",
+    ".app.github.dev",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://*.vercel.app",
+    "https://localhost:8000",
+    "http://localhost:8000",
+    "https://*.app.github.dev",
 ]
 
 INSTALLED_APPS = [

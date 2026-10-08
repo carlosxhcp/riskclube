@@ -9,6 +9,7 @@ from products.models import Product
 
 from .models import CategoriaGravacao, BottleCustomization
 
+from django.views.decorators.csrf import ensure_csrf_cookie
 
 def createbottle_choose_type(request):
     return render(
@@ -54,6 +55,7 @@ def createbottle_choose_model(request, custom_type):
     )
 
 
+@ensure_csrf_cookie
 def createbottle_mockup(request, slug):
     product = get_object_or_404(
         Product,
@@ -66,16 +68,10 @@ def createbottle_mockup(request, slug):
         ativo=True
     ).prefetch_related("gravacoes")
 
-    return render(
-        request,
-        "customization/createbottle_mockup.html",
-        {
-            "product": product,
-            "categorias": categorias,
-        }
-    )
-
-
+    return render(request, "customization/createbottle_mockup.html", {
+        "product": product,
+        "categorias": categorias,
+    })
 def createbottle_group_mockup(request, slug):
     product = get_object_or_404(
         Product,

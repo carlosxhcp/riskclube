@@ -43,148 +43,315 @@
 
         <!-- ABAS (somente no mobile) -->
         <div class="vip-mobile-tabs" role="tablist">
-            <button type="button" class="vip-tab-btn active" data-tab="nome" role="tab" aria-selected="true"><i
-                    class="bi bi-fonts"></i> Nome</button>
-            <button type="button" class="vip-tab-btn" data-tab="gravacoes" role="tab" aria-selected="false"><i
-                    class="bi bi-grid"></i> Gravações</button>
-            <button type="button" class="vip-tab-btn" data-tab="ajuste" role="tab" aria-selected="false"><i
-                    class="bi bi-sliders"></i> Ajustar <em class="vip-tab-count" id="layersCount" hidden>0</em></button>
+            <button type="button" class="vip-tab-btn active" data-tab="nome" role="tab" aria-selected="true">
+                <i class="bi bi-fonts"></i> Nome
+            </button>
+
+            <button type="button" class="vip-tab-btn" data-tab="gravacoes" role="tab" aria-selected="false">
+                <i class="bi bi-grid"></i> Gravações
+            </button>
+
+            <button type="button" class="vip-tab-btn" data-tab="ajuste" role="tab" aria-selected="false">
+                <i class="bi bi-sliders"></i> Ajustar
+                <em class="vip-tab-count" id="layersCount" hidden>0</em>
+            </button>
         </div>
 
         <!-- 1. NOME -->
         <div class="vip-panel-section vip-sec-name">
-            <div class="vip-step-title"><span>1</span> Nome na garrafa</div>
+
+            <div class="vip-step-title">
+                <span>1</span> Nome na garrafa
+            </div>
+
             <div class="vip-name-input-row">
-                <input type="text" id="nameInput" maxlength="15" placeholder="Digite seu texto" value=""
-                    autocomplete="off" autocapitalize="characters" enterkeyhint="done">
+                <input
+                    type="text"
+                    id="nameInput"
+                    maxlength="15"
+                    placeholder="Digite seu texto"
+                    value=""
+                    autocomplete="off"
+                    autocapitalize="characters"
+                    enterkeyhint="done">
             </div>
 
             <div class="vip-name-options">
+
                 <div class="vip-font-options">
-                    <button type="button" class="vip-font-btn active"
-                        data-font="Arial"><strong>Aa</strong><span>Arial</span></button>
-                    <button type="button" class="vip-font-btn"
-                        data-font="Montserrat"><strong>Aa</strong><span>Montserrat</span></button>
-                    <button type="button" class="vip-font-btn"
-                        data-font="Georgia"><strong>Aa</strong><span>Georgia</span></button>
-                    <button type="button" class="vip-font-btn"
-                        data-font="Ma Shan Zheng"><strong>Aa</strong><span>Caligrafia</span></button>
+
+                    <button type="button" class="vip-font-btn active" data-font="Arial">
+                        <strong>Aa</strong>
+                        <span>Arial</span>
+                    </button>
+
+                    <button type="button" class="vip-font-btn" data-font="Montserrat">
+                        <strong>Aa</strong>
+                        <span>Montserrat</span>
+                    </button>
+
+                    <button type="button" class="vip-font-btn" data-font="Georgia">
+                        <strong>Aa</strong>
+                        <span>Georgia</span>
+                    </button>
+
+                    <button type="button" class="vip-font-btn" data-font="Ma Shan Zheng">
+                        <strong>Aa</strong>
+                        <span>Caligrafia</span>
+                    </button>
+
                 </div>
+
             </div>
         </div>
 
         <!-- 2. GRAVAÇÕES -->
         <div class="vip-panel-section vip-sec-engravings">
-            <div class="vip-step-title"><span>2</span> Escolha as gravações</div>
+
+            <div class="vip-step-title">
+                <span>2</span> Escolha as gravações
+            </div>
 
             <div class="vip-engraving-grid" id="engravingGrid">
+
                 {% for categoria in categorias %}
+
                 <div class="vip-engraving-category">
-                    <button type="button" class="vip-engraving-category-btn {% if forloop.first %}active{% endif %}"
+
+                    <button
+                        type="button"
+                        class="vip-engraving-category-btn {% if forloop.first %}active{% endif %}"
                         data-category="{{ categoria.id }}">
+
                         <span class="vip-engraving-category-left">
-                            {% if categoria.icone %}<img src="{{ categoria.icone.url }}" alt="{{ categoria.nome }}">{%
-                            endif %}
+
+                            {% if categoria.icone %}
+                            <img
+                                src="{{ categoria.icone.url }}"
+                                alt="{{ categoria.nome }}">
+                            {% endif %}
+
                             <span>{{ categoria.nome }}</span>
+
                         </span>
+
                         <i class="bi bi-chevron-down"></i>
+
                     </button>
 
-                    <div class="vip-engraving-category-content {% if forloop.first %}open{% endif %}"
+                    <div
+                        class="vip-engraving-category-content {% if forloop.first %}open{% endif %}"
                         data-category-content="{{ categoria.id }}">
+
                         <div class="vip-engraving-items">
+
                             {% for gravacao in categoria.gravacoes.all %}
+
                             {% if gravacao.ativo %}
-                            <button type="button" class="vip-engraving-btn" data-name="{{ gravacao.nome }}"
+
+                            <button
+                                type="button"
+                                class="vip-engraving-btn"
+                                data-name="{{ gravacao.nome }}"
                                 data-image="{{ gravacao.imagem.url }}">
-                                <img src="{{ gravacao.imagem.url }}" alt="{{ gravacao.nome }}">
-                                {% if gravacao.nome %}<span>{{ gravacao.nome }}</span>{% endif %}
+
+                                <img
+                                    src="{{ gravacao.imagem.url }}"
+                                    alt="{{ gravacao.nome }}">
+
+                                {% if gravacao.nome %}
+                                <span>{{ gravacao.nome }}</span>
+                                {% endif %}
+
                             </button>
+
                             {% endif %}
+
                             {% endfor %}
+
                         </div>
+
                     </div>
+
                 </div>
-                {% empty %}
-                <p class="vip-no-engravings">Nenhuma gravação disponível.</p>
+
                 {% endfor %}
+
+                {% if not categorias %}
+                <p class="vip-no-engravings">
+                    Nenhuma gravação disponível.
+                </p>
+                {% endif %}
+
             </div>
+
         </div>
 
         <!-- 3. CAMADAS + CONTROLES -->
         <div class="vip-panel-section vip-sec-adjust">
-            <div class="vip-step-title"><span>3</span> Ajustar gravações</div>
+
+            <div class="vip-step-title">
+                <span>3</span> Ajustar gravações
+            </div>
 
             <div id="engravingLayersList" class="vip-engraving-layers-list">
+
                 <div class="vip-engraving-empty">
                     Nenhuma gravação adicionada.
-                    <button type="button" class="vip-empty-link" data-go-tab="gravacoes">Escolher gravação</button>
+
+                    <button
+                        type="button"
+                        class="vip-empty-link"
+                        data-go-tab="gravacoes">
+                        Escolher gravação
+                    </button>
+
                 </div>
+
             </div>
 
             <div id="engravingControlsSection" class="vip-controls-card">
 
                 <div class="vip-section-title-row">
                     <label>Editando</label>
-                    <span id="selectedEngravingName">Nenhuma gravação</span>
+                    <span id="selectedEngravingName">
+                        Nenhuma gravação
+                    </span>
                 </div>
 
                 <div class="vip-controls-grid">
 
                     <div class="vip-position-editor">
-                        <div class="vip-position-pad" id="engravingPositionPad" aria-label="Arraste para posicionar"
-                            role="application" tabindex="0">
+
+                        <div
+                            class="vip-position-pad"
+                            id="engravingPositionPad"
+                            aria-label="Arraste para posicionar"
+                            role="application"
+                            tabindex="0">
+
                             <div class="vip-position-grid"></div>
                             <div class="vip-position-axis-x"></div>
                             <div class="vip-position-axis-y"></div>
-                            <div class="vip-position-hint"><span>ARRASTE</span><small>para posicionar</small></div>
-                            <div class="vip-position-knob" id="engravingPositionKnob"><span></span></div>
+
+                            <div class="vip-position-hint">
+                                <span>ARRASTE</span>
+                                <small>para posicionar</small>
+                            </div>
+
+                            <div
+                                class="vip-position-knob"
+                                id="engravingPositionKnob">
+                                <span></span>
+                            </div>
+
                         </div>
 
                         <div class="vip-position-readout">
-                            <div><span>X</span><strong id="engravingXValue">140</strong></div>
-                            <div><span>Y</span><strong id="engravingYValue">700</strong></div>
+
+                            <div>
+                                <span>X</span>
+                                <strong id="engravingXValue">140</strong>
+                            </div>
+
+                            <div>
+                                <span>Y</span>
+                                <strong id="engravingYValue">700</strong>
+                            </div>
+
                         </div>
+
                     </div>
 
                     <div class="vip-controls-side">
 
                         <div class="vip-engraving-control">
-                            <div class="vip-control-header"><span>Tamanho</span><strong
-                                    id="engravingSizeValue">250</strong></div>
-                            <input type="range" id="engravingSizeControl" min="20" max="800" step="1" value="250">
+
+                            <div class="vip-control-header">
+                                <span>Tamanho</span>
+                                <strong id="engravingSizeValue">250</strong>
+                            </div>
+
+                            <input
+                                type="range"
+                                id="engravingSizeControl"
+                                min="20"
+                                max="800"
+                                step="1"
+                                value="250">
+
                         </div>
 
                         <div class="vip-engraving-control">
-                            <div class="vip-control-header"><span>Rotação</span><strong
-                                    id="engravingRotationValue">0°</strong></div>
-                            <input type="range" id="engravingRotationControl" min="-180" max="180" step="1" value="0">
+
+                            <div class="vip-control-header">
+                                <span>Rotação</span>
+                                <strong id="engravingRotationValue">0°</strong>
+                            </div>
+
+                            <input
+                                type="range"
+                                id="engravingRotationControl"
+                                min="-180"
+                                max="180"
+                                step="1"
+                                value="0">
+
                         </div>
 
                     </div>
+
                 </div>
 
                 <div class="vip-controls-actions">
-                    <button type="button" id="resetEngravingPosition" class="vip-reset-engraving-btn">
-                        <i class="bi bi-bullseye"></i> Posição inicial
+
+                    <button
+                        type="button"
+                        id="resetEngravingPosition"
+                        class="vip-reset-engraving-btn">
+
+                        <i class="bi bi-bullseye"></i>
+                        Posição inicial
+
                     </button>
-                    <button type="button" id="removeSelectedEngraving" class="vip-remove-engraving-btn">
-                        <i class="bi bi-trash"></i> Remover
+
+                    <button
+                        type="button"
+                        id="removeSelectedEngraving"
+                        class="vip-remove-engraving-btn">
+
+                        <i class="bi bi-trash"></i>
+                        Remover
+
                     </button>
+
                 </div>
 
             </div>
+
         </div>
 
         <!-- PREÇO -->
         <div class="vip-price-box vip-price-sticky">
+
             <div class="vip-price-row">
                 <span>Total</span>
                 <strong>R$ {{ product.price }}</strong>
             </div>
+
             <div class="vip-group-flow-actions">
-                <button type="button" class="vip-next-bottle-btn">Continuar <i class="bi bi-arrow-right"></i></button>
+
+                <button
+                    type="button"
+                    class="vip-next-bottle-btn">
+
+                    Continuar
+                    <i class="bi bi-arrow-right"></i>
+
+                </button>
+
             </div>
+
         </div>
 
     </div>
@@ -193,845 +360,2291 @@
 
 
 <script>
-    document.addEventListener("DOMContentLoaded", () => {
 
-        const viewer = document.getElementById("bottleViewer");
-        if (!viewer) return;
+document.addEventListener("DOMContentLoaded", () => {
 
-        const $ = id => document.getElementById(id);
+    const viewer = document.getElementById("bottleViewer");
 
-        const panel = document.querySelector(".vip-mockup-panel");
-        const tabButtons = document.querySelectorAll(".vip-tab-btn");
-        const engravingButtons = document.querySelectorAll(".vip-engraving-btn");
-        const fontButtons = document.querySelectorAll(".vip-font-btn");
+    if (!viewer) return;
 
-        const layersList = $("engravingLayersList");
-        const layersCount = $("layersCount");
-        const controlsSection = $("engravingControlsSection");
-        const selectedName = $("selectedEngravingName");
-        const sizeControl = $("engravingSizeControl");
-        const rotationControl = $("engravingRotationControl");
-        const xValue = $("engravingXValue");
-        const yValue = $("engravingYValue");
-        const sizeValue = $("engravingSizeValue");
-        const rotationValue = $("engravingRotationValue");
-        const positionPad = $("engravingPositionPad");
-        const positionKnob = $("engravingPositionKnob");
-        const resetButton = $("resetEngravingPosition");
-        const removeButton = $("removeSelectedEngraving");
-        const nameInput = $("nameInput");
+    const $ = id => document.getElementById(id);
+
+    const panel = document.querySelector(".vip-mockup-panel");
+    const tabButtons = document.querySelectorAll(".vip-tab-btn");
+    const engravingButtons = document.querySelectorAll(".vip-engraving-btn");
+    const fontButtons = document.querySelectorAll(".vip-font-btn");
+
+    const layersList = $("engravingLayersList");
+    const layersCount = $("layersCount");
+    const controlsSection = $("engravingControlsSection");
+
+    const selectedName = $("selectedEngravingName");
+
+    const sizeControl = $("engravingSizeControl");
+    const rotationControl = $("engravingRotationControl");
+
+    const xValue = $("engravingXValue");
+    const yValue = $("engravingYValue");
+
+    const sizeValue = $("engravingSizeValue");
+    const rotationValue = $("engravingRotationValue");
+
+    const positionPad = $("engravingPositionPad");
+    const positionKnob = $("engravingPositionKnob");
+
+    const resetButton = $("resetEngravingPosition");
+    const removeButton = $("removeSelectedEngraving");
+
+    const nameInput = $("nameInput");
 
 
-        /* =========================================================
-           CONFIGURAÇÕES
-        ========================================================= */
+    /* =========================================================
+       CONFIGURAÇÕES
+    ========================================================= */
 
-        const TEXTURE_SIZE = 1024;
-        const TEXTURE_FLIP_X = true;    // espelhamento horizontal do UV
-        const TEXTURE_FLIP_Y = true;    // figura de cabeça pra baixo
-        const NAME_MIRROR_X = true;     // desespelha o nome
+    const TEXTURE_SIZE = 1024;
 
-        const START_X = 140;
-        const START_Y = 700;
-        const Y_MIN = -256;
-        const Y_MAX = 1280;
+    const TEXTURE_FLIP_X = true;
+    const TEXTURE_FLIP_Y = true;
 
-        const PAD_SIGN_X = -1;          // inverte esquerda/direita do pad
-        const PAD_EDGE = 0.38;          // fração do pad usada como raio de movimento do knob
-        const PAD_SENSITIVITY = 0.3;    // 1 = pad inteiro dá uma volta; menor = mais preciso
+    const NAME_MIRROR_X = true;
 
-        // Câmera: a garrafa gira para deixar a gravação sempre de frente.
-        // THETA_HOME = ângulo (horizontal) da câmera em que a posição inicial (START_X) fica de frente.
-        // THETA_SIGN = sentido do giro. Se a garrafa girar para o lado errado, troque para 1.
-        const THETA_HOME = -50 * Math.PI / 180;   // igual ao camera-orbit inicial do model-viewer
-        const THETA_SIGN = -1;
+    const START_X = 140;
+    const START_Y = 700;
 
-        const NAME_MAX_CHARACTERS = 15;
-        const NAME_MAX_WIDTH = 420;
-        const NAME_DEFAULT_SIZE = 120;
-        const IMAGE_DEFAULT_SIZE = 250;
+    const Y_MIN = -256;
+    const Y_MAX = 1280;
 
-        // Cópias deslocadas para a gravação não cortar na emenda da textura
-        const WRAP_OFFSETS = [-TEXTURE_SIZE, 0, TEXTURE_SIZE];
+    const PAD_SIGN_X = -1;
+    const PAD_EDGE = 0.38;
+    const PAD_SENSITIVITY = 0.3;
 
-        const EMPTY_LAYERS_HTML = `
+    const THETA_HOME = -50 * Math.PI / 180;
+    const THETA_SIGN = -1;
+
+    const NAME_MAX_CHARACTERS = 15;
+    const NAME_MAX_WIDTH = 420;
+    const NAME_DEFAULT_SIZE = 120;
+    const IMAGE_DEFAULT_SIZE = 250;
+
+    const WRAP_OFFSETS = [
+        -TEXTURE_SIZE,
+        0,
+        TEXTURE_SIZE
+    ];
+
+    const EMPTY_LAYERS_HTML = `
         <div class="vip-engraving-empty">
             Nenhuma gravação adicionada.
-            <button type="button" class="vip-empty-link" data-go-tab="gravacoes">Escolher gravação</button>
+
+            <button
+                type="button"
+                class="vip-empty-link"
+                data-go-tab="gravacoes">
+
+                Escolher gravação
+
+            </button>
         </div>
     `;
 
 
-        /* =========================================================
-           ESTADO
-        ========================================================= */
+    /* =========================================================
+       ESTADO
+    ========================================================= */
 
-        const layers = [];
-        let selectedId = null;
-        let currentFont = "Arial";
-        let engravingMaterial = null;
+    const layers = [];
 
-        let lastTextureDataUrl = null;
-        let renderVersion = 0;
-        let renderRunning = false;
-        let renderPending = false;
+    let selectedId = null;
+    let currentFont = "Arial";
+    let engravingMaterial = null;
 
+    let lastTextureDataUrl = null;
 
-        /* =========================================================
-           UTILITÁRIOS
-        ========================================================= */
-
-        const wrapX = value => ((value % TEXTURE_SIZE) + TEXTURE_SIZE) % TEXTURE_SIZE;
-        const clampY = value => Math.max(Y_MIN, Math.min(Y_MAX, value));
-        const radToDeg = rad => Math.round(rad * 180 / Math.PI);
-
-        const getSelected = () => layers.find(layer => layer.id === selectedId) || null;
-        const getNameLayer = () => layers.find(layer => layer.type === "name") || null;
-
-        function generateId() {
-            return "layer_" + Date.now().toString(36) + "_" + Math.random().toString(36).substring(2, 8);
-        }
-
-        function loadImage(url) {
-            return new Promise((resolve, reject) => {
-                const image = new Image();
-                image.crossOrigin = "anonymous";
-                image.onload = () => resolve(image);
-                image.onerror = () => reject(new Error("Não foi possível carregar a imagem: " + url));
-                image.src = url;
-            });
-        }
-
-        // Posiciona a câmera de frente para a gravação (ângulo absoluto, sempre pelo caminho mais curto)
-        function faceEngraving(x) {
-            const target = THETA_HOME + THETA_SIGN * ((x - START_X) / TEXTURE_SIZE) * Math.PI * 2;
-
-            const orbit = viewer.getCameraOrbit();
-
-            let diff = target - orbit.theta;
-            diff = ((diff + Math.PI) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2) - Math.PI;
-
-            viewer.cameraOrbit = `${orbit.theta + diff}rad ${orbit.phi}rad ${orbit.radius}m`;
-        }
+    let renderVersion = 0;
+    let renderRunning = false;
+    let renderPending = false;
 
 
-        /* =========================================================
-           ABAS (MOBILE)
-        ========================================================= */
+    /* =========================================================
+       UTILITÁRIOS
+    ========================================================= */
 
-        function setTab(name) {
-            panel.dataset.tab = name;
+    const wrapX = value =>
+        ((value % TEXTURE_SIZE) + TEXTURE_SIZE) % TEXTURE_SIZE;
 
-            tabButtons.forEach(button => {
-                const active = button.dataset.tab === name;
-                button.classList.toggle("active", active);
-                button.setAttribute("aria-selected", active ? "true" : "false");
-            });
+    const clampY = value =>
+        Math.max(
+            Y_MIN,
+            Math.min(Y_MAX, value)
+        );
 
-            panel.querySelectorAll(".vip-panel-section").forEach(section => { section.scrollTop = 0; });
-        }
+    const radToDeg = rad =>
+        Math.round(rad * 180 / Math.PI);
+
+    const getSelected = () =>
+        layers.find(
+            layer => layer.id === selectedId
+        ) || null;
+
+    const getNameLayer = () =>
+        layers.find(
+            layer => layer.type === "name"
+        ) || null;
+
+
+    function generateId() {
+
+        return (
+            "layer_" +
+            Date.now().toString(36) +
+            "_" +
+            Math.random()
+                .toString(36)
+                .substring(2, 8)
+        );
+
+    }
+
+
+    function loadImage(url) {
+
+        return new Promise((resolve, reject) => {
+
+            const image = new Image();
+
+            image.crossOrigin = "anonymous";
+
+            image.onload = () =>
+                resolve(image);
+
+            image.onerror = () =>
+                reject(
+                    new Error(
+                        "Não foi possível carregar a imagem: " +
+                        url
+                    )
+                );
+
+            image.src = url;
+
+        });
+
+    }
+
+
+    function faceEngraving(x) {
+
+        const target =
+            THETA_HOME +
+            THETA_SIGN *
+            ((x - START_X) / TEXTURE_SIZE) *
+            Math.PI *
+            2;
+
+        const orbit =
+            viewer.getCameraOrbit();
+
+        let diff =
+            target -
+            orbit.theta;
+
+        diff =
+            (
+                (diff + Math.PI) %
+                (Math.PI * 2) +
+                Math.PI * 2
+            ) -
+            Math.PI;
+
+        viewer.cameraOrbit =
+            `${orbit.theta + diff}rad ${orbit.phi}rad ${orbit.radius}m`;
+
+    }
+
+
+    /* =========================================================
+       ABAS MOBILE
+    ========================================================= */
+
+    function setTab(name) {
+
+        panel.dataset.tab = name;
 
         tabButtons.forEach(button => {
-            button.addEventListener("click", () => setTab(button.dataset.tab));
-        });
 
-        // botão "Escolher gravação" do estado vazio
-        panel.addEventListener("click", event => {
-            const go = event.target.closest("[data-go-tab]");
-            if (go) setTab(go.dataset.goTab);
-        });
+            const active =
+                button.dataset.tab === name;
 
-
-        /* =========================================================
-           DESENHO NA TEXTURA
-        ========================================================= */
-
-        function drawNameLayer(ctx, layer) {
-            const text = (layer.text || "").substring(0, NAME_MAX_CHARACTERS).toUpperCase();
-            if (!text) return;
-
-            ctx.save();
-            ctx.translate(layer.x, layer.y);
-            ctx.rotate(layer.rotation);
-            ctx.rotate(-Math.PI / 2); // nome sempre na vertical
-
-            if (NAME_MIRROR_X) ctx.scale(-1, 1);
-
-            ctx.fillStyle = "#FFFFFF";
-            ctx.textAlign = "center";
-            ctx.textBaseline = "middle";
-
-            const MIN_FONT = 16;
-            let fontSize = Math.max(MIN_FONT, layer.size * 0.35);
-            ctx.font = `bold ${fontSize}px "${layer.font}"`;
-
-            while (ctx.measureText(text).width > NAME_MAX_WIDTH && fontSize > MIN_FONT) {
-                fontSize--;
-                ctx.font = `bold ${fontSize}px "${layer.font}"`;
-            }
-
-            ctx.fillText(text, 0, 0);
-            ctx.restore();
-        }
-
-        function drawImageLayer(ctx, layer) {
-            if (!layer.image) return;
-
-            ctx.save();
-            ctx.translate(layer.x, layer.y);
-            ctx.rotate(layer.rotation);
-            ctx.drawImage(layer.image, -layer.size / 2, -layer.size / 2, layer.size, layer.size);
-            ctx.restore();
-        }
-
-        async function rebuildEngravingTexture() {
-            if (!engravingMaterial) return;
-
-            const version = ++renderVersion;
-
-            // garante que as fontes do nome já carregaram antes de desenhar
-            await Promise.all(
-                layers
-                    .filter(layer => layer.type === "name")
-                    .map(layer => document.fonts.load(`bold 40px "${layer.font}"`, layer.text))
+            button.classList.toggle(
+                "active",
+                active
             );
 
-            if (version !== renderVersion) return;
+            button.setAttribute(
+                "aria-selected",
+                active
+                    ? "true"
+                    : "false"
+            );
 
-            const canvas = document.createElement("canvas");
-            canvas.width = TEXTURE_SIZE;
-            canvas.height = TEXTURE_SIZE;
-            const ctx = canvas.getContext("2d");
+        });
 
-            ctx.save();
-            ctx.translate(TEXTURE_FLIP_X ? TEXTURE_SIZE : 0, TEXTURE_FLIP_Y ? TEXTURE_SIZE : 0);
-            ctx.scale(TEXTURE_FLIP_X ? -1 : 1, TEXTURE_FLIP_Y ? -1 : 1);
+        panel
+            .querySelectorAll(".vip-panel-section")
+            .forEach(section => {
+                section.scrollTop = 0;
+            });
 
-            for (const layer of layers) {
-                if (version !== renderVersion) {
-                    ctx.restore();
-                    return;
-                }
+    }
 
-                try {
-                    if (layer.type === "image" && !layer.image) {
-                        layer.image = await loadImage(layer.imageUrl);
-                    }
 
-                    for (const offset of WRAP_OFFSETS) {
-                        const copy = { ...layer, x: layer.x + offset };
-                        if (layer.type === "name") drawNameLayer(ctx, copy);
-                        else drawImageLayer(ctx, copy);
-                    }
-                } catch (error) {
-                    console.error("Erro ao desenhar camada:", layer, error);
-                }
+    tabButtons.forEach(button => {
+
+        button.addEventListener(
+            "click",
+            () => setTab(button.dataset.tab)
+        );
+
+    });
+
+
+    panel.addEventListener("click", event => {
+
+        const go =
+            event.target.closest(
+                "[data-go-tab]"
+            );
+
+        if (go) {
+            setTab(go.dataset.goTab);
+        }
+
+    });
+
+
+    /* =========================================================
+       DESENHO NA TEXTURA
+    ========================================================= */
+
+    function drawNameLayer(ctx, layer) {
+
+        const text =
+            (layer.text || "")
+                .substring(
+                    0,
+                    NAME_MAX_CHARACTERS
+                )
+                .toUpperCase();
+
+        if (!text) return;
+
+        ctx.save();
+
+        ctx.translate(
+            layer.x,
+            layer.y
+        );
+
+        ctx.rotate(
+            layer.rotation
+        );
+
+        ctx.rotate(
+            -Math.PI / 2
+        );
+
+        if (NAME_MIRROR_X) {
+            ctx.scale(-1, 1);
+        }
+
+        ctx.fillStyle = "#FFFFFF";
+
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+
+        const MIN_FONT = 16;
+
+        let fontSize =
+            Math.max(
+                MIN_FONT,
+                layer.size * 0.35
+            );
+
+        ctx.font =
+            `bold ${fontSize}px "${layer.font}"`;
+
+        while (
+            ctx.measureText(text).width >
+                NAME_MAX_WIDTH &&
+            fontSize > MIN_FONT
+        ) {
+
+            fontSize--;
+
+            ctx.font =
+                `bold ${fontSize}px "${layer.font}"`;
+
+        }
+
+        ctx.fillText(
+            text,
+            0,
+            0
+        );
+
+        ctx.restore();
+
+    }
+
+
+    function drawImageLayer(ctx, layer) {
+
+        if (!layer.image) return;
+
+        ctx.save();
+
+        ctx.translate(
+            layer.x,
+            layer.y
+        );
+
+        ctx.rotate(
+            layer.rotation
+        );
+
+        ctx.drawImage(
+            layer.image,
+            -layer.size / 2,
+            -layer.size / 2,
+            layer.size,
+            layer.size
+        );
+
+        ctx.restore();
+
+    }
+
+
+    async function rebuildEngravingTexture() {
+
+        if (!engravingMaterial) return;
+
+        const version =
+            ++renderVersion;
+
+        await Promise.all(
+
+            layers
+                .filter(
+                    layer =>
+                        layer.type === "name"
+                )
+                .map(layer =>
+                    document.fonts.load(
+                        `bold 40px "${layer.font}"`,
+                        layer.text
+                    )
+                )
+
+        );
+
+        if (
+            version !== renderVersion
+        ) {
+            return;
+        }
+
+        const canvas =
+            document.createElement("canvas");
+
+        canvas.width =
+            TEXTURE_SIZE;
+
+        canvas.height =
+            TEXTURE_SIZE;
+
+        const ctx =
+            canvas.getContext("2d");
+
+        ctx.save();
+
+        ctx.translate(
+            TEXTURE_FLIP_X
+                ? TEXTURE_SIZE
+                : 0,
+
+            TEXTURE_FLIP_Y
+                ? TEXTURE_SIZE
+                : 0
+        );
+
+        ctx.scale(
+            TEXTURE_FLIP_X
+                ? -1
+                : 1,
+
+            TEXTURE_FLIP_Y
+                ? -1
+                : 1
+        );
+
+
+        for (const layer of layers) {
+
+            if (
+                version !== renderVersion
+            ) {
+
+                ctx.restore();
+                return;
+
             }
-
-            ctx.restore();
-
-            if (version !== renderVersion) return;
 
             try {
-                lastTextureDataUrl = canvas.toDataURL("image/png");
 
-                const texture = await viewer.createTexture(lastTextureDataUrl);
-                if (version !== renderVersion) return;
+                if (
+                    layer.type === "image" &&
+                    !layer.image
+                ) {
 
-                engravingMaterial.pbrMetallicRoughness.baseColorTexture.setTexture(texture);
-                engravingMaterial.pbrMetallicRoughness.setBaseColorFactor([1, 1, 1, 1]);
-                engravingMaterial.setAlphaMode("BLEND");
+                    layer.image =
+                        await loadImage(
+                            layer.imageUrl
+                        );
+
+                }
+
+                for (
+                    const offset
+                    of WRAP_OFFSETS
+                ) {
+
+                    const copy = {
+                        ...layer,
+                        x: layer.x + offset
+                    };
+
+                    if (
+                        layer.type === "name"
+                    ) {
+
+                        drawNameLayer(
+                            ctx,
+                            copy
+                        );
+
+                    } else {
+
+                        drawImageLayer(
+                            ctx,
+                            copy
+                        );
+
+                    }
+
+                }
+
             } catch (error) {
-                console.error("Erro ao atualizar textura:", error);
+
+                console.error(
+                    "Erro ao desenhar camada:",
+                    layer,
+                    error
+                );
+
             }
+
         }
 
-        function requestRebuild() {
-            renderPending = true;
-            if (renderRunning) return;
-            renderRunning = true;
+        ctx.restore();
 
-            requestAnimationFrame(async () => {
-                renderPending = false;
-                await rebuildEngravingTexture();
-                renderRunning = false;
-                if (renderPending) requestRebuild();
-            });
+
+        if (
+            version !== renderVersion
+        ) {
+            return;
         }
 
 
-        /* =========================================================
-           INTERFACE
-        ========================================================= */
+        try {
 
-        function layerTitle(layer) {
-            if (layer.type === "name") return layer.text ? `Nome: ${layer.text}` : "Nome";
-            return layer.name;
-        }
+            lastTextureDataUrl =
+                canvas.toDataURL(
+                    "image/png"
+                );
 
-        // marca na biblioteca as gravações já usadas e atualiza o contador da aba
-        function syncLibrary() {
-            const added = new Set(layers.filter(layer => layer.type === "image").map(layer => layer.imageUrl));
+            const texture =
+                await viewer.createTexture(
+                    lastTextureDataUrl
+                );
 
-            engravingButtons.forEach(button => {
-                button.classList.toggle("is-added", added.has(button.dataset.image));
-            });
-
-            if (layersCount) {
-                layersCount.textContent = layers.length;
-                layersCount.hidden = !layers.length;
-            }
-        }
-
-        function renderLayersList() {
-            syncLibrary();
-
-            if (!layers.length) {
-                layersList.innerHTML = EMPTY_LAYERS_HTML;
+            if (
+                version !== renderVersion
+            ) {
                 return;
             }
 
-            layersList.innerHTML = "";
+            engravingMaterial
+                .pbrMetallicRoughness
+                .baseColorTexture
+                .setTexture(texture);
 
-            layers.forEach((layer, index) => {
-                const item = document.createElement("button");
-                item.type = "button";
-                item.className = "vip-engraving-layer-item" + (layer.id === selectedId ? " active" : "");
+            engravingMaterial
+                .pbrMetallicRoughness
+                .setBaseColorFactor(
+                    [1, 1, 1, 1]
+                );
 
-                const preview = layer.type === "name"
-                    ? `<span style="font-size: 13px; font-weight: 700;">Aa</span>`
-                    : `<img src="${layer.imageUrl}" alt="">`;
+            engravingMaterial
+                .setAlphaMode("BLEND");
 
-                item.innerHTML = `
-                <span class="vip-layer-number">${index + 1}</span>
-                <span class="vip-layer-preview">${preview}</span>
-                <span class="vip-layer-name">${layerTitle(layer)}</span>
-                <i class="bi bi-chevron-right"></i>
-            `;
+        } catch (error) {
 
-                item.addEventListener("click", () => selectLayer(layer.id));
-                layersList.appendChild(item);
-            });
+            console.error(
+                "Erro ao atualizar textura:",
+                error
+            );
+
         }
 
-        // Os controles ficam sempre visíveis; sem camada selecionada ficam desativados.
-        function updateControls() {
-            const layer = getSelected();
-            const enabled = !!layer;
+    }
 
-            controlsSection.classList.toggle("is-active", enabled);
-            [sizeControl, rotationControl, resetButton, removeButton].forEach(el => el.disabled = !enabled);
 
-            const x = layer ? layer.x : START_X;
-            const y = layer ? layer.y : START_Y;
-            const size = layer ? layer.size : IMAGE_DEFAULT_SIZE;
-            const rotation = layer ? layer.rotation : 0;
+    function requestRebuild() {
 
-            selectedName.textContent = layer ? layerTitle(layer) : "Nenhuma gravação";
-            xValue.textContent = Math.round(x);
-            yValue.textContent = Math.round(y);
-            sizeControl.value = size;
-            sizeValue.textContent = Math.round(size);
-            rotationControl.value = radToDeg(rotation);
-            rotationValue.textContent = radToDeg(rotation) + "°";
+        renderPending = true;
 
-            updatePositionKnob(layer);
+        if (renderRunning) {
+            return;
         }
 
-        function selectLayer(id) {
-            selectedId = id;
-            const layer = getSelected();
+        renderRunning = true;
 
-            if (layer && layer.type === "name") {
-                nameInput.value = layer.text || "";
-                currentFont = layer.font;
-                fontButtons.forEach(button => {
-                    button.classList.toggle("active", button.dataset.font === currentFont);
-                });
-            }
+        requestAnimationFrame(
+            async () => {
 
-            updateControls();
-            renderLayersList();
+                renderPending = false;
 
-            if (layer) faceEngraving(layer.x);
-        }
+                await rebuildEngravingTexture();
 
+                renderRunning = false;
 
-        /* =========================================================
-           NOME
-        ========================================================= */
-
-        function updateNameFromInput() {
-            const text = nameInput.value.trim().substring(0, NAME_MAX_CHARACTERS).toUpperCase();
-            nameInput.value = text;
-
-            let nameLayer = getNameLayer();
-
-            if (!text) {
-                if (nameLayer) {
-                    layers.splice(layers.indexOf(nameLayer), 1);
-                    selectedId = null;
-                    updateControls();
-                    renderLayersList();
+                if (renderPending) {
                     requestRebuild();
                 }
-                return;
+
             }
+        );
 
-            if (!nameLayer) {
-                nameLayer = {
-                    id: generateId(),
-                    type: "name",
-                    text: "",
-                    x: START_X,
-                    y: START_Y,
-                    size: NAME_DEFAULT_SIZE,
-                    rotation: 0,
-                    font: currentFont
-                };
-                layers.push(nameLayer);
-            }
+    }
 
-            nameLayer.text = text;
-            nameLayer.font = currentFont;
 
-            selectLayer(nameLayer.id);
-            requestRebuild();
+    /* =========================================================
+       INTERFACE
+    ========================================================= */
+
+    function layerTitle(layer) {
+
+        if (
+            layer.type === "name"
+        ) {
+
+            return layer.text
+                ? `Nome: ${layer.text}`
+                : "Nome";
+
         }
 
-        nameInput.addEventListener("input", updateNameFromInput);
+        return layer.name;
 
-        // "OK" do teclado do celular fecha o teclado
-        nameInput.addEventListener("keydown", event => {
-            if (event.key === "Enter") nameInput.blur();
-        });
-
-        fontButtons.forEach(button => {
-            button.addEventListener("click", () => {
-                fontButtons.forEach(btn => btn.classList.remove("active"));
-                button.classList.add("active");
-
-                currentFont = button.dataset.font || "Arial";
-
-                const nameLayer = getNameLayer();
-                if (nameLayer) nameLayer.font = currentFont;
-
-                requestRebuild();
-            });
-        });
+    }
 
 
-        /* =========================================================
-           GRAVAÇÕES
-        ========================================================= */
+    function syncLibrary() {
+
+        const added =
+            new Set(
+                layers
+                    .filter(
+                        layer =>
+                            layer.type === "image"
+                    )
+                    .map(
+                        layer =>
+                            layer.imageUrl
+                    )
+            );
+
 
         engravingButtons.forEach(button => {
-            button.addEventListener("click", async () => {
-                const imageUrl = button.dataset.image;
-                if (!imageUrl) return;
 
-                const existing = layers.find(layer => layer.type === "image" && layer.imageUrl === imageUrl);
-                if (existing) {
-                    setTab("ajuste");
-                    selectLayer(existing.id);
-                    return;
-                }
+            button.classList.toggle(
+                "is-added",
+                added.has(
+                    button.dataset.image
+                )
+            );
 
-                const layer = {
-                    id: generateId(),
-                    type: "image",
-                    name: button.dataset.name || "Gravação",
-                    imageUrl,
-                    image: null,
-                    x: START_X,
-                    y: START_Y,
-                    size: IMAGE_DEFAULT_SIZE,
-                    rotation: 0
-                };
-
-                try {
-                    layer.image = await loadImage(imageUrl);
-                } catch (error) {
-                    console.error(error);
-                    return;
-                }
-
-                layers.push(layer);
-
-                // no mobile, leva o usuário direto para os ajustes da gravação recém-adicionada
-                setTab("ajuste");
-                selectLayer(layer.id);
-                requestRebuild();
-            });
         });
 
-        function removeSelected() {
-            const layer = getSelected();
-            if (!layer) return;
 
-            layers.splice(layers.indexOf(layer), 1);
-            selectedId = null;
+        if (layersCount) {
 
-            if (layer.type === "name") nameInput.value = "";
+            layersCount.textContent =
+                layers.length;
 
-            updateControls();
-            renderLayersList();
-            requestRebuild();
+            layersCount.hidden =
+                !layers.length;
+
         }
 
-        removeButton.addEventListener("click", removeSelected);
+    }
 
-        resetButton.addEventListener("click", () => {
-            const layer = getSelected();
-            if (!layer) return;
 
-            layer.x = START_X;
-            layer.y = START_Y;
-            updateControls();
-            faceEngraving(layer.x);
-            requestRebuild();
-        });
+    function renderLayersList() {
 
-        [sizeControl, rotationControl].forEach(control => {
-            control.addEventListener("input", () => {
-                const layer = getSelected();
-                if (!layer) return;
+        syncLibrary();
 
-                layer.size = Number(sizeControl.value);
-                layer.rotation = Number(rotationControl.value) * Math.PI / 180;
+        if (!layers.length) {
+
+            layersList.innerHTML =
+                EMPTY_LAYERS_HTML;
+
+            return;
+
+        }
+
+        layersList.innerHTML = "";
+
+
+        layers.forEach(
+            (layer, index) => {
+
+                const item =
+                    document.createElement(
+                        "button"
+                    );
+
+                item.type = "button";
+
+                item.className =
+                    "vip-engraving-layer-item" +
+                    (
+                        layer.id === selectedId
+                            ? " active"
+                            : ""
+                    );
+
+
+                const preview =
+                    layer.type === "name"
+
+                        ? `
+                            <span
+                                style="
+                                    font-size: 13px;
+                                    font-weight: 700;
+                                ">
+                                Aa
+                            </span>
+                        `
+
+                        : `
+                            <img
+                                src="${layer.imageUrl}"
+                                alt="">
+                        `;
+
+
+                item.innerHTML = `
+
+                    <span class="vip-layer-number">
+                        ${index + 1}
+                    </span>
+
+                    <span class="vip-layer-preview">
+                        ${preview}
+                    </span>
+
+                    <span class="vip-layer-name">
+                        ${layerTitle(layer)}
+                    </span>
+
+                    <i class="bi bi-chevron-right"></i>
+
+                `;
+
+
+                item.addEventListener(
+                    "click",
+                    () =>
+                        selectLayer(
+                            layer.id
+                        )
+                );
+
+
+                layersList.appendChild(
+                    item
+                );
+
+            }
+        );
+
+    }
+
+
+    function updateControls() {
+
+        const layer =
+            getSelected();
+
+        const enabled =
+            !!layer;
+
+        controlsSection.classList.toggle(
+            "is-active",
+            enabled
+        );
+
+
+        [
+            sizeControl,
+            rotationControl,
+            resetButton,
+            removeButton
+        ].forEach(
+            el =>
+                el.disabled =
+                    !enabled
+        );
+
+
+        const x =
+            layer
+                ? layer.x
+                : START_X;
+
+        const y =
+            layer
+                ? layer.y
+                : START_Y;
+
+        const size =
+            layer
+                ? layer.size
+                : IMAGE_DEFAULT_SIZE;
+
+        const rotation =
+            layer
+                ? layer.rotation
+                : 0;
+
+
+        selectedName.textContent =
+            layer
+                ? layerTitle(layer)
+                : "Nenhuma gravação";
+
+
+        xValue.textContent =
+            Math.round(x);
+
+        yValue.textContent =
+            Math.round(y);
+
+        sizeControl.value =
+            size;
+
+        sizeValue.textContent =
+            Math.round(size);
+
+        rotationControl.value =
+            radToDeg(rotation);
+
+        rotationValue.textContent =
+            radToDeg(rotation) + "°";
+
+
+        updatePositionKnob(
+            layer
+        );
+
+    }
+
+
+    function selectLayer(id) {
+
+        selectedId = id;
+
+        const layer =
+            getSelected();
+
+
+        if (
+            layer &&
+            layer.type === "name"
+        ) {
+
+            nameInput.value =
+                layer.text || "";
+
+            currentFont =
+                layer.font;
+
+
+            fontButtons.forEach(
+                button => {
+
+                    button.classList.toggle(
+                        "active",
+                        button.dataset.font ===
+                            currentFont
+                    );
+
+                }
+            );
+
+        }
+
+
+        updateControls();
+
+        renderLayersList();
+
+
+        if (layer) {
+            faceEngraving(
+                layer.x
+            );
+        }
+
+    }
+
+
+    /* =========================================================
+       NOME
+    ========================================================= */
+
+    function updateNameFromInput() {
+
+        const text =
+            nameInput.value
+                .trim()
+                .substring(
+                    0,
+                    NAME_MAX_CHARACTERS
+                )
+                .toUpperCase();
+
+
+        nameInput.value =
+            text;
+
+
+        let nameLayer =
+            getNameLayer();
+
+
+        if (!text) {
+
+            if (nameLayer) {
+
+                layers.splice(
+                    layers.indexOf(
+                        nameLayer
+                    ),
+                    1
+                );
+
+                selectedId = null;
 
                 updateControls();
                 renderLayersList();
                 requestRebuild();
-            });
-        });
 
-
-        /* =========================================================
-           PAD DE POSIÇÃO
-           Arraste relativo e contínuo: ao passar da borda do pad,
-           a gravação continua girando pela garrafa sem limite.
-           PAD_SENSITIVITY controla a precisão (menor = mais preciso).
-        ========================================================= */
-
-        const Y_MID = (Y_MIN + Y_MAX) / 2;
-        const Y_HALF = (Y_MAX - Y_MIN) / 2;
-
-        // Raio (em px) em que o knob se move dentro do pad
-        function padRadius() {
-            return {
-                x: positionPad.clientWidth * PAD_EDGE,
-                y: positionPad.clientHeight * PAD_EDGE
-            };
-        }
-
-        // Knob acompanha a posição real da gravação (X em volta completa, Y no intervalo todo)
-        function updatePositionKnob(layer) {
-            const r = padRadius();
-
-            let nx = 0;
-            let ny = 0;
-
-            if (layer) {
-                // distância de START_X no intervalo [-512, 512)
-                const d = ((layer.x - START_X + TEXTURE_SIZE / 2) % TEXTURE_SIZE + TEXTURE_SIZE) % TEXTURE_SIZE - TEXTURE_SIZE / 2;
-                nx = d / (TEXTURE_SIZE / 2);
-                ny = (layer.y - Y_MID) / Y_HALF;
             }
 
-            positionKnob.style.left = `calc(50% + ${PAD_SIGN_X * nx * r.x}px)`;
-            positionKnob.style.top = `calc(50% + ${ny * r.y}px)`;
+            return;
+
         }
 
-        let dragging = false;
-        let dragStart = null;
 
-        function moveFromPointer(event) {
-            const layer = getSelected();
-            if (!layer || !dragStart) return;
+        if (!nameLayer) {
 
-            const r = padRadius();
+            nameLayer = {
 
-            // unidades de textura por pixel, reduzidas pela sensibilidade
-            const unitsPerPxX = (TEXTURE_SIZE / (2 * r.x)) * PAD_SENSITIVITY;
-            const unitsPerPxY = ((Y_MAX - Y_MIN) / (2 * r.y)) * PAD_SENSITIVITY;
+                id:
+                    generateId(),
 
-            const dx = event.clientX - dragStart.pointerX;
-            const dy = event.clientY - dragStart.pointerY;
+                type:
+                    "name",
 
-            layer.x = wrapX(Math.round(dragStart.layerX + PAD_SIGN_X * dx * unitsPerPxX));
-            layer.y = clampY(Math.round(dragStart.layerY + dy * unitsPerPxY));
+                text:
+                    "",
 
-            faceEngraving(layer.x);
-            updateControls();
-            requestRebuild();
-        }
+                x:
+                    START_X,
 
-        positionPad.addEventListener("pointerdown", event => {
-            const layer = getSelected();
-            if (!layer) return;
+                y:
+                    START_Y,
 
-            event.preventDefault();
-            dragging = true;
+                size:
+                    NAME_DEFAULT_SIZE,
 
-            dragStart = {
-                pointerX: event.clientX,
-                pointerY: event.clientY,
-                layerX: layer.x,
-                layerY: layer.y
+                rotation:
+                    0,
+
+                font:
+                    currentFont
+
             };
 
-            try { positionPad.setPointerCapture(event.pointerId); } catch (_) { }
-        });
 
-        positionPad.addEventListener("pointermove", event => {
-            if (!dragging) return;
-            event.preventDefault();
-            moveFromPointer(event);
-        });
-
-        function endDrag(event) {
-            dragging = false;
-            dragStart = null;
-            if (event && event.pointerId !== undefined) {
-                try { positionPad.releasePointerCapture(event.pointerId); } catch (_) { }
-            }
-        }
-
-        positionPad.addEventListener("pointerup", endDrag);
-        positionPad.addEventListener("pointercancel", endDrag);
-
-        positionPad.addEventListener("keydown", event => {
-            const layer = getSelected();
-            if (!layer) return;
-
-            const step = event.shiftKey ? 5 : 1;
-
-            if (event.key === "ArrowUp") layer.y -= step;
-            else if (event.key === "ArrowDown") layer.y += step;
-            else if (event.key === "ArrowLeft") layer.x -= step * PAD_SIGN_X;
-            else if (event.key === "ArrowRight") layer.x += step * PAD_SIGN_X;
-            else return;
-
-            event.preventDefault();
-
-            layer.x = wrapX(layer.x);
-            layer.y = clampY(layer.y);
-
-            faceEngraving(layer.x);
-            updateControls();
-            requestRebuild();
-        });
-
-
-
-/* =========================================================
-   SALVAR PERSONALIZAÇÃO
-========================================================= */
-
-const nextBottleButton = document.querySelector(".vip-next-bottle-btn");
-
-async function saveBottleCustomization() {
-    if (!nextBottleButton) return;
-
-    nextBottleButton.disabled = true;
-
-    const originalText = nextBottleButton.innerHTML;
-
-    nextBottleButton.innerHTML = `
-        Salvando...
-    <i class="bi bi-arrow-repeat"></i>
-    `;
-
-    try {
-        /*
-         * Garante que a textura mais recente seja gerada
-         * antes de enviar a personalização.
-         */
-        await rebuildEngravingTexture();
-
-        const texture = lastTextureDataUrl;
-
-        if (!texture) {
-            throw new Error(
-                "Não foi possível gerar a textura da personalização."
+            layers.push(
+                nameLayer
             );
+
         }
 
-        /*
-         * Remove o objeto Image carregado da camada.
-         * Ele não pode ser enviado no JSON.
-         */
-        const layersData = layers.map(layer => ({
-            id: layer.id,
-            type: layer.type,
-            name: layer.name || "",
-            text: layer.text || "",
-            imageUrl: layer.imageUrl || "",
-            x: layer.x,
-            y: layer.y,
-            size: layer.size,
-            rotation: layer.rotation,
-            font: layer.font || ""
-        }));
 
-        const data = {
-            product_id: "{{ product.id }}",
-            name: nameInput.value.trim(),
-            font: currentFont,
-            layers: layersData,
-            texture: texture
-        };
+        nameLayer.text =
+            text;
 
-        const response = await fetch(
-            "{% url 'customization:save_bottle_customization' %}",
-            {
-                method: "POST",
+        nameLayer.font =
+            currentFont;
 
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": getCookie("csrftoken")
-                },
 
-                body: JSON.stringify(data)
-            }
+        selectLayer(
+            nameLayer.id
         );
 
-        const result = await response.json();
+        requestRebuild();
 
-        if (!response.ok || !result.success) {
-            throw new Error(
-                result.message || "Não foi possível salvar a personalização."
-            );
-        }
-
-        console.log(
-            "Personalização salva:",
-            result.customization_id
-        );
-
-        /*
-         * Guardamos o ID para o próximo passo.
-         */
-        sessionStorage.setItem(
-            "customization_id",
-            result.customization_id
-        );
-
-        /*
-         * Por enquanto apenas confirma que foi salva.
-         * No próximo passo vamos usar esse ID para adicionar
-         * o produto personalizado ao carrinho.
-         */
-        alert("Personalização salva com sucesso!");
-
-    } catch (error) {
-        console.error(
-            "Erro ao salvar personalização:",
-            error
-        );
-
-        alert(
-            error.message ||
-            "Não foi possível salvar sua personalização."
-        );
-
-    } finally {
-        nextBottleButton.disabled = false;
-        nextBottleButton.innerHTML = originalText;
-    }
-}
-
-
-/*
- * Obtém o cookie CSRF criado pelo Django.
- */
-function getCookie(name) {
-    const cookies = document.cookie
-        .split(";")
-        .map(cookie => cookie.trim());
-
-    for (const cookie of cookies) {
-        if (cookie.startsWith(name + "=")) {
-            return decodeURIComponent(
-                cookie.substring(name.length + 1)
-            );
-        }
     }
 
-    return null;
-}
 
-
-if (nextBottleButton) {
-    nextBottleButton.addEventListener(
-        "click",
-        saveBottleCustomization
+    nameInput.addEventListener(
+        "input",
+        updateNameFromInput
     );
-}
 
 
-        /* =========================================================
-           CARREGAMENTO DO MODELO
-        ========================================================= */
+    nameInput.addEventListener(
+        "keydown",
+        event => {
 
-        viewer.addEventListener("load", async () => {
+            if (
+                event.key === "Enter"
+            ) {
 
-        const materials = viewer.model.materials;
-        const byName = name => materials.find(m => (m.name || "").trim().toLowerCase() === name) || null;
+                nameInput.blur();
 
-        engravingMaterial =
-            byName("cylinder") ||
-            byName("forma") ||
-            materials.find(m => (m.name || "").trim().toLowerCase() !== "garrafa") ||
-            null;
+            }
 
-        if (!engravingMaterial) {
-            console.error("Material da gravação não encontrado:", materials.map(m => m.name));
+        }
+    );
+
+
+    fontButtons.forEach(
+        button => {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    fontButtons.forEach(
+                        btn =>
+                            btn.classList.remove(
+                                "active"
+                            )
+                    );
+
+                    button.classList.add(
+                        "active"
+                    );
+
+
+                    currentFont =
+                        button.dataset.font ||
+                        "Arial";
+
+
+                    const nameLayer =
+                        getNameLayer();
+
+
+                    if (nameLayer) {
+
+                        nameLayer.font =
+                            currentFont;
+
+                    }
+
+
+                    requestRebuild();
+
+                }
+            );
+
+        }
+    );
+
+
+    /* =========================================================
+       GRAVAÇÕES
+    ========================================================= */
+
+    engravingButtons.forEach(
+        button => {
+
+            button.addEventListener(
+                "click",
+                async () => {
+
+                    const imageUrl =
+                        button.dataset.image;
+
+                    if (!imageUrl) {
+                        return;
+                    }
+
+
+                    const existing =
+                        layers.find(
+                            layer =>
+                                layer.type === "image" &&
+                                layer.imageUrl === imageUrl
+                        );
+
+
+                    if (existing) {
+
+                        setTab(
+                            "ajuste"
+                        );
+
+                        selectLayer(
+                            existing.id
+                        );
+
+                        return;
+
+                    }
+
+
+                    const layer = {
+
+                        id:
+                            generateId(),
+
+                        type:
+                            "image",
+
+                        name:
+                            button.dataset.name ||
+                            "Gravação",
+
+                        imageUrl:
+                            imageUrl,
+
+                        image:
+                            null,
+
+                        x:
+                            START_X,
+
+                        y:
+                            START_Y,
+
+                        size:
+                            IMAGE_DEFAULT_SIZE,
+
+                        rotation:
+                            0
+
+                    };
+
+
+                    try {
+
+                        layer.image =
+                            await loadImage(
+                                imageUrl
+                            );
+
+                    } catch (error) {
+
+                        console.error(
+                            error
+                        );
+
+                        return;
+
+                    }
+
+
+                    layers.push(
+                        layer
+                    );
+
+
+                    setTab(
+                        "ajuste"
+                    );
+
+                    selectLayer(
+                        layer.id
+                    );
+
+                    requestRebuild();
+
+                }
+            );
+
+        }
+    );
+
+
+    function removeSelected() {
+
+        const layer =
+            getSelected();
+
+        if (!layer) {
             return;
         }
 
-        try {
-            await engravingMaterial.ensureLoaded();
-            engravingMaterial.setAlphaMode("BLEND");
-            engravingMaterial.pbrMetallicRoughness.setBaseColorFactor([1, 1, 1, 1]);
-        } catch (error) {
-            console.warn("Aviso ao configurar material:", error);
+
+        layers.splice(
+            layers.indexOf(layer),
+            1
+        );
+
+        selectedId = null;
+
+
+        if (
+            layer.type === "name"
+        ) {
+
+            nameInput.value = "";
+
         }
 
+
+        updateControls();
+        renderLayersList();
         requestRebuild();
-    });
 
-    viewer.addEventListener("error", event => {
-        console.error("Erro ao carregar o modelo:", event);
-    });
+    }
 
-    // Estado inicial: controles visíveis, porém desativados
+
+    removeButton.addEventListener(
+        "click",
+        removeSelected
+    );
+
+
+    resetButton.addEventListener(
+        "click",
+        () => {
+
+            const layer =
+                getSelected();
+
+            if (!layer) {
+                return;
+            }
+
+
+            layer.x =
+                START_X;
+
+            layer.y =
+                START_Y;
+
+
+            updateControls();
+
+            faceEngraving(
+                layer.x
+            );
+
+            requestRebuild();
+
+        }
+    );
+
+
+    [
+        sizeControl,
+        rotationControl
+    ].forEach(
+        control => {
+
+            control.addEventListener(
+                "input",
+                () => {
+
+                    const layer =
+                        getSelected();
+
+                    if (!layer) {
+                        return;
+                    }
+
+
+                    layer.size =
+                        Number(
+                            sizeControl.value
+                        );
+
+                    layer.rotation =
+                        Number(
+                            rotationControl.value
+                        ) *
+                        Math.PI /
+                        180;
+
+
+                    updateControls();
+                    renderLayersList();
+                    requestRebuild();
+
+                }
+            );
+
+        }
+    );
+
+
+    /* =========================================================
+       PAD DE POSIÇÃO
+    ========================================================= */
+
+    const Y_MID =
+        (Y_MIN + Y_MAX) / 2;
+
+    const Y_HALF =
+        (Y_MAX - Y_MIN) / 2;
+
+
+    function padRadius() {
+
+        return {
+
+            x:
+                positionPad.clientWidth *
+                PAD_EDGE,
+
+            y:
+                positionPad.clientHeight *
+                PAD_EDGE
+
+        };
+
+    }
+
+
+    function updatePositionKnob(layer) {
+
+        const r =
+            padRadius();
+
+        let nx = 0;
+        let ny = 0;
+
+
+        if (layer) {
+
+            const d =
+                (
+                    (
+                        layer.x -
+                        START_X +
+                        TEXTURE_SIZE / 2
+                    ) %
+                    TEXTURE_SIZE +
+                    TEXTURE_SIZE
+                ) %
+                TEXTURE_SIZE -
+                TEXTURE_SIZE / 2;
+
+
+            nx =
+                d /
+                (TEXTURE_SIZE / 2);
+
+
+            ny =
+                (
+                    layer.y -
+                    Y_MID
+                ) /
+                Y_HALF;
+
+        }
+
+
+        positionKnob.style.left =
+            `calc(50% + ${
+                PAD_SIGN_X *
+                nx *
+                r.x
+            }px)`;
+
+
+        positionKnob.style.top =
+            `calc(50% + ${
+                ny *
+                r.y
+            }px)`;
+
+    }
+
+
+    let dragging = false;
+    let dragStart = null;
+
+
+    function moveFromPointer(event) {
+
+        const layer =
+            getSelected();
+
+        if (
+            !layer ||
+            !dragStart
+        ) {
+            return;
+        }
+
+
+        const r =
+            padRadius();
+
+
+        const unitsPerPxX =
+            (
+                TEXTURE_SIZE /
+                (2 * r.x)
+            ) *
+            PAD_SENSITIVITY;
+
+
+        const unitsPerPxY =
+            (
+                (Y_MAX - Y_MIN) /
+                (2 * r.y)
+            ) *
+            PAD_SENSITIVITY;
+
+
+        const dx =
+            event.clientX -
+            dragStart.pointerX;
+
+
+        const dy =
+            event.clientY -
+            dragStart.pointerY;
+
+
+        layer.x =
+            wrapX(
+                Math.round(
+                    dragStart.layerX +
+                    PAD_SIGN_X *
+                    dx *
+                    unitsPerPxX
+                )
+            );
+
+
+        layer.y =
+            clampY(
+                Math.round(
+                    dragStart.layerY +
+                    dy *
+                    unitsPerPxY
+                )
+            );
+
+
+        faceEngraving(
+            layer.x
+        );
+
+        updateControls();
+
+        requestRebuild();
+
+    }
+
+
+    positionPad.addEventListener(
+        "pointerdown",
+        event => {
+
+            const layer =
+                getSelected();
+
+            if (!layer) {
+                return;
+            }
+
+
+            event.preventDefault();
+
+            dragging = true;
+
+
+            dragStart = {
+
+                pointerX:
+                    event.clientX,
+
+                pointerY:
+                    event.clientY,
+
+                layerX:
+                    layer.x,
+
+                layerY:
+                    layer.y
+
+            };
+
+
+            try {
+
+                positionPad.setPointerCapture(
+                    event.pointerId
+                );
+
+            } catch (_) {}
+
+        }
+    );
+
+
+    positionPad.addEventListener(
+        "pointermove",
+        event => {
+
+            if (!dragging) {
+                return;
+            }
+
+            event.preventDefault();
+
+            moveFromPointer(
+                event
+            );
+
+        }
+    );
+
+
+    function endDrag(event) {
+
+        dragging = false;
+        dragStart = null;
+
+
+        if (
+            event &&
+            event.pointerId !== undefined
+        ) {
+
+            try {
+
+                positionPad.releasePointerCapture(
+                    event.pointerId
+                );
+
+            } catch (_) {}
+
+        }
+
+    }
+
+
+    positionPad.addEventListener(
+        "pointerup",
+        endDrag
+    );
+
+    positionPad.addEventListener(
+        "pointercancel",
+        endDrag
+    );
+
+
+    positionPad.addEventListener(
+        "keydown",
+        event => {
+
+            const layer =
+                getSelected();
+
+            if (!layer) {
+                return;
+            }
+
+
+            const step =
+                event.shiftKey
+                    ? 5
+                    : 1;
+
+
+            if (
+                event.key === "ArrowUp"
+            ) {
+
+                layer.y -= step;
+
+            } else if (
+                event.key === "ArrowDown"
+            ) {
+
+                layer.y += step;
+
+            } else if (
+                event.key === "ArrowLeft"
+            ) {
+
+                layer.x -=
+                    step *
+                    PAD_SIGN_X;
+
+            } else if (
+                event.key === "ArrowRight"
+            ) {
+
+                layer.x +=
+                    step *
+                    PAD_SIGN_X;
+
+            } else {
+
+                return;
+
+            }
+
+
+            event.preventDefault();
+
+
+            layer.x =
+                wrapX(
+                    layer.x
+                );
+
+            layer.y =
+                clampY(
+                    layer.y
+                );
+
+
+            faceEngraving(
+                layer.x
+            );
+
+            updateControls();
+
+            requestRebuild();
+
+        }
+    );
+
+
+    /* =========================================================
+       CSRF
+    ========================================================= */
+
+    function getCookie(name) {
+
+        const cookies =
+            document.cookie
+                .split(";")
+                .map(
+                    cookie =>
+                        cookie.trim()
+                );
+
+
+        for (
+            const cookie of cookies
+        ) {
+
+            if (
+                cookie.startsWith(
+                    name + "="
+                )
+            ) {
+
+                return decodeURIComponent(
+                    cookie.substring(
+                        name.length + 1
+                    )
+                );
+
+            }
+
+        }
+
+        return null;
+
+    }
+
+
+    /* =========================================================
+       SALVAR PERSONALIZAÇÃO + ADICIONAR AO CARRINHO
+    ========================================================= */
+
+    const nextBottleButton =
+        document.querySelector(
+            ".vip-next-bottle-btn"
+        );
+
+
+    async function saveBottleCustomization() {
+
+        if (!nextBottleButton) {
+            return;
+        }
+
+
+        nextBottleButton.disabled =
+            true;
+
+
+        const originalText =
+            nextBottleButton.innerHTML;
+
+
+        nextBottleButton.innerHTML = `
+            Salvando...
+            <i class="bi bi-arrow-repeat"></i>
+        `;
+
+
+        try {
+
+            /*
+             * =====================================================
+             * 1. GERA A TEXTURA MAIS RECENTE
+             * =====================================================
+             */
+
+            await rebuildEngravingTexture();
+
+
+            const texture =
+                lastTextureDataUrl;
+
+
+            if (!texture) {
+
+                throw new Error(
+                    "Não foi possível gerar a textura da personalização."
+                );
+
+            }
+
+
+            /*
+             * =====================================================
+             * 2. PREPARA AS CAMADAS
+             * =====================================================
+             */
+
+            const layersData =
+                layers.map(
+                    layer => ({
+
+                        id:
+                            layer.id,
+
+                        type:
+                            layer.type,
+
+                        name:
+                            layer.name || "",
+
+                        text:
+                            layer.text || "",
+
+                        imageUrl:
+                            layer.imageUrl || "",
+
+                        x:
+                            layer.x,
+
+                        y:
+                            layer.y,
+
+                        size:
+                            layer.size,
+
+                        rotation:
+                            layer.rotation,
+
+                        font:
+                            layer.font || ""
+
+                    })
+                );
+
+
+            /*
+             * =====================================================
+             * 3. SALVA A PERSONALIZAÇÃO NO DJANGO
+             * =====================================================
+             */
+
+            const customizationData = {
+
+                product_id:
+                    "{{ product.id }}",
+
+                name:
+                    nameInput.value.trim(),
+
+                font:
+                    currentFont,
+
+                layers:
+                    layersData,
+
+                texture:
+                    texture
+
+            };
+
+
+            const customizationResponse =
+                await fetch(
+
+                    "{% url 'customization:save_bottle_customization' %}",
+
+                    {
+
+                        method:
+                            "POST",
+
+                        headers: {
+
+                            "Content-Type":
+                                "application/json",
+
+                            "X-CSRFToken":
+                                getCookie(
+                                    "csrftoken"
+                                )
+
+                        },
+
+                        body:
+                            JSON.stringify(
+                                customizationData
+                            )
+
+                    }
+
+                );
+
+
+            const customizationResponseText =
+                await customizationResponse.text();
+
+
+            console.log(
+                "SALVAR PERSONALIZAÇÃO - STATUS:",
+                customizationResponse.status
+            );
+
+            console.log(
+                "SALVAR PERSONALIZAÇÃO - RESPOSTA:",
+                customizationResponseText
+            );
+
+
+            if (
+                !customizationResponseText
+            ) {
+
+                throw new Error(
+                    "O servidor retornou uma resposta vazia ao salvar a personalização."
+                );
+
+            }
+
+
+            let customizationResult;
+
+
+            try {
+
+                customizationResult =
+                    JSON.parse(
+                        customizationResponseText
+                    );
+
+            } catch (error) {
+
+                console.error(
+                    "Resposta da personalização não é JSON:",
+                    customizationResponseText
+                );
+
+                throw new Error(
+                    "O servidor retornou uma resposta inválida ao salvar a personalização."
+                );
+
+            }
+
+
+            if (
+                !customizationResponse.ok ||
+                !customizationResult.success
+            ) {
+
+                throw new Error(
+                    customizationResult.message ||
+                    customizationResult.error ||
+                    "Não foi possível salvar a personalização."
+                );
+
+            }
+
+
+            const customizationId =
+                customizationResult.customization_id;
+
+
+            if (!customizationId) {
+
+                throw new Error(
+                    "A personalização foi salva, mas o servidor não retornou o ID."
+                );
+
+            }
+
+
+            console.log(
+                "PERSONALIZAÇÃO SALVA:",
+                customizationId
+            );
+
+
+            /*
+             * Guarda também no sessionStorage.
+             * Não é mais a fonte principal do carrinho,
+             * mas pode ser útil para o fluxo da página.
+             */
+
+            sessionStorage.setItem(
+                "customization_id",
+                customizationId
+            );
+
+
+            /*
+             * =====================================================
+             * 4. ADICIONA O PRODUTO PERSONALIZADO AO CARRINHO
+             * =====================================================
+             */
+
+            nextBottleButton.innerHTML = `
+                Adicionando ao carrinho...
+                <i class="bi bi-arrow-repeat"></i>
+            `;
+
+
+            const cartData = {
+
+                product_id:
+                    "{{ product.id }}",
+
+                quantity:
+                    1,
+
+                size:
+                    "Único",
+
+                color:
+                    "",
+
+                custom_name:
+                    nameInput.value.trim(),
+
+                name_direction:
+                    "",
+
+                name_font:
+                    currentFont,
+
+                engraving_side:
+                    "",
+
+                customization_id:
+                    customizationId,
+
+                image:
+                    "{{ product.image.url }}"
+
+            };
+
+
+            console.log(
+                "ADICIONANDO AO CARRINHO:",
+                cartData
+            );
+
+
+            const cartResponse =
+                await fetch(
+
+                    "{% url 'cart:cart_add_ajax' %}",
+
+                    {
+
+                        method:
+                            "POST",
+
+                        headers: {
+
+                            "Content-Type":
+                                "application/json",
+
+                            "X-CSRFToken":
+                                getCookie(
+                                    "csrftoken"
+                                )
+
+                        },
+
+                        body:
+                            JSON.stringify(
+                                cartData
+                            )
+
+                    }
+
+                );
+
+
+            const cartResponseText =
+                await cartResponse.text();
+
+
+            console.log(
+                "ADICIONAR AO CARRINHO - STATUS:",
+                cartResponse.status
+            );
+
+            console.log(
+                "ADICIONAR AO CARRINHO - RESPOSTA:",
+                cartResponseText
+            );
+
+
+            if (!cartResponseText) {
+
+                throw new Error(
+                    "O servidor retornou uma resposta vazia ao adicionar o produto ao carrinho."
+                );
+
+            }
+
+
+            let cartResult;
+
+
+            try {
+
+                cartResult =
+                    JSON.parse(
+                        cartResponseText
+                    );
+
+            } catch (error) {
+
+                console.error(
+                    "Resposta do carrinho não é JSON:",
+                    cartResponseText
+                );
+
+                throw new Error(
+                    "O servidor retornou uma resposta inválida ao adicionar o produto ao carrinho."
+                );
+
+            }
+
+
+            if (
+                !cartResponse.ok ||
+                cartResult.success === false
+            ) {
+
+                throw new Error(
+                    cartResult.message ||
+                    cartResult.error ||
+                    "Não foi possível adicionar o produto ao carrinho."
+                );
+
+            }
+
+
+            /*
+             * =====================================================
+             * 5. PERSONALIZAÇÃO + PRODUTO ESTÃO NO CARRINHO
+             * =====================================================
+             */
+
+            console.log(
+                "PRODUTO PERSONALIZADO ADICIONADO AO CARRINHO."
+            );
+
+
+            /*
+             * Vai para o checkout.
+             *
+             * O customization_id já está salvo dentro
+             * da sessão do carrinho.
+             */
+
+            window.location.href =
+                "{% url 'cart:checkout_page' %}";
+
+
+        } catch (error) {
+
+            console.error(
+                "ERRO NO FLUXO DE PERSONALIZAÇÃO:",
+                error
+            );
+
+
+            alert(
+                error.message ||
+                "Não foi possível adicionar a personalização ao carrinho."
+            );
+
+
+        } finally {
+
+            nextBottleButton.disabled =
+                false;
+
+            nextBottleButton.innerHTML =
+                originalText;
+
+        }
+
+    }
+
+
+    if (nextBottleButton) {
+
+        nextBottleButton.addEventListener(
+            "click",
+            saveBottleCustomization
+        );
+
+    }
+
+
+    /* =========================================================
+       CARREGAMENTO DO MODELO
+    ========================================================= */
+
+    viewer.addEventListener(
+        "load",
+        async () => {
+
+            const materials =
+                viewer.model.materials;
+
+
+            const byName =
+                name =>
+                    materials.find(
+                        material =>
+                            (
+                                material.name ||
+                                ""
+                            )
+                                .trim()
+                                .toLowerCase() ===
+                            name
+                                .trim()
+                                .toLowerCase()
+                    ) || null;
+
+
+            engravingMaterial =
+                byName("cylinder") ||
+                byName("forma") ||
+                materials.find(
+                    material =>
+                        (
+                            material.name ||
+                            ""
+                        )
+                            .trim()
+                            .toLowerCase() !==
+                        "garrafa"
+                ) ||
+                null;
+
+
+            if (!engravingMaterial) {
+
+                console.error(
+                    "Material da gravação não encontrado:",
+                    materials.map(
+                        material =>
+                            material.name
+                    )
+                );
+
+                return;
+
+            }
+
+
+            try {
+
+                await engravingMaterial.ensureLoaded();
+
+                engravingMaterial.setAlphaMode(
+                    "BLEND"
+                );
+
+                engravingMaterial
+                    .pbrMetallicRoughness
+                    .setBaseColorFactor(
+                        [1, 1, 1, 1]
+                    );
+
+            } catch (error) {
+
+                console.warn(
+                    "Aviso ao configurar material:",
+                    error
+                );
+
+            }
+
+
+            requestRebuild();
+
+        }
+    );
+
+
+    viewer.addEventListener(
+        "error",
+        event => {
+
+            console.error(
+                "Erro ao carregar o modelo:",
+                event
+            );
+
+        }
+    );
+
+
+    /* =========================================================
+       ESTADO INICIAL
+    ========================================================= */
+
     updateControls();
 
 
     /* =========================================================
-       CATEGORIAS (ACORDEÃO)
+       CATEGORIAS - ACORDEÃO
     ========================================================= */
 
-    document.querySelectorAll(".vip-engraving-category-btn").forEach(button => {
-        button.addEventListener("click", () => {
-            const content = document.querySelector(`[data-category-content="${button.dataset.category}"]`);
-            if (!content) return;
+    document
+        .querySelectorAll(
+            ".vip-engraving-category-btn"
+        )
+        .forEach(
+            button => {
 
-            const isOpen = content.classList.contains("open");
+                button.addEventListener(
+                    "click",
+                    () => {
 
-            document.querySelectorAll(".vip-engraving-category-btn").forEach(btn => btn.classList.remove("active"));
-            document.querySelectorAll(".vip-engraving-category-content").forEach(item => item.classList.remove("open"));
+                        const content =
+                            document.querySelector(
+                                `[data-category-content="${button.dataset.category}"]`
+                            );
 
-            if (!isOpen) {
-                button.classList.add("active");
-                content.classList.add("open");
+
+                        if (!content) {
+                            return;
+                        }
+
+
+                        const isOpen =
+                            content.classList.contains(
+                                "open"
+                            );
+
+
+                        document
+                            .querySelectorAll(
+                                ".vip-engraving-category-btn"
+                            )
+                            .forEach(
+                                btn =>
+                                    btn.classList.remove(
+                                        "active"
+                                    )
+                            );
+
+
+                        document
+                            .querySelectorAll(
+                                ".vip-engraving-category-content"
+                            )
+                            .forEach(
+                                item =>
+                                    item.classList.remove(
+                                        "open"
+                                    )
+                            );
+
+
+                        if (!isOpen) {
+
+                            button.classList.add(
+                                "active"
+                            );
+
+                            content.classList.add(
+                                "open"
+                            );
+
+                        }
+
+                    }
+                );
+
             }
-        });
-    });
+        );
 
-    });
+});
+
 </script>
 
 {% endblock %}
