@@ -1,7 +1,9 @@
 from django.urls import path
 from . import views
 
+
 app_name = "customization"
+
 
 urlpatterns = [
     path(
@@ -32,5 +34,11 @@ urlpatterns = [
         "personalizar/<slug:slug>/grupo/resumo/",
         views.createbottle_group_summary,
         name="createbottle_group_summary"
+    ),
+
+    path(
+        "personalizar/salvar/",
+        views.save_bottle_customization,
+        name="save_bottle_customization"
     ),
 ]
