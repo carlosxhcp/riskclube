@@ -825,150 +825,150 @@
 
 
 
-        /* =========================================================
-           SALVAR PERSONALIZAÇÃO
-        ========================================================= */
+/* =========================================================
+   SALVAR PERSONALIZAÇÃO
+========================================================= */
 
-        const nextBottleButton = document.querySelector(".vip-next-bottle-btn");
+const nextBottleButton = document.querySelector(".vip-next-bottle-btn");
 
-        async function saveBottleCustomization() {
-            if (!nextBottleButton) return;
+async function saveBottleCustomization() {
+    if (!nextBottleButton) return;
 
-            nextBottleButton.disabled = true;
+    nextBottleButton.disabled = true;
 
-            const originalText = nextBottleButton.innerHTML;
+    const originalText = nextBottleButton.innerHTML;
 
-            nextBottleButton.innerHTML = `
+    nextBottleButton.innerHTML = `
         Salvando...
     <i class="bi bi-arrow-repeat"></i>
     `;
 
-            try {
-                /*
-                 * Garante que a textura mais recente seja gerada
-                 * antes de enviar a personalização.
-                 */
-                await rebuildEngravingTexture();
-
-                const texture = lastTextureDataUrl;
-
-                if (!texture) {
-                    throw new Error(
-                        "Não foi possível gerar a textura da personalização."
-                    );
-                }
-
-                /*
-                 * Remove o objeto Image carregado da camada.
-                 * Ele não pode ser enviado no JSON.
-                 */
-                const layersData = layers.map(layer => ({
-                    id: layer.id,
-                    type: layer.type,
-                    name: layer.name || "",
-                    text: layer.text || "",
-                    imageUrl: layer.imageUrl || "",
-                    x: layer.x,
-                    y: layer.y,
-                    size: layer.size,
-                    rotation: layer.rotation,
-                    font: layer.font || ""
-                }));
-
-                const data = {
-                    product_id: "{{ product.id }}",
-                    name: nameInput.value.trim(),
-                    font: currentFont,
-                    layers: layersData,
-                    texture: texture
-                };
-
-                const response = await fetch(
-                    "{% url 'customization:save_bottle_customization' %}",
-                    {
-                        method: "POST",
-
-                        headers: {
-                            "Content-Type": "application/json",
-                            "X-CSRFToken": getCookie("csrftoken")
-                        },
-
-                        body: JSON.stringify(data)
-                    }
-                );
-
-                const result = await response.json();
-
-                if (!response.ok || !result.success) {
-                    throw new Error(
-                        result.message || "Não foi possível salvar a personalização."
-                    );
-                }
-
-                console.log(
-                    "Personalização salva:",
-                    result.customization_id
-                );
-
-                /*
-                 * Guardamos o ID para o próximo passo.
-                 */
-                sessionStorage.setItem(
-                    "customization_id",
-                    result.customization_id
-                );
-
-                /*
-                 * Por enquanto apenas confirma que foi salva.
-                 * No próximo passo vamos usar esse ID para adicionar
-                 * o produto personalizado ao carrinho.
-                 */
-                alert("Personalização salva com sucesso!");
-
-            } catch (error) {
-                console.error(
-                    "Erro ao salvar personalização:",
-                    error
-                );
-
-                alert(
-                    error.message ||
-                    "Não foi possível salvar sua personalização."
-                );
-
-            } finally {
-                nextBottleButton.disabled = false;
-                nextBottleButton.innerHTML = originalText;
-            }
-        }
-
-
+    try {
         /*
-         * Obtém o cookie CSRF criado pelo Django.
+         * Garante que a textura mais recente seja gerada
+         * antes de enviar a personalização.
          */
-        function getCookie(name) {
-            const cookies = document.cookie
-                .split(";")
-                .map(cookie => cookie.trim());
+        await rebuildEngravingTexture();
 
-            for (const cookie of cookies) {
-                if (cookie.startsWith(name + "=")) {
-                    return decodeURIComponent(
-                        cookie.substring(name.length + 1)
-                    );
-                }
-            }
+        const texture = lastTextureDataUrl;
 
-            return null;
-        }
-
-
-        if (nextBottleButton) {
-            nextBottleButton.addEventListener(
-                "click",
-                saveBottleCustomization
+        if (!texture) {
+            throw new Error(
+                "Não foi possível gerar a textura da personalização."
             );
         }
+
+        /*
+         * Remove o objeto Image carregado da camada.
+         * Ele não pode ser enviado no JSON.
+         */
+        const layersData = layers.map(layer => ({
+            id: layer.id,
+            type: layer.type,
+            name: layer.name || "",
+            text: layer.text || "",
+            imageUrl: layer.imageUrl || "",
+            x: layer.x,
+            y: layer.y,
+            size: layer.size,
+            rotation: layer.rotation,
+            font: layer.font || ""
+        }));
+
+        const data = {
+            product_id: "{{ product.id }}",
+            name: nameInput.value.trim(),
+            font: currentFont,
+            layers: layersData,
+            texture: texture
+        };
+
+        const response = await fetch(
+            "{% url 'customization:save_bottle_customization' %}",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": getCookie("csrftoken")
+                },
+
+                body: JSON.stringify(data)
+            }
+        );
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            throw new Error(
+                result.message || "Não foi possível salvar a personalização."
+            );
+        }
+
+        console.log(
+            "Personalização salva:",
+            result.customization_id
+        );
+
+        /*
+         * Guardamos o ID para o próximo passo.
+         */
+        sessionStorage.setItem(
+            "customization_id",
+            result.customization_id
+        );
+
+        /*
+         * Por enquanto apenas confirma que foi salva.
+         * No próximo passo vamos usar esse ID para adicionar
+         * o produto personalizado ao carrinho.
+         */
+        alert("Personalização salva com sucesso!");
+
+    } catch (error) {
+        console.error(
+            "Erro ao salvar personalização:",
+            error
+        );
+
+        alert(
+            error.message ||
+            "Não foi possível salvar sua personalização."
+        );
+
+    } finally {
+        nextBottleButton.disabled = false;
+        nextBottleButton.innerHTML = originalText;
+    }
+}
+
+
+/*
+ * Obtém o cookie CSRF criado pelo Django.
+ */
+function getCookie(name) {
+    const cookies = document.cookie
+        .split(";")
+        .map(cookie => cookie.trim());
+
+    for (const cookie of cookies) {
+        if (cookie.startsWith(name + "=")) {
+            return decodeURIComponent(
+                cookie.substring(name.length + 1)
+            );
+        }
+    }
+
+    return null;
+}
+
+
+if (nextBottleButton) {
+    nextBottleButton.addEventListener(
+        "click",
+        saveBottleCustomization
+    );
+}
 
 
         /* =========================================================
@@ -977,59 +977,59 @@
 
         viewer.addEventListener("load", async () => {
 
-            const materials = viewer.model.materials;
-            const byName = name => materials.find(m => (m.name || "").trim().toLowerCase() === name) || null;
+        const materials = viewer.model.materials;
+        const byName = name => materials.find(m => (m.name || "").trim().toLowerCase() === name) || null;
 
-            engravingMaterial =
-                byName("cylinder") ||
-                byName("forma") ||
-                materials.find(m => (m.name || "").trim().toLowerCase() !== "garrafa") ||
-                null;
+        engravingMaterial =
+            byName("cylinder") ||
+            byName("forma") ||
+            materials.find(m => (m.name || "").trim().toLowerCase() !== "garrafa") ||
+            null;
 
-            if (!engravingMaterial) {
-                console.error("Material da gravação não encontrado:", materials.map(m => m.name));
-                return;
+        if (!engravingMaterial) {
+            console.error("Material da gravação não encontrado:", materials.map(m => m.name));
+            return;
+        }
+
+        try {
+            await engravingMaterial.ensureLoaded();
+            engravingMaterial.setAlphaMode("BLEND");
+            engravingMaterial.pbrMetallicRoughness.setBaseColorFactor([1, 1, 1, 1]);
+        } catch (error) {
+            console.warn("Aviso ao configurar material:", error);
+        }
+
+        requestRebuild();
+    });
+
+    viewer.addEventListener("error", event => {
+        console.error("Erro ao carregar o modelo:", event);
+    });
+
+    // Estado inicial: controles visíveis, porém desativados
+    updateControls();
+
+
+    /* =========================================================
+       CATEGORIAS (ACORDEÃO)
+    ========================================================= */
+
+    document.querySelectorAll(".vip-engraving-category-btn").forEach(button => {
+        button.addEventListener("click", () => {
+            const content = document.querySelector(`[data-category-content="${button.dataset.category}"]`);
+            if (!content) return;
+
+            const isOpen = content.classList.contains("open");
+
+            document.querySelectorAll(".vip-engraving-category-btn").forEach(btn => btn.classList.remove("active"));
+            document.querySelectorAll(".vip-engraving-category-content").forEach(item => item.classList.remove("open"));
+
+            if (!isOpen) {
+                button.classList.add("active");
+                content.classList.add("open");
             }
-
-            try {
-                await engravingMaterial.ensureLoaded();
-                engravingMaterial.setAlphaMode("BLEND");
-                engravingMaterial.pbrMetallicRoughness.setBaseColorFactor([1, 1, 1, 1]);
-            } catch (error) {
-                console.warn("Aviso ao configurar material:", error);
-            }
-
-            requestRebuild();
         });
-
-        viewer.addEventListener("error", event => {
-            console.error("Erro ao carregar o modelo:", event);
-        });
-
-        // Estado inicial: controles visíveis, porém desativados
-        updateControls();
-
-
-        /* =========================================================
-           CATEGORIAS (ACORDEÃO)
-        ========================================================= */
-
-        document.querySelectorAll(".vip-engraving-category-btn").forEach(button => {
-            button.addEventListener("click", () => {
-                const content = document.querySelector(`[data-category-content="${button.dataset.category}"]`);
-                if (!content) return;
-
-                const isOpen = content.classList.contains("open");
-
-                document.querySelectorAll(".vip-engraving-category-btn").forEach(btn => btn.classList.remove("active"));
-                document.querySelectorAll(".vip-engraving-category-content").forEach(item => item.classList.remove("open"));
-
-                if (!isOpen) {
-                    button.classList.add("active");
-                    content.classList.add("open");
-                }
-            });
-        });
+    });
 
     });
 </script>
