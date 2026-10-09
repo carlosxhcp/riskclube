@@ -1019,3 +1019,20 @@ body.checkout-is-loading #paymentBrick_container .mercadopago-button {
     font-size: 14px;
     line-height: 1.6;
 }
+
+.product-figures {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.checkout-figure-preview {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    border: 1px solid #e5e5e5;
+    border-radius: 5px;
+    padding: 2px;
+    background: #fff;
+}

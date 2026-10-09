@@ -48,6 +48,29 @@
                             {% if item.engraving_side %}
                             <span>Gravação: {{ item.engraving_side }}</span>
                             {% endif %}
+
+                            {% if item.figures %}
+                            <span class="product-figures">
+                                Figuras:
+                                {% for figure in item.figures %}
+                                    {% if figure.image %}
+                                    <img
+                                        src="{{ figure.image }}"
+                                        alt="{{ figure.name|default:'Figura personalizada' }}"
+                                        title="{{ figure.name|default:'Figura personalizada' }}"
+                                        class="checkout-figure-preview"
+                                    >
+                                    {% elif figure.url %}
+                                    <img
+                                        src="{{ figure.url }}"
+                                        alt="{{ figure.name|default:'Figura personalizada' }}"
+                                        title="{{ figure.name|default:'Figura personalizada' }}"
+                                        class="checkout-figure-preview"
+                                    >
+                                    {% endif %}
+                                {% endfor %}
+                            </span>
+                            {% endif %}
                         </div>
 
                         <small>Quantidade: {{ item.quantity }}</small>
@@ -184,12 +207,12 @@
     </section>
 
     <div id="checkoutLoadingOverlay" class="checkout-loading-overlay">
-    <div class="checkout-loading-box">
-        <div class="checkout-spinner"></div>
-        <strong>Processando pagamento</strong>
-        <p>Não feche esta página.</p>
+        <div class="checkout-loading-box">
+            <div class="checkout-spinner"></div>
+            <strong>Processando pagamento</strong>
+            <p>Não feche esta página.</p>
+        </div>
     </div>
-</div>
 
 </main>
 {% endblock %}
