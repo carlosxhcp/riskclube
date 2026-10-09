@@ -9,8 +9,8 @@ from .models import (
     ProductSize,
     ProductDefaultSize,
     VariantImage,
+    CreateBottleColor,
 )
-
 from pages.models import Category
 
 # ============================================================
@@ -238,6 +238,45 @@ class VariantImageInline(TabularInline):
     preview.short_description = "Prévia"
 
 
+
+# ============================================================
+# CORES DO CREATEBOTTLE
+# ============================================================
+
+class CreateBottleColorInline(TabularInline):
+
+    model = CreateBottleColor
+
+    verbose_name = "Cor do CreateBottle"
+    verbose_name_plural = "Cores disponíveis no CreateBottle"
+
+    extra = 1
+
+    fields = (
+        "name",
+        "hex_code",
+        "color_preview",
+        "active",
+    )
+
+    readonly_fields = (
+        "color_preview",
+    )
+
+    @admin.display(description="Prévia da cor")
+    def color_preview(self, obj):
+        if not obj or not obj.hex_code:
+            return "Sem cor"
+
+        return format_html(
+            '<span style="display:inline-block;'
+            'width:24px;height:24px;'
+            'border-radius:50%;'
+            'background:{};'
+            'border:1px solid #ccc;"></span>',
+            obj.hex_code,
+        )
+
 # ============================================================
 # PRODUTO
 # ============================================================
@@ -351,10 +390,11 @@ class ProductAdmin(ModelAdmin):
     )
 
     inlines = [
-        ProductDefaultSizeInline,
-        ProductImageInline,
-        ProductVariantInline,
-    ]
+    ProductDefaultSizeInline,
+    ProductImageInline,
+    ProductVariantInline,
+    CreateBottleColorInline,
+]
 
     def preview(self, obj):
 

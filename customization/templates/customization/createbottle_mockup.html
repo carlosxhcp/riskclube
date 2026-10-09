@@ -33,6 +33,29 @@
         </div>
     </div>
 
+<div class="bottle-color-selector">
+    <p>Cor da garrafa</p>
+
+    <div class="bottle-color-options">
+        <button type="button" class="bottle-color-option selected"
+                data-color="#111111" style="--swatch: #111111"
+                aria-label="Preto" title="Preto"></button>
+
+        <button type="button" class="bottle-color-option"
+                data-color="#F2F2F2" style="--swatch: #F2F2F2"
+                aria-label="Branco" title="Branco"></button>
+
+        <button type="button" class="bottle-color-option"
+                data-color="#C62828" style="--swatch: #C62828"
+                aria-label="Vermelho" title="Vermelho"></button>
+
+        <button type="button" class="bottle-color-option"
+                data-color="#174A8B" style="--swatch: #174A8B"
+                aria-label="Azul" title="Azul"></button>
+    </div>
+</div>
+
+
 
     <div class="vip-mockup-panel" data-tab="nome">
 
@@ -3590,5 +3613,29 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 </script>
+
+<script type="module">
+const viewer = document.querySelector("#bottleViewer");
+
+viewer.addEventListener("load", () => {
+    const material = viewer.model?.materials.find(
+        item => item.name === "garrafa"
+    );
+
+    if (!material) {
+        console.error("Material garrafa não encontrado.");
+        return;
+    }
+
+    console.log("Material encontrado:", material.name);
+
+    material.pbrMetallicRoughness.setBaseColorFactor(
+        [0.8, 0.1, 0.1, 1]
+    );
+
+    console.log("Teste de cor aplicado.");
+});
+</script>
+
 
 {% endblock %}

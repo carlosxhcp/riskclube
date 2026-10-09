@@ -255,3 +255,37 @@ class Favorite(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.product.name}"
+
+
+
+class CreateBottleColor(models.Model):
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        related_name="createbottle_colors",
+        verbose_name="Produto",
+    )
+
+    name = models.CharField(
+        max_length=50,
+        verbose_name="Nome da cor",
+    )
+
+    hex_code = models.CharField(
+        max_length=7,
+        default="#000000",
+        verbose_name="Código hexadecimal",
+    )
+
+    active = models.BooleanField(
+        default=True,
+        verbose_name="Ativa no CreateBottle",
+    )
+
+    class Meta:
+        ordering = ["id"]
+        verbose_name = "Cor do CreateBottle"
+        verbose_name_plural = "Cores do CreateBottle"
+
+    def __str__(self):
+        return f"{self.product.name} - {self.name}"

@@ -1547,3 +1547,39 @@ model-viewer::part(default-progress-mask) { background: transparent; }
         transition: none;
     }
 }
+
+
+.bottle-color-selector {
+    margin: 20px 0;
+}
+
+.bottle-color-selector p {
+    margin-bottom: 10px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.bottle-color-options {
+    display: flex;
+    gap: 12px;
+}
+
+.bottle-color-option {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: 2px solid #ccc;
+    border-radius: 50%;
+    background: var(--swatch);
+    cursor: pointer;
+}
+
+.bottle-color-option.selected {
+    outline: 2px solid #111;
+    outline-offset: 3px;
+}
+
+.bottle-color-option[data-color="#F2F2F2"] {
+    border-color: #999;
+}
+
