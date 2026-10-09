@@ -53,25 +53,38 @@
                             <span class="product-figures">
                                 Figuras:
                                 {% for figure in item.figures %}
-                                    {% if figure.image %}
-                                    <img
-                                        src="{{ figure.image }}"
-                                        alt="{{ figure.name|default:'Figura personalizada' }}"
-                                        title="{{ figure.name|default:'Figura personalizada' }}"
-                                        class="checkout-figure-preview"
-                                    >
-                                    {% elif figure.url %}
-                                    <img
-                                        src="{{ figure.url }}"
-                                        alt="{{ figure.name|default:'Figura personalizada' }}"
-                                        title="{{ figure.name|default:'Figura personalizada' }}"
-                                        class="checkout-figure-preview"
-                                    >
-                                    {% endif %}
+                                {% if figure.image %}
+                                <img src="{{ figure.image }}" alt="{{ figure.name|default:'Figura personalizada' }}"
+                                    title="{{ figure.name|default:'Figura personalizada' }}"
+                                    class="checkout-figure-preview">
+                                {% elif figure.url %}
+                                <img src="{{ figure.url }}" alt="{{ figure.name|default:'Figura personalizada' }}"
+                                    title="{{ figure.name|default:'Figura personalizada' }}"
+                                    class="checkout-figure-preview">
+                                {% endif %}
                                 {% endfor %}
                             </span>
                             {% endif %}
                         </div>
+
+                        {% if item.figures %}
+                        <div class="checkout-figures">
+                            <span>Figuras escolhidas:</span>
+
+                            <div class="checkout-figures-list">
+                                {% for figure in item.figures %}
+                                <div class="checkout-figure">
+                                    <img src="{{ figure.image_url }}"
+                                        alt="{{ figure.name|default:'Figura personalizada' }}"
+                                        title="{{ figure.name }}">
+                                    {% if figure.name %}
+                                    <small>{{ figure.name }}</small>
+                                    {% endif %}
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
 
                         <small>Quantidade: {{ item.quantity }}</small>
                     </div>

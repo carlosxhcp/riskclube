@@ -1036,3 +1036,40 @@ body.checkout-is-loading #paymentBrick_container .mercadopago-button {
     padding: 2px;
     background: #fff;
 }
+
+.checkout-figures {
+    margin-top: 12px;
+}
+
+.checkout-figures > span {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 12px;
+    color: #666;
+}
+
+.checkout-figures-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.checkout-figure {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.checkout-figure img {
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+    border: 1px solid #e5e5e5;
+    padding: 4px;
+    background: #fff;
+}
+
+.checkout-figure small {
+    font-size: 11px;
+    color: #555;
+}

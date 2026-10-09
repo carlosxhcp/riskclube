@@ -72,6 +72,26 @@ def get_cart_payload(request):
         item_subtotal = price * quantity
         subtotal += item_subtotal
 
+        # BUSCA AS FIGURAS DA PERSONALIZAÇÃO
+        figures = []
+        customization_id = item.get("customization_id")
+
+        if customization_id:
+            customization = BottleCustomization.objects.filter(
+                id=customization_id,
+                product_id=item.get("product_id"),
+            ).first()
+
+            if customization:
+                configuration = customization.configuration or {}
+
+                for layer in configuration.get("layers", []):
+                    if layer.get("type") == "image" and layer.get("imageUrl"):
+                        figures.append({
+                            "name": layer.get("name", ""),
+                            "image_url": layer.get("imageUrl", ""),
+                        })
+
         items.append({
             "cart_key": cart_key,
             "name": item.get("name", "Produto"),
@@ -81,6 +101,7 @@ def get_cart_payload(request):
             "engraving_side": item.get("engraving_side", ""),
             "name_direction": item.get("name_direction", ""),
             "name_font": item.get("name_font", ""),
+            "figures": figures,
             "quantity": quantity,
             "price": float(price),
             "subtotal": float(item_subtotal),
@@ -108,14 +129,20 @@ def get_cart_payload(request):
             request.session.modified = True
             shipping = None
 
-        shipping_price = to_decimal(shipping.get("price", 0)) if shipping else Decimal("0.00")
+        shipping_price = (
+            to_decimal(shipping.get("price", 0))
+            if shipping else Decimal("0.00")
+        )
 
     remaining = FREE_SHIPPING_LIMIT - subtotal
 
     if remaining < 0:
         remaining = Decimal("0.00")
 
-    progress = min((subtotal / FREE_SHIPPING_LIMIT) * 100, 100) if FREE_SHIPPING_LIMIT > 0 else 0
+    progress = (
+        min((subtotal / FREE_SHIPPING_LIMIT) * 100, 100)
+        if FREE_SHIPPING_LIMIT > 0 else 0
+    )
 
     applied_coupons = get_applied_coupons(request)
     valid_session_coupons = []
@@ -124,7 +151,10 @@ def get_cart_payload(request):
 
     for coupon_code in applied_coupons:
         try:
-            coupon = Coupon.objects.get(code__iexact=coupon_code, active=True)
+            coupon = Coupon.objects.get(
+                code__iexact=coupon_code,
+                active=True,
+            )
         except Coupon.DoesNotExist:
             continue
 
@@ -135,7 +165,10 @@ def get_cart_payload(request):
             continue
 
         remaining_subtotal = subtotal - discount
-        coupon_discount = calculate_coupon_discount(coupon, remaining_subtotal)
+        coupon_discount = calculate_coupon_discount(
+            coupon,
+            remaining_subtotal,
+        )
 
         if coupon_discount <= 0:
             continue
@@ -172,6 +205,8 @@ def get_cart_payload(request):
         "free_shipping_progress": float(progress),
         "free_shipping_limit": float(FREE_SHIPPING_LIMIT),
     }
+
+
 
 
 def cart_data(request):
