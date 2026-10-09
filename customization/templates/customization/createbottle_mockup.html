@@ -275,8 +275,8 @@
                             <input
                                 type="range"
                                 id="engravingSizeControl"
-                                min="20"
-                                max="800"
+                                min="100"
+                                max="300"
                                 step="1"
                                 value="250">
 
@@ -427,6 +427,31 @@ document.addEventListener("DOMContentLoaded", () => {
     const NAME_DEFAULT_SIZE = 120;
     const IMAGE_DEFAULT_SIZE = 250;
 
+    const MIN_FONT = 16;
+
+    /* --- Anti-sobreposição --- */
+
+    // folga mínima (em px da textura) entre duas gravações
+    const OVERLAP_GAP = 6;
+
+    // resolução da busca por espaço livre (mais fina na horizontal)
+    const SEARCH_STEP_X = 8;
+    const SEARCH_STEP_Y = 16;
+
+    // quanto custa mais deslocar na vertical do que para o lado:
+    // a gravação prefere sempre ir para a lateral
+    const VERTICAL_WEIGHT = 4;
+
+    // limites de tamanho das gravações (mesmos valores do slider)
+    const SIZE_MIN = 100;
+    const SIZE_MAX = 300;
+
+    // menores tamanhos aceitos quando a gravação precisa ser reduzida para caber
+    const NAME_MIN_SIZE = SIZE_MIN;
+    const IMAGE_MIN_SIZE = SIZE_MIN;
+
+    const FULL_BOUNDS = { x0: 0, y0: 0, x1: 1, y1: 1 };
+
     const WRAP_OFFSETS = [
         -TEXTURE_SIZE,
         0,
@@ -465,6 +490,9 @@ document.addEventListener("DOMContentLoaded", () => {
     let renderRunning = false;
     let renderPending = false;
 
+    let restPosition = null;
+    let noticeTimer = null;
+
 
     /* =========================================================
        UTILITÁRIOS
@@ -481,6 +509,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const radToDeg = rad =>
         Math.round(rad * 180 / Math.PI);
+
+    // menor diferença (com sinal) entre dois X na textura circular
+    const shortestDeltaX = (from, to) =>
+        (
+            (
+                (to - from + TEXTURE_SIZE / 2) % TEXTURE_SIZE
+            ) + TEXTURE_SIZE
+        ) % TEXTURE_SIZE - TEXTURE_SIZE / 2;
 
     const getSelected = () =>
         layers.find(
@@ -563,6 +599,51 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
+    function showNotice(message) {
+
+        let el = $("engravingNotice");
+
+        if (!el) {
+
+            el = document.createElement("div");
+
+            el.id = "engravingNotice";
+
+            el.setAttribute("role", "status");
+
+            Object.assign(el.style, {
+                position: "fixed",
+                left: "50%",
+                bottom: "96px",
+                transform: "translateX(-50%)",
+                background: "#111",
+                color: "#fff",
+                padding: "12px 18px",
+                fontSize: "14px",
+                zIndex: "9999",
+                maxWidth: "90vw",
+                textAlign: "center",
+                opacity: "0",
+                transition: "opacity .2s",
+                pointerEvents: "none"
+            });
+
+            document.body.appendChild(el);
+
+        }
+
+        el.textContent = message;
+        el.style.opacity = "1";
+
+        clearTimeout(noticeTimer);
+
+        noticeTimer = setTimeout(() => {
+            el.style.opacity = "0";
+        }, 2800);
+
+    }
+
+
     /* =========================================================
        ABAS MOBILE
     ========================================================= */
@@ -624,10 +705,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* =========================================================
-       DESENHO NA TEXTURA
+       GEOMETRIA / DETECÇÃO DE SOBREPOSIÇÃO
+
+       Cada gravação vira um retângulo rotacionado (caixa
+       orientada). Duas gravações se sobrepõem quando o teste
+       de eixos separadores (SAT) não encontra folga entre elas.
+       A textura é circular em X, então cada caixa também é
+       testada contra as cópias deslocadas em -1024 / +1024.
     ========================================================= */
 
-    function drawNameLayer(ctx, layer) {
+    const measureCtx =
+        document
+            .createElement("canvas")
+            .getContext("2d");
+
+
+    // Mesma lógica de ajuste de fonte usada no desenho do nome
+    function getNameMetrics(layer) {
 
         const text =
             (layer.text || "")
@@ -637,7 +731,627 @@ document.addEventListener("DOMContentLoaded", () => {
                 )
                 .toUpperCase();
 
-        if (!text) return;
+        let fontSize =
+            Math.max(
+                MIN_FONT,
+                layer.size * 0.35
+            );
+
+        if (!text) {
+            return { text, fontSize, width: 0 };
+        }
+
+        measureCtx.font =
+            `bold ${fontSize}px "${layer.font}"`;
+
+        let width =
+            measureCtx.measureText(text).width;
+
+        while (
+            width > NAME_MAX_WIDTH &&
+            fontSize > MIN_FONT
+        ) {
+
+            fontSize--;
+
+            measureCtx.font =
+                `bold ${fontSize}px "${layer.font}"`;
+
+            width =
+                measureCtx.measureText(text).width;
+
+        }
+
+        return { text, fontSize, width };
+
+    }
+
+
+    // Área realmente ocupada (pixels não transparentes) da imagem,
+    // em frações de 0 a 1. Evita bloquear por margem transparente.
+    function computeBounds(image) {
+
+        try {
+
+            const S = 128;
+
+            const canvas =
+                document.createElement("canvas");
+
+            canvas.width = S;
+            canvas.height = S;
+
+            const ctx =
+                canvas.getContext("2d");
+
+            ctx.drawImage(image, 0, 0, S, S);
+
+            const data =
+                ctx.getImageData(0, 0, S, S).data;
+
+            let minX = S;
+            let minY = S;
+            let maxX = -1;
+            let maxY = -1;
+
+            for (let y = 0; y < S; y++) {
+
+                for (let x = 0; x < S; x++) {
+
+                    if (data[(y * S + x) * 4 + 3] > 16) {
+
+                        if (x < minX) minX = x;
+                        if (x > maxX) maxX = x;
+                        if (y < minY) minY = y;
+                        if (y > maxY) maxY = y;
+
+                    }
+
+                }
+
+            }
+
+            if (maxX < 0) {
+                return FULL_BOUNDS;
+            }
+
+            return {
+                x0: minX / S,
+                y0: minY / S,
+                x1: (maxX + 1) / S,
+                y1: (maxY + 1) / S
+            };
+
+        } catch (error) {
+
+            // imagem sem CORS: usa o quadrado inteiro
+            return FULL_BOUNDS;
+
+        }
+
+    }
+
+
+    // Caixa orientada da gravação (centro, meias-medidas e ângulo)
+    function getBox(layer, offsetX = 0) {
+
+        if (layer.type === "name") {
+
+            const m =
+                getNameMetrics(layer);
+
+            if (!m.text) {
+
+                return {
+                    cx: layer.x + offsetX,
+                    cy: layer.y,
+                    hw: 0,
+                    hh: 0,
+                    angle: 0
+                };
+
+            }
+
+            return {
+                cx: layer.x + offsetX,
+                cy: layer.y,
+                hw: m.width / 2,
+                hh: m.fontSize * 0.5,
+                angle: layer.rotation - Math.PI / 2
+            };
+
+        }
+
+        const b =
+            layer.bounds || FULL_BOUNDS;
+
+        const ox =
+            ((b.x0 + b.x1) / 2 - 0.5) * layer.size;
+
+        const oy =
+            ((b.y0 + b.y1) / 2 - 0.5) * layer.size;
+
+        const cos = Math.cos(layer.rotation);
+        const sin = Math.sin(layer.rotation);
+
+        return {
+            cx: layer.x + offsetX + ox * cos - oy * sin,
+            cy: layer.y + ox * sin + oy * cos,
+            hw: (b.x1 - b.x0) * layer.size / 2,
+            hh: (b.y1 - b.y0) * layer.size / 2,
+            angle: layer.rotation
+        };
+
+    }
+
+
+    const isEmptyBox = box =>
+        !(box.hw || box.hh);
+
+
+    function boxesOverlap(a, b, gap) {
+
+        if (isEmptyBox(a) || isEmptyBox(b)) {
+            return false;
+        }
+
+        const ca = Math.cos(a.angle);
+        const sa = Math.sin(a.angle);
+        const cb = Math.cos(b.angle);
+        const sb = Math.sin(b.angle);
+
+        const axes = [
+            [ca, sa],
+            [-sa, ca],
+            [cb, sb],
+            [-sb, cb]
+        ];
+
+        const dx = b.cx - a.cx;
+        const dy = b.cy - a.cy;
+
+        for (const [nx, ny] of axes) {
+
+            const ra =
+                a.hw * Math.abs(nx * ca + ny * sa) +
+                a.hh * Math.abs(-nx * sa + ny * ca);
+
+            const rb =
+                b.hw * Math.abs(nx * cb + ny * sb) +
+                b.hh * Math.abs(-nx * sb + ny * cb);
+
+            const distance =
+                Math.abs(dx * nx + dy * ny);
+
+            if (distance >= ra + rb + gap) {
+                return false;
+            }
+
+        }
+
+        return true;
+
+    }
+
+
+    // Caixas de todas as outras gravações (incluindo cópias da emenda)
+    function othersBoxes(layer) {
+
+        const boxes = [];
+
+        layers.forEach(other => {
+
+            if (other === layer) return;
+
+            WRAP_OFFSETS.forEach(offset => {
+
+                const box =
+                    getBox(other, offset);
+
+                if (!isEmptyBox(box)) {
+                    boxes.push(box);
+                }
+
+            });
+
+        });
+
+        return boxes;
+
+    }
+
+
+    function overlapsAny(box, others) {
+
+        return others.some(
+            other =>
+                boxesOverlap(
+                    box,
+                    other,
+                    OVERLAP_GAP
+                )
+        );
+
+    }
+
+
+    // A gravação, se estivesse em (x, y), bateria em alguma outra?
+    function collidesAt(layer, x, y, others) {
+
+        const base =
+            getBox(layer);
+
+        if (isEmptyBox(base)) {
+            return false;
+        }
+
+        const box = {
+            ...base,
+            cx: base.cx + (x - layer.x),
+            cy: base.cy + (y - layer.y)
+        };
+
+        return overlapsAny(
+            box,
+            others || othersBoxes(layer)
+        );
+
+    }
+
+
+    const collides = layer =>
+        collidesAt(
+            layer,
+            layer.x,
+            layer.y
+        );
+
+
+    /* ---------- procura de espaço livre ---------- */
+
+    // Posições candidatas ao redor de (originX, originY), da mais próxima
+    // para a mais distante. Ir para o lado (X) custa pouco; ir para
+    // cima/baixo (Y) custa VERTICAL_WEIGHT vezes mais.
+    function buildCandidates(originX, originY) {
+
+        const list = [];
+
+        const half =
+            TEXTURE_SIZE / 2 / SEARCH_STEP_X;
+
+        const jMin =
+            Math.ceil(
+                (0 - originY) / SEARCH_STEP_Y
+            );
+
+        const jMax =
+            Math.floor(
+                (TEXTURE_SIZE - originY) /
+                SEARCH_STEP_Y
+            );
+
+        for (let j = jMin; j <= jMax; j++) {
+
+            for (let i = -half; i < half; i++) {
+
+                const ox = i * SEARCH_STEP_X;
+                const oy = j * SEARCH_STEP_Y;
+
+                list.push({
+                    x: wrapX(originX + ox),
+                    y: originY + oy,
+                    dist: Math.hypot(
+                        ox,
+                        oy * VERTICAL_WEIGHT
+                    )
+                });
+
+            }
+
+        }
+
+        list.sort((a, b) => a.dist - b.dist);
+
+        return list;
+
+    }
+
+
+    // Primeira posição livre da lista de candidatas, ou null
+    function findFreePosition(layer, candidates) {
+
+        const base =
+            getBox(layer);
+
+        if (isEmptyBox(base)) {
+
+            return {
+                x: layer.x,
+                y: layer.y
+            };
+
+        }
+
+        const others =
+            othersBoxes(layer);
+
+        const cos = Math.cos(base.angle);
+        const sin = Math.sin(base.angle);
+
+        // meia-altura da caixa na vertical da textura
+        const halfHeight =
+            base.hw * Math.abs(sin) +
+            base.hh * Math.abs(cos);
+
+        for (const c of candidates) {
+
+            const box = {
+                ...base,
+                cx: base.cx + (c.x - layer.x),
+                cy: base.cy + (c.y - layer.y)
+            };
+
+            // mantém a gravação inteira dentro da textura
+            if (
+                box.cy - halfHeight < 0 ||
+                box.cy + halfHeight > TEXTURE_SIZE
+            ) {
+                continue;
+            }
+
+            if (!overlapsAny(box, others)) {
+
+                return {
+                    x: c.x,
+                    y: c.y
+                };
+
+            }
+
+        }
+
+        return null;
+
+    }
+
+
+    // Leva a gravação para o espaço livre mais próximo da posição em
+    // que ela está (priorizando a lateral). Reduz o tamanho (até
+    // minSize) se não couber no tamanho atual. Retorna true/false.
+    function placeLayerInFreeSpot(layer, minSize) {
+
+        const candidates =
+            buildCandidates(
+                layer.x,
+                layer.y
+            );
+
+        let size = layer.size;
+
+        while (true) {
+
+            layer.size = size;
+
+            const position =
+                findFreePosition(
+                    layer,
+                    candidates
+                );
+
+            if (position) {
+
+                layer.x = position.x;
+                layer.y = position.y;
+
+                return true;
+
+            }
+
+            if (size <= minSize) {
+                break;
+            }
+
+            size =
+                Math.max(
+                    minSize,
+                    Math.floor(size * 0.85)
+                );
+
+        }
+
+        return false;
+
+    }
+
+
+    /* ---------- movimento / tamanho / rotação ---------- */
+
+    // Movimento livre: enquanto arrasta, pode passar por cima de outras
+    function moveLayerFree(layer, targetX, targetY) {
+
+        layer.x =
+            wrapX(
+                Math.round(targetX)
+            );
+
+        layer.y =
+            clampY(
+                Math.round(targetY)
+            );
+
+    }
+
+
+    // Ao soltar: se ficou por cima de outra gravação, salta para o
+    // lado livre mais próximo. Sem espaço, volta de onde saiu.
+    function settleLayer(layer) {
+
+        const rest =
+            restPosition;
+
+        restPosition = null;
+
+        if (
+            !layer ||
+            !collides(layer)
+        ) {
+            return;
+        }
+
+        if (
+            !placeLayerInFreeSpot(
+                layer,
+                layer.size
+            )
+        ) {
+
+            if (rest) {
+
+                layer.x = rest.x;
+                layer.y = rest.y;
+
+            }
+
+            showNotice(
+                "Não há espaço livre nesse ponto."
+            );
+
+        }
+
+        faceEngraving(
+            layer.x
+        );
+
+        updateControls();
+
+        requestRebuild();
+
+    }
+
+
+    // Aplica o tamanho pedido, limitado ao maior que cabe sem bater
+    function applySize(layer, requested) {
+
+        requested =
+            Math.max(
+                SIZE_MIN,
+                Math.min(
+                    SIZE_MAX,
+                    requested
+                )
+            );
+
+        const previous = layer.size;
+
+        layer.size = requested;
+
+        if (!collides(layer)) {
+            return;
+        }
+
+        if (requested <= previous) {
+
+            layer.size = previous;
+
+            return;
+
+        }
+
+        let low = previous;
+        let high = requested;
+
+        for (let i = 0; i < 12; i++) {
+
+            const mid = (low + high) / 2;
+
+            layer.size = mid;
+
+            if (collides(layer)) {
+                high = mid;
+            } else {
+                low = mid;
+            }
+
+        }
+
+        layer.size = low;
+
+    }
+
+
+    // Gira grau a grau e para antes de encostar em outra gravação
+    function applyRotation(layer, requested) {
+
+        const step = Math.PI / 180;
+
+        let current = layer.rotation;
+
+        while (Math.abs(requested - current) > 1e-6) {
+
+            const remaining = requested - current;
+
+            const next =
+                Math.abs(remaining) <= step
+                    ? requested
+                    : current + Math.sign(remaining) * step;
+
+            layer.rotation = next;
+
+            if (collides(layer)) {
+
+                layer.rotation = current;
+
+                return;
+
+            }
+
+            current = next;
+
+        }
+
+    }
+
+
+    // Garante que nenhuma gravação esteja sobre outra (ex.: depois
+    // que uma fonte web termina de carregar e muda as medidas)
+    function resolveAllOverlaps() {
+
+        let changed = false;
+
+        layers.forEach(layer => {
+
+            if (
+                collides(layer) &&
+                placeLayerInFreeSpot(
+                    layer,
+                    layer.size
+                )
+            ) {
+                changed = true;
+            }
+
+        });
+
+        if (changed) {
+
+            updateControls();
+            requestRebuild();
+
+        }
+
+    }
+
+
+    /* =========================================================
+       DESENHO NA TEXTURA
+    ========================================================= */
+
+    function drawNameLayer(ctx, layer) {
+
+        const metrics =
+            getNameMetrics(layer);
+
+        if (!metrics.text) return;
 
         ctx.save();
 
@@ -663,32 +1377,11 @@ document.addEventListener("DOMContentLoaded", () => {
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
 
-        const MIN_FONT = 16;
-
-        let fontSize =
-            Math.max(
-                MIN_FONT,
-                layer.size * 0.35
-            );
-
         ctx.font =
-            `bold ${fontSize}px "${layer.font}"`;
-
-        while (
-            ctx.measureText(text).width >
-                NAME_MAX_WIDTH &&
-            fontSize > MIN_FONT
-        ) {
-
-            fontSize--;
-
-            ctx.font =
-                `bold ${fontSize}px "${layer.font}"`;
-
-        }
+            `bold ${metrics.fontSize}px "${layer.font}"`;
 
         ctx.fillText(
-            text,
+            metrics.text,
             0,
             0
         );
@@ -811,6 +1504,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     layer.image =
                         await loadImage(
                             layer.imageUrl
+                        );
+
+                    layer.bounds =
+                        computeBounds(
+                            layer.image
                         );
 
                 }
@@ -1282,7 +1980,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     "name",
 
                 text:
-                    "",
+                    text,
 
                 x:
                     START_X,
@@ -1302,18 +2000,66 @@ document.addEventListener("DOMContentLoaded", () => {
             };
 
 
+            // procura um espaço livre (reduzindo se preciso)
+            if (
+                !placeLayerInFreeSpot(
+                    nameLayer,
+                    NAME_MIN_SIZE
+                )
+            ) {
+
+                nameInput.value = "";
+
+                showNotice(
+                    "Não há espaço livre na garrafa para o nome."
+                );
+
+                return;
+
+            }
+
+
             layers.push(
                 nameLayer
             );
 
+        } else {
+
+            const previousText =
+                nameLayer.text;
+
+            nameLayer.text =
+                text;
+
+            nameLayer.font =
+                currentFont;
+
+
+            // o texto cresceu e bateu em outra gravação:
+            // tenta mudar de lugar; se não couber, desfaz
+            if (
+                collides(nameLayer) &&
+                !placeLayerInFreeSpot(
+                    nameLayer,
+                    nameLayer.size
+                )
+            ) {
+
+                nameLayer.text =
+                    previousText;
+
+                nameInput.value =
+                    previousText;
+
+                showNotice(
+                    "Não há espaço livre para esse texto."
+                );
+
+                return;
+
+            }
+
         }
-
-
-        nameLayer.text =
-            text;
-
-        nameLayer.font =
-            currentFont;
 
 
         selectLayer(
@@ -1354,6 +2100,47 @@ document.addEventListener("DOMContentLoaded", () => {
                 "click",
                 () => {
 
+                    const newFont =
+                        button.dataset.font ||
+                        "Arial";
+
+
+                    const nameLayer =
+                        getNameLayer();
+
+
+                    if (nameLayer) {
+
+                        const previousFont =
+                            nameLayer.font;
+
+                        nameLayer.font =
+                            newFont;
+
+
+                        // a nova fonte pode ser mais larga
+                        if (
+                            collides(nameLayer) &&
+                            !placeLayerInFreeSpot(
+                                nameLayer,
+                                nameLayer.size
+                            )
+                        ) {
+
+                            nameLayer.font =
+                                previousFont;
+
+                            showNotice(
+                                "Não há espaço livre para essa fonte."
+                            );
+
+                            return;
+
+                        }
+
+                    }
+
+
                     fontButtons.forEach(
                         btn =>
                             btn.classList.remove(
@@ -1367,19 +2154,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
                     currentFont =
-                        button.dataset.font ||
-                        "Arial";
-
-
-                    const nameLayer =
-                        getNameLayer();
+                        newFont;
 
 
                     if (nameLayer) {
-
-                        nameLayer.font =
-                            currentFont;
-
+                        updateControls();
                     }
 
 
@@ -1411,12 +2190,16 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
 
 
-                    const existing =
+                    const findExisting = () =>
                         layers.find(
                             layer =>
                                 layer.type === "image" &&
                                 layer.imageUrl === imageUrl
                         );
+
+
+                    const existing =
+                        findExisting();
 
 
                     if (existing) {
@@ -1452,6 +2235,9 @@ document.addEventListener("DOMContentLoaded", () => {
                         image:
                             null,
 
+                        bounds:
+                            FULL_BOUNDS,
+
                         x:
                             START_X,
 
@@ -1474,10 +2260,52 @@ document.addEventListener("DOMContentLoaded", () => {
                                 imageUrl
                             );
 
+                        layer.bounds =
+                            computeBounds(
+                                layer.image
+                            );
+
                     } catch (error) {
 
                         console.error(
                             error
+                        );
+
+                        return;
+
+                    }
+
+
+                    // clique duplo: a mesma gravação já entrou
+                    const duplicate =
+                        findExisting();
+
+                    if (duplicate) {
+
+                        setTab(
+                            "ajuste"
+                        );
+
+                        selectLayer(
+                            duplicate.id
+                        );
+
+                        return;
+
+                    }
+
+
+                    // acha um lugar livre (reduzindo se preciso)
+                    if (
+                        !placeLayerInFreeSpot(
+                            layer,
+                            IMAGE_MIN_SIZE
+                        )
+                    ) {
+
+                        showNotice(
+                            "Não há espaço livre na garrafa. " +
+                            "Remova ou reduza outra gravação."
                         );
 
                         return;
@@ -1559,11 +2387,26 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
 
+            // posição inicial se estiver livre; senão, a mais próxima
+            const position =
+                findFreePosition(
+                    layer,
+                    buildCandidates(
+                        START_X,
+                        START_Y
+                    )
+                );
+
+            if (!position) {
+                return;
+            }
+
+
             layer.x =
-                START_X;
+                position.x;
 
             layer.y =
-                START_Y;
+                position.y;
 
 
             updateControls();
@@ -1578,43 +2421,59 @@ document.addEventListener("DOMContentLoaded", () => {
     );
 
 
-    [
-        sizeControl,
-        rotationControl
-    ].forEach(
-        control => {
+    sizeControl.addEventListener(
+        "input",
+        () => {
 
-            control.addEventListener(
-                "input",
-                () => {
+            const layer =
+                getSelected();
 
-                    const layer =
-                        getSelected();
-
-                    if (!layer) {
-                        return;
-                    }
+            if (!layer) {
+                return;
+            }
 
 
-                    layer.size =
-                        Number(
-                            sizeControl.value
-                        );
-
-                    layer.rotation =
-                        Number(
-                            rotationControl.value
-                        ) *
-                        Math.PI /
-                        180;
-
-
-                    updateControls();
-                    renderLayersList();
-                    requestRebuild();
-
-                }
+            applySize(
+                layer,
+                Number(
+                    sizeControl.value
+                )
             );
+
+
+            updateControls();
+            renderLayersList();
+            requestRebuild();
+
+        }
+    );
+
+
+    rotationControl.addEventListener(
+        "input",
+        () => {
+
+            const layer =
+                getSelected();
+
+            if (!layer) {
+                return;
+            }
+
+
+            applyRotation(
+                layer,
+                Number(
+                    rotationControl.value
+                ) *
+                Math.PI /
+                180
+            );
+
+
+            updateControls();
+            renderLayersList();
+            requestRebuild();
 
         }
     );
@@ -1752,25 +2611,26 @@ document.addEventListener("DOMContentLoaded", () => {
             dragStart.pointerY;
 
 
-        layer.x =
-            wrapX(
-                Math.round(
-                    dragStart.layerX +
-                    PAD_SIGN_X *
-                    dx *
-                    unitsPerPxX
-                )
-            );
+        // posição desejada pelo ponteiro; o movimento real
+        // é barrado/deslizado se encostar em outra gravação
+        const targetX =
+            dragStart.layerX +
+            PAD_SIGN_X *
+            dx *
+            unitsPerPxX;
 
 
-        layer.y =
-            clampY(
-                Math.round(
-                    dragStart.layerY +
-                    dy *
-                    unitsPerPxY
-                )
-            );
+        const targetY =
+            dragStart.layerY +
+            dy *
+            unitsPerPxY;
+
+
+        moveLayerFree(
+            layer,
+            targetX,
+            targetY
+        );
 
 
         faceEngraving(
@@ -1799,6 +2659,12 @@ document.addEventListener("DOMContentLoaded", () => {
             event.preventDefault();
 
             dragging = true;
+
+
+            restPosition = {
+                x: layer.x,
+                y: layer.y
+            };
 
 
             dragStart = {
@@ -1872,14 +2738,53 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
+    function finishDrag(event) {
+
+        const wasDragging =
+            dragging;
+
+        endDrag(event);
+
+        if (wasDragging) {
+            settleLayer(
+                getSelected()
+            );
+        }
+
+    }
+
+
     positionPad.addEventListener(
         "pointerup",
-        endDrag
+        finishDrag
     );
 
     positionPad.addEventListener(
         "pointercancel",
-        endDrag
+        finishDrag
+    );
+
+
+    positionPad.addEventListener(
+        "keyup",
+        event => {
+
+            if (
+                [
+                    "ArrowUp",
+                    "ArrowDown",
+                    "ArrowLeft",
+                    "ArrowRight"
+                ].includes(event.key)
+            ) {
+
+                settleLayer(
+                    getSelected()
+                );
+
+            }
+
+        }
     );
 
 
@@ -1901,23 +2806,30 @@ document.addEventListener("DOMContentLoaded", () => {
                     : 1;
 
 
+            let targetX =
+                layer.x;
+
+            let targetY =
+                layer.y;
+
+
             if (
                 event.key === "ArrowUp"
             ) {
 
-                layer.y -= step;
+                targetY -= step;
 
             } else if (
                 event.key === "ArrowDown"
             ) {
 
-                layer.y += step;
+                targetY += step;
 
             } else if (
                 event.key === "ArrowLeft"
             ) {
 
-                layer.x -=
+                targetX -=
                     step *
                     PAD_SIGN_X;
 
@@ -1925,7 +2837,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 event.key === "ArrowRight"
             ) {
 
-                layer.x +=
+                targetX +=
                     step *
                     PAD_SIGN_X;
 
@@ -1939,15 +2851,21 @@ document.addEventListener("DOMContentLoaded", () => {
             event.preventDefault();
 
 
-            layer.x =
-                wrapX(
-                    layer.x
-                );
+            if (!restPosition) {
 
-            layer.y =
-                clampY(
-                    layer.y
-                );
+                restPosition = {
+                    x: layer.x,
+                    y: layer.y
+                };
+
+            }
+
+
+            moveLayerFree(
+                layer,
+                targetX,
+                targetY
+            );
 
 
             faceEngraving(
@@ -2560,6 +3478,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
         }
     );
+
+
+    /* =========================================================
+       FONTES WEB (medidas do texto dependem delas)
+    ========================================================= */
+
+    if (document.fonts) {
+
+        // se uma fonte terminar de carregar depois e o nome
+        // ficar mais largo, reposiciona o que passou a se sobrepor
+        document.fonts.addEventListener(
+            "loadingdone",
+            resolveAllOverlaps
+        );
+
+        [
+            'bold 40px "Montserrat"',
+            'bold 40px "Ma Shan Zheng"'
+        ].forEach(
+            font =>
+                document.fonts
+                    .load(font, "A")
+                    .catch(() => {})
+        );
+
+    }
 
 
     /* =========================================================
