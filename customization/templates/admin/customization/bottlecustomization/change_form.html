@@ -1,0 +1,113 @@
+
+{% extends "admin/change_form.html" %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <script
+        type="module"
+        src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
+    </script>
+{% endblock %}
+
+{% block after_field_sets %}
+    {{ block.super }}
+
+    {% if original %}
+        <div style="
+            margin: 24px 0;
+            padding: 20px;
+            background: var(--body-bg, #fff);
+            border: 1px solid var(--border-color, #ddd);
+            border-radius: 10px;
+        ">
+            <h2 style="margin-top: 0;">
+                Visualização 3D da personalização
+            </h2>
+
+            {% if original.product.model_3d_url %}
+                <model-viewer
+                    id="adminBottleViewer"
+                    src="{{ original.product.model_3d_url }}"
+                    camera-controls
+                    touch-action="pan-y"
+                    shadow-intensity="1"
+                    exposure="1"
+                    environment-image="neutral"
+                    camera-orbit="-50deg 75deg auto"
+                    style="
+                        width: 100%;
+                        height: 520px;
+                        background: #f1f1f1;
+                        border-radius: 8px;
+                    "
+                ></model-viewer>
+
+                {% if original.texture %}
+                    <p id="adminBottleStatus"
+                       style="color: var(--body-quiet-color, #666);">
+                        Carregando a textura da personalização...
+                    </p>
+                {% else %}
+                    <p style="color: #a66a00;">
+                        Esta personalização não possui textura salva.
+                    </p>
+                {% endif %}
+
+            {% else %}
+                <p>
+                    Este produto não possui um modelo 3D configurado.
+                    Confira o campo model_3d_url no cadastro do produto.
+                </p>
+            {% endif %}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block admin_change_form_document_ready %}
+    {{ block.super }}
+
+    {% if original and original.product.model_3d_url and original.texture %}
+        <script type="module">
+            const viewer = document.getElementById("adminBottleViewer");
+            const status = document.getElementById("adminBottleStatus");
+            const textureUrl = "{{ original.texture.url|escapejs }}";
+
+            if (viewer && textureUrl) {
+                let applied = false;
+
+                viewer.addEventListener("load", async () => {
+                    if (applied) return;
+
+                    try {
+                        const material = viewer.model?.getMaterialByName("forma");
+
+                        if (!material) {
+                            status.textContent =
+                                'Modelo carregado, mas o material "forma" não foi encontrado.';
+                            return;
+                        }
+
+                        const texture = await viewer.createTexture(textureUrl);
+
+                        material.pbrMetallicRoughness.baseColorTexture
+                            .setTexture(texture);
+
+                        material.setAlphaMode("BLEND");
+
+                        applied = true;
+                        status.textContent =
+                            "Modelo carregado com a textura aplicada.";
+                    } catch (error) {
+                        console.error(
+                            "Erro ao aplicar a textura no modelo 3D:",
+                            error
+                        );
+
+                        status.textContent =
+                            "Não foi possível aplicar a textura ao modelo 3D.";
+                    }
+                }, { once: true });
+            }
+        </script>
+    {% endif %}
+{% endblock %}
