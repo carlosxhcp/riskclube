@@ -2,4 +2,5 @@ from django.apps import AppConfig
 
 
 class CustomizationConfig(AppConfig):
-    name = 'customization'
+    name = "customization"
+    verbose_name = "Personalização"

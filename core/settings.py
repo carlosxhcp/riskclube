@@ -185,16 +185,29 @@ JAZZMIN_SETTINGS = {
     "welcome_sign": "Painel administrativo",
     "copyright": "Risk Clube",
 
+
+    "custom_css": "css/admin-custom.css",
     "show_sidebar": True,
     "navigation_expanded": False,
     "show_ui_builder": True,
 
     "hide_apps": [
         "sites",
+        "account",
     ],
 
     "hide_models": [
         "auth.group",
+        "products.productimage",
+        "products.productsize",
+        "products.productdefaultsize",
+        "products.productvariant",
+        "products.variantimage",
+
+        "orders.orderitem",
+
+        "customization.categoriagravacao",
+        "customization.vipbottlemodel",
     ],
 
     "order_with_respect_to": [
@@ -210,13 +223,31 @@ JAZZMIN_SETTINGS = {
     "icons": {
         "products": "fas fa-box",
         "products.product": "fas fa-box-open",
+        "products.productimage": "fas fa-images",
+        "products.productvariant": "fas fa-layer-group",
+        "products.productsize": "fas fa-ruler",
+        "products.category": "fas fa-tags",
+
         "orders": "fas fa-shopping-cart",
+        "orders.order": "fas fa-receipt",
+        "orders.orderitem": "fas fa-list",
+
         "customization": "fas fa-paint-brush",
+        "customization.vipbottlemodel": "fas fa-wine-bottle",
+        "customization.categoriagravacao": "fas fa-folder-open",
+        "customization.gravacao": "fas fa-pen-nib",
+        "customization.bottlecustomization": "fas fa-sliders-h",
+
         "accounts": "fas fa-users",
         "accounts.customuser": "fas fa-user",
+
         "cart": "fas fa-shopping-basket",
+        "cart.coupon": "fas fa-ticket-alt",
+        "cart.couponusage": "fas fa-tags",
+
         "pages": "fas fa-file-alt",
         "auth": "fas fa-users-cog",
+        "auth.user": "fas fa-user-shield",
     },
 }
 
@@ -225,32 +256,36 @@ JAZZMIN_UI_TWEAKS = {
     "theme": "flatly",
     "default_theme_mode": "light",
 
-    "navbar": "navbar-white navbar-light",
-    "sidebar": "sidebar-dark-primary",
-    "accent": "accent-dark",
-
-    "navbar_small_text": False,
-    "sidebar_small_text": False,
-    "footer_small_text": True,
-    "body_small_text": False,
-
-    "brand_small_text": False,
+    # BARRA SUPERIOR
+    "navbar": "navbar-dark",
     "brand_colour": "navbar-dark",
 
+    # MENU LATERAL
+    "sidebar": "sidebar-dark-primary",
+    "accent": "accent-dark",
     "sidebar_nav_small_text": False,
+    "sidebar_small_text": False,
     "sidebar_nav_child_indent": True,
     "sidebar_nav_compact": True,
     "sidebar_nav_legacy_style": False,
     "sidebar_nav_flat_style": True,
 
+    # TIPOGRAFIA E ESPAÇAMENTO
+    "navbar_small_text": False,
+    "body_small_text": False,
+    "brand_small_text": False,
+    "footer_small_text": True,
+
+    # BOTÕES
     "button_classes": {
         "primary": "btn-dark",
         "secondary": "btn-secondary",
-        "info": "btn-info",
+        "info": "btn-secondary",
         "success": "btn-success",
         "warning": "btn-warning",
         "danger": "btn-danger",
     },
 }
+
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 15 * 1024 * 1024  # 15 MB

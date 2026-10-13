@@ -161,16 +161,7 @@ class BottleCustomizationAdmin(admin.ModelAdmin):
                 "fields": ("product", "name", "font"),
             },
         ),
-        (
-            "Arquivos da personalização",
-            {
-                "fields": ("preview_view", "texture_view"),
-                "description": (
-                    "Confira a imagem final e a textura PNG "
-                    "salva nesta personalização."
-                ),
-            },
-        ),
+   
         (
             "Camadas da gravação",
             {
