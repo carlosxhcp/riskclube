@@ -65,15 +65,8 @@
             </div>
 
             <div class="vip-name-input-row">
-                <input
-                    type="text"
-                    id="nameInput"
-                    maxlength="15"
-                    placeholder="Digite seu texto"
-                    value=""
-                    autocomplete="off"
-                    autocapitalize="characters"
-                    enterkeyhint="done">
+                <input type="text" id="nameInput" maxlength="15" placeholder="Digite seu texto" value=""
+                    autocomplete="off" autocapitalize="characters" enterkeyhint="done">
             </div>
 
             <div class="vip-name-options">
@@ -118,17 +111,13 @@
 
                 <div class="vip-engraving-category">
 
-                    <button
-                        type="button"
-                        class="vip-engraving-category-btn {% if forloop.first %}active{% endif %}"
+                    <button type="button" class="vip-engraving-category-btn {% if forloop.first %}active{% endif %}"
                         data-category="{{ categoria.id }}">
 
                         <span class="vip-engraving-category-left">
 
                             {% if categoria.icone %}
-                            <img
-                                src="{{ categoria.icone.url }}"
-                                alt="{{ categoria.nome }}">
+                            <img src="{{ categoria.icone.url }}" alt="{{ categoria.nome }}">
                             {% endif %}
 
                             <span>{{ categoria.nome }}</span>
@@ -139,8 +128,7 @@
 
                     </button>
 
-                    <div
-                        class="vip-engraving-category-content {% if forloop.first %}open{% endif %}"
+                    <div class="vip-engraving-category-content {% if forloop.first %}open{% endif %}"
                         data-category-content="{{ categoria.id }}">
 
                         <div class="vip-engraving-items">
@@ -149,15 +137,10 @@
 
                             {% if gravacao.ativo %}
 
-                            <button
-                                type="button"
-                                class="vip-engraving-btn"
-                                data-name="{{ gravacao.nome }}"
+                            <button type="button" class="vip-engraving-btn" data-name="{{ gravacao.nome }}"
                                 data-image="{{ gravacao.imagem.url }}">
 
-                                <img
-                                    src="{{ gravacao.imagem.url }}"
-                                    alt="{{ gravacao.nome }}">
+                                <img src="{{ gravacao.imagem.url }}" alt="{{ gravacao.nome }}">
 
                                 {% if gravacao.nome %}
                                 <span>{{ gravacao.nome }}</span>
@@ -199,10 +182,7 @@
                 <div class="vip-engraving-empty">
                     Nenhuma gravação adicionada.
 
-                    <button
-                        type="button"
-                        class="vip-empty-link"
-                        data-go-tab="gravacoes">
+                    <button type="button" class="vip-empty-link" data-go-tab="gravacoes">
                         Escolher gravação
                     </button>
 
@@ -223,12 +203,8 @@
 
                     <div class="vip-position-editor">
 
-                        <div
-                            class="vip-position-pad"
-                            id="engravingPositionPad"
-                            aria-label="Arraste para posicionar"
-                            role="application"
-                            tabindex="0">
+                        <div class="vip-position-pad" id="engravingPositionPad" aria-label="Arraste para posicionar"
+                            role="application" tabindex="0">
 
                             <div class="vip-position-grid"></div>
                             <div class="vip-position-axis-x"></div>
@@ -239,9 +215,7 @@
                                 <small>para posicionar</small>
                             </div>
 
-                            <div
-                                class="vip-position-knob"
-                                id="engravingPositionKnob">
+                            <div class="vip-position-knob" id="engravingPositionKnob">
                                 <span></span>
                             </div>
 
@@ -272,13 +246,7 @@
                                 <strong id="engravingSizeValue">250</strong>
                             </div>
 
-                            <input
-                                type="range"
-                                id="engravingSizeControl"
-                                min="100"
-                                max="300"
-                                step="1"
-                                value="250">
+                            <input type="range" id="engravingSizeControl" min="100" max="300" step="1" value="250">
 
                         </div>
 
@@ -289,13 +257,7 @@
                                 <strong id="engravingRotationValue">0°</strong>
                             </div>
 
-                            <input
-                                type="range"
-                                id="engravingRotationControl"
-                                min="-180"
-                                max="180"
-                                step="1"
-                                value="0">
+                            <input type="range" id="engravingRotationControl" min="-180" max="180" step="1" value="0">
 
                         </div>
 
@@ -305,20 +267,14 @@
 
                 <div class="vip-controls-actions">
 
-                    <button
-                        type="button"
-                        id="resetEngravingPosition"
-                        class="vip-reset-engraving-btn">
+                    <button type="button" id="resetEngravingPosition" class="vip-reset-engraving-btn">
 
                         <i class="bi bi-bullseye"></i>
                         Posição inicial
 
                     </button>
 
-                    <button
-                        type="button"
-                        id="removeSelectedEngraving"
-                        class="vip-remove-engraving-btn">
+                    <button type="button" id="removeSelectedEngraving" class="vip-remove-engraving-btn">
 
                         <i class="bi bi-trash"></i>
                         Remover
@@ -341,9 +297,7 @@
 
             <div class="vip-group-flow-actions">
 
-                <button
-                    type="button"
-                    class="vip-next-bottle-btn">
+                <button type="button" class="vip-next-bottle-btn">
 
                     Continuar
                     <i class="bi bi-arrow-right"></i>
@@ -361,104 +315,104 @@
 
 <script>
 
-document.addEventListener("DOMContentLoaded", () => {
+    document.addEventListener("DOMContentLoaded", () => {
 
-    const viewer = document.getElementById("bottleViewer");
+        const viewer = document.getElementById("bottleViewer");
 
-    if (!viewer) return;
+        if (!viewer) return;
 
-    const $ = id => document.getElementById(id);
+        const $ = id => document.getElementById(id);
 
-    const panel = document.querySelector(".vip-mockup-panel");
-    const tabButtons = document.querySelectorAll(".vip-tab-btn");
-    const engravingButtons = document.querySelectorAll(".vip-engraving-btn");
-    const fontButtons = document.querySelectorAll(".vip-font-btn");
+        const panel = document.querySelector(".vip-mockup-panel");
+        const tabButtons = document.querySelectorAll(".vip-tab-btn");
+        const engravingButtons = document.querySelectorAll(".vip-engraving-btn");
+        const fontButtons = document.querySelectorAll(".vip-font-btn");
 
-    const layersList = $("engravingLayersList");
-    const layersCount = $("layersCount");
-    const controlsSection = $("engravingControlsSection");
+        const layersList = $("engravingLayersList");
+        const layersCount = $("layersCount");
+        const controlsSection = $("engravingControlsSection");
 
-    const selectedName = $("selectedEngravingName");
+        const selectedName = $("selectedEngravingName");
 
-    const sizeControl = $("engravingSizeControl");
-    const rotationControl = $("engravingRotationControl");
+        const sizeControl = $("engravingSizeControl");
+        const rotationControl = $("engravingRotationControl");
 
-    const xValue = $("engravingXValue");
-    const yValue = $("engravingYValue");
+        const xValue = $("engravingXValue");
+        const yValue = $("engravingYValue");
 
-    const sizeValue = $("engravingSizeValue");
-    const rotationValue = $("engravingRotationValue");
+        const sizeValue = $("engravingSizeValue");
+        const rotationValue = $("engravingRotationValue");
 
-    const positionPad = $("engravingPositionPad");
-    const positionKnob = $("engravingPositionKnob");
+        const positionPad = $("engravingPositionPad");
+        const positionKnob = $("engravingPositionKnob");
 
-    const resetButton = $("resetEngravingPosition");
-    const removeButton = $("removeSelectedEngraving");
+        const resetButton = $("resetEngravingPosition");
+        const removeButton = $("removeSelectedEngraving");
 
-    const nameInput = $("nameInput");
+        const nameInput = $("nameInput");
 
 
-    /* =========================================================
-       CONFIGURAÇÕES
-    ========================================================= */
+        /* =========================================================
+           CONFIGURAÇÕES
+        ========================================================= */
 
-    const TEXTURE_SIZE = 1024;
+        const TEXTURE_SIZE = 1024;
 
-    const TEXTURE_FLIP_X = true;
-    const TEXTURE_FLIP_Y = true;
+        const TEXTURE_FLIP_X = true;
+        const TEXTURE_FLIP_Y = true;
 
-    const NAME_MIRROR_X = true;
+        const NAME_MIRROR_X = true;
 
-    const START_X = 140;
-    const START_Y = 700;
+        const START_X = 140;
+        const START_Y = 700;
 
-    const Y_MIN = -256;
-    const Y_MAX = 1280;
+        const Y_MIN = -256;
+        const Y_MAX = 1280;
 
-    const PAD_SIGN_X = -1;
-    const PAD_EDGE = 0.38;
-    const PAD_SENSITIVITY = 0.3;
+        const PAD_SIGN_X = -1;
+        const PAD_EDGE = 0.38;
+        const PAD_SENSITIVITY = 0.3;
 
-    const THETA_HOME = -50 * Math.PI / 180;
-    const THETA_SIGN = -1;
+        const THETA_HOME = -50 * Math.PI / 180;
+        const THETA_SIGN = -1;
 
-    const NAME_MAX_CHARACTERS = 15;
-    const NAME_MAX_WIDTH = 420;
-    const NAME_DEFAULT_SIZE = 120;
-    const IMAGE_DEFAULT_SIZE = 250;
+        const NAME_MAX_CHARACTERS = 15;
+        const NAME_MAX_WIDTH = 420;
+        const NAME_DEFAULT_SIZE = 120;
+        const IMAGE_DEFAULT_SIZE = 250;
 
-    const MIN_FONT = 16;
+        const MIN_FONT = 16;
 
-    /* --- Anti-sobreposição --- */
+        /* --- Anti-sobreposição --- */
 
-    // folga mínima (em px da textura) entre duas gravações
-    const OVERLAP_GAP = 6;
+        // folga mínima (em px da textura) entre duas gravações
+        const OVERLAP_GAP = 6;
 
-    // resolução da busca por espaço livre (mais fina na horizontal)
-    const SEARCH_STEP_X = 8;
-    const SEARCH_STEP_Y = 16;
+        // resolução da busca por espaço livre (mais fina na horizontal)
+        const SEARCH_STEP_X = 8;
+        const SEARCH_STEP_Y = 16;
 
-    // quanto custa mais deslocar na vertical do que para o lado:
-    // a gravação prefere sempre ir para a lateral
-    const VERTICAL_WEIGHT = 4;
+        // quanto custa mais deslocar na vertical do que para o lado:
+        // a gravação prefere sempre ir para a lateral
+        const VERTICAL_WEIGHT = 4;
 
-    // limites de tamanho das gravações (mesmos valores do slider)
-    const SIZE_MIN = 100;
-    const SIZE_MAX = 300;
+        // limites de tamanho das gravações (mesmos valores do slider)
+        const SIZE_MIN = 100;
+        const SIZE_MAX = 300;
 
-    // menores tamanhos aceitos quando a gravação precisa ser reduzida para caber
-    const NAME_MIN_SIZE = SIZE_MIN;
-    const IMAGE_MIN_SIZE = SIZE_MIN;
+        // menores tamanhos aceitos quando a gravação precisa ser reduzida para caber
+        const NAME_MIN_SIZE = SIZE_MIN;
+        const IMAGE_MIN_SIZE = SIZE_MIN;
 
-    const FULL_BOUNDS = { x0: 0, y0: 0, x1: 1, y1: 1 };
+        const FULL_BOUNDS = { x0: 0, y0: 0, x1: 1, y1: 1 };
 
-    const WRAP_OFFSETS = [
-        -TEXTURE_SIZE,
-        0,
-        TEXTURE_SIZE
-    ];
+        const WRAP_OFFSETS = [
+            -TEXTURE_SIZE,
+            0,
+            TEXTURE_SIZE
+        ];
 
-    const EMPTY_LAYERS_HTML = `
+        const EMPTY_LAYERS_HTML = `
         <div class="vip-engraving-empty">
             Nenhuma gravação adicionada.
 
@@ -474,1080 +428,1133 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
 
 
-    /* =========================================================
-       ESTADO
-    ========================================================= */
+        /* =========================================================
+           ESTADO
+        ========================================================= */
 
-    const layers = [];
+        const layers = [];
 
-    let selectedId = null;
-    let currentFont = "Arial";
-    let engravingMaterial = null;
+        let selectedId = null;
+        let currentFont = "Arial";
+        let engravingMaterial = null;
 
-    let lastTextureDataUrl = null;
+        let lastTextureDataUrl = null;
 
-    let renderVersion = 0;
-    let renderRunning = false;
-    let renderPending = false;
+        let renderVersion = 0;
+        let renderRunning = false;
+        let renderPending = false;
 
-    let restPosition = null;
-    let noticeTimer = null;
+        let restPosition = null;
+        let noticeTimer = null;
 
 
-    /* =========================================================
-       UTILITÁRIOS
-    ========================================================= */
+        /* =========================================================
+           UTILITÁRIOS
+        ========================================================= */
 
-    const wrapX = value =>
-        ((value % TEXTURE_SIZE) + TEXTURE_SIZE) % TEXTURE_SIZE;
+        const wrapX = value =>
+            ((value % TEXTURE_SIZE) + TEXTURE_SIZE) % TEXTURE_SIZE;
 
-    const clampY = value =>
-        Math.max(
-            Y_MIN,
-            Math.min(Y_MAX, value)
-        );
+        const clampY = value =>
+            Math.max(
+                Y_MIN,
+                Math.min(Y_MAX, value)
+            );
 
-    const radToDeg = rad =>
-        Math.round(rad * 180 / Math.PI);
+        const radToDeg = rad =>
+            Math.round(rad * 180 / Math.PI);
 
-    // menor diferença (com sinal) entre dois X na textura circular
-    const shortestDeltaX = (from, to) =>
-        (
+        // menor diferença (com sinal) entre dois X na textura circular
+        const shortestDeltaX = (from, to) =>
             (
-                (to - from + TEXTURE_SIZE / 2) % TEXTURE_SIZE
-            ) + TEXTURE_SIZE
-        ) % TEXTURE_SIZE - TEXTURE_SIZE / 2;
+                (
+                    (to - from + TEXTURE_SIZE / 2) % TEXTURE_SIZE
+                ) + TEXTURE_SIZE
+            ) % TEXTURE_SIZE - TEXTURE_SIZE / 2;
 
-    const getSelected = () =>
-        layers.find(
-            layer => layer.id === selectedId
-        ) || null;
+        const getSelected = () =>
+            layers.find(
+                layer => layer.id === selectedId
+            ) || null;
 
-    const getNameLayer = () =>
-        layers.find(
-            layer => layer.type === "name"
-        ) || null;
-
-
-    function generateId() {
-
-        return (
-            "layer_" +
-            Date.now().toString(36) +
-            "_" +
-            Math.random()
-                .toString(36)
-                .substring(2, 8)
-        );
-
-    }
+        const getNameLayer = () =>
+            layers.find(
+                layer => layer.type === "name"
+            ) || null;
 
 
-    function loadImage(url) {
+        function generateId() {
 
-        return new Promise((resolve, reject) => {
-
-            const image = new Image();
-
-            image.crossOrigin = "anonymous";
-
-            image.onload = () =>
-                resolve(image);
-
-            image.onerror = () =>
-                reject(
-                    new Error(
-                        "Não foi possível carregar a imagem: " +
-                        url
-                    )
-                );
-
-            image.src = url;
-
-        });
-
-    }
-
-
-    function faceEngraving(x) {
-
-        const target =
-            THETA_HOME +
-            THETA_SIGN *
-            ((x - START_X) / TEXTURE_SIZE) *
-            Math.PI *
-            2;
-
-        const orbit =
-            viewer.getCameraOrbit();
-
-        let diff =
-            target -
-            orbit.theta;
-
-        diff =
-            (
-                (diff + Math.PI) %
-                (Math.PI * 2) +
-                Math.PI * 2
-            ) -
-            Math.PI;
-
-        viewer.cameraOrbit =
-            `${orbit.theta + diff}rad ${orbit.phi}rad ${orbit.radius}m`;
-
-    }
-
-
-    function showNotice(message) {
-
-        let el = $("engravingNotice");
-
-        if (!el) {
-
-            el = document.createElement("div");
-
-            el.id = "engravingNotice";
-
-            el.setAttribute("role", "status");
-
-            Object.assign(el.style, {
-                position: "fixed",
-                left: "50%",
-                bottom: "96px",
-                transform: "translateX(-50%)",
-                background: "#111",
-                color: "#fff",
-                padding: "12px 18px",
-                fontSize: "14px",
-                zIndex: "9999",
-                maxWidth: "90vw",
-                textAlign: "center",
-                opacity: "0",
-                transition: "opacity .2s",
-                pointerEvents: "none"
-            });
-
-            document.body.appendChild(el);
+            return (
+                "layer_" +
+                Date.now().toString(36) +
+                "_" +
+                Math.random()
+                    .toString(36)
+                    .substring(2, 8)
+            );
 
         }
 
-        el.textContent = message;
-        el.style.opacity = "1";
 
-        clearTimeout(noticeTimer);
+        function loadImage(url) {
 
-        noticeTimer = setTimeout(() => {
-            el.style.opacity = "0";
-        }, 2800);
+            return new Promise((resolve, reject) => {
 
-    }
+                const image = new Image();
+
+                image.crossOrigin = "anonymous";
+
+                image.onload = () =>
+                    resolve(image);
+
+                image.onerror = () =>
+                    reject(
+                        new Error(
+                            "Não foi possível carregar a imagem: " +
+                            url
+                        )
+                    );
+
+                image.src = url;
+
+            });
+
+        }
 
 
-    /* =========================================================
-       ABAS MOBILE
-    ========================================================= */
+        function faceEngraving(x) {
 
-    function setTab(name) {
+            const target =
+                THETA_HOME +
+                THETA_SIGN *
+                ((x - START_X) / TEXTURE_SIZE) *
+                Math.PI *
+                2;
 
-        panel.dataset.tab = name;
+            const orbit =
+                viewer.getCameraOrbit();
+
+            let diff =
+                target -
+                orbit.theta;
+
+            diff =
+                (
+                    (diff + Math.PI) %
+                    (Math.PI * 2) +
+                    Math.PI * 2
+                ) -
+                Math.PI;
+
+            viewer.cameraOrbit =
+                `${orbit.theta + diff}rad ${orbit.phi}rad ${orbit.radius}m`;
+
+        }
+
+
+        function showNotice(message) {
+
+            let el = $("engravingNotice");
+
+            if (!el) {
+
+                el = document.createElement("div");
+
+                el.id = "engravingNotice";
+
+                el.setAttribute("role", "status");
+
+                Object.assign(el.style, {
+                    position: "fixed",
+                    left: "50%",
+                    bottom: "96px",
+                    transform: "translateX(-50%)",
+                    background: "#111",
+                    color: "#fff",
+                    padding: "12px 18px",
+                    fontSize: "14px",
+                    zIndex: "9999",
+                    maxWidth: "90vw",
+                    textAlign: "center",
+                    opacity: "0",
+                    transition: "opacity .2s",
+                    pointerEvents: "none"
+                });
+
+                document.body.appendChild(el);
+
+            }
+
+            el.textContent = message;
+            el.style.opacity = "1";
+
+            clearTimeout(noticeTimer);
+
+            noticeTimer = setTimeout(() => {
+                el.style.opacity = "0";
+            }, 2800);
+
+        }
+
+
+        /* =========================================================
+           ABAS MOBILE
+        ========================================================= */
+
+        function setTab(name) {
+
+            panel.dataset.tab = name;
+
+            tabButtons.forEach(button => {
+
+                const active =
+                    button.dataset.tab === name;
+
+                button.classList.toggle(
+                    "active",
+                    active
+                );
+
+                button.setAttribute(
+                    "aria-selected",
+                    active
+                        ? "true"
+                        : "false"
+                );
+
+            });
+
+            panel
+                .querySelectorAll(".vip-panel-section")
+                .forEach(section => {
+                    section.scrollTop = 0;
+                });
+
+        }
+
 
         tabButtons.forEach(button => {
 
-            const active =
-                button.dataset.tab === name;
-
-            button.classList.toggle(
-                "active",
-                active
-            );
-
-            button.setAttribute(
-                "aria-selected",
-                active
-                    ? "true"
-                    : "false"
+            button.addEventListener(
+                "click",
+                () => setTab(button.dataset.tab)
             );
 
         });
 
-        panel
-            .querySelectorAll(".vip-panel-section")
-            .forEach(section => {
-                section.scrollTop = 0;
-            });
 
-    }
+        panel.addEventListener("click", event => {
 
+            const go =
+                event.target.closest(
+                    "[data-go-tab]"
+                );
 
-    tabButtons.forEach(button => {
+            if (go) {
+                setTab(go.dataset.goTab);
+            }
 
-        button.addEventListener(
-            "click",
-            () => setTab(button.dataset.tab)
-        );
-
-    });
+        });
 
 
-    panel.addEventListener("click", event => {
+        /* =========================================================
+           GEOMETRIA / DETECÇÃO DE SOBREPOSIÇÃO
+    
+           Cada gravação vira um retângulo rotacionado (caixa
+           orientada). Duas gravações se sobrepõem quando o teste
+           de eixos separadores (SAT) não encontra folga entre elas.
+           A textura é circular em X, então cada caixa também é
+           testada contra as cópias deslocadas em -1024 / +1024.
+        ========================================================= */
 
-        const go =
-            event.target.closest(
-                "[data-go-tab]"
-            );
-
-        if (go) {
-            setTab(go.dataset.goTab);
-        }
-
-    });
-
-
-    /* =========================================================
-       GEOMETRIA / DETECÇÃO DE SOBREPOSIÇÃO
-
-       Cada gravação vira um retângulo rotacionado (caixa
-       orientada). Duas gravações se sobrepõem quando o teste
-       de eixos separadores (SAT) não encontra folga entre elas.
-       A textura é circular em X, então cada caixa também é
-       testada contra as cópias deslocadas em -1024 / +1024.
-    ========================================================= */
-
-    const measureCtx =
-        document
-            .createElement("canvas")
-            .getContext("2d");
+        const measureCtx =
+            document
+                .createElement("canvas")
+                .getContext("2d");
 
 
-    // Mesma lógica de ajuste de fonte usada no desenho do nome
-    function getNameMetrics(layer) {
+        // Mesma lógica de ajuste de fonte usada no desenho do nome
+        function getNameMetrics(layer) {
 
-        const text =
-            (layer.text || "")
-                .substring(
-                    0,
-                    NAME_MAX_CHARACTERS
-                )
-                .toUpperCase();
+            const text =
+                (layer.text || "")
+                    .substring(
+                        0,
+                        NAME_MAX_CHARACTERS
+                    )
+                    .toUpperCase();
 
-        let fontSize =
-            Math.max(
-                MIN_FONT,
-                layer.size * 0.35
-            );
+            let fontSize =
+                Math.max(
+                    MIN_FONT,
+                    layer.size * 0.35
+                );
 
-        if (!text) {
-            return { text, fontSize, width: 0 };
-        }
-
-        measureCtx.font =
-            `bold ${fontSize}px "${layer.font}"`;
-
-        let width =
-            measureCtx.measureText(text).width;
-
-        while (
-            width > NAME_MAX_WIDTH &&
-            fontSize > MIN_FONT
-        ) {
-
-            fontSize--;
+            if (!text) {
+                return { text, fontSize, width: 0 };
+            }
 
             measureCtx.font =
                 `bold ${fontSize}px "${layer.font}"`;
 
-            width =
+            let width =
                 measureCtx.measureText(text).width;
+
+            while (
+                width > NAME_MAX_WIDTH &&
+                fontSize > MIN_FONT
+            ) {
+
+                fontSize--;
+
+                measureCtx.font =
+                    `bold ${fontSize}px "${layer.font}"`;
+
+                width =
+                    measureCtx.measureText(text).width;
+
+            }
+
+            return { text, fontSize, width };
 
         }
 
-        return { text, fontSize, width };
 
-    }
+        // Área realmente ocupada (pixels não transparentes) da imagem,
+        // em frações de 0 a 1. Evita bloquear por margem transparente.
+        function computeBounds(image) {
 
+            try {
 
-    // Área realmente ocupada (pixels não transparentes) da imagem,
-    // em frações de 0 a 1. Evita bloquear por margem transparente.
-    function computeBounds(image) {
+                const S = 128;
 
-        try {
+                const canvas =
+                    document.createElement("canvas");
 
-            const S = 128;
+                canvas.width = S;
+                canvas.height = S;
 
-            const canvas =
-                document.createElement("canvas");
+                const ctx =
+                    canvas.getContext("2d");
 
-            canvas.width = S;
-            canvas.height = S;
+                ctx.drawImage(image, 0, 0, S, S);
 
-            const ctx =
-                canvas.getContext("2d");
+                const data =
+                    ctx.getImageData(0, 0, S, S).data;
 
-            ctx.drawImage(image, 0, 0, S, S);
+                let minX = S;
+                let minY = S;
+                let maxX = -1;
+                let maxY = -1;
 
-            const data =
-                ctx.getImageData(0, 0, S, S).data;
+                for (let y = 0; y < S; y++) {
 
-            let minX = S;
-            let minY = S;
-            let maxX = -1;
-            let maxY = -1;
+                    for (let x = 0; x < S; x++) {
 
-            for (let y = 0; y < S; y++) {
+                        if (data[(y * S + x) * 4 + 3] > 16) {
 
-                for (let x = 0; x < S; x++) {
+                            if (x < minX) minX = x;
+                            if (x > maxX) maxX = x;
+                            if (y < minY) minY = y;
+                            if (y > maxY) maxY = y;
 
-                    if (data[(y * S + x) * 4 + 3] > 16) {
-
-                        if (x < minX) minX = x;
-                        if (x > maxX) maxX = x;
-                        if (y < minY) minY = y;
-                        if (y > maxY) maxY = y;
+                        }
 
                     }
 
                 }
 
-            }
+                if (maxX < 0) {
+                    return FULL_BOUNDS;
+                }
 
-            if (maxX < 0) {
+                return {
+                    x0: minX / S,
+                    y0: minY / S,
+                    x1: (maxX + 1) / S,
+                    y1: (maxY + 1) / S
+                };
+
+            } catch (error) {
+
+                // imagem sem CORS: usa o quadrado inteiro
                 return FULL_BOUNDS;
+
             }
-
-            return {
-                x0: minX / S,
-                y0: minY / S,
-                x1: (maxX + 1) / S,
-                y1: (maxY + 1) / S
-            };
-
-        } catch (error) {
-
-            // imagem sem CORS: usa o quadrado inteiro
-            return FULL_BOUNDS;
 
         }
 
-    }
 
+        // Caixa orientada da gravação (centro, meias-medidas e ângulo)
+        function getBox(layer, offsetX = 0) {
 
-    // Caixa orientada da gravação (centro, meias-medidas e ângulo)
-    function getBox(layer, offsetX = 0) {
+            if (layer.type === "name") {
 
-        if (layer.type === "name") {
+                const m =
+                    getNameMetrics(layer);
 
-            const m =
-                getNameMetrics(layer);
+                if (!m.text) {
 
-            if (!m.text) {
+                    return {
+                        cx: layer.x + offsetX,
+                        cy: layer.y,
+                        hw: 0,
+                        hh: 0,
+                        angle: 0
+                    };
+
+                }
 
                 return {
                     cx: layer.x + offsetX,
                     cy: layer.y,
-                    hw: 0,
-                    hh: 0,
-                    angle: 0
+                    hw: m.width / 2,
+                    hh: m.fontSize * 0.5,
+                    angle: layer.rotation - Math.PI / 2
                 };
 
             }
 
+            const b =
+                layer.bounds || FULL_BOUNDS;
+
+            const ox =
+                ((b.x0 + b.x1) / 2 - 0.5) * layer.size;
+
+            const oy =
+                ((b.y0 + b.y1) / 2 - 0.5) * layer.size;
+
+            const cos = Math.cos(layer.rotation);
+            const sin = Math.sin(layer.rotation);
+
             return {
-                cx: layer.x + offsetX,
-                cy: layer.y,
-                hw: m.width / 2,
-                hh: m.fontSize * 0.5,
-                angle: layer.rotation - Math.PI / 2
+                cx: layer.x + offsetX + ox * cos - oy * sin,
+                cy: layer.y + ox * sin + oy * cos,
+                hw: (b.x1 - b.x0) * layer.size / 2,
+                hh: (b.y1 - b.y0) * layer.size / 2,
+                angle: layer.rotation
             };
 
         }
 
-        const b =
-            layer.bounds || FULL_BOUNDS;
 
-        const ox =
-            ((b.x0 + b.x1) / 2 - 0.5) * layer.size;
-
-        const oy =
-            ((b.y0 + b.y1) / 2 - 0.5) * layer.size;
-
-        const cos = Math.cos(layer.rotation);
-        const sin = Math.sin(layer.rotation);
-
-        return {
-            cx: layer.x + offsetX + ox * cos - oy * sin,
-            cy: layer.y + ox * sin + oy * cos,
-            hw: (b.x1 - b.x0) * layer.size / 2,
-            hh: (b.y1 - b.y0) * layer.size / 2,
-            angle: layer.rotation
-        };
-
-    }
+        const isEmptyBox = box =>
+            !(box.hw || box.hh);
 
 
-    const isEmptyBox = box =>
-        !(box.hw || box.hh);
+        function boxesOverlap(a, b, gap) {
 
-
-    function boxesOverlap(a, b, gap) {
-
-        if (isEmptyBox(a) || isEmptyBox(b)) {
-            return false;
-        }
-
-        const ca = Math.cos(a.angle);
-        const sa = Math.sin(a.angle);
-        const cb = Math.cos(b.angle);
-        const sb = Math.sin(b.angle);
-
-        const axes = [
-            [ca, sa],
-            [-sa, ca],
-            [cb, sb],
-            [-sb, cb]
-        ];
-
-        const dx = b.cx - a.cx;
-        const dy = b.cy - a.cy;
-
-        for (const [nx, ny] of axes) {
-
-            const ra =
-                a.hw * Math.abs(nx * ca + ny * sa) +
-                a.hh * Math.abs(-nx * sa + ny * ca);
-
-            const rb =
-                b.hw * Math.abs(nx * cb + ny * sb) +
-                b.hh * Math.abs(-nx * sb + ny * cb);
-
-            const distance =
-                Math.abs(dx * nx + dy * ny);
-
-            if (distance >= ra + rb + gap) {
+            if (isEmptyBox(a) || isEmptyBox(b)) {
                 return false;
             }
 
+            const ca = Math.cos(a.angle);
+            const sa = Math.sin(a.angle);
+            const cb = Math.cos(b.angle);
+            const sb = Math.sin(b.angle);
+
+            const axes = [
+                [ca, sa],
+                [-sa, ca],
+                [cb, sb],
+                [-sb, cb]
+            ];
+
+            const dx = b.cx - a.cx;
+            const dy = b.cy - a.cy;
+
+            for (const [nx, ny] of axes) {
+
+                const ra =
+                    a.hw * Math.abs(nx * ca + ny * sa) +
+                    a.hh * Math.abs(-nx * sa + ny * ca);
+
+                const rb =
+                    b.hw * Math.abs(nx * cb + ny * sb) +
+                    b.hh * Math.abs(-nx * sb + ny * cb);
+
+                const distance =
+                    Math.abs(dx * nx + dy * ny);
+
+                if (distance >= ra + rb + gap) {
+                    return false;
+                }
+
+            }
+
+            return true;
+
         }
 
-        return true;
 
-    }
+        // Caixas de todas as outras gravações (incluindo cópias da emenda)
+        function othersBoxes(layer) {
 
+            const boxes = [];
 
-    // Caixas de todas as outras gravações (incluindo cópias da emenda)
-    function othersBoxes(layer) {
+            layers.forEach(other => {
 
-        const boxes = [];
+                if (other === layer) return;
 
-        layers.forEach(other => {
+                WRAP_OFFSETS.forEach(offset => {
 
-            if (other === layer) return;
+                    const box =
+                        getBox(other, offset);
 
-            WRAP_OFFSETS.forEach(offset => {
+                    if (!isEmptyBox(box)) {
+                        boxes.push(box);
+                    }
 
-                const box =
-                    getBox(other, offset);
-
-                if (!isEmptyBox(box)) {
-                    boxes.push(box);
-                }
+                });
 
             });
 
-        });
+            return boxes;
 
-        return boxes;
-
-    }
-
-
-    function overlapsAny(box, others) {
-
-        return others.some(
-            other =>
-                boxesOverlap(
-                    box,
-                    other,
-                    OVERLAP_GAP
-                )
-        );
-
-    }
-
-
-    // A gravação, se estivesse em (x, y), bateria em alguma outra?
-    function collidesAt(layer, x, y, others) {
-
-        const base =
-            getBox(layer);
-
-        if (isEmptyBox(base)) {
-            return false;
         }
 
-        const box = {
-            ...base,
-            cx: base.cx + (x - layer.x),
-            cy: base.cy + (y - layer.y)
-        };
 
-        return overlapsAny(
-            box,
-            others || othersBoxes(layer)
-        );
+        function overlapsAny(box, others) {
 
-    }
-
-
-    const collides = layer =>
-        collidesAt(
-            layer,
-            layer.x,
-            layer.y
-        );
-
-
-    /* ---------- procura de espaço livre ---------- */
-
-    // Posições candidatas ao redor de (originX, originY), da mais próxima
-    // para a mais distante. Ir para o lado (X) custa pouco; ir para
-    // cima/baixo (Y) custa VERTICAL_WEIGHT vezes mais.
-    function buildCandidates(originX, originY) {
-
-        const list = [];
-
-        const half =
-            TEXTURE_SIZE / 2 / SEARCH_STEP_X;
-
-        const jMin =
-            Math.ceil(
-                (0 - originY) / SEARCH_STEP_Y
-            );
-
-        const jMax =
-            Math.floor(
-                (TEXTURE_SIZE - originY) /
-                SEARCH_STEP_Y
-            );
-
-        for (let j = jMin; j <= jMax; j++) {
-
-            for (let i = -half; i < half; i++) {
-
-                const ox = i * SEARCH_STEP_X;
-                const oy = j * SEARCH_STEP_Y;
-
-                list.push({
-                    x: wrapX(originX + ox),
-                    y: originY + oy,
-                    dist: Math.hypot(
-                        ox,
-                        oy * VERTICAL_WEIGHT
+            return others.some(
+                other =>
+                    boxesOverlap(
+                        box,
+                        other,
+                        OVERLAP_GAP
                     )
-                });
+            );
 
+        }
+
+
+        // A gravação, se estivesse em (x, y), bateria em alguma outra?
+        function collidesAt(layer, x, y, others) {
+
+            const base =
+                getBox(layer);
+
+            if (isEmptyBox(base)) {
+                return false;
             }
-
-        }
-
-        list.sort((a, b) => a.dist - b.dist);
-
-        return list;
-
-    }
-
-
-    // Primeira posição livre da lista de candidatas, ou null
-    function findFreePosition(layer, candidates) {
-
-        const base =
-            getBox(layer);
-
-        if (isEmptyBox(base)) {
-
-            return {
-                x: layer.x,
-                y: layer.y
-            };
-
-        }
-
-        const others =
-            othersBoxes(layer);
-
-        const cos = Math.cos(base.angle);
-        const sin = Math.sin(base.angle);
-
-        // meia-altura da caixa na vertical da textura
-        const halfHeight =
-            base.hw * Math.abs(sin) +
-            base.hh * Math.abs(cos);
-
-        for (const c of candidates) {
 
             const box = {
                 ...base,
-                cx: base.cx + (c.x - layer.x),
-                cy: base.cy + (c.y - layer.y)
+                cx: base.cx + (x - layer.x),
+                cy: base.cy + (y - layer.y)
             };
 
-            // mantém a gravação inteira dentro da textura
-            if (
-                box.cy - halfHeight < 0 ||
-                box.cy + halfHeight > TEXTURE_SIZE
-            ) {
-                continue;
-            }
-
-            if (!overlapsAny(box, others)) {
-
-                return {
-                    x: c.x,
-                    y: c.y
-                };
-
-            }
+            return overlapsAny(
+                box,
+                others || othersBoxes(layer)
+            );
 
         }
 
-        return null;
 
-    }
-
-
-    // Leva a gravação para o espaço livre mais próximo da posição em
-    // que ela está (priorizando a lateral). Reduz o tamanho (até
-    // minSize) se não couber no tamanho atual. Retorna true/false.
-    function placeLayerInFreeSpot(layer, minSize) {
-
-        const candidates =
-            buildCandidates(
+        const collides = layer =>
+            collidesAt(
+                layer,
                 layer.x,
                 layer.y
             );
 
-        let size = layer.size;
 
-        while (true) {
+        /* ---------- procura de espaço livre ---------- */
 
-            layer.size = size;
+        // Posições candidatas ao redor de (originX, originY), da mais próxima
+        // para a mais distante. Ir para o lado (X) custa pouco; ir para
+        // cima/baixo (Y) custa VERTICAL_WEIGHT vezes mais.
+        function buildCandidates(originX, originY) {
 
-            const position =
-                findFreePosition(
-                    layer,
-                    candidates
+            const list = [];
+
+            const half =
+                TEXTURE_SIZE / 2 / SEARCH_STEP_X;
+
+            const jMin =
+                Math.ceil(
+                    (0 - originY) / SEARCH_STEP_Y
                 );
 
-            if (position) {
+            const jMax =
+                Math.floor(
+                    (TEXTURE_SIZE - originY) /
+                    SEARCH_STEP_Y
+                );
 
-                layer.x = position.x;
-                layer.y = position.y;
+            for (let j = jMin; j <= jMax; j++) {
 
-                return true;
+                for (let i = -half; i < half; i++) {
+
+                    const ox = i * SEARCH_STEP_X;
+                    const oy = j * SEARCH_STEP_Y;
+
+                    list.push({
+                        x: wrapX(originX + ox),
+                        y: originY + oy,
+                        dist: Math.hypot(
+                            ox,
+                            oy * VERTICAL_WEIGHT
+                        )
+                    });
+
+                }
 
             }
 
-            if (size <= minSize) {
-                break;
+            list.sort((a, b) => a.dist - b.dist);
+
+            return list;
+
+        }
+
+
+        // Primeira posição livre da lista de candidatas, ou null
+        function findFreePosition(layer, candidates) {
+
+            const base =
+                getBox(layer);
+
+            if (isEmptyBox(base)) {
+
+                return {
+                    x: layer.x,
+                    y: layer.y
+                };
+
             }
 
-            size =
-                Math.max(
-                    minSize,
-                    Math.floor(size * 0.85)
+            const others =
+                othersBoxes(layer);
+
+            const cos = Math.cos(base.angle);
+            const sin = Math.sin(base.angle);
+
+            // meia-altura da caixa na vertical da textura
+            const halfHeight =
+                base.hw * Math.abs(sin) +
+                base.hh * Math.abs(cos);
+
+            for (const c of candidates) {
+
+                const box = {
+                    ...base,
+                    cx: base.cx + (c.x - layer.x),
+                    cy: base.cy + (c.y - layer.y)
+                };
+
+                // mantém a gravação inteira dentro da textura
+                if (
+                    box.cy - halfHeight < 0 ||
+                    box.cy + halfHeight > TEXTURE_SIZE
+                ) {
+                    continue;
+                }
+
+                if (!overlapsAny(box, others)) {
+
+                    return {
+                        x: c.x,
+                        y: c.y
+                    };
+
+                }
+
+            }
+
+            return null;
+
+        }
+
+
+        // Leva a gravação para o espaço livre mais próximo da posição em
+        // que ela está (priorizando a lateral). Reduz o tamanho (até
+        // minSize) se não couber no tamanho atual. Retorna true/false.
+        function placeLayerInFreeSpot(layer, minSize) {
+
+            const candidates =
+                buildCandidates(
+                    layer.x,
+                    layer.y
+                );
+
+            let size = layer.size;
+
+            while (true) {
+
+                layer.size = size;
+
+                const position =
+                    findFreePosition(
+                        layer,
+                        candidates
+                    );
+
+                if (position) {
+
+                    layer.x = position.x;
+                    layer.y = position.y;
+
+                    return true;
+
+                }
+
+                if (size <= minSize) {
+                    break;
+                }
+
+                size =
+                    Math.max(
+                        minSize,
+                        Math.floor(size * 0.85)
+                    );
+
+            }
+
+            return false;
+
+        }
+
+
+        /* ---------- movimento / tamanho / rotação ---------- */
+
+        // Movimento livre: enquanto arrasta, pode passar por cima de outras
+        function moveLayerFree(layer, targetX, targetY) {
+
+            layer.x =
+                wrapX(
+                    Math.round(targetX)
+                );
+
+            layer.y =
+                clampY(
+                    Math.round(targetY)
                 );
 
         }
 
-        return false;
 
-    }
+        // Ao soltar: se ficou por cima de outra gravação, salta para o
+        // lado livre mais próximo. Sem espaço, volta de onde saiu.
+        function settleLayer(layer) {
 
+            const rest =
+                restPosition;
 
-    /* ---------- movimento / tamanho / rotação ---------- */
-
-    // Movimento livre: enquanto arrasta, pode passar por cima de outras
-    function moveLayerFree(layer, targetX, targetY) {
-
-        layer.x =
-            wrapX(
-                Math.round(targetX)
-            );
-
-        layer.y =
-            clampY(
-                Math.round(targetY)
-            );
-
-    }
-
-
-    // Ao soltar: se ficou por cima de outra gravação, salta para o
-    // lado livre mais próximo. Sem espaço, volta de onde saiu.
-    function settleLayer(layer) {
-
-        const rest =
-            restPosition;
-
-        restPosition = null;
-
-        if (
-            !layer ||
-            !collides(layer)
-        ) {
-            return;
-        }
-
-        if (
-            !placeLayerInFreeSpot(
-                layer,
-                layer.size
-            )
-        ) {
-
-            if (rest) {
-
-                layer.x = rest.x;
-                layer.y = rest.y;
-
-            }
-
-            showNotice(
-                "Não há espaço livre nesse ponto."
-            );
-
-        }
-
-        faceEngraving(
-            layer.x
-        );
-
-        updateControls();
-
-        requestRebuild();
-
-    }
-
-
-    // Aplica o tamanho pedido, limitado ao maior que cabe sem bater
-    function applySize(layer, requested) {
-
-        requested =
-            Math.max(
-                SIZE_MIN,
-                Math.min(
-                    SIZE_MAX,
-                    requested
-                )
-            );
-
-        const previous = layer.size;
-
-        layer.size = requested;
-
-        if (!collides(layer)) {
-            return;
-        }
-
-        if (requested <= previous) {
-
-            layer.size = previous;
-
-            return;
-
-        }
-
-        let low = previous;
-        let high = requested;
-
-        for (let i = 0; i < 12; i++) {
-
-            const mid = (low + high) / 2;
-
-            layer.size = mid;
-
-            if (collides(layer)) {
-                high = mid;
-            } else {
-                low = mid;
-            }
-
-        }
-
-        layer.size = low;
-
-    }
-
-
-    // Gira grau a grau e para antes de encostar em outra gravação
-    function applyRotation(layer, requested) {
-
-        const step = Math.PI / 180;
-
-        let current = layer.rotation;
-
-        while (Math.abs(requested - current) > 1e-6) {
-
-            const remaining = requested - current;
-
-            const next =
-                Math.abs(remaining) <= step
-                    ? requested
-                    : current + Math.sign(remaining) * step;
-
-            layer.rotation = next;
-
-            if (collides(layer)) {
-
-                layer.rotation = current;
-
-                return;
-
-            }
-
-            current = next;
-
-        }
-
-    }
-
-
-    // Garante que nenhuma gravação esteja sobre outra (ex.: depois
-    // que uma fonte web termina de carregar e muda as medidas)
-    function resolveAllOverlaps() {
-
-        let changed = false;
-
-        layers.forEach(layer => {
+            restPosition = null;
 
             if (
-                collides(layer) &&
-                placeLayerInFreeSpot(
+                !layer ||
+                !collides(layer)
+            ) {
+                return;
+            }
+
+            if (
+                !placeLayerInFreeSpot(
                     layer,
                     layer.size
                 )
             ) {
-                changed = true;
+
+                if (rest) {
+
+                    layer.x = rest.x;
+                    layer.y = rest.y;
+
+                }
+
+                showNotice(
+                    "Não há espaço livre nesse ponto."
+                );
+
             }
 
-        });
-
-        if (changed) {
+            faceEngraving(
+                layer.x
+            );
 
             updateControls();
+
             requestRebuild();
 
         }
 
-    }
 
+        // Aplica o tamanho pedido, limitado ao maior que cabe sem bater
+        function applySize(layer, requested) {
 
-    /* =========================================================
-       DESENHO NA TEXTURA
-    ========================================================= */
-
-    function drawNameLayer(ctx, layer) {
-
-        const metrics =
-            getNameMetrics(layer);
-
-        if (!metrics.text) return;
-
-        ctx.save();
-
-        ctx.translate(
-            layer.x,
-            layer.y
-        );
-
-        ctx.rotate(
-            layer.rotation
-        );
-
-        ctx.rotate(
-            -Math.PI / 2
-        );
-
-        if (NAME_MIRROR_X) {
-            ctx.scale(-1, 1);
-        }
-
-        ctx.fillStyle = "#FFFFFF";
-
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-
-        ctx.font =
-            `bold ${metrics.fontSize}px "${layer.font}"`;
-
-        ctx.fillText(
-            metrics.text,
-            0,
-            0
-        );
-
-        ctx.restore();
-
-    }
-
-
-    function drawImageLayer(ctx, layer) {
-
-        if (!layer.image) return;
-
-        ctx.save();
-
-        ctx.translate(
-            layer.x,
-            layer.y
-        );
-
-        ctx.rotate(
-            layer.rotation
-        );
-
-        ctx.drawImage(
-            layer.image,
-            -layer.size / 2,
-            -layer.size / 2,
-            layer.size,
-            layer.size
-        );
-
-        ctx.restore();
-
-    }
-
-
-    async function rebuildEngravingTexture() {
-
-        if (!engravingMaterial) return;
-
-        const version =
-            ++renderVersion;
-
-        await Promise.all(
-
-            layers
-                .filter(
-                    layer =>
-                        layer.type === "name"
-                )
-                .map(layer =>
-                    document.fonts.load(
-                        `bold 40px "${layer.font}"`,
-                        layer.text
+            requested =
+                Math.max(
+                    SIZE_MIN,
+                    Math.min(
+                        SIZE_MAX,
+                        requested
                     )
-                )
+                );
 
-        );
+            const previous = layer.size;
 
-        if (
-            version !== renderVersion
-        ) {
-            return;
-        }
+            layer.size = requested;
 
-        const canvas =
-            document.createElement("canvas");
+            if (!collides(layer)) {
+                return;
+            }
 
-        canvas.width =
-            TEXTURE_SIZE;
+            if (requested <= previous) {
 
-        canvas.height =
-            TEXTURE_SIZE;
+                layer.size = previous;
 
-        const ctx =
-            canvas.getContext("2d");
-
-        ctx.save();
-
-        ctx.translate(
-            TEXTURE_FLIP_X
-                ? TEXTURE_SIZE
-                : 0,
-
-            TEXTURE_FLIP_Y
-                ? TEXTURE_SIZE
-                : 0
-        );
-
-        ctx.scale(
-            TEXTURE_FLIP_X
-                ? -1
-                : 1,
-
-            TEXTURE_FLIP_Y
-                ? -1
-                : 1
-        );
-
-
-        for (const layer of layers) {
-
-            if (
-                version !== renderVersion
-            ) {
-
-                ctx.restore();
                 return;
 
             }
 
-            try {
+            let low = previous;
+            let high = requested;
 
-                if (
-                    layer.type === "image" &&
-                    !layer.image
-                ) {
+            for (let i = 0; i < 12; i++) {
 
-                    layer.image =
-                        await loadImage(
-                            layer.imageUrl
-                        );
+                const mid = (low + high) / 2;
 
-                    layer.bounds =
-                        computeBounds(
-                            layer.image
-                        );
+                layer.size = mid;
+
+                if (collides(layer)) {
+                    high = mid;
+                } else {
+                    low = mid;
+                }
+
+            }
+
+            layer.size = low;
+
+        }
+
+
+        // Gira grau a grau e para antes de encostar em outra gravação
+        function applyRotation(layer, requested) {
+
+            const step = Math.PI / 180;
+
+            let current = layer.rotation;
+
+            while (Math.abs(requested - current) > 1e-6) {
+
+                const remaining = requested - current;
+
+                const next =
+                    Math.abs(remaining) <= step
+                        ? requested
+                        : current + Math.sign(remaining) * step;
+
+                layer.rotation = next;
+
+                if (collides(layer)) {
+
+                    layer.rotation = current;
+
+                    return;
 
                 }
 
-                for (
-                    const offset
-                    of WRAP_OFFSETS
+                current = next;
+
+            }
+
+        }
+
+
+        // Garante que nenhuma gravação esteja sobre outra (ex.: depois
+        // que uma fonte web termina de carregar e muda as medidas)
+        function resolveAllOverlaps() {
+
+            let changed = false;
+
+            layers.forEach(layer => {
+
+                if (
+                    collides(layer) &&
+                    placeLayerInFreeSpot(
+                        layer,
+                        layer.size
+                    )
+                ) {
+                    changed = true;
+                }
+
+            });
+
+            if (changed) {
+
+                updateControls();
+                requestRebuild();
+
+            }
+
+        }
+
+
+        /* =========================================================
+           DESENHO NA TEXTURA
+        ========================================================= */
+
+        function drawNameLayer(ctx, layer) {
+
+            const metrics =
+                getNameMetrics(layer);
+
+            if (!metrics.text) return;
+
+            ctx.save();
+
+            ctx.translate(
+                layer.x,
+                layer.y
+            );
+
+            ctx.rotate(
+                layer.rotation
+            );
+
+            ctx.rotate(
+                -Math.PI / 2
+            );
+
+            if (NAME_MIRROR_X) {
+                ctx.scale(-1, 1);
+            }
+
+            ctx.fillStyle = "#FFFFFF";
+
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+
+            ctx.font =
+                `bold ${metrics.fontSize}px "${layer.font}"`;
+
+            ctx.fillText(
+                metrics.text,
+                0,
+                0
+            );
+
+            ctx.restore();
+
+        }
+
+
+        function drawImageLayer(ctx, layer) {
+
+            if (!layer.image) return;
+
+            ctx.save();
+
+            ctx.translate(
+                layer.x,
+                layer.y
+            );
+
+            ctx.rotate(
+                layer.rotation
+            );
+
+            ctx.drawImage(
+                layer.image,
+                -layer.size / 2,
+                -layer.size / 2,
+                layer.size,
+                layer.size
+            );
+
+            ctx.restore();
+
+        }
+
+
+        async function rebuildEngravingTexture() {
+
+            if (!engravingMaterial) return;
+
+            const version =
+                ++renderVersion;
+
+            await Promise.all(
+
+                layers
+                    .filter(
+                        layer =>
+                            layer.type === "name"
+                    )
+                    .map(layer =>
+                        document.fonts.load(
+                            `bold 40px "${layer.font}"`,
+                            layer.text
+                        )
+                    )
+
+            );
+
+            if (
+                version !== renderVersion
+            ) {
+                return;
+            }
+
+            const canvas =
+                document.createElement("canvas");
+
+            canvas.width =
+                TEXTURE_SIZE;
+
+            canvas.height =
+                TEXTURE_SIZE;
+
+            const ctx =
+                canvas.getContext("2d");
+
+            ctx.save();
+
+            ctx.translate(
+                TEXTURE_FLIP_X
+                    ? TEXTURE_SIZE
+                    : 0,
+
+                TEXTURE_FLIP_Y
+                    ? TEXTURE_SIZE
+                    : 0
+            );
+
+            ctx.scale(
+                TEXTURE_FLIP_X
+                    ? -1
+                    : 1,
+
+                TEXTURE_FLIP_Y
+                    ? -1
+                    : 1
+            );
+
+
+            for (const layer of layers) {
+
+                if (
+                    version !== renderVersion
                 ) {
 
-                    const copy = {
-                        ...layer,
-                        x: layer.x + offset
-                    };
+                    ctx.restore();
+                    return;
+
+                }
+
+                try {
 
                     if (
-                        layer.type === "name"
+                        layer.type === "image" &&
+                        !layer.image
                     ) {
 
-                        drawNameLayer(
-                            ctx,
-                            copy
-                        );
+                        layer.image =
+                            await loadImage(
+                                layer.imageUrl
+                            );
 
-                    } else {
-
-                        drawImageLayer(
-                            ctx,
-                            copy
-                        );
+                        layer.bounds =
+                            computeBounds(
+                                layer.image
+                            );
 
                     }
 
+                    for (
+                        const offset
+                        of WRAP_OFFSETS
+                    ) {
+
+                        const copy = {
+                            ...layer,
+                            x: layer.x + offset
+                        };
+
+                        if (
+                            layer.type === "name"
+                        ) {
+
+                            drawNameLayer(
+                                ctx,
+                                copy
+                            );
+
+                        } else {
+
+                            drawImageLayer(
+                                ctx,
+                                copy
+                            );
+
+                        }
+
+                    }
+
+                } catch (error) {
+
+                    console.error(
+                        "Erro ao desenhar camada:",
+                        layer,
+                        error
+                    );
+
                 }
+
+            }
+
+            ctx.restore();
+
+
+            if (
+                version !== renderVersion
+            ) {
+                return;
+            }
+
+
+            try {
+
+                lastTextureDataUrl =
+                    canvas.toDataURL(
+                        "image/png"
+                    );
+
+                const texture =
+                    await viewer.createTexture(
+                        lastTextureDataUrl
+                    );
+
+                if (
+                    version !== renderVersion
+                ) {
+                    return;
+                }
+
+                engravingMaterial
+                    .pbrMetallicRoughness
+                    .baseColorTexture
+                    .setTexture(texture);
+
+                engravingMaterial
+                    .pbrMetallicRoughness
+                    .setBaseColorFactor(
+                        [1, 1, 1, 1]
+                    );
+
+                engravingMaterial
+                    .setAlphaMode("BLEND");
 
             } catch (error) {
 
                 console.error(
-                    "Erro ao desenhar camada:",
-                    layer,
+                    "Erro ao atualizar textura:",
                     error
                 );
 
@@ -1555,190 +1562,137 @@ document.addEventListener("DOMContentLoaded", () => {
 
         }
 
-        ctx.restore();
 
+        function requestRebuild() {
 
-        if (
-            version !== renderVersion
-        ) {
-            return;
-        }
+            renderPending = true;
 
-
-        try {
-
-            lastTextureDataUrl =
-                canvas.toDataURL(
-                    "image/png"
-                );
-
-            const texture =
-                await viewer.createTexture(
-                    lastTextureDataUrl
-                );
-
-            if (
-                version !== renderVersion
-            ) {
+            if (renderRunning) {
                 return;
             }
 
-            engravingMaterial
-                .pbrMetallicRoughness
-                .baseColorTexture
-                .setTexture(texture);
+            renderRunning = true;
 
-            engravingMaterial
-                .pbrMetallicRoughness
-                .setBaseColorFactor(
-                    [1, 1, 1, 1]
-                );
+            requestAnimationFrame(
+                async () => {
 
-            engravingMaterial
-                .setAlphaMode("BLEND");
+                    renderPending = false;
 
-        } catch (error) {
+                    await rebuildEngravingTexture();
 
-            console.error(
-                "Erro ao atualizar textura:",
-                error
+                    renderRunning = false;
+
+                    if (renderPending) {
+                        requestRebuild();
+                    }
+
+                }
             );
 
         }
 
-    }
 
+        /* =========================================================
+           INTERFACE
+        ========================================================= */
 
-    function requestRebuild() {
+        function layerTitle(layer) {
 
-        renderPending = true;
+            if (
+                layer.type === "name"
+            ) {
 
-        if (renderRunning) {
-            return;
-        }
-
-        renderRunning = true;
-
-        requestAnimationFrame(
-            async () => {
-
-                renderPending = false;
-
-                await rebuildEngravingTexture();
-
-                renderRunning = false;
-
-                if (renderPending) {
-                    requestRebuild();
-                }
+                return layer.text
+                    ? `Nome: ${layer.text}`
+                    : "Nome";
 
             }
-        );
 
-    }
-
-
-    /* =========================================================
-       INTERFACE
-    ========================================================= */
-
-    function layerTitle(layer) {
-
-        if (
-            layer.type === "name"
-        ) {
-
-            return layer.text
-                ? `Nome: ${layer.text}`
-                : "Nome";
+            return layer.name;
 
         }
 
-        return layer.name;
 
-    }
+        function syncLibrary() {
+
+            const added =
+                new Set(
+                    layers
+                        .filter(
+                            layer =>
+                                layer.type === "image"
+                        )
+                        .map(
+                            layer =>
+                                layer.imageUrl
+                        )
+                );
 
 
-    function syncLibrary() {
+            engravingButtons.forEach(button => {
 
-        const added =
-            new Set(
-                layers
-                    .filter(
-                        layer =>
-                            layer.type === "image"
+                button.classList.toggle(
+                    "is-added",
+                    added.has(
+                        button.dataset.image
                     )
-                    .map(
-                        layer =>
-                            layer.imageUrl
-                    )
-            );
+                );
+
+            });
 
 
-        engravingButtons.forEach(button => {
+            if (layersCount) {
 
-            button.classList.toggle(
-                "is-added",
-                added.has(
-                    button.dataset.image
-                )
-            );
+                layersCount.textContent =
+                    layers.length;
 
-        });
+                layersCount.hidden =
+                    !layers.length;
 
-
-        if (layersCount) {
-
-            layersCount.textContent =
-                layers.length;
-
-            layersCount.hidden =
-                !layers.length;
+            }
 
         }
 
-    }
+
+        function renderLayersList() {
+
+            syncLibrary();
+
+            if (!layers.length) {
+
+                layersList.innerHTML =
+                    EMPTY_LAYERS_HTML;
+
+                return;
+
+            }
+
+            layersList.innerHTML = "";
 
 
-    function renderLayersList() {
+            layers.forEach(
+                (layer, index) => {
 
-        syncLibrary();
+                    const item =
+                        document.createElement(
+                            "button"
+                        );
 
-        if (!layers.length) {
+                    item.type = "button";
 
-            layersList.innerHTML =
-                EMPTY_LAYERS_HTML;
-
-            return;
-
-        }
-
-        layersList.innerHTML = "";
-
-
-        layers.forEach(
-            (layer, index) => {
-
-                const item =
-                    document.createElement(
-                        "button"
-                    );
-
-                item.type = "button";
-
-                item.className =
-                    "vip-engraving-layer-item" +
-                    (
-                        layer.id === selectedId
-                            ? " active"
-                            : ""
-                    );
+                    item.className =
+                        "vip-engraving-layer-item" +
+                        (
+                            layer.id === selectedId
+                                ? " active"
+                                : ""
+                        );
 
 
-                const preview =
-                    layer.type === "name"
+                    const preview =
+                        layer.type === "name"
 
-                        ? `
+                            ? `
                             <span
                                 style="
                                     font-size: 13px;
@@ -1748,14 +1702,14 @@ document.addEventListener("DOMContentLoaded", () => {
                             </span>
                         `
 
-                        : `
+                            : `
                             <img
                                 src="${layer.imageUrl}"
                                 alt="">
                         `;
 
 
-                item.innerHTML = `
+                    item.innerHTML = `
 
                     <span class="vip-layer-number">
                         ${index + 1}
@@ -1774,131 +1728,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 `;
 
 
-                item.addEventListener(
-                    "click",
-                    () =>
-                        selectLayer(
-                            layer.id
-                        )
-                );
+                    item.addEventListener(
+                        "click",
+                        () =>
+                            selectLayer(
+                                layer.id
+                            )
+                    );
 
 
-                layersList.appendChild(
-                    item
-                );
-
-            }
-        );
-
-    }
-
-
-    function updateControls() {
-
-        const layer =
-            getSelected();
-
-        const enabled =
-            !!layer;
-
-        controlsSection.classList.toggle(
-            "is-active",
-            enabled
-        );
-
-
-        [
-            sizeControl,
-            rotationControl,
-            resetButton,
-            removeButton
-        ].forEach(
-            el =>
-                el.disabled =
-                    !enabled
-        );
-
-
-        const x =
-            layer
-                ? layer.x
-                : START_X;
-
-        const y =
-            layer
-                ? layer.y
-                : START_Y;
-
-        const size =
-            layer
-                ? layer.size
-                : IMAGE_DEFAULT_SIZE;
-
-        const rotation =
-            layer
-                ? layer.rotation
-                : 0;
-
-
-        selectedName.textContent =
-            layer
-                ? layerTitle(layer)
-                : "Nenhuma gravação";
-
-
-        xValue.textContent =
-            Math.round(x);
-
-        yValue.textContent =
-            Math.round(y);
-
-        sizeControl.value =
-            size;
-
-        sizeValue.textContent =
-            Math.round(size);
-
-        rotationControl.value =
-            radToDeg(rotation);
-
-        rotationValue.textContent =
-            radToDeg(rotation) + "°";
-
-
-        updatePositionKnob(
-            layer
-        );
-
-    }
-
-
-    function selectLayer(id) {
-
-        selectedId = id;
-
-        const layer =
-            getSelected();
-
-
-        if (
-            layer &&
-            layer.type === "name"
-        ) {
-
-            nameInput.value =
-                layer.text || "";
-
-            currentFont =
-                layer.font;
-
-
-            fontButtons.forEach(
-                button => {
-
-                    button.classList.toggle(
-                        "active",
-                        button.dataset.font ===
-                            currentFont
+                    layersList.appendChild(
+                        item
                     );
 
                 }
@@ -1907,477 +1747,549 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
 
-        updateControls();
+        function updateControls() {
 
-        renderLayersList();
+            const layer =
+                getSelected();
 
+            const enabled =
+                !!layer;
 
-        if (layer) {
-            faceEngraving(
-                layer.x
-            );
-        }
-
-    }
-
-
-    /* =========================================================
-       NOME
-    ========================================================= */
-
-    function updateNameFromInput() {
-
-        const text =
-            nameInput.value
-                .trim()
-                .substring(
-                    0,
-                    NAME_MAX_CHARACTERS
-                )
-                .toUpperCase();
-
-
-        nameInput.value =
-            text;
-
-
-        let nameLayer =
-            getNameLayer();
-
-
-        if (!text) {
-
-            if (nameLayer) {
-
-                layers.splice(
-                    layers.indexOf(
-                        nameLayer
-                    ),
-                    1
-                );
-
-                selectedId = null;
-
-                updateControls();
-                renderLayersList();
-                requestRebuild();
-
-            }
-
-            return;
-
-        }
-
-
-        if (!nameLayer) {
-
-            nameLayer = {
-
-                id:
-                    generateId(),
-
-                type:
-                    "name",
-
-                text:
-                    text,
-
-                x:
-                    START_X,
-
-                y:
-                    START_Y,
-
-                size:
-                    NAME_DEFAULT_SIZE,
-
-                rotation:
-                    0,
-
-                font:
-                    currentFont
-
-            };
-
-
-            // procura um espaço livre (reduzindo se preciso)
-            if (
-                !placeLayerInFreeSpot(
-                    nameLayer,
-                    NAME_MIN_SIZE
-                )
-            ) {
-
-                nameInput.value = "";
-
-                showNotice(
-                    "Não há espaço livre na garrafa para o nome."
-                );
-
-                return;
-
-            }
-
-
-            layers.push(
-                nameLayer
+            controlsSection.classList.toggle(
+                "is-active",
+                enabled
             );
 
-        } else {
 
-            const previousText =
-                nameLayer.text;
+            [
+                sizeControl,
+                rotationControl,
+                resetButton,
+                removeButton
+            ].forEach(
+                el =>
+                    el.disabled =
+                    !enabled
+            );
 
-            nameLayer.text =
-                text;
 
-            nameLayer.font =
-                currentFont;
+            const x =
+                layer
+                    ? layer.x
+                    : START_X;
+
+            const y =
+                layer
+                    ? layer.y
+                    : START_Y;
+
+            const size =
+                layer
+                    ? layer.size
+                    : IMAGE_DEFAULT_SIZE;
+
+            const rotation =
+                layer
+                    ? layer.rotation
+                    : 0;
 
 
-            // o texto cresceu e bateu em outra gravação:
-            // tenta mudar de lugar; se não couber, desfaz
+            selectedName.textContent =
+                layer
+                    ? layerTitle(layer)
+                    : "Nenhuma gravação";
+
+
+            xValue.textContent =
+                Math.round(x);
+
+            yValue.textContent =
+                Math.round(y);
+
+            sizeControl.value =
+                size;
+
+            sizeValue.textContent =
+                Math.round(size);
+
+            rotationControl.value =
+                radToDeg(rotation);
+
+            rotationValue.textContent =
+                radToDeg(rotation) + "°";
+
+
+            updatePositionKnob(
+                layer
+            );
+
+        }
+
+
+        function selectLayer(id) {
+
+            selectedId = id;
+
+            const layer =
+                getSelected();
+
+
             if (
-                collides(nameLayer) &&
-                !placeLayerInFreeSpot(
-                    nameLayer,
-                    nameLayer.size
-                )
+                layer &&
+                layer.type === "name"
             ) {
-
-                nameLayer.text =
-                    previousText;
 
                 nameInput.value =
-                    previousText;
+                    layer.text || "";
 
-                showNotice(
-                    "Não há espaço livre para esse texto."
+                currentFont =
+                    layer.font;
+
+
+                fontButtons.forEach(
+                    button => {
+
+                        button.classList.toggle(
+                            "active",
+                            button.dataset.font ===
+                            currentFont
+                        );
+
+                    }
                 );
+
+            }
+
+
+            updateControls();
+
+            renderLayersList();
+
+
+            if (layer) {
+                faceEngraving(
+                    layer.x
+                );
+            }
+
+        }
+
+
+        /* =========================================================
+           NOME
+        ========================================================= */
+
+        function updateNameFromInput() {
+
+            const text =
+                nameInput.value
+                    .trim()
+                    .substring(
+                        0,
+                        NAME_MAX_CHARACTERS
+                    )
+                    .toUpperCase();
+
+
+            nameInput.value =
+                text;
+
+
+            let nameLayer =
+                getNameLayer();
+
+
+            if (!text) {
+
+                if (nameLayer) {
+
+                    layers.splice(
+                        layers.indexOf(
+                            nameLayer
+                        ),
+                        1
+                    );
+
+                    selectedId = null;
+
+                    updateControls();
+                    renderLayersList();
+                    requestRebuild();
+
+                }
 
                 return;
 
             }
 
-        }
+
+            if (!nameLayer) {
+
+                nameLayer = {
+
+                    id:
+                        generateId(),
+
+                    type:
+                        "name",
+
+                    text:
+                        text,
+
+                    x:
+                        START_X,
+
+                    y:
+                        START_Y,
+
+                    size:
+                        NAME_DEFAULT_SIZE,
+
+                    rotation:
+                        0,
+
+                    font:
+                        currentFont
+
+                };
 
 
-        selectLayer(
-            nameLayer.id
-        );
+                // procura um espaço livre (reduzindo se preciso)
+                if (
+                    !placeLayerInFreeSpot(
+                        nameLayer,
+                        NAME_MIN_SIZE
+                    )
+                ) {
 
-        requestRebuild();
+                    nameInput.value = "";
 
-    }
+                    showNotice(
+                        "Não há espaço livre na garrafa para o nome."
+                    );
+
+                    return;
+
+                }
 
 
-    nameInput.addEventListener(
-        "input",
-        updateNameFromInput
-    );
+                layers.push(
+                    nameLayer
+                );
+
+            } else {
+
+                const previousText =
+                    nameLayer.text;
+
+                nameLayer.text =
+                    text;
+
+                nameLayer.font =
+                    currentFont;
 
 
-    nameInput.addEventListener(
-        "keydown",
-        event => {
+                // o texto cresceu e bateu em outra gravação:
+                // tenta mudar de lugar; se não couber, desfaz
+                if (
+                    collides(nameLayer) &&
+                    !placeLayerInFreeSpot(
+                        nameLayer,
+                        nameLayer.size
+                    )
+                ) {
 
-            if (
-                event.key === "Enter"
-            ) {
+                    nameLayer.text =
+                        previousText;
 
-                nameInput.blur();
+                    nameInput.value =
+                        previousText;
+
+                    showNotice(
+                        "Não há espaço livre para esse texto."
+                    );
+
+                    return;
+
+                }
 
             }
 
+
+            selectLayer(
+                nameLayer.id
+            );
+
+            requestRebuild();
+
         }
-    );
 
 
-    fontButtons.forEach(
-        button => {
-
-            button.addEventListener(
-                "click",
-                () => {
-
-                    const newFont =
-                        button.dataset.font ||
-                        "Arial";
+        nameInput.addEventListener(
+            "input",
+            updateNameFromInput
+        );
 
 
-                    const nameLayer =
-                        getNameLayer();
+        nameInput.addEventListener(
+            "keydown",
+            event => {
+
+                if (
+                    event.key === "Enter"
+                ) {
+
+                    nameInput.blur();
+
+                }
+
+            }
+        );
 
 
-                    if (nameLayer) {
+        fontButtons.forEach(
+            button => {
 
-                        const previousFont =
-                            nameLayer.font;
+                button.addEventListener(
+                    "click",
+                    () => {
 
-                        nameLayer.font =
+                        const newFont =
+                            button.dataset.font ||
+                            "Arial";
+
+
+                        const nameLayer =
+                            getNameLayer();
+
+
+                        if (nameLayer) {
+
+                            const previousFont =
+                                nameLayer.font;
+
+                            nameLayer.font =
+                                newFont;
+
+
+                            // a nova fonte pode ser mais larga
+                            if (
+                                collides(nameLayer) &&
+                                !placeLayerInFreeSpot(
+                                    nameLayer,
+                                    nameLayer.size
+                                )
+                            ) {
+
+                                nameLayer.font =
+                                    previousFont;
+
+                                showNotice(
+                                    "Não há espaço livre para essa fonte."
+                                );
+
+                                return;
+
+                            }
+
+                        }
+
+
+                        fontButtons.forEach(
+                            btn =>
+                                btn.classList.remove(
+                                    "active"
+                                )
+                        );
+
+                        button.classList.add(
+                            "active"
+                        );
+
+
+                        currentFont =
                             newFont;
 
 
-                        // a nova fonte pode ser mais larga
-                        if (
-                            collides(nameLayer) &&
-                            !placeLayerInFreeSpot(
-                                nameLayer,
-                                nameLayer.size
-                            )
-                        ) {
+                        if (nameLayer) {
+                            updateControls();
+                        }
 
-                            nameLayer.font =
-                                previousFont;
 
-                            showNotice(
-                                "Não há espaço livre para essa fonte."
+                        requestRebuild();
+
+                    }
+                );
+
+            }
+        );
+
+
+        /* =========================================================
+           GRAVAÇÕES
+        ========================================================= */
+
+        engravingButtons.forEach(
+            button => {
+
+                button.addEventListener(
+                    "click",
+                    async () => {
+
+                        const imageUrl =
+                            button.dataset.image;
+
+                        if (!imageUrl) {
+                            return;
+                        }
+
+
+                        const findExisting = () =>
+                            layers.find(
+                                layer =>
+                                    layer.type === "image" &&
+                                    layer.imageUrl === imageUrl
+                            );
+
+
+                        const existing =
+                            findExisting();
+
+
+                        if (existing) {
+
+                            setTab(
+                                "ajuste"
+                            );
+
+                            selectLayer(
+                                existing.id
                             );
 
                             return;
 
                         }
 
-                    }
+
+                        const layer = {
+
+                            id:
+                                generateId(),
+
+                            type:
+                                "image",
+
+                            name:
+                                button.dataset.name ||
+                                "Gravação",
+
+                            imageUrl:
+                                imageUrl,
+
+                            image:
+                                null,
+
+                            bounds:
+                                FULL_BOUNDS,
+
+                            x:
+                                START_X,
+
+                            y:
+                                START_Y,
+
+                            size:
+                                IMAGE_DEFAULT_SIZE,
+
+                            rotation:
+                                0
+
+                        };
 
 
-                    fontButtons.forEach(
-                        btn =>
-                            btn.classList.remove(
-                                "active"
+                        try {
+
+                            layer.image =
+                                await loadImage(
+                                    imageUrl
+                                );
+
+                            layer.bounds =
+                                computeBounds(
+                                    layer.image
+                                );
+
+                        } catch (error) {
+
+                            console.error(
+                                error
+                            );
+
+                            return;
+
+                        }
+
+
+                        // clique duplo: a mesma gravação já entrou
+                        const duplicate =
+                            findExisting();
+
+                        if (duplicate) {
+
+                            setTab(
+                                "ajuste"
+                            );
+
+                            selectLayer(
+                                duplicate.id
+                            );
+
+                            return;
+
+                        }
+
+
+                        // acha um lugar livre (reduzindo se preciso)
+                        if (
+                            !placeLayerInFreeSpot(
+                                layer,
+                                IMAGE_MIN_SIZE
                             )
-                    );
+                        ) {
 
-                    button.classList.add(
-                        "active"
-                    );
+                            showNotice(
+                                "Não há espaço livre na garrafa. " +
+                                "Remova ou reduza outra gravação."
+                            );
 
+                            return;
 
-                    currentFont =
-                        newFont;
-
-
-                    if (nameLayer) {
-                        updateControls();
-                    }
+                        }
 
 
-                    requestRebuild();
-
-                }
-            );
-
-        }
-    );
-
-
-    /* =========================================================
-       GRAVAÇÕES
-    ========================================================= */
-
-    engravingButtons.forEach(
-        button => {
-
-            button.addEventListener(
-                "click",
-                async () => {
-
-                    const imageUrl =
-                        button.dataset.image;
-
-                    if (!imageUrl) {
-                        return;
-                    }
-
-
-                    const findExisting = () =>
-                        layers.find(
-                            layer =>
-                                layer.type === "image" &&
-                                layer.imageUrl === imageUrl
+                        layers.push(
+                            layer
                         );
 
-
-                    const existing =
-                        findExisting();
-
-
-                    if (existing) {
 
                         setTab(
                             "ajuste"
                         );
 
                         selectLayer(
-                            existing.id
+                            layer.id
                         );
 
-                        return;
+                        requestRebuild();
 
                     }
+                );
 
-
-                    const layer = {
-
-                        id:
-                            generateId(),
-
-                        type:
-                            "image",
-
-                        name:
-                            button.dataset.name ||
-                            "Gravação",
-
-                        imageUrl:
-                            imageUrl,
-
-                        image:
-                            null,
-
-                        bounds:
-                            FULL_BOUNDS,
-
-                        x:
-                            START_X,
-
-                        y:
-                            START_Y,
-
-                        size:
-                            IMAGE_DEFAULT_SIZE,
-
-                        rotation:
-                            0
-
-                    };
-
-
-                    try {
-
-                        layer.image =
-                            await loadImage(
-                                imageUrl
-                            );
-
-                        layer.bounds =
-                            computeBounds(
-                                layer.image
-                            );
-
-                    } catch (error) {
-
-                        console.error(
-                            error
-                        );
-
-                        return;
-
-                    }
-
-
-                    // clique duplo: a mesma gravação já entrou
-                    const duplicate =
-                        findExisting();
-
-                    if (duplicate) {
-
-                        setTab(
-                            "ajuste"
-                        );
-
-                        selectLayer(
-                            duplicate.id
-                        );
-
-                        return;
-
-                    }
-
-
-                    // acha um lugar livre (reduzindo se preciso)
-                    if (
-                        !placeLayerInFreeSpot(
-                            layer,
-                            IMAGE_MIN_SIZE
-                        )
-                    ) {
-
-                        showNotice(
-                            "Não há espaço livre na garrafa. " +
-                            "Remova ou reduza outra gravação."
-                        );
-
-                        return;
-
-                    }
-
-
-                    layers.push(
-                        layer
-                    );
-
-
-                    setTab(
-                        "ajuste"
-                    );
-
-                    selectLayer(
-                        layer.id
-                    );
-
-                    requestRebuild();
-
-                }
-            );
-
-        }
-    );
-
-
-    function removeSelected() {
-
-        const layer =
-            getSelected();
-
-        if (!layer) {
-            return;
-        }
-
-
-        layers.splice(
-            layers.indexOf(layer),
-            1
+            }
         );
 
-        selectedId = null;
 
-
-        if (
-            layer.type === "name"
-        ) {
-
-            nameInput.value = "";
-
-        }
-
-
-        updateControls();
-        renderLayersList();
-        requestRebuild();
-
-    }
-
-
-    removeButton.addEventListener(
-        "click",
-        removeSelected
-    );
-
-
-    resetButton.addEventListener(
-        "click",
-        () => {
+        function removeSelected() {
 
             const layer =
                 getSelected();
@@ -2387,478 +2299,283 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
 
-            // posição inicial se estiver livre; senão, a mais próxima
-            const position =
-                findFreePosition(
+            layers.splice(
+                layers.indexOf(layer),
+                1
+            );
+
+            selectedId = null;
+
+
+            if (
+                layer.type === "name"
+            ) {
+
+                nameInput.value = "";
+
+            }
+
+
+            updateControls();
+            renderLayersList();
+            requestRebuild();
+
+        }
+
+
+        removeButton.addEventListener(
+            "click",
+            removeSelected
+        );
+
+
+        resetButton.addEventListener(
+            "click",
+            () => {
+
+                const layer =
+                    getSelected();
+
+                if (!layer) {
+                    return;
+                }
+
+
+                // posição inicial se estiver livre; senão, a mais próxima
+                const position =
+                    findFreePosition(
+                        layer,
+                        buildCandidates(
+                            START_X,
+                            START_Y
+                        )
+                    );
+
+                if (!position) {
+                    return;
+                }
+
+
+                layer.x =
+                    position.x;
+
+                layer.y =
+                    position.y;
+
+
+                updateControls();
+
+                faceEngraving(
+                    layer.x
+                );
+
+                requestRebuild();
+
+            }
+        );
+
+
+        sizeControl.addEventListener(
+            "input",
+            () => {
+
+                const layer =
+                    getSelected();
+
+                if (!layer) {
+                    return;
+                }
+
+
+                applySize(
                     layer,
-                    buildCandidates(
-                        START_X,
-                        START_Y
+                    Number(
+                        sizeControl.value
                     )
                 );
 
-            if (!position) {
-                return;
+
+                updateControls();
+                renderLayersList();
+                requestRebuild();
+
             }
+        );
 
 
-            layer.x =
-                position.x;
+        rotationControl.addEventListener(
+            "input",
+            () => {
 
-            layer.y =
-                position.y;
+                const layer =
+                    getSelected();
+
+                if (!layer) {
+                    return;
+                }
 
 
-            updateControls();
+                applyRotation(
+                    layer,
+                    Number(
+                        rotationControl.value
+                    ) *
+                    Math.PI /
+                    180
+                );
 
-            faceEngraving(
-                layer.x
-            );
 
-            requestRebuild();
+                updateControls();
+                renderLayersList();
+                requestRebuild();
+
+            }
+        );
+
+
+        /* =========================================================
+           PAD DE POSIÇÃO
+        ========================================================= */
+
+        const Y_MID =
+            (Y_MIN + Y_MAX) / 2;
+
+        const Y_HALF =
+            (Y_MAX - Y_MIN) / 2;
+
+
+        function padRadius() {
+
+            return {
+
+                x:
+                    positionPad.clientWidth *
+                    PAD_EDGE,
+
+                y:
+                    positionPad.clientHeight *
+                    PAD_EDGE
+
+            };
 
         }
-    );
 
 
-    sizeControl.addEventListener(
-        "input",
-        () => {
+        function updatePositionKnob(layer) {
 
-            const layer =
-                getSelected();
+            const r =
+                padRadius();
 
-            if (!layer) {
-                return;
-            }
+            let nx = 0;
+            let ny = 0;
 
 
-            applySize(
-                layer,
-                Number(
-                    sizeControl.value
-                )
-            );
+            if (layer) {
 
-
-            updateControls();
-            renderLayersList();
-            requestRebuild();
-
-        }
-    );
-
-
-    rotationControl.addEventListener(
-        "input",
-        () => {
-
-            const layer =
-                getSelected();
-
-            if (!layer) {
-                return;
-            }
-
-
-            applyRotation(
-                layer,
-                Number(
-                    rotationControl.value
-                ) *
-                Math.PI /
-                180
-            );
-
-
-            updateControls();
-            renderLayersList();
-            requestRebuild();
-
-        }
-    );
-
-
-    /* =========================================================
-       PAD DE POSIÇÃO
-    ========================================================= */
-
-    const Y_MID =
-        (Y_MIN + Y_MAX) / 2;
-
-    const Y_HALF =
-        (Y_MAX - Y_MIN) / 2;
-
-
-    function padRadius() {
-
-        return {
-
-            x:
-                positionPad.clientWidth *
-                PAD_EDGE,
-
-            y:
-                positionPad.clientHeight *
-                PAD_EDGE
-
-        };
-
-    }
-
-
-    function updatePositionKnob(layer) {
-
-        const r =
-            padRadius();
-
-        let nx = 0;
-        let ny = 0;
-
-
-        if (layer) {
-
-            const d =
-                (
+                const d =
                     (
-                        layer.x -
-                        START_X +
-                        TEXTURE_SIZE / 2
+                        (
+                            layer.x -
+                            START_X +
+                            TEXTURE_SIZE / 2
+                        ) %
+                        TEXTURE_SIZE +
+                        TEXTURE_SIZE
                     ) %
-                    TEXTURE_SIZE +
-                    TEXTURE_SIZE
-                ) %
-                TEXTURE_SIZE -
-                TEXTURE_SIZE / 2;
+                    TEXTURE_SIZE -
+                    TEXTURE_SIZE / 2;
 
 
-            nx =
-                d /
-                (TEXTURE_SIZE / 2);
+                nx =
+                    d /
+                    (TEXTURE_SIZE / 2);
 
 
-            ny =
-                (
-                    layer.y -
-                    Y_MID
-                ) /
-                Y_HALF;
+                ny =
+                    (
+                        layer.y -
+                        Y_MID
+                    ) /
+                    Y_HALF;
 
-        }
+            }
 
 
-        positionKnob.style.left =
-            `calc(50% + ${
-                PAD_SIGN_X *
+            positionKnob.style.left =
+                `calc(50% + ${PAD_SIGN_X *
                 nx *
                 r.x
-            }px)`;
+                }px)`;
 
 
-        positionKnob.style.top =
-            `calc(50% + ${
-                ny *
+            positionKnob.style.top =
+                `calc(50% + ${ny *
                 r.y
-            }px)`;
+                }px)`;
 
-    }
-
-
-    let dragging = false;
-    let dragStart = null;
-
-
-    function moveFromPointer(event) {
-
-        const layer =
-            getSelected();
-
-        if (
-            !layer ||
-            !dragStart
-        ) {
-            return;
         }
 
 
-        const r =
-            padRadius();
+        let dragging = false;
+        let dragStart = null;
 
 
-        const unitsPerPxX =
-            (
-                TEXTURE_SIZE /
-                (2 * r.x)
-            ) *
-            PAD_SENSITIVITY;
-
-
-        const unitsPerPxY =
-            (
-                (Y_MAX - Y_MIN) /
-                (2 * r.y)
-            ) *
-            PAD_SENSITIVITY;
-
-
-        const dx =
-            event.clientX -
-            dragStart.pointerX;
-
-
-        const dy =
-            event.clientY -
-            dragStart.pointerY;
-
-
-        // posição desejada pelo ponteiro; o movimento real
-        // é barrado/deslizado se encostar em outra gravação
-        const targetX =
-            dragStart.layerX +
-            PAD_SIGN_X *
-            dx *
-            unitsPerPxX;
-
-
-        const targetY =
-            dragStart.layerY +
-            dy *
-            unitsPerPxY;
-
-
-        moveLayerFree(
-            layer,
-            targetX,
-            targetY
-        );
-
-
-        faceEngraving(
-            layer.x
-        );
-
-        updateControls();
-
-        requestRebuild();
-
-    }
-
-
-    positionPad.addEventListener(
-        "pointerdown",
-        event => {
+        function moveFromPointer(event) {
 
             const layer =
                 getSelected();
 
-            if (!layer) {
-                return;
-            }
-
-
-            event.preventDefault();
-
-            dragging = true;
-
-
-            restPosition = {
-                x: layer.x,
-                y: layer.y
-            };
-
-
-            dragStart = {
-
-                pointerX:
-                    event.clientX,
-
-                pointerY:
-                    event.clientY,
-
-                layerX:
-                    layer.x,
-
-                layerY:
-                    layer.y
-
-            };
-
-
-            try {
-
-                positionPad.setPointerCapture(
-                    event.pointerId
-                );
-
-            } catch (_) {}
-
-        }
-    );
-
-
-    positionPad.addEventListener(
-        "pointermove",
-        event => {
-
-            if (!dragging) {
-                return;
-            }
-
-            event.preventDefault();
-
-            moveFromPointer(
-                event
-            );
-
-        }
-    );
-
-
-    function endDrag(event) {
-
-        dragging = false;
-        dragStart = null;
-
-
-        if (
-            event &&
-            event.pointerId !== undefined
-        ) {
-
-            try {
-
-                positionPad.releasePointerCapture(
-                    event.pointerId
-                );
-
-            } catch (_) {}
-
-        }
-
-    }
-
-
-    function finishDrag(event) {
-
-        const wasDragging =
-            dragging;
-
-        endDrag(event);
-
-        if (wasDragging) {
-            settleLayer(
-                getSelected()
-            );
-        }
-
-    }
-
-
-    positionPad.addEventListener(
-        "pointerup",
-        finishDrag
-    );
-
-    positionPad.addEventListener(
-        "pointercancel",
-        finishDrag
-    );
-
-
-    positionPad.addEventListener(
-        "keyup",
-        event => {
-
             if (
-                [
-                    "ArrowUp",
-                    "ArrowDown",
-                    "ArrowLeft",
-                    "ArrowRight"
-                ].includes(event.key)
+                !layer ||
+                !dragStart
             ) {
-
-                settleLayer(
-                    getSelected()
-                );
-
-            }
-
-        }
-    );
-
-
-    positionPad.addEventListener(
-        "keydown",
-        event => {
-
-            const layer =
-                getSelected();
-
-            if (!layer) {
                 return;
             }
 
 
-            const step =
-                event.shiftKey
-                    ? 5
-                    : 1;
+            const r =
+                padRadius();
 
 
-            let targetX =
-                layer.x;
-
-            let targetY =
-                layer.y;
-
-
-            if (
-                event.key === "ArrowUp"
-            ) {
-
-                targetY -= step;
-
-            } else if (
-                event.key === "ArrowDown"
-            ) {
-
-                targetY += step;
-
-            } else if (
-                event.key === "ArrowLeft"
-            ) {
-
-                targetX -=
-                    step *
-                    PAD_SIGN_X;
-
-            } else if (
-                event.key === "ArrowRight"
-            ) {
-
-                targetX +=
-                    step *
-                    PAD_SIGN_X;
-
-            } else {
-
-                return;
-
-            }
+            const unitsPerPxX =
+                (
+                    TEXTURE_SIZE /
+                    (2 * r.x)
+                ) *
+                PAD_SENSITIVITY;
 
 
-            event.preventDefault();
+            const unitsPerPxY =
+                (
+                    (Y_MAX - Y_MIN) /
+                    (2 * r.y)
+                ) *
+                PAD_SENSITIVITY;
 
 
-            if (!restPosition) {
+            const dx =
+                event.clientX -
+                dragStart.pointerX;
 
-                restPosition = {
-                    x: layer.x,
-                    y: layer.y
-                };
 
-            }
+            const dy =
+                event.clientY -
+                dragStart.pointerY;
+
+
+            // posição desejada pelo ponteiro; o movimento real
+            // é barrado/deslizado se encostar em outra gravação
+            const targetX =
+                dragStart.layerX +
+                PAD_SIGN_X *
+                dx *
+                unitsPerPxX;
+
+
+            const targetY =
+                dragStart.layerY +
+                dy *
+                unitsPerPxY;
 
 
             moveLayerFree(
@@ -2877,521 +2594,813 @@ document.addEventListener("DOMContentLoaded", () => {
             requestRebuild();
 
         }
-    );
 
 
-    /* =========================================================
-       CSRF
-    ========================================================= */
+        positionPad.addEventListener(
+            "pointerdown",
+            event => {
 
-    function getCookie(name) {
+                const layer =
+                    getSelected();
 
-        const cookies =
-            document.cookie
-                .split(";")
-                .map(
-                    cookie =>
-                        cookie.trim()
+                if (!layer) {
+                    return;
+                }
+
+
+                event.preventDefault();
+
+                dragging = true;
+
+
+                restPosition = {
+                    x: layer.x,
+                    y: layer.y
+                };
+
+
+                dragStart = {
+
+                    pointerX:
+                        event.clientX,
+
+                    pointerY:
+                        event.clientY,
+
+                    layerX:
+                        layer.x,
+
+                    layerY:
+                        layer.y
+
+                };
+
+
+                try {
+
+                    positionPad.setPointerCapture(
+                        event.pointerId
+                    );
+
+                } catch (_) { }
+
+            }
+        );
+
+
+        positionPad.addEventListener(
+            "pointermove",
+            event => {
+
+                if (!dragging) {
+                    return;
+                }
+
+                event.preventDefault();
+
+                moveFromPointer(
+                    event
                 );
 
+            }
+        );
 
-        for (
-            const cookie of cookies
-        ) {
+
+        function endDrag(event) {
+
+            dragging = false;
+            dragStart = null;
+
 
             if (
-                cookie.startsWith(
-                    name + "="
-                )
+                event &&
+                event.pointerId !== undefined
             ) {
 
-                return decodeURIComponent(
-                    cookie.substring(
-                        name.length + 1
-                    )
-                );
+                try {
+
+                    positionPad.releasePointerCapture(
+                        event.pointerId
+                    );
+
+                } catch (_) { }
 
             }
 
         }
 
-        return null;
 
-    }
+        function finishDrag(event) {
 
+            const wasDragging =
+                dragging;
 
-    /* =========================================================
-       SALVAR PERSONALIZAÇÃO + ADICIONAR AO CARRINHO
-    ========================================================= */
+            endDrag(event);
 
-    const nextBottleButton =
-        document.querySelector(
-            ".vip-next-bottle-btn"
-        );
+            if (wasDragging) {
+                settleLayer(
+                    getSelected()
+                );
+            }
 
-
-    async function saveBottleCustomization() {
-
-        if (!nextBottleButton) {
-            return;
         }
 
 
-        nextBottleButton.disabled =
-            true;
+        positionPad.addEventListener(
+            "pointerup",
+            finishDrag
+        );
+
+        positionPad.addEventListener(
+            "pointercancel",
+            finishDrag
+        );
 
 
-        const originalText =
-            nextBottleButton.innerHTML;
+        positionPad.addEventListener(
+            "keyup",
+            event => {
+
+                if (
+                    [
+                        "ArrowUp",
+                        "ArrowDown",
+                        "ArrowLeft",
+                        "ArrowRight"
+                    ].includes(event.key)
+                ) {
+
+                    settleLayer(
+                        getSelected()
+                    );
+
+                }
+
+            }
+        );
 
 
-        nextBottleButton.innerHTML = `
+        positionPad.addEventListener(
+            "keydown",
+            event => {
+
+                const layer =
+                    getSelected();
+
+                if (!layer) {
+                    return;
+                }
+
+
+                const step =
+                    event.shiftKey
+                        ? 5
+                        : 1;
+
+
+                let targetX =
+                    layer.x;
+
+                let targetY =
+                    layer.y;
+
+
+                if (
+                    event.key === "ArrowUp"
+                ) {
+
+                    targetY -= step;
+
+                } else if (
+                    event.key === "ArrowDown"
+                ) {
+
+                    targetY += step;
+
+                } else if (
+                    event.key === "ArrowLeft"
+                ) {
+
+                    targetX -=
+                        step *
+                        PAD_SIGN_X;
+
+                } else if (
+                    event.key === "ArrowRight"
+                ) {
+
+                    targetX +=
+                        step *
+                        PAD_SIGN_X;
+
+                } else {
+
+                    return;
+
+                }
+
+
+                event.preventDefault();
+
+
+                if (!restPosition) {
+
+                    restPosition = {
+                        x: layer.x,
+                        y: layer.y
+                    };
+
+                }
+
+
+                moveLayerFree(
+                    layer,
+                    targetX,
+                    targetY
+                );
+
+
+                faceEngraving(
+                    layer.x
+                );
+
+                updateControls();
+
+                requestRebuild();
+
+            }
+        );
+
+
+        /* =========================================================
+           CSRF
+        ========================================================= */
+
+        function getCookie(name) {
+
+            const cookies =
+                document.cookie
+                    .split(";")
+                    .map(
+                        cookie =>
+                            cookie.trim()
+                    );
+
+
+            for (
+                const cookie of cookies
+            ) {
+
+                if (
+                    cookie.startsWith(
+                        name + "="
+                    )
+                ) {
+
+                    return decodeURIComponent(
+                        cookie.substring(
+                            name.length + 1
+                        )
+                    );
+
+                }
+
+            }
+
+            return null;
+
+        }
+
+
+        /* =========================================================
+           SALVAR PERSONALIZAÇÃO + ADICIONAR AO CARRINHO
+        ========================================================= */
+
+        const nextBottleButton =
+            document.querySelector(
+                ".vip-next-bottle-btn"
+            );
+
+
+        function blobToDataUrl(blob) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(blob);
+            });
+        }
+
+        async function captureViewerPreview() {
+            try {
+                if (layers.length) {
+                    faceEngraving(layers[0].x);
+                    viewer.jumpCameraToGoal();
+                    // espera 2 frames para o 3D redesenhar já virado
+                    await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+                }
+
+                const blob = await viewer.toBlob({
+                    mimeType: "image/jpeg",
+                    qualityArgument: 0.85,
+                    idealAspect: true
+                });
+
+                return await blobToDataUrl(blob);
+            } catch (error) {
+                console.warn("Não foi possível gerar a foto do 3D:", error);
+                return null; // não bloqueia a compra
+            }
+        }
+
+
+        async function saveBottleCustomization() {
+
+            if (!nextBottleButton) {
+                return;
+            }
+
+
+            nextBottleButton.disabled =
+                true;
+
+
+            const originalText =
+                nextBottleButton.innerHTML;
+
+
+            nextBottleButton.innerHTML = `
             Salvando...
             <i class="bi bi-arrow-repeat"></i>
         `;
 
 
-        try {
-
-            /*
-             * =====================================================
-             * 1. GERA A TEXTURA MAIS RECENTE
-             * =====================================================
-             */
-
-            await rebuildEngravingTexture();
-
-
-            const texture =
-                lastTextureDataUrl;
-
-
-            if (!texture) {
-
-                throw new Error(
-                    "Não foi possível gerar a textura da personalização."
-                );
-
-            }
-
-
-            /*
-             * =====================================================
-             * 2. PREPARA AS CAMADAS
-             * =====================================================
-             */
-
-            const layersData =
-                layers.map(
-                    layer => ({
-
-                        id:
-                            layer.id,
-
-                        type:
-                            layer.type,
-
-                        name:
-                            layer.name || "",
-
-                        text:
-                            layer.text || "",
-
-                        imageUrl:
-                            layer.imageUrl || "",
-
-                        x:
-                            layer.x,
-
-                        y:
-                            layer.y,
-
-                        size:
-                            layer.size,
-
-                        rotation:
-                            layer.rotation,
-
-                        font:
-                            layer.font || ""
-
-                    })
-                );
-
-
-            /*
-             * =====================================================
-             * 3. SALVA A PERSONALIZAÇÃO NO DJANGO
-             * =====================================================
-             */
-
-            const customizationData = {
-
-                product_id:
-                    "{{ product.id }}",
-
-                name:
-                    nameInput.value.trim(),
-
-                font:
-                    currentFont,
-
-                layers:
-                    layersData,
-
-                texture:
-                    texture
-
-            };
-
-
-            const customizationResponse =
-                await fetch(
-
-                    "{% url 'customization:save_bottle_customization' %}",
-
-                    {
-
-                        method:
-                            "POST",
-
-                        headers: {
-
-                            "Content-Type":
-                                "application/json",
-
-                            "X-CSRFToken":
-                                getCookie(
-                                    "csrftoken"
-                                )
-
-                        },
-
-                        body:
-                            JSON.stringify(
-                                customizationData
-                            )
-
-                    }
-
-                );
-
-
-            const customizationResponseText =
-                await customizationResponse.text();
-
-
-            console.log(
-                "SALVAR PERSONALIZAÇÃO - STATUS:",
-                customizationResponse.status
-            );
-
-            console.log(
-                "SALVAR PERSONALIZAÇÃO - RESPOSTA:",
-                customizationResponseText
-            );
-
-
-            if (
-                !customizationResponseText
-            ) {
-
-                throw new Error(
-                    "O servidor retornou uma resposta vazia ao salvar a personalização."
-                );
-
-            }
-
-
-            let customizationResult;
-
-
             try {
 
-                customizationResult =
-                    JSON.parse(
-                        customizationResponseText
+                /*
+                 * =====================================================
+                 * 1. GERA A TEXTURA MAIS RECENTE
+                 * =====================================================
+                 */
+
+                await rebuildEngravingTexture();
+
+
+                const texture =
+                    lastTextureDataUrl;
+
+
+                if (!texture) {
+
+                    throw new Error(
+                        "Não foi possível gerar a textura da personalização."
                     );
 
-            } catch (error) {
+                }
 
-                console.error(
-                    "Resposta da personalização não é JSON:",
+
+                /*
+                 * =====================================================
+                 * 2. PREPARA AS CAMADAS
+                 * =====================================================
+                 */
+
+                const layersData =
+                    layers.map(
+                        layer => ({
+
+                            id:
+                                layer.id,
+
+                            type:
+                                layer.type,
+
+                            name:
+                                layer.name || "",
+
+                            text:
+                                layer.text || "",
+
+                            imageUrl:
+                                layer.imageUrl || "",
+
+                            x:
+                                layer.x,
+
+                            y:
+                                layer.y,
+
+                            size:
+                                layer.size,
+
+                            rotation:
+                                layer.rotation,
+
+                            font:
+                                layer.font || ""
+
+                        })
+                    );
+
+
+                /*
+                 * =====================================================
+                 * 3. SALVA A PERSONALIZAÇÃO NO DJANGO
+                 * =====================================================
+                 */
+
+                // foto do 3D para o admin ver como o cliente montou a garrafa
+                const preview =
+                    await captureViewerPreview();
+
+
+                const customizationData = {
+
+                    product_id:
+                        "{{ product.id }}",
+
+                    name:
+                        nameInput.value.trim(),
+
+                    font:
+                        currentFont,
+
+                    layers:
+                        layersData,
+
+                    texture:
+                        texture,
+
+                    preview:
+                        preview
+
+                };
+
+
+                const customizationResponse =
+                    await fetch(
+
+                        "{% url 'customization:save_bottle_customization' %}",
+
+                        {
+
+                            method:
+                                "POST",
+
+                            headers: {
+
+                                "Content-Type":
+                                    "application/json",
+
+                                "X-CSRFToken":
+                                    getCookie(
+                                        "csrftoken"
+                                    )
+
+                            },
+
+                            body:
+                                JSON.stringify(
+                                    customizationData
+                                )
+
+                        }
+
+                    );
+
+
+                const customizationResponseText =
+                    await customizationResponse.text();
+
+
+                console.log(
+                    "SALVAR PERSONALIZAÇÃO - STATUS:",
+                    customizationResponse.status
+                );
+
+                console.log(
+                    "SALVAR PERSONALIZAÇÃO - RESPOSTA:",
                     customizationResponseText
                 );
 
-                throw new Error(
-                    "O servidor retornou uma resposta inválida ao salvar a personalização."
+
+                if (
+                    !customizationResponseText
+                ) {
+
+                    throw new Error(
+                        "O servidor retornou uma resposta vazia ao salvar a personalização."
+                    );
+
+                }
+
+
+                let customizationResult;
+
+
+                try {
+
+                    customizationResult =
+                        JSON.parse(
+                            customizationResponseText
+                        );
+
+                } catch (error) {
+
+                    console.error(
+                        "Resposta da personalização não é JSON:",
+                        customizationResponseText
+                    );
+
+                    throw new Error(
+                        "O servidor retornou uma resposta inválida ao salvar a personalização."
+                    );
+
+                }
+
+
+                if (
+                    !customizationResponse.ok ||
+                    !customizationResult.success
+                ) {
+
+                    throw new Error(
+                        customizationResult.message ||
+                        customizationResult.error ||
+                        "Não foi possível salvar a personalização."
+                    );
+
+                }
+
+
+                const customizationId =
+                    customizationResult.customization_id;
+
+
+                if (!customizationId) {
+
+                    throw new Error(
+                        "A personalização foi salva, mas o servidor não retornou o ID."
+                    );
+
+                }
+
+
+                console.log(
+                    "PERSONALIZAÇÃO SALVA:",
+                    customizationId
                 );
 
-            }
 
+                /*
+                 * Guarda também no sessionStorage.
+                 * Não é mais a fonte principal do carrinho,
+                 * mas pode ser útil para o fluxo da página.
+                 */
 
-            if (
-                !customizationResponse.ok ||
-                !customizationResult.success
-            ) {
-
-                throw new Error(
-                    customizationResult.message ||
-                    customizationResult.error ||
-                    "Não foi possível salvar a personalização."
+                sessionStorage.setItem(
+                    "customization_id",
+                    customizationId
                 );
 
-            }
 
+                /*
+                 * =====================================================
+                 * 4. ADICIONA O PRODUTO PERSONALIZADO AO CARRINHO
+                 * =====================================================
+                 */
 
-            const customizationId =
-                customizationResult.customization_id;
-
-
-            if (!customizationId) {
-
-                throw new Error(
-                    "A personalização foi salva, mas o servidor não retornou o ID."
-                );
-
-            }
-
-
-            console.log(
-                "PERSONALIZAÇÃO SALVA:",
-                customizationId
-            );
-
-
-            /*
-             * Guarda também no sessionStorage.
-             * Não é mais a fonte principal do carrinho,
-             * mas pode ser útil para o fluxo da página.
-             */
-
-            sessionStorage.setItem(
-                "customization_id",
-                customizationId
-            );
-
-
-            /*
-             * =====================================================
-             * 4. ADICIONA O PRODUTO PERSONALIZADO AO CARRINHO
-             * =====================================================
-             */
-
-            nextBottleButton.innerHTML = `
+                nextBottleButton.innerHTML = `
                 Adicionando ao carrinho...
                 <i class="bi bi-arrow-repeat"></i>
             `;
 
 
-            const cartData = {
+                const cartData = {
 
-                product_id:
-                    "{{ product.id }}",
+                    product_id:
+                        "{{ product.id }}",
 
-                quantity:
-                    1,
+                    quantity:
+                        1,
 
-                size:
-                    "Único",
+                    size:
+                        "Único",
 
-                color:
-                    "",
+                    color:
+                        "",
 
-                custom_name:
-                    nameInput.value.trim(),
+                    custom_name:
+                        nameInput.value.trim(),
 
-                name_direction:
-                    "",
+                    name_direction:
+                        "",
 
-                name_font:
-                    currentFont,
+                    name_font:
+                        currentFont,
 
-                engraving_side:
-                    "",
+                    engraving_side:
+                        "",
 
-                customization_id:
-                    customizationId,
+                    customization_id:
+                        customizationId,
 
-                image:
-                    "{{ product.image.url }}"
+                    image:
+                        "{{ product.image.url }}"
 
-            };
-
-
-            console.log(
-                "ADICIONANDO AO CARRINHO:",
-                cartData
-            );
+                };
 
 
-            const cartResponse =
-                await fetch(
+                console.log(
+                    "ADICIONANDO AO CARRINHO:",
+                    cartData
+                );
 
-                    "{% url 'cart:cart_add_ajax' %}",
 
-                    {
+                const cartResponse =
+                    await fetch(
 
-                        method:
-                            "POST",
+                        "{% url 'cart:cart_add_ajax' %}",
 
-                        headers: {
+                        {
 
-                            "Content-Type":
-                                "application/json",
+                            method:
+                                "POST",
 
-                            "X-CSRFToken":
-                                getCookie(
-                                    "csrftoken"
+                            headers: {
+
+                                "Content-Type":
+                                    "application/json",
+
+                                "X-CSRFToken":
+                                    getCookie(
+                                        "csrftoken"
+                                    )
+
+                            },
+
+                            body:
+                                JSON.stringify(
+                                    cartData
                                 )
 
-                        },
+                        }
 
-                        body:
-                            JSON.stringify(
-                                cartData
-                            )
+                    );
 
-                    }
 
+                const cartResponseText =
+                    await cartResponse.text();
+
+
+                console.log(
+                    "ADICIONAR AO CARRINHO - STATUS:",
+                    cartResponse.status
+                );
+
+                console.log(
+                    "ADICIONAR AO CARRINHO - RESPOSTA:",
+                    cartResponseText
                 );
 
 
-            const cartResponseText =
-                await cartResponse.text();
+                if (!cartResponseText) {
+
+                    throw new Error(
+                        "O servidor retornou uma resposta vazia ao adicionar o produto ao carrinho."
+                    );
+
+                }
 
 
-            console.log(
-                "ADICIONAR AO CARRINHO - STATUS:",
-                cartResponse.status
-            );
-
-            console.log(
-                "ADICIONAR AO CARRINHO - RESPOSTA:",
-                cartResponseText
-            );
+                let cartResult;
 
 
-            if (!cartResponseText) {
+                try {
 
-                throw new Error(
-                    "O servidor retornou uma resposta vazia ao adicionar o produto ao carrinho."
-                );
+                    cartResult =
+                        JSON.parse(
+                            cartResponseText
+                        );
 
-            }
+                } catch (error) {
 
-
-            let cartResult;
-
-
-            try {
-
-                cartResult =
-                    JSON.parse(
+                    console.error(
+                        "Resposta do carrinho não é JSON:",
                         cartResponseText
                     );
+
+                    throw new Error(
+                        "O servidor retornou uma resposta inválida ao adicionar o produto ao carrinho."
+                    );
+
+                }
+
+
+                if (
+                    !cartResponse.ok ||
+                    cartResult.success === false
+                ) {
+
+                    throw new Error(
+                        cartResult.message ||
+                        cartResult.error ||
+                        "Não foi possível adicionar o produto ao carrinho."
+                    );
+
+                }
+
+
+                /*
+                 * =====================================================
+                 * 5. PERSONALIZAÇÃO + PRODUTO ESTÃO NO CARRINHO
+                 * =====================================================
+                 */
+
+                console.log(
+                    "PRODUTO PERSONALIZADO ADICIONADO AO CARRINHO."
+                );
+
+
+                /*
+                 * Vai para o checkout.
+                 *
+                 * O customization_id já está salvo dentro
+                 * da sessão do carrinho.
+                 */
+
+                window.location.href =
+                    "{% url 'cart:checkout_page' %}";
+
 
             } catch (error) {
 
                 console.error(
-                    "Resposta do carrinho não é JSON:",
-                    cartResponseText
+                    "ERRO NO FLUXO DE PERSONALIZAÇÃO:",
+                    error
                 );
 
-                throw new Error(
-                    "O servidor retornou uma resposta inválida ao adicionar o produto ao carrinho."
+
+                alert(
+                    error.message ||
+                    "Não foi possível adicionar a personalização ao carrinho."
                 );
+
+
+            } finally {
+
+                nextBottleButton.disabled =
+                    false;
+
+                nextBottleButton.innerHTML =
+                    originalText;
 
             }
-
-
-            if (
-                !cartResponse.ok ||
-                cartResult.success === false
-            ) {
-
-                throw new Error(
-                    cartResult.message ||
-                    cartResult.error ||
-                    "Não foi possível adicionar o produto ao carrinho."
-                );
-
-            }
-
-
-            /*
-             * =====================================================
-             * 5. PERSONALIZAÇÃO + PRODUTO ESTÃO NO CARRINHO
-             * =====================================================
-             */
-
-            console.log(
-                "PRODUTO PERSONALIZADO ADICIONADO AO CARRINHO."
-            );
-
-
-            /*
-             * Vai para o checkout.
-             *
-             * O customization_id já está salvo dentro
-             * da sessão do carrinho.
-             */
-
-            window.location.href =
-                "{% url 'cart:checkout_page' %}";
-
-
-        } catch (error) {
-
-            console.error(
-                "ERRO NO FLUXO DE PERSONALIZAÇÃO:",
-                error
-            );
-
-
-            alert(
-                error.message ||
-                "Não foi possível adicionar a personalização ao carrinho."
-            );
-
-
-        } finally {
-
-            nextBottleButton.disabled =
-                false;
-
-            nextBottleButton.innerHTML =
-                originalText;
 
         }
 
-    }
+
+        if (nextBottleButton) {
+
+            nextBottleButton.addEventListener(
+                "click",
+                saveBottleCustomization
+            );
+
+        }
 
 
-    if (nextBottleButton) {
+        /* =========================================================
+           CARREGAMENTO DO MODELO
+        ========================================================= */
 
-        nextBottleButton.addEventListener(
-            "click",
-            saveBottleCustomization
-        );
+        viewer.addEventListener(
+            "load",
+            async () => {
 
-    }
-
-
-    /* =========================================================
-       CARREGAMENTO DO MODELO
-    ========================================================= */
-
-    viewer.addEventListener(
-        "load",
-        async () => {
-
-            const materials =
-                viewer.model.materials;
+                const materials =
+                    viewer.model.materials;
 
 
-            const byName =
-                name =>
+                const byName =
+                    name =>
+                        materials.find(
+                            material =>
+                                (
+                                    material.name ||
+                                    ""
+                                )
+                                    .trim()
+                                    .toLowerCase() ===
+                                name
+                                    .trim()
+                                    .toLowerCase()
+                        ) || null;
+
+
+                engravingMaterial =
+                    byName("cylinder") ||
+                    byName("forma") ||
                     materials.find(
                         material =>
                             (
@@ -3399,195 +3408,178 @@ document.addEventListener("DOMContentLoaded", () => {
                                 ""
                             )
                                 .trim()
-                                .toLowerCase() ===
-                            name
-                                .trim()
-                                .toLowerCase()
-                    ) || null;
+                                .toLowerCase() !==
+                            "garrafa"
+                    ) ||
+                    null;
 
 
-            engravingMaterial =
-                byName("cylinder") ||
-                byName("forma") ||
-                materials.find(
-                    material =>
-                        (
-                            material.name ||
-                            ""
+                if (!engravingMaterial) {
+
+                    console.error(
+                        "Material da gravação não encontrado:",
+                        materials.map(
+                            material =>
+                                material.name
                         )
-                            .trim()
-                            .toLowerCase() !==
-                        "garrafa"
-                ) ||
-                null;
-
-
-            if (!engravingMaterial) {
-
-                console.error(
-                    "Material da gravação não encontrado:",
-                    materials.map(
-                        material =>
-                            material.name
-                    )
-                );
-
-                return;
-
-            }
-
-
-            try {
-
-                await engravingMaterial.ensureLoaded();
-
-                engravingMaterial.setAlphaMode(
-                    "BLEND"
-                );
-
-                engravingMaterial
-                    .pbrMetallicRoughness
-                    .setBaseColorFactor(
-                        [1, 1, 1, 1]
                     );
 
-            } catch (error) {
+                    return;
 
-                console.warn(
-                    "Aviso ao configurar material:",
-                    error
+                }
+
+
+                try {
+
+                    await engravingMaterial.ensureLoaded();
+
+                    engravingMaterial.setAlphaMode(
+                        "BLEND"
+                    );
+
+                    engravingMaterial
+                        .pbrMetallicRoughness
+                        .setBaseColorFactor(
+                            [1, 1, 1, 1]
+                        );
+
+                } catch (error) {
+
+                    console.warn(
+                        "Aviso ao configurar material:",
+                        error
+                    );
+
+                }
+
+
+                requestRebuild();
+
+            }
+        );
+
+
+        viewer.addEventListener(
+            "error",
+            event => {
+
+                console.error(
+                    "Erro ao carregar o modelo:",
+                    event
                 );
 
             }
+        );
 
 
-            requestRebuild();
+        /* =========================================================
+           FONTES WEB (medidas do texto dependem delas)
+        ========================================================= */
 
-        }
-    );
+        if (document.fonts) {
 
+            // se uma fonte terminar de carregar depois e o nome
+            // ficar mais largo, reposiciona o que passou a se sobrepor
+            document.fonts.addEventListener(
+                "loadingdone",
+                resolveAllOverlaps
+            );
 
-    viewer.addEventListener(
-        "error",
-        event => {
-
-            console.error(
-                "Erro ao carregar o modelo:",
-                event
+            [
+                'bold 40px "Montserrat"',
+                'bold 40px "Ma Shan Zheng"'
+            ].forEach(
+                font =>
+                    document.fonts
+                        .load(font, "A")
+                        .catch(() => { })
             );
 
         }
-    );
 
 
-    /* =========================================================
-       FONTES WEB (medidas do texto dependem delas)
-    ========================================================= */
+        /* =========================================================
+           ESTADO INICIAL
+        ========================================================= */
 
-    if (document.fonts) {
-
-        // se uma fonte terminar de carregar depois e o nome
-        // ficar mais largo, reposiciona o que passou a se sobrepor
-        document.fonts.addEventListener(
-            "loadingdone",
-            resolveAllOverlaps
-        );
-
-        [
-            'bold 40px "Montserrat"',
-            'bold 40px "Ma Shan Zheng"'
-        ].forEach(
-            font =>
-                document.fonts
-                    .load(font, "A")
-                    .catch(() => {})
-        );
-
-    }
+        updateControls();
 
 
-    /* =========================================================
-       ESTADO INICIAL
-    ========================================================= */
+        /* =========================================================
+           CATEGORIAS - ACORDEÃO
+        ========================================================= */
 
-    updateControls();
+        document
+            .querySelectorAll(
+                ".vip-engraving-category-btn"
+            )
+            .forEach(
+                button => {
 
+                    button.addEventListener(
+                        "click",
+                        () => {
 
-    /* =========================================================
-       CATEGORIAS - ACORDEÃO
-    ========================================================= */
-
-    document
-        .querySelectorAll(
-            ".vip-engraving-category-btn"
-        )
-        .forEach(
-            button => {
-
-                button.addEventListener(
-                    "click",
-                    () => {
-
-                        const content =
-                            document.querySelector(
-                                `[data-category-content="${button.dataset.category}"]`
-                            );
+                            const content =
+                                document.querySelector(
+                                    `[data-category-content="${button.dataset.category}"]`
+                                );
 
 
-                        if (!content) {
-                            return;
-                        }
+                            if (!content) {
+                                return;
+                            }
 
 
-                        const isOpen =
-                            content.classList.contains(
-                                "open"
-                            );
+                            const isOpen =
+                                content.classList.contains(
+                                    "open"
+                                );
 
 
-                        document
-                            .querySelectorAll(
-                                ".vip-engraving-category-btn"
-                            )
-                            .forEach(
-                                btn =>
-                                    btn.classList.remove(
-                                        "active"
-                                    )
-                            );
+                            document
+                                .querySelectorAll(
+                                    ".vip-engraving-category-btn"
+                                )
+                                .forEach(
+                                    btn =>
+                                        btn.classList.remove(
+                                            "active"
+                                        )
+                                );
 
 
-                        document
-                            .querySelectorAll(
-                                ".vip-engraving-category-content"
-                            )
-                            .forEach(
-                                item =>
-                                    item.classList.remove(
-                                        "open"
-                                    )
-                            );
+                            document
+                                .querySelectorAll(
+                                    ".vip-engraving-category-content"
+                                )
+                                .forEach(
+                                    item =>
+                                        item.classList.remove(
+                                            "open"
+                                        )
+                                );
 
 
-                        if (!isOpen) {
+                            if (!isOpen) {
 
-                            button.classList.add(
-                                "active"
-                            );
+                                button.classList.add(
+                                    "active"
+                                );
 
-                            content.classList.add(
-                                "open"
-                            );
+                                content.classList.add(
+                                    "open"
+                                );
+
+                            }
 
                         }
+                    );
 
-                    }
-                );
+                }
+            );
 
-            }
-        );
-
-});
+    });
 
 </script>
 

@@ -252,3 +252,5 @@ JAZZMIN_UI_TWEAKS = {
         "danger": "btn-danger",
     },
 }
+
+DATA_UPLOAD_MAX_MEMORY_SIZE = 15 * 1024 * 1024  # 15 MB

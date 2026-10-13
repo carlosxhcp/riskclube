@@ -1,4 +1,5 @@
 from django.db import models
+import uuid
 
 
 class VipBottleModel(models.Model):
@@ -60,49 +61,14 @@ class Gravacao(models.Model):
 
 
 class BottleCustomization(models.Model):
-    product = models.ForeignKey(
-        "products.Product",
-        on_delete=models.PROTECT,
-        related_name="bottle_customizations"
-    )
-
-    name = models.CharField(
-        max_length=15,
-        blank=True
-    )
-
-    font = models.CharField(
-        max_length=100,
-        blank=True
-    )
-
-    configuration = models.JSONField(
-        default=dict
-    )
-
-    preview_image = models.ImageField(
-        upload_to="customizations/previews/",
-        blank=True,
-        null=True
-    )
-
-    texture_image = models.ImageField(
-        upload_to="customizations/textures/",
-        blank=True,
-        null=True
-    )
-
-    created_at = models.DateTimeField(
-        auto_now_add=True
-    )
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    product = models.ForeignKey("products.Product", on_delete=models.PROTECT)  # ajuste o app
+    name = models.CharField(max_length=30, blank=True)
+    font = models.CharField(max_length=50, blank=True)
+    layers = models.JSONField(default=list)
+    texture = models.ImageField(upload_to="customizations/texture/")
+    preview = models.ImageField(upload_to="customizations/preview/", blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        if self.name:
-            return f"{self.product.name} - {self.name}"
-
-        return f"{self.product.name} - Personalização #{self.id}"
-
-    class Meta:
-        verbose_name = "Personalização de garrafa"
-        verbose_name_plural = "Personalizações de garrafas"
-        ordering = ["-created_at"]
+        return f"Personalização {str(self.id)[:8]} - {self.product}"

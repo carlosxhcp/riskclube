@@ -10,6 +10,16 @@ from products.models import Product
 from .models import CategoriaGravacao, BottleCustomization
 
 from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.http import require_POST
+
+
+
+
+
+def data_url_to_file(data_url, filename):
+    header, encoded = data_url.split(",", 1)
+    return ContentFile(base64.b64decode(encoded), name=filename)
+
 
 def createbottle_choose_type(request):
     return render(
@@ -105,116 +115,27 @@ def createbottle_group_summary(request, slug):
         }
     )
 
-
+@require_POST
 def save_bottle_customization(request):
-    if request.method != "POST":
-        return JsonResponse(
-            {
-                "success": False,
-                "message": "Método não permitido."
-            },
-            status=405
-        )
-
     try:
         data = json.loads(request.body)
+        product = get_object_or_404(Product, pk=data["product_id"])
 
-        product_id = data.get("product_id")
-        name = data.get("name", "").strip()
-        font = data.get("font", "").strip()
-        layers = data.get("layers", [])
-        texture_data = data.get("texture")
-
-        if not product_id:
-            return JsonResponse(
-                {
-                    "success": False,
-                    "message": "Produto não informado."
-                },
-                status=400
-            )
-
-        product = get_object_or_404(
-            Product,
-            id=product_id,
-            available=True,
-            is_createbottle=True
-        )
-
-        if len(name) > 15:
-            return JsonResponse(
-                {
-                    "success": False,
-                    "message": "O nome pode ter no máximo 15 caracteres."
-                },
-                status=400
-            )
-
-        configuration = {
-            "layers": layers,
-        }
-
-        customization = BottleCustomization.objects.create(
+        customization = BottleCustomization(
             product=product,
-            name=name,
-            font=font,
-            configuration=configuration,
+            name=data.get("name", ""),
+            font=data.get("font", ""),
+            layers=data.get("layers", []),
         )
 
-        if texture_data:
-            try:
-                header, encoded_data = texture_data.split(
-                    ",",
-                    1
-                )
+        customization.texture = data_url_to_file(data["texture"], "texture.png")
 
-                image_data = base64.b64decode(
-                    encoded_data
-                )
+        if data.get("preview"):
+            customization.preview = data_url_to_file(data["preview"], "preview.jpg")
 
-                file_name = (
-                    f"customization_{customization.id}.png"
-                )
+        customization.save()
 
-                customization.texture_image.save(
-                    file_name,
-                    ContentFile(image_data),
-                    save=True
-                )
+        return JsonResponse({"success": True, "customization_id": str(customization.id)})
 
-            except (ValueError, TypeError):
-                customization.delete()
-
-                return JsonResponse(
-                    {
-                        "success": False,
-                        "message": "A textura enviada é inválida."
-                    },
-                    status=400
-                )
-
-        return JsonResponse(
-            {
-                "success": True,
-                "customization_id": customization.id,
-                "message": "Personalização salva com sucesso."
-            }
-        )
-
-    except json.JSONDecodeError:
-        return JsonResponse(
-            {
-                "success": False,
-                "message": "Dados JSON inválidos."
-            },
-            status=400
-        )
-
-    except Exception as error:
-        return JsonResponse(
-            {
-                "success": False,
-                "message": str(error)
-            },
-            status=500
-        )
+    except Exception as e:
+        return JsonResponse({"success": False, "message": str(e)}, status=400)
