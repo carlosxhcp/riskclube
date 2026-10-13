@@ -147,16 +147,6 @@ class BottleCustomizationAdmin(admin.ModelAdmin):
     list_per_page = 25
     list_select_related = ("product",)
 
-    fields = (
-        "product",
-        "name",
-        "font",
-        "preview_view",
-        "texture_view",
-        "layers_view",
-        "created_at",
-    )
-
     readonly_fields = (
         "preview_view",
         "texture_view",
