@@ -42,11 +42,14 @@ class Migration(migrations.Migration):
             ),
         ),
         migrations.AddField(
-            model_name="bottlecustomization",
-            name="texture",
-            field=models.ImageField(default=1, upload_to="customizations/texture/"),
-            preserve_default=False,
-        ),
+    model_name="bottlecustomization",
+    name="texture",
+    field=models.ImageField(
+        upload_to="customizations/texture/",
+        blank=True,
+        null=True,
+    ),
+),
         migrations.AlterField(
             model_name="bottlecustomization",
             name="font",

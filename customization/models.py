@@ -65,7 +65,11 @@ class BottleCustomization(models.Model):
     name = models.CharField(max_length=30, blank=True)
     font = models.CharField(max_length=50, blank=True)
     layers = models.JSONField(default=list)
-    texture = models.ImageField(upload_to="customizations/texture/")
+    texture = models.ImageField(
+    upload_to="customizations/texture/",
+    blank=True,
+    null=True,
+)
     preview = models.ImageField(upload_to="customizations/preview/", blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
