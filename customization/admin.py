@@ -189,9 +189,7 @@ class BottleCustomizationAdmin(admin.ModelAdmin):
     @admin.display(description="Prévia")
     def preview_list(self, obj):
         if not obj.preview:
-            return format_html(
-                '<span style="color:#888;">Sem prévia</span>'
-            )
+            return "Sem prévia"
 
         return format_html(
             '<img src="{}" style="width:65px;height:75px;'

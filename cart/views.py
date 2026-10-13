@@ -83,13 +83,18 @@ def get_cart_payload(request):
             ).first()
 
             if customization:
-                configuration = customization.configuration or {}
+                layers = customization.layers or []
 
-                for layer in configuration.get("layers", []):
-                    if layer.get("type") == "image" and layer.get("imageUrl"):
+                for layer in layers:
+                    if not isinstance(layer, dict):
+                        continue
+
+                    image_url = layer.get("imageUrl") or layer.get("image_url")
+
+                    if layer.get("type") == "image" and image_url:
                         figures.append({
                             "name": layer.get("name", ""),
-                            "image_url": layer.get("imageUrl", ""),
+                            "image_url": image_url,
                         })
 
         items.append({
