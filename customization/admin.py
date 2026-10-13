@@ -301,16 +301,17 @@ class BottleCustomizationAdmin(admin.ModelAdmin):
             )
 
         header = format_html(
-            '<thead><tr>'
-            '<th style="padding:8px;text-align:left;">#</th>'
-            '<th style="padding:8px;text-align:left;">Elemento</th>'
-            '<th style="padding:8px;text-align:left;">Detalhes</th>'
-            '<th style="padding:8px;">X</th>'
-            '<th style="padding:8px;">Y</th>'
-            '<th style="padding:8px;">Tamanho</th>'
-            '<th style="padding:8px;">Rotação</th>'
-            '</tr></thead>'
-        )
+    '<thead><tr>'
+    '<th style="padding:8px;text-align:left;">#</th>'
+    '<th style="padding:8px;text-align:left;">Elemento</th>'
+    '<th style="padding:8px;text-align:left;">Detalhes</th>'
+    '<th style="padding:8px;">X</th>'
+    '<th style="padding:8px;">Y</th>'
+    '<th style="padding:8px;">Tamanho</th>'
+    '<th style="padding:8px;">Rotação</th>'
+    '</tr></thead>{}',
+    "",
+)
 
         body = format_html_join(
             "",
