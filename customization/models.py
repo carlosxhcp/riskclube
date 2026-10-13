@@ -61,7 +61,6 @@ class Gravacao(models.Model):
 
 
 class BottleCustomization(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     product = models.ForeignKey("products.Product", on_delete=models.PROTECT)  # ajuste o app
     name = models.CharField(max_length=30, blank=True)
     font = models.CharField(max_length=50, blank=True)
